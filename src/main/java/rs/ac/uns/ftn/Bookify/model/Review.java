@@ -9,14 +9,12 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Rating {
-
+public class Review {
 	private Long id;
 	private double rate;
 	private String comment;
 	private LocalDate date;
 	private boolean accepted;
 	private boolean reported;
-	private Guest guest;
-
+	private Long guestId;
 }

@@ -5,7 +5,7 @@ import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.model.Address;
 import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
-import rs.ac.uns.ftn.Bookify.model.Rating;
+import rs.ac.uns.ftn.Bookify.model.Review;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class AccommodationDetailDTO {
     private String description;
     private List<PricelistItem> priceList;
     private List<Availability> availability;
-    private List<Rating> ratings;
+    private List<Review> reviews;
     private List<Filter> filters;
     private Address address;
 

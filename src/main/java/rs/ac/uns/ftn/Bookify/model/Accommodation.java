@@ -24,7 +24,7 @@ public class Accommodation {
 	private boolean manual = true;
 	private List<PricelistItem> priceList;
 	private List<Availability> availability;
-	private List<Rating> ratings;
+	private List<Review> reviews;
 	private List<Filter> filters;
 	private AccommodationType accommodationType;
 	private PricePer pricePer;
