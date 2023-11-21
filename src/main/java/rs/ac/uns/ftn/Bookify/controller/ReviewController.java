@@ -67,8 +67,8 @@ public class ReviewController {
         return new ResponseEntity<ReviewDTO>(rejectReview, HttpStatus.OK);
     }
 
-    @PutMapping(value="/accept/{reservationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ReviewDTO> acceptReview(@PathVariable Long reservationId) {
+    @PutMapping(value="/accept/{reviewId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReviewDTO> acceptReview(@PathVariable Long reviewId) {
         //change to accepted
         ReviewDTO acceptReview = new ReviewDTO();
         return new ResponseEntity<ReviewDTO>(acceptReview, HttpStatus.OK);
