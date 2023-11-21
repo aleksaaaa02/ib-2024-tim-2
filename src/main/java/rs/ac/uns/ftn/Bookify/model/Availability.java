@@ -1,26 +1,18 @@
 package rs.ac.uns.ftn.Bookify.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Availability {
 
+	private Long id;
 	private LocalDate startDate;
 	private LocalDate endDate;
-
-	public LocalDate getStartDate() {
- 		return this.startDate; 
-	}
-
-	public void setStartDate(LocalDate startDate) {
- 		this.startDate = startDate; 
-	}
-
-	public LocalDate getEndDate() {
- 		return this.endDate; 
-	}
-
-	public void setEndDate(LocalDate endDate) {
- 		this.endDate = endDate; 
-	}
 
 }

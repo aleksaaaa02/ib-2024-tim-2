@@ -4,6 +4,7 @@ import java.util.List;
 
 public abstract class User {
 
+	private Long id;
 	private String email;
 	private String password;
 	private String firstName;
@@ -13,6 +14,14 @@ public abstract class User {
 	private List<Notification> notifications;
 	private Active active;
 	private Address address;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Active getActive(){
 		return this.active;
