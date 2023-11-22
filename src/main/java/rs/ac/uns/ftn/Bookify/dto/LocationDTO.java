@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-//@AllArgsConstructor
-public class ReservationDTO {
+@AllArgsConstructor
+public class LocationDTO {
+    private String city;
+    private String country;
+    //picture
 }

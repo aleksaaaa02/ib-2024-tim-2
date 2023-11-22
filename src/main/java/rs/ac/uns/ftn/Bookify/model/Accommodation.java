@@ -29,5 +29,6 @@ public class Accommodation {
 	private AccommodationType accommodationType;
 	private PricePer pricePer;
 	private Address address;
+	//picture
 
 }

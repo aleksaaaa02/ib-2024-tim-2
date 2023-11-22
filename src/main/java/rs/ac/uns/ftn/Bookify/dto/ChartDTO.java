@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-//@AllArgsConstructor
-public class ReservationDTO {
+@AllArgsConstructor
+public class ChartDTO {
+
+    private int numberOfReservations;
+    private double profiteOfAccommodation;
 }
