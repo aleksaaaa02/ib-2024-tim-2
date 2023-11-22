@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Review {
 	private Long id;
-	private double rate;
+	private int rate;
 	private String comment;
 	private LocalDate date;
 	private boolean accepted;

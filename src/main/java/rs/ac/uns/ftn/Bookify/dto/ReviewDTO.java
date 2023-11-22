@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ReviewDTO {
     private Long id;
-    private double rate;
+    private int rate;
     private String comment;
     private LocalDate date;
     private boolean accepted;

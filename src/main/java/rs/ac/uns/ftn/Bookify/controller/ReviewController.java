@@ -9,6 +9,7 @@ import rs.ac.uns.ftn.Bookify.dto.AccommodationDTO;
 import rs.ac.uns.ftn.Bookify.dto.AccommodationDetailDTO;
 import rs.ac.uns.ftn.Bookify.dto.ReviewDTO;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -21,56 +22,72 @@ public class ReviewController {
     @GetMapping(value = "/reviews/created", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getAllCreatedReviews(){
         //returns all created reviews
+        ReviewDTO review1 = new ReviewDTO(1L, 4, "Nice", LocalDate.now(), false, false, 1L);
+        ReviewDTO review2 = new ReviewDTO(2L, 3, "Bad", LocalDate.now(), false, false, 1L);
         Collection<ReviewDTO> reviewDTO = new HashSet<>();
+        reviewDTO.add(review1);
+        reviewDTO.add(review2);
         return new ResponseEntity<>(reviewDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/reviews/reported", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getAllReportedReviews(){
         //returns all reported reviews
+        ReviewDTO review1 = new ReviewDTO(1L, 4, "Nice", LocalDate.now(), false, true, 1L);
+        ReviewDTO review2 = new ReviewDTO(2L, 3, "Bad", LocalDate.now(), false, true, 1L);
         Collection<ReviewDTO> reviewDTO = new HashSet<>();
+        reviewDTO.add(review1);
+        reviewDTO.add(review2);
         return new ResponseEntity<>(reviewDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getReviewsForAccommodation(@PathVariable Long accommodationId){
         //returns reviews for accommodation
+        ReviewDTO review1 = new ReviewDTO(1L, 4, "Nice", LocalDate.now(), true, false, 2L);
+        ReviewDTO review2 = new ReviewDTO(1L, 3, "Bad", LocalDate.now(), true, false, 1L);
         Collection<ReviewDTO> reviewDTO = new HashSet<>();
+        reviewDTO.add(review1);
+        reviewDTO.add(review2);
         return new ResponseEntity<>(reviewDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getReviewsForOwner(@PathVariable Long ownerId){
         //returns reviews for owner
+        ReviewDTO review1 = new ReviewDTO(3L, 4, "Nice", LocalDate.now(), true, false, 2L);
+        ReviewDTO review2 = new ReviewDTO(4L, 3, "Bad", LocalDate.now(), true, false, 1L);
         Collection<ReviewDTO> reviewDTO = new HashSet<>();
+        reviewDTO.add(review1);
+        reviewDTO.add(review2);
         return new ResponseEntity<>(reviewDTO, HttpStatus.OK);
     }
 
     @PostMapping(value = "/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDTO> newReviewAccommodation(@PathVariable Long accommodationId, @RequestBody ReviewDTO review) {
         //insert new review for accommodation
-        ReviewDTO savedReview = new ReviewDTO();
+        ReviewDTO savedReview = new ReviewDTO(1L, 4, "Nice", LocalDate.now(), true, false, 2L);
         return new ResponseEntity<ReviewDTO>(savedReview, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/{ownerId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDTO> newReviewOwner(@PathVariable Long ownerId, @RequestBody ReviewDTO review) {
         //insert new review for owner
-        ReviewDTO savedReview = new ReviewDTO();
+        ReviewDTO savedReview = new ReviewDTO(1L, 4, "Nice", LocalDate.now(), true, false, 2L);
         return new ResponseEntity<ReviewDTO>(savedReview, HttpStatus.CREATED);
     }
 
     @PutMapping(value="/reject/{reviewId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDTO> rejectReview(@PathVariable Long reviewId) {
         //change to rejected
-        ReviewDTO rejectReview = new ReviewDTO();
+        ReviewDTO rejectReview = new ReviewDTO(1L, 4, "Nice", LocalDate.now(), false, true, 2L);
         return new ResponseEntity<ReviewDTO>(rejectReview, HttpStatus.OK);
     }
 
     @PutMapping(value="/accept/{reviewId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDTO> acceptReview(@PathVariable Long reviewId) {
         //change to accepted
-        ReviewDTO acceptReview = new ReviewDTO();
+        ReviewDTO acceptReview = new ReviewDTO(1L, 4, "Nice", LocalDate.now(), true, false, 2L);
         return new ResponseEntity<ReviewDTO>(acceptReview, HttpStatus.OK);
     }
 
