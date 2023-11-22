@@ -62,6 +62,40 @@ public class AccommodationController {
         return new ResponseEntity<>(basicAccommodations, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/charts", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ChartDTO>> getChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
+    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end) {
+        //return all charts for period
+        Collection<ChartDTO> charts = new HashSet<>();
+        charts.add(new ChartDTO(12, 32.2));
+        charts.add(new ChartDTO(1, 2.1));
+        charts.add(new ChartDTO(22, 75.8));
+        return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/charts-download", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> downloadChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
+    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end) {
+        //download pdf report for period
+        return new ResponseEntity<>("PDF", HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/charts/{ownerId}/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@PathVariable Long ownerId, @PathVariable Long accommodationId, @PathVariable int year) {
+        //return all charts for accommodation
+        Collection<ChartDTO> charts = new HashSet<>();
+        charts.add(new ChartDTO(12, 32.2));
+        charts.add(new ChartDTO(1, 2.1));
+        charts.add(new ChartDTO(22, 75.8));
+        return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/charts-download/{ownerId}/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> downloadChartsByAccommodation(@PathVariable Long ownerId, @PathVariable Long accommodationId, @PathVariable int year) {
+        //download pdf report for accommodation in one year
+        return new ResponseEntity<>("PDF", HttpStatus.OK);
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccommodationDTO> insert(@RequestBody AccommodationDTO accommodation) {
         //insert new accommodation
@@ -89,31 +123,8 @@ public class AccommodationController {
     }
 
     @DeleteMapping("/{accommodationId}")
-    public ResponseEntity<AccommodationDTO> delete(@PathVariable Long accommodationId) {
+    public ResponseEntity<String> delete(@PathVariable Long accommodationId) {
         //delete accommodation
-        return new ResponseEntity<AccommodationDTO>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Accommodation removed", HttpStatus.OK);
     }
-
-    @GetMapping(value = "/charts", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ChartDTO>> getChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
-    @DateTimeFormat(pattern = "yyyy-MM-dd") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd") Date end) {
-        //return all charts for period
-        Collection<ChartDTO> charts = new HashSet<>();
-        charts.add(new ChartDTO(12, 32.2));
-        charts.add(new ChartDTO(1, 2.1));
-        charts.add(new ChartDTO(22, 75.8));
-        return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/charts/{ownerId}/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@PathVariable Long ownerId, @PathVariable Long accommodationId, @PathVariable int year) {
-        //return all charts for accommodation
-        Collection<ChartDTO> charts = new HashSet<>();
-        charts.add(new ChartDTO(12, 32.2));
-        charts.add(new ChartDTO(1, 2.1));
-        charts.add(new ChartDTO(22, 75.8));
-        return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
-    }
-
-    //download button??
 }
