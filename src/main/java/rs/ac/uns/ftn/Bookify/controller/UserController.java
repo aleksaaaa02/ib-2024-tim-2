@@ -37,7 +37,7 @@ public class UserController {
         return user.map(userDetailDTO -> new ResponseEntity<>(userDetailDTO, HttpStatus.FOUND)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     public ResponseEntity<String> registerUser(@RequestBody UserDetailDTO newUser) {
         Optional<UserDetailDTO> user = Optional.ofNullable(userService.create(newUser));
         if(user.isPresent()){
@@ -101,6 +101,12 @@ public class UserController {
         //insert new report
         ReportedUserDTO reportedUserDTO = new ReportedUserDTO("Reason", LocalDateTime.of(2000,10,10,10,10,10), new Owner(), new Guest());
         return new ResponseEntity<ReportedUserDTO>(reportedUserDTO, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Collection<UserDTO>> searchUsers(@RequestParam String searchParameter){
+
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
 }

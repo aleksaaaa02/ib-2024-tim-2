@@ -74,4 +74,11 @@ public class UserService implements IUserService {
     public boolean blockUser(Long userId) {
         return false;
     }
+
+    @Override
+    public Collection<UserDTO> searchUsers(String searchParam) {
+        return null;
+    }
+
+
 }

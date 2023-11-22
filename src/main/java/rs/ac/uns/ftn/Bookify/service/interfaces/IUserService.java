@@ -18,4 +18,5 @@ public interface IUserService {
     public boolean login(UserCredentialsDTO userCredentials);
     public boolean deleteUser(Long userId);
     public boolean blockUser(Long userId);
+    public Collection<UserDTO> searchUsers(String searchParam);
 }
