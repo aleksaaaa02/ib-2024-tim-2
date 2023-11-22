@@ -10,9 +10,7 @@ import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.model.Address;
 import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
-import rs.ac.uns.ftn.Bookify.model.Rating;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -23,8 +21,8 @@ public class AccommodationController {
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationBasicDTO>> getAccommodationBasics(@RequestParam("location") String location, @RequestParam("begin")
-        @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate begin, @RequestParam("end")
-        @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate end, @RequestParam("persons") int persons){
+        @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end")
+        @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons") int persons){
         //return all basic info of accommodations for search
         AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f);
         AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f);
