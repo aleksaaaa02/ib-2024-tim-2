@@ -146,8 +146,8 @@ public class AccommodationController {
         return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/charts-download/{ownerId}/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> downloadChartsByAccommodation(@PathVariable Long ownerId, @PathVariable Long accommodationId, @PathVariable int year) {
+    @GetMapping(value = "/charts-download/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> downloadChartsByAccommodation(@PathVariable Long accommodationId, @PathVariable int year) {
         //download pdf report for accommodation in one year
         return new ResponseEntity<>("PDF", HttpStatus.OK);
     }
