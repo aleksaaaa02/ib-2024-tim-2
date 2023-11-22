@@ -6,7 +6,7 @@ import rs.ac.uns.ftn.Bookify.model.Address;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class AccommodationBasicDTO {
     private Long id;
     private String name;
