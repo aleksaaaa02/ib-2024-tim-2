@@ -32,7 +32,7 @@ public class UserController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReportedUserDTO>> getReportedUsers() {
-        //return all reservations
+        //return all reported users
         Collection<ReportedUserDTO> reportedUsers = new HashSet<>();
         reportedUsers.add(new ReportedUserDTO("Reason", LocalDateTime.of(2000, 10, 10, 10, 10, 10), new Owner(), new Guest()));
         reportedUsers.add(new ReportedUserDTO("Reason", LocalDateTime.of(2000, 10, 10, 10, 10, 10), new Owner(), new Guest()));
