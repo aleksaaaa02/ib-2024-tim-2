@@ -11,8 +11,8 @@ import rs.ac.uns.ftn.Bookify.model.*;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class AccommodationDTO {
     private Long id;
     private String name;
@@ -28,4 +28,5 @@ public class AccommodationDTO {
     private PricePer pricePer;
     private Address address;
     private Owner owner;
+    //picture
 }

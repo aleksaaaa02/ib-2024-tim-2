@@ -10,8 +10,8 @@ import rs.ac.uns.ftn.Bookify.model.Review;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class AccommodationDetailDTO {
     private Long id;
     private String name;
@@ -21,10 +21,12 @@ public class AccommodationDetailDTO {
     private List<Review> reviews;
     private List<Filter> filters;
     private Address address;
+    //picture
 
     private Long idOwner;
     private String firstName;
     private String lastName;
     private String phone;
     private float avgRating;
+    //picture
 }
