@@ -96,4 +96,27 @@ public class AccommodationController {
         //delete accommodation
         return new ResponseEntity<AccommodationDTO>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping(value = "/charts", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ChartDTO>> getChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
+    @DateTimeFormat(pattern = "yyyy-MM-dd") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd") Date end) {
+        //return all charts for period
+        Collection<ChartDTO> charts = new HashSet<>();
+        charts.add(new ChartDTO(12, 32.2));
+        charts.add(new ChartDTO(1, 2.1));
+        charts.add(new ChartDTO(22, 75.8));
+        return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/charts/{ownerId}/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@PathVariable Long ownerId, @PathVariable Long accommodationId, @PathVariable int year) {
+        //return all charts for accommodation
+        Collection<ChartDTO> charts = new HashSet<>();
+        charts.add(new ChartDTO(12, 32.2));
+        charts.add(new ChartDTO(1, 2.1));
+        charts.add(new ChartDTO(22, 75.8));
+        return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
+    }
+
+    //download button??
 }
