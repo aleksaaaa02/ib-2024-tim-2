@@ -41,7 +41,7 @@ public class ReviewController {
         return new ResponseEntity<>(reviewDTO, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/accommodation-reviews/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getReviewsForAccommodation(@PathVariable Long accommodationId){
         //returns reviews for accommodation
         ReviewDTO review1 = new ReviewDTO(1L, 4, "Nice", LocalDate.now(), true, false, 2L);
@@ -52,7 +52,7 @@ public class ReviewController {
         return new ResponseEntity<>(reviewDTO, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/owner-reviews/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReviewDTO>> getReviewsForOwner(@PathVariable Long ownerId){
         //returns reviews for owner
         ReviewDTO review1 = new ReviewDTO(3L, 4, "Nice", LocalDate.now(), true, false, 2L);
@@ -63,41 +63,41 @@ public class ReviewController {
         return new ResponseEntity<>(reviewDTO, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/new-review-accommodation/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDTO> newReviewAccommodation(@PathVariable Long accommodationId, @RequestBody ReviewDTO review) {
         //insert new review for accommodation
         ReviewDTO savedReview = new ReviewDTO(1L, 4, "Nice", LocalDate.now(), true, false, 2L);
         return new ResponseEntity<ReviewDTO>(savedReview, HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "/{ownerId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/new-review-owner/{ownerId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDTO> newReviewOwner(@PathVariable Long ownerId, @RequestBody ReviewDTO review) {
         //insert new review for owner
         ReviewDTO savedReview = new ReviewDTO(1L, 4, "Nice", LocalDate.now(), true, false, 2L);
         return new ResponseEntity<ReviewDTO>(savedReview, HttpStatus.CREATED);
     }
 
-    @PutMapping(value="/reject/{reviewId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value="/review/reject/{reviewId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDTO> rejectReview(@PathVariable Long reviewId) {
         //change to rejected
         ReviewDTO rejectReview = new ReviewDTO(1L, 4, "Nice", LocalDate.now(), false, true, 2L);
         return new ResponseEntity<ReviewDTO>(rejectReview, HttpStatus.OK);
     }
 
-    @PutMapping(value="/accept/{reviewId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value="/review/accept/{reviewId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDTO> acceptReview(@PathVariable Long reviewId) {
         //change to accepted
         ReviewDTO acceptReview = new ReviewDTO(1L, 4, "Nice", LocalDate.now(), true, false, 2L);
         return new ResponseEntity<ReviewDTO>(acceptReview, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{accommodationId}/{reviewId}")
+    @DeleteMapping("/accommodation-review-delete/{accommodationId}/{reviewId}")
     public ResponseEntity<ReviewDTO> deleteAccommodationReview(@PathVariable Long reviewId, @PathVariable Long accommodationId) {
         //delete review for accommodation
         return new ResponseEntity<ReviewDTO>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/{ownerId}/{reviewId}")
+    @DeleteMapping("/owner-review-delete/{ownerId}/{reviewId}")
     public ResponseEntity<ReviewDTO> deleteOwnerReview(@PathVariable Long reviewId, @PathVariable Long ownerId) {
         //delete review for owner
         return new ResponseEntity<ReviewDTO>(HttpStatus.NO_CONTENT);
