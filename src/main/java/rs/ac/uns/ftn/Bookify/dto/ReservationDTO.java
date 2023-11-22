@@ -10,8 +10,8 @@ import rs.ac.uns.ftn.Bookify.model.Guest;
 import java.time.LocalDate;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
-//@AllArgsConstructor
 public class ReservationDTO {
 
     private Long id;

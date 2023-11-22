@@ -10,8 +10,8 @@ import rs.ac.uns.ftn.Bookify.model.Rating;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
-//@AllArgsConstructor
 public class AccommodationDetailDTO {
     private Long id;
     private String name;

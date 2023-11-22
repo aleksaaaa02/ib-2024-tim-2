@@ -5,8 +5,8 @@ import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.model.Address;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
-//@AllArgsConstructor
 public class AccommodationBasicDTO {
     private Long id;
     private String name;

@@ -1,16 +1,14 @@
 package rs.ac.uns.ftn.Bookify.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
-//@AllArgsConstructor
-public class UserDTO {
-    private Long id;
+public class UserCredentialsDTO {
     private String email;
-    private String firstName;
-    private String lastName;
-    private boolean blocked;
+    private String password;
 }
