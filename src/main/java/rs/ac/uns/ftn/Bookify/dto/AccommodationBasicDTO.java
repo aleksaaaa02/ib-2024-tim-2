@@ -14,5 +14,6 @@ public class AccommodationBasicDTO {
     private float totalPrice;
     public PricePer pricePer;
     public float priceOne;
+    //picture
 }
 

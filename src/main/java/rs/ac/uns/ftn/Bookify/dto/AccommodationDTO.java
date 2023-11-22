@@ -28,4 +28,5 @@ public class AccommodationDTO {
     private PricePer pricePer;
     private Address address;
     private Owner owner;
+    //picture
 }

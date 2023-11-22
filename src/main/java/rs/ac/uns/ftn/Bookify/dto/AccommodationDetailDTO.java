@@ -21,10 +21,12 @@ public class AccommodationDetailDTO {
     private List<Rating> ratings;
     private List<Filter> filters;
     private Address address;
+    //picture
 
     private Long idOwner;
     private String firstName;
     private String lastName;
     private String phone;
     private float avgRating;
+    //picture
 }
