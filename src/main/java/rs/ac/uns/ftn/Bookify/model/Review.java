@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -13,7 +14,7 @@ public class Review {
 	private Long id;
 	private int rate;
 	private String comment;
-	private LocalDate date;
+	private Date date;
 	private boolean accepted;
 	private boolean reported;
 	private Long guestId;

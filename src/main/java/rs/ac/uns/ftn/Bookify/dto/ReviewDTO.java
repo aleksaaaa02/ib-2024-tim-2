@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import rs.ac.uns.ftn.Bookify.model.Guest;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -14,7 +15,7 @@ public class ReviewDTO {
     private Long id;
     private int rate;
     private String comment;
-    private LocalDate date;
+    private Date date;
     private boolean accepted;
     private boolean reported;
     private Long guestId;
