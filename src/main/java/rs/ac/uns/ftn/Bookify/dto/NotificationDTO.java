@@ -7,7 +7,7 @@ import rs.ac.uns.ftn.Bookify.enumerations.NotificationType;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class NotificationDTO {
     private Long id;
     private String description;

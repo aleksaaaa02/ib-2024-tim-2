@@ -1,11 +1,20 @@
 package rs.ac.uns.ftn.Bookify.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
+import rs.ac.uns.ftn.Bookify.model.Address;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class AccommodationBasicDTO {
-    //name, address, avg rating, total price, price per, price for price per
+    private Long id;
+    private String name;
+    private Address address;
+    private float avgRating;
+    private float totalPrice;
+    public PricePer pricePer;
+    public float priceOne;
+    //picture
 }
+
