@@ -32,6 +32,17 @@ public class AccommodationController {
         return new ResponseEntity<>(basicAccommodations, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<AccommodationBasicDTO>> getAccommodationBasicsByFilter(@RequestBody FilterDTO filter){
+        //return all basic info of accommodations for search
+        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f);
+        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f);
+        Collection<AccommodationBasicDTO> basicAccommodations = new HashSet<>();
+        basicAccommodations.add(basicDTO1);
+        basicAccommodations.add(basicDTO2);
+        return new ResponseEntity<>(basicAccommodations, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/details/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccommodationDetailDTO> getAccommodationDetails(@PathVariable Long accommodationId){
         //returns details about one accommodation
@@ -131,10 +142,24 @@ public class AccommodationController {
         return new ResponseEntity<>("Accommodation added to favorites", HttpStatus.OK);
     }
 
-    @PutMapping(value = "/update-accommodation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccommodationDTO> updateAccommodation(@RequestBody AccommodationDTO accommodation) {
         //update accommodation
         return new ResponseEntity<>(accommodation, HttpStatus.OK);
+    }
+
+    @PutMapping(value="/approve/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AccommodationDTO> approveAccommodation(@PathVariable Long accommodationId) {
+        //change to accepted
+        AccommodationDTO approveAccommodation = new AccommodationDTO();
+        return new ResponseEntity<AccommodationDTO>(approveAccommodation, HttpStatus.OK);
+    }
+
+    @PutMapping(value="/reject/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AccommodationDTO> rejectAccommodation(@PathVariable Long accommodationId) {
+        //change to accepted
+        AccommodationDTO rejectAccommodation = new AccommodationDTO();
+        return new ResponseEntity<AccommodationDTO>(rejectAccommodation, HttpStatus.OK);
     }
 
     @DeleteMapping("/remove-from-favorites/{guestId}/{accommodationId}")
