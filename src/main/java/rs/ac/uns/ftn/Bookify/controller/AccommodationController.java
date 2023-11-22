@@ -103,8 +103,8 @@ public class AccommodationController {
         return new ResponseEntity<>("PDF", HttpStatus.OK);
     }
 
-    @GetMapping(value = "/charts/{ownerId}/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@PathVariable Long ownerId, @PathVariable Long accommodationId, @PathVariable int year) {
+    @GetMapping(value = "/charts/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@PathVariable Long accommodationId, @PathVariable int year) {
         //return all charts for accommodation
         Collection<ChartDTO> charts = new HashSet<>();
         charts.add(new ChartDTO(12, 32.2));
@@ -113,8 +113,8 @@ public class AccommodationController {
         return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/charts-download/{ownerId}/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> downloadChartsByAccommodation(@PathVariable Long ownerId, @PathVariable Long accommodationId, @PathVariable int year) {
+    @GetMapping(value = "/charts-download/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> downloadChartsByAccommodation(@PathVariable Long accommodationId, @PathVariable int year) {
         //download pdf report for accommodation in one year
         return new ResponseEntity<>("PDF", HttpStatus.OK);
     }
