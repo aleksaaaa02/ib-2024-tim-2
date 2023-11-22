@@ -10,18 +10,27 @@ import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 import java.util.Collection;
 import java.util.Optional;
-
+import rs.ac.uns.ftn.Bookify.dto.ReportedUserDTO;
 import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Owner;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
-
     @Autowired
     private IUserService userService;
 
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReportedUserDTO>> getReportedUsers() {
+        //return all reservations
+        Collection<ReportedUserDTO> reportedUsers = new HashSet<>();
+        reportedUsers.add(new ReportedUserDTO("Reason", LocalDateTime.of(2000, 10, 10, 10, 10, 10), new Owner(), new Guest()));
+        reportedUsers.add(new ReportedUserDTO("Reason", LocalDateTime.of(2000, 10, 10, 10, 10, 10), new Owner(), new Guest()));
+        return new ResponseEntity<Collection<ReportedUserDTO>>(reportedUsers, HttpStatus.OK);
+    }
+    
     @GetMapping
     public ResponseEntity<Collection<UserDTO>> getAllUsers(){
         Collection<UserDTO> response = userService.getAll();
