@@ -15,7 +15,7 @@ import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/v1/accommodation")
+@RequestMapping("/api/v1/accommodations")
 public class AccommodationController {
     //    @Autowired
     //    private IAccommodationService accommodationService;
