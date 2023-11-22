@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 @RestController
-@RequestMapping("/api/v1/review")
+@RequestMapping("/api/v1/reviews")
 public class ReviewController {
 //    @Autowired
 //    private IReviewService reviewService;
