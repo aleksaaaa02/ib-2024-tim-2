@@ -5,18 +5,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Rating {
-
+public class Review {
 	private Long id;
-	private double rate;
+	private int rate;
 	private String comment;
-	private LocalDate date;
+	private Date date;
 	private boolean accepted;
 	private boolean reported;
-	private Guest guest;
-
+	private Long guestId;
 }

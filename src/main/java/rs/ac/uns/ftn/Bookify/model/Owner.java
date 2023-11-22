@@ -15,6 +15,6 @@ public class Owner extends User {
 
     private Map<NotificationType, Boolean> notificationType;
     private List<Accommodation> accommodations;
-    private List<Rating> ratings;
+    private List<Review> reviews;
 
 }
