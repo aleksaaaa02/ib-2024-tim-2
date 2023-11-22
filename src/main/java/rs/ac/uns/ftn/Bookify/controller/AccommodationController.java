@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.Bookify.dto.AccommodationBasicDTO;
-import rs.ac.uns.ftn.Bookify.dto.AccommodationDTO;
-import rs.ac.uns.ftn.Bookify.dto.AccommodationDetailDTO;
-import rs.ac.uns.ftn.Bookify.dto.LocationDTO;
+import rs.ac.uns.ftn.Bookify.dto.*;
 
 import java.time.LocalDate;
 import java.util.Collection;
