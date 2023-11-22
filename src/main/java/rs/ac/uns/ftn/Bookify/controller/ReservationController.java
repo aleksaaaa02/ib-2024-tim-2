@@ -15,7 +15,7 @@ import java.util.*;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("/api/v1/reservation")
+@RequestMapping("/api/v1/reservations")
 public class ReservationController {
 //    @Autowired
 //    private IReservationService reservationService;
@@ -91,10 +91,23 @@ public class ReservationController {
         return new ResponseEntity<ReservationDTO>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ReservationDTO>> filterRequests(@RequestParam("accommodationId") Long accommodationId, @RequestParam("begin")
+    @GetMapping(value = "/filter/owner", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReservationDTO>> filterOwnersRequests(@RequestParam("accommodationId") Long accommodationId, @RequestParam("begin")
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end,
-                                                                     @RequestParam("statuses") Set<Status> statuses) {
+                                                                           @RequestParam("statuses") Set<Status> statuses) {
+        // return all requests of one user using filters (g, tabs)
+        Collection<ReservationDTO> reservations = new HashSet<>();
+        reservations.add(new ReservationDTO(1L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
+                LocalDate.of(2023, 11, 12), 2, new Guest(), new Accommodation(), Status.PENDING));
+        reservations.add(new ReservationDTO(2L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
+                LocalDate.of(2023, 11, 12), 1, new Guest(), new Accommodation(), Status.PENDING));
+        return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/filter/guest", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ReservationDTO>> filterGuestsRequests(@RequestParam("guestId") Long guestId, @RequestParam("accommodationId") Long accommodationId, @RequestParam("begin")
+    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end,
+                                                                           @RequestParam("statuses") Set<Status> statuses) {
         // return all requests of one user using filters (g, tabs)
         Collection<ReservationDTO> reservations = new HashSet<>();
         reservations.add(new ReservationDTO(1L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
