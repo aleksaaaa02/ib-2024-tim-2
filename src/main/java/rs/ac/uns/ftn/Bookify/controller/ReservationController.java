@@ -1,14 +1,16 @@
 package rs.ac.uns.ftn.Bookify.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.Bookify.dto.ChartDTO;
 import rs.ac.uns.ftn.Bookify.dto.ReservationDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.Status;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 
 @RestController
@@ -45,21 +47,21 @@ public class ReservationController {
         return new ResponseEntity<ReservationDTO>(savedReservation, HttpStatus.CREATED);
     }
 
-    @PutMapping(value="/cancel/{reservationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/cancel/{reservationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable Long reservationId) {
         //change status into canceled
         ReservationDTO canceledReservation = new ReservationDTO();
         return new ResponseEntity<ReservationDTO>(canceledReservation, HttpStatus.OK);
     }
 
-    @PutMapping(value="/accept/{reservationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/accept/{reservationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> acceptReservation(@PathVariable Long reservationId) {
         //change status into accepted
         ReservationDTO acceptedReservation = new ReservationDTO();
         return new ResponseEntity<ReservationDTO>(acceptedReservation, HttpStatus.OK);
     }
 
-    @PutMapping(value="/reject/{reservationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/reject/{reservationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> rejectReservation(@PathVariable Long reservationId) {
         //change status into rejected
         ReservationDTO rejectedReservation = new ReservationDTO();
@@ -72,4 +74,24 @@ public class ReservationController {
         //delete reservation???
         return new ResponseEntity<ReservationDTO>(HttpStatus.NO_CONTENT);
     }
+
+
+    //charts
+
+    @GetMapping(value = "/charts", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ChartDTO>> getChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
+    @DateTimeFormat(pattern = "yyyy-MM-dd") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd") Date end) {
+        //return all charts for period
+        Collection<ChartDTO> charts = new HashSet<>();
+        return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/charts/{ownerId}/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@PathVariable Long ownerId, @PathVariable Long accommodationId, @PathVariable int year) {
+        //return all charts for accommodation
+        Collection<ChartDTO> charts = new HashSet<>();
+        return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
+    }
+
+    //download button??
 }
