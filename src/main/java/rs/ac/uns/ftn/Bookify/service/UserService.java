@@ -1,10 +1,7 @@
 package rs.ac.uns.ftn.Bookify.service;
 
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.Bookify.dto.PasswordUpdateDTO;
-import rs.ac.uns.ftn.Bookify.dto.UserCredentialsDTO;
-import rs.ac.uns.ftn.Bookify.dto.UserDTO;
-import rs.ac.uns.ftn.Bookify.dto.UserDetailDTO;
+import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.model.Address;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
@@ -32,9 +29,9 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDetailDTO create(UserDetailDTO newUser) {
+    public UserDetailDTO create(UserRegisteredDTO newUser) {
         newUser.setId(123L);
-        return newUser;
+        return null;
     }
 
     @Override

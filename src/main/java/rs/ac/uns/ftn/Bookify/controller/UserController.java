@@ -6,14 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.Bookify.dto.PasswordUpdateDTO;
-import rs.ac.uns.ftn.Bookify.dto.UserCredentialsDTO;
-import rs.ac.uns.ftn.Bookify.dto.UserDTO;
-import rs.ac.uns.ftn.Bookify.dto.UserDetailDTO;
+import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 import java.util.Collection;
 import java.util.Optional;
-import rs.ac.uns.ftn.Bookify.dto.ReportedUserDTO;
+
 import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Owner;
 import java.time.LocalDateTime;
@@ -38,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerUser(@RequestBody UserDetailDTO newUser) {
+    public ResponseEntity<String> registerUser(@RequestBody UserRegisteredDTO newUser) {
         Optional<UserDetailDTO> user = Optional.ofNullable(userService.create(newUser));
         if(user.isPresent()){
             return new ResponseEntity<>("New user created", HttpStatus.CREATED);
