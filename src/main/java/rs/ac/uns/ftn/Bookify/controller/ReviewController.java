@@ -88,6 +88,13 @@ public class ReviewController {
         return new ResponseEntity<ReviewDTO>(acceptReview, HttpStatus.OK);
     }
 
+    @PutMapping(value="/review/report/{reviewId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReviewDTO> reportReview(@PathVariable Long reviewId) {
+        //change to report
+        ReviewDTO reportReview = new ReviewDTO(1L, 4, "Nice", new Date(), true, true, 2L);
+        return new ResponseEntity<ReviewDTO>(reportReview, HttpStatus.OK);
+    }
+
     @DeleteMapping("/accommodation-review-delete/{accommodationId}/{reviewId}")
     public ResponseEntity<ReviewDTO> deleteAccommodationReview(@PathVariable Long reviewId, @PathVariable Long accommodationId) {
         //delete review for accommodation
