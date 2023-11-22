@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.Bookify.dto.*;
+import rs.ac.uns.ftn.Bookify.model.Accommodation;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -20,43 +21,43 @@ public class AccommodationController {
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationBasicDTO>> getAccommodationBasics(@RequestParam("location") String location, @RequestParam("begin")
-        @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate begin, @RequestParam("end")
-        @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate end, @RequestParam("persons") int persons){
+    @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate begin, @RequestParam("end")
+                                                                                    @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate end, @RequestParam("persons") int persons) {
         //return all basic info of accommodations for search
         Collection<AccommodationBasicDTO> basicAccommodations = new HashSet<>();
         return new ResponseEntity<>(basicAccommodations, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationDetailDTO> getAccommodationDetails(@PathVariable Long accommodationId){
+    public ResponseEntity<AccommodationDetailDTO> getAccommodationDetails(@PathVariable Long accommodationId) {
         //returns details about one accommodation
         AccommodationDetailDTO accommodationDetailDTO = new AccommodationDetailDTO();
         return new ResponseEntity<>(accommodationDetailDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/top-accommodations", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<AccommodationBasicDTO>> getTopAccommodations(){
+    public ResponseEntity<Collection<AccommodationBasicDTO>> getTopAccommodations() {
         //returns most popular accommodations
         Collection<AccommodationBasicDTO> accommodationBasicDTO = new HashSet<>();
         return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/top-locations", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<LocationDTO>> getTopLocations(){
+    public ResponseEntity<Collection<LocationDTO>> getTopLocations() {
         //returns most popular locations
         Collection<LocationDTO> locationDTO = new HashSet<>();
         return new ResponseEntity<>(locationDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<AccommodationBasicDTO>> getOwnersAccommodations(@PathVariable Long ownerId){
+    public ResponseEntity<Collection<AccommodationBasicDTO>> getOwnersAccommodations(@PathVariable Long ownerId) {
         //returns all accommodations for owner
         Collection<AccommodationBasicDTO> basicAccommodations = new HashSet<>();
         return new ResponseEntity<>(basicAccommodations, HttpStatus.OK);
     }
 
     @GetMapping("/favorites/{guestId}")
-    public ResponseEntity<Collection<AccommodationBasicDTO>> getFavoritesAccommodations(@PathVariable Long guestId){
+    public ResponseEntity<Collection<AccommodationBasicDTO>> getFavoritesAccommodations(@PathVariable Long guestId) {
         //returns all favorites accommodation of user
         Collection<AccommodationBasicDTO> basicAccommodations = new HashSet<>();
         return new ResponseEntity<>(basicAccommodations, HttpStatus.OK);
@@ -70,7 +71,7 @@ public class AccommodationController {
     }
 
     @PostMapping("/add-to-favorites/{guestId}/{accommodationId}")
-    public ResponseEntity<String> addAccommodationToFavorites(@PathVariable Long guestId, @PathVariable Long accommodationId){
+    public ResponseEntity<String> addAccommodationToFavorites(@PathVariable Long guestId, @PathVariable Long accommodationId) {
         //inserts accommodation to favorites
         return new ResponseEntity<>("Accommodation added to favorites", HttpStatus.OK);
     }
@@ -83,7 +84,7 @@ public class AccommodationController {
     }
 
     @DeleteMapping("/remove-from-favorites/{guestId}/{accommodationId}")
-    public ResponseEntity<String> removeAccommodationFromFavorites(@PathVariable Long guestId, @PathVariable Long accommodationId){
+    public ResponseEntity<String> removeAccommodationFromFavorites(@PathVariable Long guestId, @PathVariable Long accommodationId) {
         //delete accommodation from favorites
         return new ResponseEntity<>("Accommodation removed from favorites", HttpStatus.OK);
     }
@@ -95,18 +96,18 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/charts", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ChartDTO>> getChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
-    @DateTimeFormat(pattern = "yyyy-MM-dd") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd") Date end) {
+    public ResponseEntity<Collection<AccommodationsChartDTO>> getChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
+    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end) {
         //return all charts for period
-        Collection<ChartDTO> charts = new HashSet<>();
-        charts.add(new ChartDTO(12, 32.2));
-        charts.add(new ChartDTO(1, 2.1));
-        charts.add(new ChartDTO(22, 75.8));
-        return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
+        Collection<AccommodationsChartDTO> charts = new HashSet<>();
+        charts.add(new AccommodationsChartDTO(new Accommodation(), 12, 32.2));
+        charts.add(new AccommodationsChartDTO(new Accommodation(), 1, 2.1));
+        charts.add(new AccommodationsChartDTO(new Accommodation(), 22, 75.8));
+        return new ResponseEntity<Collection<AccommodationsChartDTO>>(charts, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/charts/{ownerId}/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@PathVariable Long ownerId, @PathVariable Long accommodationId, @PathVariable int year) {
+    @GetMapping(value = "/charts/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@PathVariable Long accommodationId, @PathVariable int year) {
         //return all charts for accommodation
         Collection<ChartDTO> charts = new HashSet<>();
         charts.add(new ChartDTO(12, 32.2));
