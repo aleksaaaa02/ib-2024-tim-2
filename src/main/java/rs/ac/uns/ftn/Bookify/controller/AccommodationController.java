@@ -32,7 +32,7 @@ public class AccommodationController {
         return new ResponseEntity<>(basicAccommodations, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/details/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccommodationDetailDTO> getAccommodationDetails(@PathVariable Long accommodationId){
         //returns details about one accommodation
         List<PricelistItem> pricelistItemList = new ArrayList<>();
