@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.Bookify.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,9 +11,12 @@ import rs.ac.uns.ftn.Bookify.dto.UserCredentialsDTO;
 import rs.ac.uns.ftn.Bookify.dto.UserDTO;
 import rs.ac.uns.ftn.Bookify.dto.UserDetailDTO;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
-
 import java.util.Collection;
 import java.util.Optional;
+import rs.ac.uns.ftn.Bookify.dto.ReportedUserDTO;
+import rs.ac.uns.ftn.Bookify.model.Guest;
+import rs.ac.uns.ftn.Bookify.model.Owner;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -75,7 +79,7 @@ public class UserController {
     public ResponseEntity<String> login(@RequestBody UserCredentialsDTO userCredentials){
         boolean success = userService.login(userCredentials);
         if(success) {
-            return new ResponseEntity<>("Login successfull!", HttpStatus.OK);
+            return new ResponseEntity<>("Login successful!", HttpStatus.OK);
         }
         return new ResponseEntity<>("Login failed", HttpStatus.NOT_FOUND);
     }
@@ -87,8 +91,17 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/block-user")
-    public ResponseEntity<String> blockUser(@PathVariable Long userId){
+    public ResponseEntity<String> blockUser(@PathVariable Long userId) {
 
         return new ResponseEntity<>("User blocked successfully", HttpStatus.OK);
     }
+
+    @PostMapping(value = "/report", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ReportedUserDTO> insertReport(@RequestBody ReportedUserDTO reservation) {
+        //insert new report
+        ReportedUserDTO reportedUserDTO = new ReportedUserDTO("Reason", LocalDateTime.of(2000,10,10,10,10,10), new Owner(), new Guest());
+        return new ResponseEntity<ReportedUserDTO>(reportedUserDTO, HttpStatus.CREATED);
+    }
+
 }
+
