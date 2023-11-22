@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class AccommodationBasicDTO {
     //name, address, avg rating, total price, price per, price for price per
 }

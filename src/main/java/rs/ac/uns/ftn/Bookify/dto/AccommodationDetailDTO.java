@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class AccommodationDetailDTO {
     //ono sto se prikazuje na accommodation details stranici
 }
