@@ -6,10 +6,7 @@ import rs.ac.uns.ftn.Bookify.dto.NotificationSettingsDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.NotificationType;
 import rs.ac.uns.ftn.Bookify.service.interfaces.INotificationService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class NotificationService implements INotificationService {
@@ -17,7 +14,7 @@ public class NotificationService implements INotificationService {
     public Collection<NotificationDTO> getUserNotification(Long userId) {
         Collection<NotificationDTO> notifications = new ArrayList<>();
         for(int i = 0; i < 10; i++){
-            notifications.add(new NotificationDTO(1L, "Somebody did something proudly", NotificationType.NEW_USER_RATING));
+            notifications.add(new NotificationDTO(1L, "Somebody did something proudly", NotificationType.NEW_USER_RATING, new Date()));
         }
         return notifications;
     }

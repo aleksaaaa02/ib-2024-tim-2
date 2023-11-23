@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
+
+import java.util.Date;
 import java.util.Collection;
 import java.util.Optional;
 import rs.ac.uns.ftn.Bookify.dto.ReportedUserDTO;
@@ -26,8 +28,8 @@ public class UserController {
     public ResponseEntity<Collection<ReportedUserDTO>> getReportedUsers() {
         //return all reported users
         Collection<ReportedUserDTO> reportedUsers = new HashSet<>();
-        reportedUsers.add(new ReportedUserDTO("Reason", LocalDateTime.of(2000, 10, 10, 10, 10, 10), new Owner(), new Guest()));
-        reportedUsers.add(new ReportedUserDTO("Reason", LocalDateTime.of(2000, 10, 10, 10, 10, 10), new Owner(), new Guest()));
+        reportedUsers.add(new ReportedUserDTO("Reason", new Date(), new Owner(), new Guest()));
+        reportedUsers.add(new ReportedUserDTO("Reason", new Date(), new Owner(), new Guest()));
         return new ResponseEntity<Collection<ReportedUserDTO>>(reportedUsers, HttpStatus.OK);
     }
     
@@ -105,7 +107,7 @@ public class UserController {
     @PostMapping(value = "/report", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReportedUserDTO> insertReport(@RequestBody ReportedUserDTO reservation) {
         //insert new report
-        ReportedUserDTO reportedUserDTO = new ReportedUserDTO("Reason", LocalDateTime.of(2000,10,10,10,10,10), new Owner(), new Guest());
+        ReportedUserDTO reportedUserDTO = new ReportedUserDTO("Reason", new Date(), new Owner(), new Guest());
         return new ResponseEntity<ReportedUserDTO>(reportedUserDTO, HttpStatus.CREATED);
     }
 

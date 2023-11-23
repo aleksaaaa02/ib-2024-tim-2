@@ -1,5 +1,8 @@
 package rs.ac.uns.ftn.Bookify.enumerations;
 
+import jakarta.persistence.*;
+
+@Table(name = "filters")
 public enum Filter {
     FREE_WIFI,
     FREE_PARKING,

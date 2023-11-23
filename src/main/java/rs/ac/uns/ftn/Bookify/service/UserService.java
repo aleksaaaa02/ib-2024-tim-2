@@ -24,7 +24,7 @@ public class UserService implements IUserService {
     @Override
     public UserDetailDTO get(Long userId) {
         if(userId == 1231L)
-            return new UserDetailDTO(1231L, "test@example.com", "Pera","Peric", false, "+381412412", new Address(123L,"Srbija","Novi Sad", "Trg Dositeja Obradovica 6", "2100"));
+            return new UserDetailDTO(1231L, "test@example.com", "Pera","Peric", false, "+381412412", new Address());
         return null;
     }
 

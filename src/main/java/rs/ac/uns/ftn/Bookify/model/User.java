@@ -1,98 +1,49 @@
 package rs.ac.uns.ftn.Bookify.model;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.util.Collection;
 
-import java.util.List;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name="users")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
 public abstract class User {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(unique = true, nullable = false)
 	private String email;
+
+	@Column(length = 20, nullable = false)
 	private String password;
+
+	@Column(nullable = false)
 	private String firstName;
+
+	@Column(nullable = false)
 	private String lastName;
+
+	@Column(nullable = false)
 	private boolean blocked;
+
+	@Column(nullable = false)
 	private String phone;
-	private List<Notification> notifications;
+
+	@OneToMany
+	private Collection<Notification> notifications;
+
+	@Embedded
 	private Active active;
+
+	@Embedded
 	private Address address;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Active getActive(){
-		return this.active;
-	}
-
-	public void setActive(Active active){
-		this.active = active;
-	}
-
-	public Address getAddress(){
-		return this.address;
-	}
-
-	public void setAddress(Address address){
-		this.address = address;
-	}
-
-	public String getEmail() {
- 		return this.email; 
-	}
-
-	public void setEmail(String email) {
- 		this.email = email; 
-	}
-
-	public String getPassword() {
- 		return this.password; 
-	}
-
-	public void setPassword(String password) {
- 		this.password = password; 
-	}
-
-	public String getFirstName() {
- 		return this.firstName; 
-	}
-
-	public void setFirstName(String firstName) {
- 		this.firstName = firstName; 
-	}
-
-	public String getLastName() {
- 		return this.lastName; 
-	}
-
-	public void setLastName(String lastName) {
- 		this.lastName = lastName; 
-	}
-
-	public boolean getBlocked() {
- 		return this.blocked; 
-	}
-
-	public void setBlocked(boolean blocked) {
- 		this.blocked = blocked; 
-	}
-
-	public String getPhone() {
- 		return this.phone; 
-	}
-
-	public void setPhone(String phone) {
- 		this.phone = phone; 
-	}
-
-	public List<Notification> getNotifications(){
-		return this.notifications;
-	}
-
-	public void setNotifications(List<Notification> notifications){
-		this.notifications = notifications;
-	}
 
 }

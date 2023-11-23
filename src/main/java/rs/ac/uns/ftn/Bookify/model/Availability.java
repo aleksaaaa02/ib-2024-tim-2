@@ -1,18 +1,26 @@
 package rs.ac.uns.ftn.Bookify.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Availability {
-
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private LocalDate startDate;
-	private LocalDate endDate;
+
+	@Column(nullable = false)
+	private Date startDate;
+
+	@Column(nullable = false)
+	private Date endDate;
 
 }
