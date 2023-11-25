@@ -13,13 +13,15 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatSliderModule} from "@angular/material/slider";
 import {MatInputModule} from "@angular/material/input";
 import { SearchComponent } from './feature-modules/search/search.component';
+import { ResultsPageComponent } from './feature-modules/results-page/results-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AccommodationBasicComponent,
     FilterComponent,
-    SearchComponent
+    SearchComponent,
+    ResultsPageComponent
   ],
   imports: [
     BrowserModule,

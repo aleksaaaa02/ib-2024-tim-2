@@ -1,8 +1,8 @@
 .filter-card{
   margin: auto;
   width: 70%;
-  border-radius: 2em;
-  background-color: lightgray;
+  border-radius: 1.2em;
+  background-color: rgba(170, 169, 169, 0.7);
   padding: 1rem;
 }
 
@@ -23,9 +23,7 @@
 }
 
 hr.rounded {
-  margin-left: 2.5vw;
-  margin-right: 60%;
-  margin-top: 0.2rem;
+  margin: 0.2rem 60% 1.3rem 2.5vw;
   border-top: 0.4vh solid #fff;
   border-radius: 1vh;
 }
