@@ -1,0 +1,61 @@
+.filter-card{
+  margin: auto;
+  width: 70%;
+  border-radius: 2em;
+  background-color: lightgray;
+  padding: 1rem;
+}
+
+.inline {
+  display: flex;
+  align-items: center;
+}
+
+.material-symbols-outlined {
+  margin-left: 1rem;
+  color: white;
+}
+
+.subcategory{
+  color: white;
+  margin: 0 0 0 0.5rem;
+  font-size: large;
+}
+
+hr.rounded {
+  margin-left: 2.5vw;
+  margin-right: 60%;
+  margin-top: 0.2rem;
+  border-top: 0.4vh solid #fff;
+  border-radius: 1vh;
+}
+
+.filters {
+  display: grid;
+  margin-left: 4vw;
+  margin-right: 4vw;
+  grid-template-columns: 25% 25% 25% 25%;
+}
+
+mat-form-field {
+  display: flex;
+  margin-left: 2vw;
+  padding: 0;
+}
+
+mat-slider {
+  width: 80%;
+  position: relative;
+  left: 50%;
+  margin-right: -50%;
+  margin-top: 2vh;
+  transform: translate(-50%, -50%);
+}
+
+.button-right {
+  position: relative;
+  left: 60%;
+  margin-right: -50%;
+  margin-top: 10vh;
+  transform: translate(-50%, -50%);
+}

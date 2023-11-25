@@ -1,0 +1,71 @@
+.checked {
+  color: orange;
+}
+
+.fa-star {
+  width: 1.3rem;
+  height: 1.3rem;
+  display: flex;
+  align-items: center;
+}
+
+.inline {
+  display: flex;
+}
+
+.accommodation-card{
+  margin: auto;
+  width: 70%;
+  border-radius: 2em;
+  background-color: lightgray;
+  display: flex;
+}
+
+.column-left {
+  width: 14vw;
+}
+
+.column-center {
+  margin-top: 0.5rem;
+  margin-left: 1rem;
+  flex-grow: 1;
+}
+
+.column-right {
+  margin: 0 1rem 0 1rem;
+  width: 30vw;
+  padding-top: 6vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.accommodation-image {
+  width: inherit;
+  height: 100%;
+  border-radius: 2em;
+  padding: 0;
+  margin: 0;
+  display: inline-block;
+}
+
+.subtitle {
+  font-size: small;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+}
+
+.title {
+  font-size: larger;
+  margin: 0 1rem 0 0;
+}
+
+.description {
+  margin-top: 0.5rem;
+  font-size: medium;
+}
+
+.price {
+  font-size: medium;
+  margin: 0 0 0.5rem 0;
+}
