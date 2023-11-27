@@ -14,6 +14,8 @@ import {MatSliderModule} from "@angular/material/slider";
 import {MatInputModule} from "@angular/material/input";
 import { SearchComponent } from './feature-modules/search/search.component';
 import { ResultsPageComponent } from './feature-modules/results-page/results-page.component';
+import {MatSelectModule} from "@angular/material/select";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { ResultsPageComponent } from './feature-modules/results-page/results-pag
     MatButtonModule,
     MatCheckboxModule,
     MatSliderModule,
-    MatInputModule
+    MatInputModule,
+    MatSelectModule,
+    MatPaginatorModule
   ],
   providers: [
     provideClientHydration()

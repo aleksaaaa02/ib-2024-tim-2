@@ -8,44 +8,24 @@
   </div>
   <hr class="rounded">
   <div class="filters">
-    <mat-checkbox>Free WiFI</mat-checkbox>
-    <mat-checkbox>Air conditioning</mat-checkbox>
-    <mat-checkbox>Terrace</mat-checkbox>
-    <mat-checkbox>Swimming pool</mat-checkbox>
-    <mat-checkbox>Bar</mat-checkbox>
-    <mat-checkbox>Sauna</mat-checkbox>
-    <mat-checkbox>Luggage storage</mat-checkbox>
-    <mat-checkbox>Lunch</mat-checkbox>
-    <mat-checkbox>Airport shuttle</mat-checkbox>
-    <mat-checkbox>Wheelchair</mat-checkbox>
-    <mat-checkbox>Non-smoking</mat-checkbox>
-    <mat-checkbox>Free parking</mat-checkbox>
-    <mat-checkbox>Family rooms</mat-checkbox>
-    <mat-checkbox>Garden</mat-checkbox>
-    <mat-checkbox>24-hour front desk</mat-checkbox>
-    <mat-checkbox>Jacuzzi</mat-checkbox>
-    <mat-checkbox>Heating</mat-checkbox>
-    <mat-checkbox>Breakfast</mat-checkbox>
-    <mat-checkbox>Dinner</mat-checkbox>
-    <mat-checkbox>Private bathroom</mat-checkbox>
-    <mat-checkbox>Deposit box</mat-checkbox>
-    <mat-checkbox>City center</mat-checkbox>
+    @for (label of checkboxLabels; track label) {
+    <div class="checkbox-wrapper-42">
+      <input id="cbx-{{ label }}" type="checkbox" />
+      <label class="cbx" for="cbx-{{ label }}"></label>
+      <label class="lbl" for="cbx-{{ label }}">{{ label }}</label>
+    </div>
+    }
   </div>
-  <div class="inline">
+  <div class="inline-price">
     <span class="material-symbols-outlined">shoppingmode</span>
     <p class="subcategory">Price</p>
-    <mat-form-field appearance="outline">
-      <mat-label>Minimum</mat-label>
-      <input matInput>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Maximum</mat-label>
-      <input matInput>
-    </mat-form-field>
+    <input class="input-field input-margin" placeholder="Minimum"/>
+    <p id="line">-</p>
+    <input class="input-field" placeholder="Maximum"/>
   </div>
   <mat-slider min="0" max="10000">
     <input value="300" matSliderStartThumb>
     <input value="4000" matSliderEndThumb>
   </mat-slider>
-  <button mat-raised-button class="button-right">Filter</button>
+  <button class="button-right">Filter</button>
 </div>

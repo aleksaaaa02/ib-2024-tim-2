@@ -1,5 +1,9 @@
 .checked {
-  color: orange;
+  color: #326268;
+}
+
+.unchecked {
+  color: darkgrey;
 }
 
 .fa-star {
@@ -14,7 +18,9 @@
 }
 
 .accommodation-card{
-  margin: auto;
+  margin-top: 2vh;
+  margin-left: auto;
+  margin-right: auto;
   width: 60%;
   border-radius: 1.5em;
   background-color: whitesmoke;
@@ -63,9 +69,35 @@
 .description {
   margin-top: 0.5rem;
   font-size: medium;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.price-per {
+  font-size: medium;
+  color: #326268;
+  margin: 0 0 0.5rem 0;
 }
 
 .price {
   font-size: medium;
+  color: #2E4057;
+  font-weight: bold;
   margin: 0 0 0.5rem 0;
+}
+
+.details-button {
+  border: transparent;
+  padding: 0.4rem 1rem 0.4rem 1rem;
+  margin: 0.5rem 0 0.5rem 0.7rem;
+  border-radius: 2rem;
+  background-color: #2E4057;
+  color: whitesmoke;
+}
+
+.details-button:hover {
+  background-color: dimgrey;
 }
