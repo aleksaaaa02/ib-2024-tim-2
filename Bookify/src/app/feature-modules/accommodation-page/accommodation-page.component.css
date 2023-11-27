@@ -1,0 +1,28 @@
+.inline {
+  margin-top: 2vh;
+  justify-content: center;
+  display: flex;
+}
+
+#hotel-name {
+  margin: 0;
+  font-size: xx-large;
+}
+
+.average-rating {
+  position: relative;
+  margin-left: 2vw;
+  appearance: none;
+  color: transparent;
+  display: inline-block;
+}
+
+.average-rating::before {
+  --percent: calc(4.3/5*100%);
+  content: '★★★★★';
+  font-size: 1.6rem;
+  background:
+    linear-gradient(90deg, #326268 var(--percent), rgba(0,0,0,0.2) var(--percent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

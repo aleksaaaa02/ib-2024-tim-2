@@ -16,6 +16,8 @@ import { SearchComponent } from './feature-modules/search/search.component';
 import { ResultsPageComponent } from './feature-modules/results-page/results-page.component';
 import {MatSelectModule} from "@angular/material/select";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import { AccommodationPageComponent } from './feature-modules/accommodation-page/accommodation-page.component';
 
 @NgModule({
   declarations: [
@@ -23,21 +25,23 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     AccommodationBasicComponent,
     FilterComponent,
     SearchComponent,
-    ResultsPageComponent
+    ResultsPageComponent,
+    AccommodationPageComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatButtonToggleModule,
-    MatCardModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatSliderModule,
-    MatInputModule,
-    MatSelectModule,
-    MatPaginatorModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatButtonToggleModule,
+        MatCardModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatSliderModule,
+        MatInputModule,
+        MatSelectModule,
+        MatPaginatorModule,
+        MatDatepickerModule
+    ],
   providers: [
     provideClientHydration()
   ],
