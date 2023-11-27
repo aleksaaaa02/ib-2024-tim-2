@@ -18,6 +18,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import { AccommodationPageComponent } from './feature-modules/accommodation-page/accommodation-page.component';
+import {NgImageSliderModule} from "ng-image-slider";
 
 @NgModule({
   declarations: [
@@ -28,20 +29,21 @@ import { AccommodationPageComponent } from './feature-modules/accommodation-page
     ResultsPageComponent,
     AccommodationPageComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatButtonToggleModule,
-        MatCardModule,
-        MatButtonModule,
-        MatCheckboxModule,
-        MatSliderModule,
-        MatInputModule,
-        MatSelectModule,
-        MatPaginatorModule,
-        MatDatepickerModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatSliderModule,
+    MatInputModule,
+    MatSelectModule,
+    MatPaginatorModule,
+    MatDatepickerModule,
+    NgImageSliderModule
+  ],
   providers: [
     provideClientHydration()
   ],

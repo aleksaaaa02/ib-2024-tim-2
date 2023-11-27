@@ -4,20 +4,17 @@
     <meter class="average-rating" min="0" max="5" value="4.3"></meter>
   </div>
 
-
-  <div class="slideshow-container">
-    <div class="slide">
-      <img src="assets/images/accommodation.png" alt="Image 1">
-    </div>
-    <div class="slide">
-      <img src="assets/images/accommodation.png" alt="Image 2">
-    </div>
-    <div class="slide">
-      <img src="assets/images/landing.png" alt="Image 3">
-    </div>
-    <a class="prev" onclick="prevSlide()">&#10094;</a>
-    <a class="next" onclick="nextSlide()">&#10095;</a>
+  <div #contrainer id="image-slider" [ngStyle]="{width: 800 +'px', height: 400 + 'px'}">
+  <ng-image-slider #nav
+                   [images]="imageObject"
+                   [infinite]="false"
+                   [autoSlide]="1"
+                   [manageImageRatio]=false
+                   [imageSize]="{width: contrainer.style.width, space:0, height: 400 + 'px'}"
+                   slideImage="1"></ng-image-slider>
   </div>
+
+
   <div class="two-part">
     <div id="amenities">
       <p class="subcategory white">Amenities</p>
@@ -49,26 +46,3 @@
     </div>
   </div>
 </div>
-
-
-
-
-<script>
-  let slideIndex = 1;
-  showSlides(slideIndex);function plusSlide(n) {
-    showSlides(slideIndex += n);
-  }function showSlides(n) {
-    let i;
-    const slides = document.getElementsByClassName("slide");
-    if (n > slides.length) {slideIndex = 1}
-    if (n < 1) {slideIndex = slides.length}
-    for (i = 0; i < slides.length; i++) {
-      slides[i].style.display = "none";
-    }
-    slides[slideIndex-1].style.display = "block";
-  }function prevSlide() {
-    plusSlide(-1);
-  }function nextSlide() {
-    plusSlide(1);
-  }
-</script>
