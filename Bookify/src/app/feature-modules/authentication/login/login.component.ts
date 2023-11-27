@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import {FormControl, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { ThemePalette } from '@angular/material/core'
 
 @Component({
@@ -21,7 +21,7 @@ export class LoginComponent {
     return this.email.hasError('email') ? 'Not a valid email' : '';
   }
 
-  aaaa(){
+  aaaa() {
     alert('JAO');
   }
 }

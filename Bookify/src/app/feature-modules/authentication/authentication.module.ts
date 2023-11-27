@@ -5,13 +5,14 @@ import { LoginComponent } from './login/login.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
-import {MatIconModule} from '@angular/material/icon';
-
-
+import { MatIconModule } from '@angular/material/icon';
+import { RegistrationComponent } from './registration/registration.component';
+import { MatSelectModule } from '@angular/material/select'
 
 @NgModule({
   declarations: [
-    LoginComponent
+    LoginComponent,
+    RegistrationComponent
   ],
   imports: [
     CommonModule,
@@ -19,10 +20,12 @@ import {MatIconModule} from '@angular/material/icon';
     BrowserModule,
     BrowserAnimationsModule,
     MatInputModule,
-    MatIconModule
+    MatIconModule, 
+    MatSelectModule
   ],
   exports: [
-    LoginComponent
+    LoginComponent,
+    RegistrationComponent
   ]
 })
 export class AuthenticationModule { }
