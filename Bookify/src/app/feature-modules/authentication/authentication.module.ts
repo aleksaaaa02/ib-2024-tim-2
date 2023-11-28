@@ -8,13 +8,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { RegistrationComponent } from './registration/registration.component';
 import { MatSelectModule } from '@angular/material/select';
-import { ConfirmationComponent } from './confirmation/confirmation.component'
+import { ConfirmationComponent } from './confirmation/confirmation.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component'
 
 @NgModule({
   declarations: [
     LoginComponent,
     RegistrationComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     CommonModule,
@@ -28,7 +30,8 @@ import { ConfirmationComponent } from './confirmation/confirmation.component'
   exports: [
     LoginComponent,
     RegistrationComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    ForgotPasswordComponent
   ]
 })
 export class AuthenticationModule { }
