@@ -20,6 +20,7 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 import { AccommodationPageComponent } from './feature-modules/accommodation-page/accommodation-page.component';
 import {NgImageSliderModule} from "ng-image-slider";
 import { ReserveComponent } from './feature-modules/reserve/reserve.component';
+import { LandingPageComponent } from './feature-modules/landing-page/landing-page.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { ReserveComponent } from './feature-modules/reserve/reserve.component';
     SearchComponent,
     ResultsPageComponent,
     AccommodationPageComponent,
-    ReserveComponent
+    ReserveComponent,
+    LandingPageComponent
   ],
   imports: [
     BrowserModule,
