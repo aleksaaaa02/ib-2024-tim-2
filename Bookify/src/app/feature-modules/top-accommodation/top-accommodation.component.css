@@ -65,6 +65,10 @@
   right: 2rem;
 }
 
+.book-button:hover {
+  background-color: dimgrey;
+}
+
 .details-button:hover {
   background-color: dimgrey;
 }
