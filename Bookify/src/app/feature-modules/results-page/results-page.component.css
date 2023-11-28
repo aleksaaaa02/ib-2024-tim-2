@@ -10,7 +10,7 @@
 .landing {
   position: relative;
   width: 100%;
-  height: 120vh;
+  height: 110vh;
   mask-image: linear-gradient(to bottom, rgba(255,255,255,1) 80%,rgba(0,0,0,0) 100%);
 }
 
@@ -27,7 +27,7 @@
   height: auto;
   position: absolute;
   overflow: visible;
-  margin: -30vh auto 0 auto;
+  margin: -20vh auto 0 auto;
 }
 
 #moto {
@@ -57,5 +57,5 @@ mat-paginator {
 }
 
 #list {
-  margin-top: 32vh;
+  margin-top: 19rem;
 }
