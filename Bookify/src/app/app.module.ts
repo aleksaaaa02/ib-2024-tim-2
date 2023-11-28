@@ -21,6 +21,8 @@ import { AccommodationPageComponent } from './feature-modules/accommodation-page
 import {NgImageSliderModule} from "ng-image-slider";
 import { ReserveComponent } from './feature-modules/reserve/reserve.component';
 import { LandingPageComponent } from './feature-modules/landing-page/landing-page.component';
+import { TopDestinationComponent } from './feature-modules/top-destination/top-destination.component';
+import { TopAccommodationComponent } from './feature-modules/top-accommodation/top-accommodation.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { LandingPageComponent } from './feature-modules/landing-page/landing-pag
     ResultsPageComponent,
     AccommodationPageComponent,
     ReserveComponent,
-    LandingPageComponent
+    LandingPageComponent,
+    TopDestinationComponent,
+    TopAccommodationComponent
   ],
   imports: [
     BrowserModule,
