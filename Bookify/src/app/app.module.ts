@@ -23,6 +23,7 @@ import { ReserveComponent } from './feature-modules/reserve/reserve.component';
 import { LandingPageComponent } from './feature-modules/landing-page/landing-page.component';
 import { TopDestinationComponent } from './feature-modules/top-destination/top-destination.component';
 import { TopAccommodationComponent } from './feature-modules/top-accommodation/top-accommodation.component';
+import { FooterComponent } from './feature-modules/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { TopAccommodationComponent } from './feature-modules/top-accommodation/t
     ReserveComponent,
     LandingPageComponent,
     TopDestinationComponent,
-    TopAccommodationComponent
+    TopAccommodationComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
