@@ -19,6 +19,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import { AccommodationPageComponent } from './feature-modules/accommodation-page/accommodation-page.component';
 import {NgImageSliderModule} from "ng-image-slider";
+import { ReserveComponent } from './feature-modules/reserve/reserve.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import {NgImageSliderModule} from "ng-image-slider";
     FilterComponent,
     SearchComponent,
     ResultsPageComponent,
-    AccommodationPageComponent
+    AccommodationPageComponent,
+    ReserveComponent
   ],
   imports: [
     BrowserModule,

@@ -23,4 +23,15 @@ export class AccommodationPageComponent {
     image: 'assets/images/image5.jpg',
     thumbImage: 'assets/images/image5.jpg',
   }];
+
+  amenitiesList: [string, string][] = [
+    ['Free WiFi', 'wifi'],
+    ['Free parking', 'local_parking'],
+    ['Terrace', 'balcony'],
+    ['Breakfast', 'breakfast_dining'],
+    ['Deposit box', 'local_atm'],
+    ['Jacuzzi', "hot_tub"],
+    ['Wheelchair', 'accessible'],
+    ["Non-smoking", 'smoke_free']
+  ];
 }
