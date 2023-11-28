@@ -10,6 +10,14 @@ import { RegistrationComponent } from './registration/registration.component';
 import { MatSelectModule } from '@angular/material/select';
 import { ConfirmationComponent } from './confirmation/confirmation.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component'
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  { path: "login", component: LoginComponent },
+  { path: "registration", component: RegistrationComponent },
+  { path: "forgot-password", component: ForgotPasswordComponent },
+  { path: "confirmation", component: ConfirmationComponent }
+];
 
 @NgModule({
   declarations: [
@@ -25,13 +33,15 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     BrowserAnimationsModule,
     MatInputModule,
     MatIconModule, 
-    MatSelectModule
+    MatSelectModule,
+    RouterModule.forChild(routes)
   ],
   exports: [
     LoginComponent,
     RegistrationComponent,
     ConfirmationComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    RouterModule
   ]
 })
 export class AuthenticationModule { }

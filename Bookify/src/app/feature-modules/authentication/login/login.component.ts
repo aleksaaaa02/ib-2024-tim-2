@@ -3,6 +3,7 @@ import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angu
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ThemePalette } from '@angular/material/core'
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
