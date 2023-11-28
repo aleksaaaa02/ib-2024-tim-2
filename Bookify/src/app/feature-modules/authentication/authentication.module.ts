@@ -7,12 +7,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { RegistrationComponent } from './registration/registration.component';
-import { MatSelectModule } from '@angular/material/select'
+import { MatSelectModule } from '@angular/material/select';
+import { ConfirmationComponent } from './confirmation/confirmation.component'
 
 @NgModule({
   declarations: [
     LoginComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    ConfirmationComponent
   ],
   imports: [
     CommonModule,
@@ -25,7 +27,8 @@ import { MatSelectModule } from '@angular/material/select'
   ],
   exports: [
     LoginComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    ConfirmationComponent
   ]
 })
 export class AuthenticationModule { }

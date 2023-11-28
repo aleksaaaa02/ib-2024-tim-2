@@ -9,7 +9,8 @@ import { AuthenticationService } from '../authentication.service';
 })
 export class RegistrationComponent implements OnInit {
   email = new FormControl('', [Validators.required, Validators.email]);
-  hide = true;
+  hide1 = true;
+  hide2 = true;
   countries: Promise<string[]> = Promise.resolve([]);
 
   constructor(private authenticationService: AuthenticationService) {}
