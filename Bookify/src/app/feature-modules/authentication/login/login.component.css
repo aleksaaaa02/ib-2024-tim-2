@@ -18,7 +18,6 @@ mat-form-field {
 .login-login {
     gap: 10px;
     width: 100%;
-    height: 100vh;
     display: flex;
     overflow: hidden;
     position: relative;
@@ -45,9 +44,10 @@ mat-form-field {
 }
 
 .login-form {
+    margin-top: 15vh;
     left: 13%;
     width: 40vw;
-    height: 90vh;
+    height: 80vh;
     display: flex;
     overflow: hidden;
     position: relative;

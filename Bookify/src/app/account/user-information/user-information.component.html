@@ -5,22 +5,27 @@
       <button id="logout" mat-button>LOGOUT</button>
     </div>
     <div class="title-underline"></div>
-    <div id="account-pic">
-      <img ngSrc="assets/images/icon.png" height="300" width="300" alt="">
-    </div>
-    <form>
-      <div class="acc-input">
-        <div class="acc-input-labels">
-          <label>Email</label>
-        </div>
-        <mat-form-field class="full-width">
-          <input matInput type="text" value="pera.peric@example.com" disabled="true">
-        </mat-form-field>
+    <div class="vertical-flex">
+      <div id="account-pic">
+        <img ngSrc="assets/images/icon.png" height="300" width="300" alt="">
+        <div class="title-underline"></div>
       </div>
-    </form>
-    <div class="button-holder">
-      <button mat-button>CHANGE PASSWORD</button>
-      <button mat-button>DELETE ACCOUNT</button>
+      <div>
+        <form>
+          <div class="acc-input">
+            <div class="acc-input-labels">
+              <label>Email</label>
+            </div>
+            <mat-form-field class="full-width">
+              <input matInput type="text" value="pera.peric@example.com" disabled="true">
+            </mat-form-field>
+          </div>
+        </form>
+        <div class="button-holder">
+          <button mat-button>CHANGE PASSWORD</button>
+          <button mat-button>DELETE ACCOUNT</button>
+        </div>
+      </div>
     </div>
   </div>
   <div id="user-information" class="card">
@@ -31,7 +36,7 @@
         <div class="acc-input-labels">
           <label>First Name</label>
         </div>
-        <mat-form-field class="full-width">
+        <mat-form-field appearance="fill" class="full-width">
           <input matInput type="text" value="Pera">
         </mat-form-field>
       </div>
@@ -45,15 +50,41 @@
       </div>
       <div class="acc-input">
         <div class="acc-input-labels">
-          <label>Address</label>
+          <label>Country</label>
         </div>
         <mat-form-field class="full-width">
-          <input matInput type="text" value="Trg Dositeja Obradovica, 6, Novi Sad 21000">
+          <mat-select required>
+            <mat-option *ngFor="let country of countries | async" [value]="country">{{ country }}</mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
       <div class="acc-input">
         <div class="acc-input-labels">
-          <label>Phone Number</label>
+          <label>City</label>
+        </div>
+        <mat-form-field class="full-width">
+          <input matInput required value="Novi Sad">
+        </mat-form-field>
+      </div>
+      <div class="acc-input">
+        <div class="acc-input-labels">
+          <label>Street Address</label>
+        </div>
+        <mat-form-field class="full-width">
+          <input matInput required value="Trg Dositeja Obradovica 6">
+        </mat-form-field>
+      </div>
+      <div class="acc-input">
+        <div class="acc-input-labels">
+          <label>Zip Code</label>
+        </div>
+        <mat-form-field class="full-width">
+          <input matInput type="tel" required value="21000">
+        </mat-form-field>
+      </div>
+      <div class="acc-input">
+        <div class="acc-input-labels">
+          <label>Phone</label>
         </div>
         <mat-form-field class="full-width">
           <input matInput type="tel" value="+3816514141">

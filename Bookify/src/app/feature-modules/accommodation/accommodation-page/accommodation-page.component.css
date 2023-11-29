@@ -1,3 +1,7 @@
+.container{
+  margin-top: 15vh;
+}
+
 .inline {
   margin-top: 2rem;
   justify-content: center;
