@@ -8,6 +8,7 @@ import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Guest;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -15,9 +16,9 @@ import java.time.LocalDate;
 public class ReservationDTO {
 
     private Long id;
-    private LocalDate created;
-    private LocalDate start;
-    private LocalDate end;
+    private Date created;
+    private Date start;
+    private Date end;
     private int guestNumber;
     private Guest guest;
     private Accommodation accommodation;

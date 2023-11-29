@@ -28,5 +28,5 @@ public class AccommodationDetailDTO {
     private String lastName;
     private String phone;
     private float avgRating;
-    //picture
+    private List<Long> imageId;
 }

@@ -7,7 +7,7 @@ import java.util.Collection;
 public interface IUserService {
     public Collection<UserDTO> getAll();
     public UserDetailDTO get(Long userId);
-    public UserDetailDTO create(UserRegisteredDTO newUser);
+    public Long create(UserRegisteredDTO newUser);
     public UserDetailDTO update(UserDetailDTO updatedUser);
     public boolean changePassword(Long userId, PasswordUpdateDTO newPassword);
     public boolean resetPassword();

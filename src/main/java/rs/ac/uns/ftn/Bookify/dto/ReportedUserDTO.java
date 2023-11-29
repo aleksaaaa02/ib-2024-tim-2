@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import rs.ac.uns.ftn.Bookify.model.User;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 public class ReportedUserDTO {
 
     private String reason;
-    private LocalDateTime created;
+    private Date created;
     private User reportedUser;
     private User createdBy;
 }

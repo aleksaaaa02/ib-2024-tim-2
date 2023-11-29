@@ -16,4 +16,5 @@ public class UserDetailDTO {
     private boolean blocked;
     private String phone;
     private Address address;
+    private Long imageId;
 }

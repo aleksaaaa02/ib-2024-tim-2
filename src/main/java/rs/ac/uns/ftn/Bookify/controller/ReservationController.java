@@ -24,10 +24,10 @@ public class ReservationController {
     public ResponseEntity<Collection<ReservationDTO>> getReservations() {
         //return all reservations
         Collection<ReservationDTO> reservations = new HashSet<>();
-        reservations.add(new ReservationDTO(1L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
-                LocalDate.of(2023, 11, 12), 2, new Guest(), new Accommodation(), Status.PENDING));
-        reservations.add(new ReservationDTO(2L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
-                LocalDate.of(2023, 11, 12), 1, new Guest(), new Accommodation(), Status.PENDING));
+        reservations.add(new ReservationDTO(1L, new Date(), new Date(),
+                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING));
+        reservations.add(new ReservationDTO(2L, new Date(), new Date(),
+                new Date(), 1, new Guest(), new Accommodation(), Status.PENDING));
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
 
@@ -35,10 +35,10 @@ public class ReservationController {
     public ResponseEntity<Collection<ReservationDTO>> findReservationsByUserId(@PathVariable Long userId) {
         //return all reservations of one user
         Collection<ReservationDTO> reservations = new HashSet<>();
-        reservations.add(new ReservationDTO(1L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
-                LocalDate.of(2023, 11, 12), 2, new Guest(), new Accommodation(), Status.PENDING));
-        reservations.add(new ReservationDTO(2L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
-                LocalDate.of(2023, 11, 12), 1, new Guest(), new Accommodation(), Status.PENDING));
+        reservations.add(new ReservationDTO(1L, new Date(), new Date(),
+                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING));
+        reservations.add(new ReservationDTO(2L, new Date(), new Date(),
+                new Date(), 1, new Guest(), new Accommodation(), Status.PENDING));
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
 
@@ -46,42 +46,42 @@ public class ReservationController {
     public ResponseEntity<Collection<ReservationDTO>> findReservationsByUserIdAndStatus(@PathVariable Long userId, @PathVariable Status status) {
         // return all reservations of one user where reservation status == status (g, tabs)
         Collection<ReservationDTO> reservations = new HashSet<>();
-        reservations.add(new ReservationDTO(1L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
-                LocalDate.of(2023, 11, 12), 2, new Guest(), new Accommodation(), Status.PENDING));
-        reservations.add(new ReservationDTO(2L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
-                LocalDate.of(2023, 11, 12), 1, new Guest(), new Accommodation(), Status.PENDING));
+        reservations.add(new ReservationDTO(1L, new Date(), new Date(),
+                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING));
+        reservations.add(new ReservationDTO(2L, new Date(), new Date(),
+                new Date(), 1, new Guest(), new Accommodation(), Status.PENDING));
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> insert(@RequestBody ReservationDTO reservation) {
         //insert new reservation request (g)
-        ReservationDTO savedReservation = new ReservationDTO(1L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
-                LocalDate.of(2023, 11, 12), 2, new Guest(), new Accommodation(), Status.PENDING);
+        ReservationDTO savedReservation = new ReservationDTO(1L, new Date(), new Date(),
+                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING);
         return new ResponseEntity<ReservationDTO>(savedReservation, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/cancel/{reservationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/cancel/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable Long reservationId) {
         //change status into canceled
-        ReservationDTO canceledReservation = new ReservationDTO(1L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
-                LocalDate.of(2023, 11, 12), 2, new Guest(), new Accommodation(), Status.PENDING);
+        ReservationDTO canceledReservation = new ReservationDTO(1L, new Date(), new Date(),
+                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING);
         return new ResponseEntity<ReservationDTO>(canceledReservation, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/accept/{reservationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/accept/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> acceptReservation(@PathVariable Long reservationId) {
         //change status into accepted
-        ReservationDTO acceptedReservation = new ReservationDTO(1L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
-                LocalDate.of(2023, 11, 12), 2, new Guest(), new Accommodation(), Status.PENDING);
+        ReservationDTO acceptedReservation = new ReservationDTO(1L, new Date(), new Date(),
+                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING);
         return new ResponseEntity<ReservationDTO>(acceptedReservation, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/reject/{reservationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/reject/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> rejectReservation(@PathVariable Long reservationId) {
         //change status into rejected
-        ReservationDTO rejectedReservation = new ReservationDTO(1L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
-                LocalDate.of(2023, 11, 12), 2, new Guest(), new Accommodation(), Status.PENDING);
+        ReservationDTO rejectedReservation = new ReservationDTO(1L, new Date(), new Date(),
+                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING);
         return new ResponseEntity<ReservationDTO>(rejectedReservation, HttpStatus.OK);
     }
 
@@ -97,10 +97,10 @@ public class ReservationController {
                                                                            @RequestParam("statuses") Set<Status> statuses) {
         // return all requests of one user using filters (g, tabs)
         Collection<ReservationDTO> reservations = new HashSet<>();
-        reservations.add(new ReservationDTO(1L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
-                LocalDate.of(2023, 11, 12), 2, new Guest(), new Accommodation(), Status.PENDING));
-        reservations.add(new ReservationDTO(2L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
-                LocalDate.of(2023, 11, 12), 1, new Guest(), new Accommodation(), Status.PENDING));
+        reservations.add(new ReservationDTO(1L, new Date(), new Date(),
+                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING));
+        reservations.add(new ReservationDTO(2L, new Date(), new Date(),
+                new Date(), 1, new Guest(), new Accommodation(), Status.PENDING));
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
 
@@ -110,10 +110,10 @@ public class ReservationController {
                                                                            @RequestParam("statuses") Set<Status> statuses) {
         // return all requests of one user using filters (g, tabs)
         Collection<ReservationDTO> reservations = new HashSet<>();
-        reservations.add(new ReservationDTO(1L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
-                LocalDate.of(2023, 11, 12), 2, new Guest(), new Accommodation(), Status.PENDING));
-        reservations.add(new ReservationDTO(2L, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 11),
-                LocalDate.of(2023, 11, 12), 1, new Guest(), new Accommodation(), Status.PENDING));
+        reservations.add(new ReservationDTO(1L, new Date(), new Date(),
+                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING));
+        reservations.add(new ReservationDTO(2L, new Date(), new Date(),
+                new Date(), 1, new Guest(), new Accommodation(), Status.PENDING));
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
 }
