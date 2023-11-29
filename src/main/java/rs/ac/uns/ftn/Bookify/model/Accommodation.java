@@ -65,4 +65,6 @@ public class Accommodation {
     @Column(nullable = false)
     private Address address;
 
+    @OneToMany
+    private Collection<Image> accommodationImages;
 }

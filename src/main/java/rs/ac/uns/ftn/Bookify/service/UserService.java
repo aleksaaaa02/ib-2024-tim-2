@@ -24,14 +24,14 @@ public class UserService implements IUserService {
     @Override
     public UserDetailDTO get(Long userId) {
         if(userId == 1231L)
-            return new UserDetailDTO(1231L, "test@example.com", "Pera","Peric", false, "+381412412", new Address());
+            return new UserDetailDTO(1231L, "test@example.com", "Pera","Peric", false, "+381412412", new Address(), null);
         return null;
     }
 
     @Override
-    public UserDetailDTO create(UserRegisteredDTO newUser) {
+    public Long create(UserRegisteredDTO newUser) {
         newUser.setId(123L);
-        return null;
+        return 123L;
     }
 
     @Override

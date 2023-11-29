@@ -40,6 +40,9 @@ public abstract class User {
 	@OneToMany
 	private Collection<Notification> notifications;
 
+	@OneToOne
+	private Image profileImage;
+
 	@Embedded
 	private Active active;
 
