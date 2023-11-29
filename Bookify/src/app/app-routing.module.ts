@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import {AccountComponent} from "./account/account/account.component";
 import { ResultsPageComponent } from "./feature-modules/accommodation/results-page/results-page.component";
 import { AccommodationPageComponent } from "./feature-modules/accommodation/accommodation-page/accommodation-page.component";
 import { LandingPageComponent } from "./layout/landing-page/landing-page.component";
@@ -15,7 +16,8 @@ const routes: Routes = [
   { path: "confirmation", component: ConfirmationComponent },
   { path: "results", component: ResultsPageComponent },
   { path: "accommodation", component: AccommodationPageComponent },
-  { path: '', component: LandingPageComponent }
+  { path: '', component: LandingPageComponent },
+  { path:"account", component: AccountComponent }
 ];
 
 @NgModule({

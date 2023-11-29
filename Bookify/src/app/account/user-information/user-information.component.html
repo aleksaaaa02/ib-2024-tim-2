@@ -1,0 +1,83 @@
+<div id="account">
+  <div id="account-information" class="card">
+    <div class="horizontal">
+      <label class="acc-title">Account information</label>
+      <button id="logout" mat-button>LOGOUT</button>
+    </div>
+    <div class="title-underline"></div>
+    <div class="vertical-flex">
+      <div id="account-pic">
+        <img ngSrc="assets/images/icon.png" height="300" width="300" alt="">
+        <div class="title-underline"></div>
+      </div>
+      <div>
+        <form>
+          <div class="acc-input">
+            <label class="acc-input-labels">Email</label>
+            <mat-form-field class="full-width">
+              <input matInput type="text" value="pera.peric@example.com" disabled="true">
+            </mat-form-field>
+          </div>
+        </form>
+        <div class="button-holder">
+          <button mat-button>CHANGE PASSWORD</button>
+          <button mat-button>DELETE ACCOUNT</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="user-information" class="card">
+    <label class="acc-title">User information</label>
+    <div class="title-underline bottom-margin"></div>
+    <form>
+      <div class="acc-input">
+        <label class="acc-input-labels">First Name</label>
+        <mat-form-field appearance="fill" class="full-width">
+          <input matInput type="text" value="Pera">
+        </mat-form-field>
+      </div>
+      <div class="acc-input">
+        <label class="acc-input-labels">Last Name</label>
+        <mat-form-field class="full-width">
+          <input matInput type="text" value="Peric">
+        </mat-form-field>
+      </div>
+      <div class="acc-input">
+        <label class="acc-input-labels">Country</label>
+        <mat-form-field class="full-width">
+          <mat-select required>
+            <mat-option *ngFor="let country of countries | async" [value]="country">{{ country }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="acc-input">
+        <label class="acc-input-labels">City</label>
+        <mat-form-field class="full-width">
+          <input matInput required value="Novi Sad">
+        </mat-form-field>
+      </div>
+      <div class="acc-input">
+        <label class="acc-input-labels">Street Address</label>
+        <mat-form-field class="full-width">
+          <input matInput required value="Trg Dositeja Obradovica 6">
+        </mat-form-field>
+      </div>
+      <div class="acc-input">
+        <label class="acc-input-labels">Zip Code</label>
+        <mat-form-field class="full-width">
+          <input matInput type="tel" required value="21000">
+        </mat-form-field>
+      </div>
+      <div class="acc-input">
+        <label class="acc-input-labels">Phone</label>
+        <mat-form-field class="full-width">
+          <input matInput type="tel" value="+3816514141">
+        </mat-form-field>
+      </div>
+    </form>
+    <div class="button-holder-horizontal">
+      <button mat-button>EDIT ACCOUNT</button>
+      <button mat-button>SAVE CHANGES</button>
+    </div>
+  </div>
+</div>

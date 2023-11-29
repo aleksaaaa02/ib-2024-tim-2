@@ -32,7 +32,7 @@ const routes: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     MatInputModule,
-    MatIconModule, 
+    MatIconModule,
     MatSelectModule,
     RouterModule.forChild(routes)
   ],

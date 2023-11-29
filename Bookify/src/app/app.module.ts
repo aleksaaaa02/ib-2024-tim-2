@@ -3,6 +3,8 @@ import { BrowserModule, provideClientHydration } from '@angular/platform-browser
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import {LayoutModule} from "./layout/layout.module";
+import {AccountModule} from "./account/account.module";
 import { AccommodationBasicComponent } from './feature-modules/accommodation/accommodation-basic/accommodation-basic.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
@@ -18,7 +20,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import { AccommodationPageComponent } from './feature-modules/accommodation/accommodation-page/accommodation-page.component';
-import {NgImageSliderModule} from "ng-image-slider";
+import { NgImageSliderModule } from "ng-image-slider";
 import { ReserveComponent } from './feature-modules/accommodation/reserve/reserve.component';
 import { LandingPageComponent } from './layout/landing-page/landing-page.component';
 import { TopDestinationComponent } from './layout/top-destination/top-destination.component';
@@ -44,6 +46,8 @@ import { MatFormFieldModule } from '@angular/material/form-field'
   imports: [
     BrowserModule,
     AppRoutingModule,
+    LayoutModule,
+    AccountModule,
     BrowserAnimationsModule,
     MatButtonToggleModule,
     MatCardModule,
@@ -56,7 +60,7 @@ import { MatFormFieldModule } from '@angular/material/form-field'
     MatDatepickerModule,
     NgImageSliderModule,
     AuthenticationModule,
-    MatFormFieldModule,
+    MatFormFieldModule
   ],
   providers: [
     provideClientHydration()
