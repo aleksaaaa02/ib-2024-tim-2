@@ -1,0 +1,48 @@
+mat-toolbar {
+  background-color: #2E4057;
+  position: fixed;
+  left: 5%;
+  right: 5%;
+  top: 5%;
+  overflow: hidden;
+  z-index: 10;
+  width: 90%;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+}
+.spacer {
+  flex: 1 1 auto;
+}
+
+a{
+  text-decoration: none;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+a[mat-button]{
+  height: auto;
+  font-size: 20px;
+  color:white;
+}
+
+mat-icon{
+  color: white;
+  height: 25px;
+}
+
+#login_btn{
+  background-color: white;
+  padding: 10px 25px;
+  border-radius: 20px;
+}
+
+#login_btn[mat-button]{
+  color: #2E4057;
+}
+
+#logo{
+  width: 250px;
+  height: auto;
+}
+

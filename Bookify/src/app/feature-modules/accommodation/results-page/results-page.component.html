@@ -1,0 +1,38 @@
+<div id="main">
+  <div class="front">
+    <img src="../../../../assets/images/landing.png" class="landing"/>
+    <p id="moto">Live life with no excuses, travel with no regret.</p>
+    <p id="person">- Oscar Wilde</p>
+    <app-search class="search-bar"></app-search>
+  </div>
+  <app-filter class="filter-comp"></app-filter>
+
+  <div id="list">
+    <mat-form-field appearance="outline" id="sort">
+      <mat-label>Sort by</mat-label>
+      <mat-select>
+        <mat-option>None</mat-option>
+        <mat-option>Name</mat-option>
+        <mat-option>Popularity</mat-option>
+        <mat-option>Price lowest to highest</mat-option>
+        <mat-option>Price highest to lowest</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <app-accommodation-basic></app-accommodation-basic>
+    <app-accommodation-basic></app-accommodation-basic>
+    <app-accommodation-basic></app-accommodation-basic>
+    <app-accommodation-basic></app-accommodation-basic>
+    <app-accommodation-basic></app-accommodation-basic>
+    <app-accommodation-basic></app-accommodation-basic>
+    <app-accommodation-basic></app-accommodation-basic>
+    <app-accommodation-basic></app-accommodation-basic>
+    <app-accommodation-basic></app-accommodation-basic>
+    <app-accommodation-basic></app-accommodation-basic>
+  </div>
+
+  <mat-paginator [length]="100"
+                 [pageSize]="10"
+                 [pageSizeOptions]="[5, 10, 25, 100]"
+                 aria-label="Select page">
+  </mat-paginator>
+</div>

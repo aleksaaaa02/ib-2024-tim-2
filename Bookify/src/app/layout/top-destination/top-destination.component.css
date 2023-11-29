@@ -1,0 +1,16 @@
+.background {
+  width: 18vw;
+  height: 12vw;
+  background-image: url("../../../assets/images/sydney.png");
+  background-size: cover;
+  border-radius: 1rem;
+  position: relative;
+}
+
+.name {
+  font-size: 1.2vw;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  left: 0.5rem;
+}

@@ -1,0 +1,111 @@
+.card{
+  background-color: #D8EBDE;
+  padding: 30px;
+  border-radius: 30px;
+}
+
+input[matInput]{
+  font-size: 20px;
+}
+
+#account-pic{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#account-information{
+  width: 35%;
+}
+
+.full-width {
+  width: 70%;
+}
+
+.acc-input{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+.acc-title{
+  display: block;
+  width: 100%;
+  color: #326268;
+  font-size: 23px;
+  font-weight: bold;
+}
+
+.acc-input-labels{
+  margin-bottom: 10px;
+}
+.acc-input-labels>label{
+  font-weight: bolder;
+  font-size: 20px;
+}
+
+#account{
+  width: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.acc-input[matInput]{
+  font-size: 18px;
+}
+
+.title-underline{
+  background-color: #A29D92;
+  height: 4px;
+  box-shadow: black;
+  border-radius: 20px;
+  margin: 5px 0;
+}
+
+.button-holder{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#user-information{
+  width: 55%;
+}
+.button-holder button[mat-button]{
+  width: 50%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.button-holder-horizontal{
+  margin-top: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.button-holder-horizontal button[mat-button]{
+  width: 30%
+}
+
+.horizontal{
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+}
+
+#logout{
+  margin-bottom: 2px;
+  width: 30%;
+}
+
+button[mat-button]{
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  border-radius: 20px;
+  background-color: #2E4057;
+  color: white;
+}
