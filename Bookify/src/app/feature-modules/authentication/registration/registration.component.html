@@ -1,0 +1,76 @@
+<div class="registration-container">
+    <div class="registration-registration">
+        <div class="background">
+            <img src="../../../../assets/images/background-image.png" alt="image255165" class="background-image" />
+            <div class="overlay"></div>
+        </div>
+        <div class="registration-form">
+            <div>
+                <img src="../../../../assets/images/logo.png" alt="image276070" class="logo" />
+            </div>
+            <mat-form-field appearance="fill">
+                <mat-label>Email</mat-label>
+                <input matInput placeholder="pat@example.com" required>
+                @if (email.invalid) {
+                <mat-error>{{getErrorMessage()}}</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Password</mat-label>
+                <input matInput [type]="hide1 ? 'password' : 'text'" required>
+                <button mat-icon-button matSuffix (click)="hide1 = !hide1" [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hide1">
+                    <mat-icon>{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Repeat password</mat-label>
+                <input matInput [type]="hide2 ? 'password' : 'text'" required>
+                <button mat-icon-button matSuffix (click)="hide2 = !hide2" [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hide2">
+                    <mat-icon>{{hide2 ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>First name</mat-label>
+                <input matInput required>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Last name</mat-label>
+                <input matInput required>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Country</mat-label>
+                <mat-select required>
+                    <mat-option *ngFor="let country of countries | async" [value]="country">{{ country }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Street address</mat-label>
+                <input matInput required>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Zip code</mat-label>
+                <input matInput required>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Phone</mat-label>
+                <input matInput type="tel" required>
+            </mat-form-field>
+
+            <button routerLink="/login" mat-raised-button type="submit" class="registration-button button">SIGN UP</button>
+            <div>
+                <p class="account">Already have an account?</p>
+                <p class="log-in" routerLink="/login">Log in</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -24,6 +24,8 @@ import { LandingPageComponent } from './feature-modules/landing-page/landing-pag
 import { TopDestinationComponent } from './feature-modules/top-destination/top-destination.component';
 import { TopAccommodationComponent } from './feature-modules/top-accommodation/top-accommodation.component';
 import { FooterComponent } from './feature-modules/footer/footer.component';
+import { AuthenticationModule } from './feature-modules/authentication/authentication.module';
+import { MatFormFieldModule } from '@angular/material/form-field'
 
 @NgModule({
   declarations: [
@@ -52,7 +54,9 @@ import { FooterComponent } from './feature-modules/footer/footer.component';
     MatSelectModule,
     MatPaginatorModule,
     MatDatepickerModule,
-    NgImageSliderModule
+    NgImageSliderModule,
+    AuthenticationModule,
+    MatFormFieldModule,
   ],
   providers: [
     provideClientHydration()
