@@ -13,9 +13,7 @@
       <div>
         <form>
           <div class="acc-input">
-            <div class="acc-input-labels">
-              <label>Email</label>
-            </div>
+            <label class="acc-input-labels">Email</label>
             <mat-form-field class="full-width">
               <input matInput type="text" value="pera.peric@example.com" disabled="true">
             </mat-form-field>
@@ -30,28 +28,22 @@
   </div>
   <div id="user-information" class="card">
     <label class="acc-title">User information</label>
-    <div class="title-underline"></div>
+    <div class="title-underline bottom-margin"></div>
     <form>
       <div class="acc-input">
-        <div class="acc-input-labels">
-          <label>First Name</label>
-        </div>
+        <label class="acc-input-labels">First Name</label>
         <mat-form-field appearance="fill" class="full-width">
           <input matInput type="text" value="Pera">
         </mat-form-field>
       </div>
       <div class="acc-input">
-        <div class="acc-input-labels">
-          <label>Last Name</label>
-        </div>
+        <label class="acc-input-labels">Last Name</label>
         <mat-form-field class="full-width">
           <input matInput type="text" value="Peric">
         </mat-form-field>
       </div>
       <div class="acc-input">
-        <div class="acc-input-labels">
-          <label>Country</label>
-        </div>
+        <label class="acc-input-labels">Country</label>
         <mat-form-field class="full-width">
           <mat-select required>
             <mat-option *ngFor="let country of countries | async" [value]="country">{{ country }}</mat-option>
@@ -59,33 +51,25 @@
         </mat-form-field>
       </div>
       <div class="acc-input">
-        <div class="acc-input-labels">
-          <label>City</label>
-        </div>
+        <label class="acc-input-labels">City</label>
         <mat-form-field class="full-width">
           <input matInput required value="Novi Sad">
         </mat-form-field>
       </div>
       <div class="acc-input">
-        <div class="acc-input-labels">
-          <label>Street Address</label>
-        </div>
+        <label class="acc-input-labels">Street Address</label>
         <mat-form-field class="full-width">
           <input matInput required value="Trg Dositeja Obradovica 6">
         </mat-form-field>
       </div>
       <div class="acc-input">
-        <div class="acc-input-labels">
-          <label>Zip Code</label>
-        </div>
+        <label class="acc-input-labels">Zip Code</label>
         <mat-form-field class="full-width">
           <input matInput type="tel" required value="21000">
         </mat-form-field>
       </div>
       <div class="acc-input">
-        <div class="acc-input-labels">
-          <label>Phone</label>
-        </div>
+        <label class="acc-input-labels">Phone</label>
         <mat-form-field class="full-width">
           <input matInput type="tel" value="+3816514141">
         </mat-form-field>

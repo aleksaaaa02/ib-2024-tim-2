@@ -41,7 +41,6 @@ input[matInput]:disabled{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1em;
 }
 
 .acc-title{
@@ -53,12 +52,9 @@ input[matInput]:disabled{
 }
 
 .acc-input-labels{
-  align-self: center;
-}
-
-.acc-input-labels>label{
   font-weight: bolder;
   font-size: 20px;
+  align-self: center;
 }
 
 #account{
@@ -79,6 +75,10 @@ input[matInput]:disabled{
   box-shadow: black;
   border-radius: 20px;
   margin: 5px 0;
+}
+
+.bottom-margin{
+  margin-bottom: 2em;
 }
 
 .button-holder{
