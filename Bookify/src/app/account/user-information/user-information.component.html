@@ -1,0 +1,68 @@
+<div id="account">
+  <div id="account-information" class="card">
+    <div class="horizontal">
+      <label class="acc-title">Account information</label>
+      <button id="logout" mat-button>LOGOUT</button>
+    </div>
+    <div class="title-underline"></div>
+    <div id="account-pic">
+      <img ngSrc="assets/images/icon.png" height="300" width="300" alt="">
+    </div>
+    <form>
+      <div class="acc-input">
+        <div class="acc-input-labels">
+          <label>Email</label>
+        </div>
+        <mat-form-field class="full-width">
+          <input matInput type="text" value="pera.peric@example.com" disabled="true">
+        </mat-form-field>
+      </div>
+    </form>
+    <div class="button-holder">
+      <button mat-button>CHANGE PASSWORD</button>
+      <button mat-button>DELETE ACCOUNT</button>
+    </div>
+  </div>
+  <div id="user-information" class="card">
+    <label class="acc-title">User information</label>
+    <div class="title-underline"></div>
+    <form>
+      <div class="acc-input">
+        <div class="acc-input-labels">
+          <label>First Name</label>
+        </div>
+        <mat-form-field class="full-width">
+          <input matInput type="text" value="Pera">
+        </mat-form-field>
+      </div>
+      <div class="acc-input">
+        <div class="acc-input-labels">
+          <label>Last Name</label>
+        </div>
+        <mat-form-field class="full-width">
+          <input matInput type="text" value="Peric">
+        </mat-form-field>
+      </div>
+      <div class="acc-input">
+        <div class="acc-input-labels">
+          <label>Address</label>
+        </div>
+        <mat-form-field class="full-width">
+          <input matInput type="text" value="Trg Dositeja Obradovica, 6, Novi Sad 21000">
+        </mat-form-field>
+      </div>
+      <div class="acc-input">
+        <div class="acc-input-labels">
+          <label>Phone Number</label>
+        </div>
+        <mat-form-field class="full-width">
+          <input matInput type="tel" value="+3816514141">
+        </mat-form-field>
+      </div>
+    </form>
+    <div class="button-holder-horizontal">
+      <button mat-button>EDIT ACCOUNT</button>
+      <button mat-button>SAVE CHANGES</button>
+    </div>
+  </div>
+</div>
