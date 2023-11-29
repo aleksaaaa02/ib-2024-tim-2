@@ -1,14 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
-body{
-    margin: 0;
-}
+
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-
-/* Apply additional styling for Pink/Blue Gray Theme */
-.pink-blue-gray-theme {
-  /*Customize color values if needed*/
-  background-color: #ff4081; /* Pink color */
-  color: #607d8b; /* Blue Gray color */
-}
+body { margin: 0; font-family: Montserrat, sans-serif; }

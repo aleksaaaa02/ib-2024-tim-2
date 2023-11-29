@@ -1,0 +1,71 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+<div>
+  <div class="inline">
+    <span class="material-symbols-outlined favorite">favorite</span>
+  <p id="hotel-name">Scandinavic Havet Hotel</p>
+    <meter class="average-rating" min="0" max="5" value="4.3"></meter>
+  </div>
+
+  <div #contrainer id="image-slider" [ngStyle]="{width: 800 +'px', height: 400 + 'px'}">
+  <ng-image-slider #nav
+                   [images]="imageObject"
+                   [infinite]="false"
+                   [autoSlide]="1"
+                   [manageImageRatio]=false
+                   [imageSize]="{width: contrainer.style.width, space:0, height: 400 + 'px'}"
+                   slideImage="1"></ng-image-slider>
+  </div>
+
+
+  <div class="two-part">
+    <div id="amenities">
+      <p class="subcategory white">Amenities</p>
+      <hr class="white-back"/>
+      <div id="amenities-list">
+        @for (amenities of amenitiesList; track amenities) {
+        <div class="amenities-wrapper">
+          <span class="material-symbols-outlined amenities-icon">{{ amenities[1] }}</span>
+          <p class="amenities-name">{{ amenities[0] }}</p>
+        </div>
+        }
+      </div>
+    </div>
+    <div id="location">
+      <p class="subcategory white">Location</p>
+      <hr class="white-back"/>
+      <img id="map" src="../../../../assets/images/map.webp"/>
+      <p id="address">Bulevar Slobodana Jovanovica 46, Novi Sad, Srbija</p>
+    </div>
+  </div>
+  <div class="two-part">
+    <div id="description">
+      <p class="subcategory">Description</p>
+      <hr/>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Quisque porttitor convallis rhoncus.
+        Nunc semper, justo a bibendum luctus, lorem arcu accumsan massa,
+        sed scelerisque lorem felis nec quam. Curabitur at magna metus.
+        Pellentesque habitant morbi tristique sene.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Quisque porttitor convallis rhoncus.</p>
+    </div>
+    <div id="owner">
+      <p class="subcategory">Owner</p>
+      <hr/>
+      <div id="owner-profile">
+        <span class="material-symbols-outlined">account_circle</span>
+        <div id="owner-info">
+          <div class="inline no-margin">
+            <p id="owner-name">Petar Petrovic</p>
+            <meter class="average-rating small" min="0" max="5" value="4.3"></meter>
+          </div>
+          <p id="owner-number">060 188347245</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="two-part">
+    <app-reserve></app-reserve>
+  </div>
+
+</div>
