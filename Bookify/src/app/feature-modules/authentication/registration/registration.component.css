@@ -2,6 +2,10 @@ mat-form-field {
     width: 73%;
 }
 
+mat-button-toggle-group {
+    margin-bottom: 10px; 
+}
+
 :host {
     display: contents;
 }

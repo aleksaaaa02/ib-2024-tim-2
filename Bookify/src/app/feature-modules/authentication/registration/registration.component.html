@@ -66,7 +66,13 @@
                 <input matInput type="tel" required>
             </mat-form-field>
 
-            <button routerLink="/login" mat-raised-button type="submit" class="registration-button button">SIGN UP</button>
+            <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+                <mat-button-toggle value="owner">Owner</mat-button-toggle>
+                <mat-button-toggle value="guest">Guest</mat-button-toggle>
+            </mat-button-toggle-group>
+
+            <button routerLink="/login" mat-raised-button type="submit" class="registration-button button">SIGN
+                UP</button>
             <div>
                 <p class="account">Already have an account?</p>
                 <p class="log-in" routerLink="/login">Log in</p>

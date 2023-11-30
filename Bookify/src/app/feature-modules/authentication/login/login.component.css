@@ -78,10 +78,10 @@ mat-form-field {
 }
 
 .login-form> :first-child {
-    margin-top: 3vw;
+    margin-top: 2vw;
     display: flex;
     justify-content: center;
-    margin-bottom: 4vw;
+    margin-bottom: 1vw; 
 }
 
 .forgot-password {

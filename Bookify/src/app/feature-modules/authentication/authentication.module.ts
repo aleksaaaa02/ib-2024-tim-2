@@ -11,6 +11,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { ConfirmationComponent } from './confirmation/confirmation.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component'
 import { RouterModule, Routes } from '@angular/router';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatButtonModule } from '@angular/material/button';
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -34,7 +36,9 @@ const routes: Routes = [
     MatInputModule,
     MatIconModule,
     MatSelectModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    MatButtonModule,
+    MatButtonToggleModule
   ],
   exports: [
     LoginComponent,
