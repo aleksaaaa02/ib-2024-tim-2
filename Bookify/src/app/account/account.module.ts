@@ -7,6 +7,7 @@ import { MaterialModule } from "../infrastructure/material/material.module";
 import { AccountComponent } from "./account/account.component";
 import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
+import {HttpClientModule} from "@angular/common/http";
 import { AuthenticationService } from "../feature-modules/authentication/authentication.service";
 
 
@@ -22,7 +23,8 @@ import { AuthenticationService } from "../feature-modules/authentication/authent
     MaterialModule,
     NgOptimizedImage,
     MatOptionModule,
-    MatSelectModule
+    MatSelectModule,
+    HttpClientModule
   ],
 
   exports: [

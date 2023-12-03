@@ -15,7 +15,7 @@
           <div class="acc-input">
             <label class="acc-input-labels">Email</label>
             <mat-form-field class="full-width">
-              <input matInput type="text" value="pera.peric@example.com" disabled="true">
+              <input matInput type="text" value="{{account.email}}" disabled="true">
             </mat-form-field>
           </div>
         </form>
@@ -31,47 +31,47 @@
     <div class="title-underline bottom-margin"></div>
     <form>
       <div class="acc-input">
-        <label class="acc-input-labels">First Name</label>
+        <label class="acc-input-labels" for="firstname">First Name</label>
         <mat-form-field appearance="fill" class="full-width">
-          <input matInput type="text" value="Pera">
+          <input matInput type="text" value="{{account.firstName}}" name="firstname" id="firstname">
         </mat-form-field>
       </div>
       <div class="acc-input">
-        <label class="acc-input-labels">Last Name</label>
+        <label class="acc-input-labels" for="lastname">Last Name</label>
         <mat-form-field class="full-width">
-          <input matInput type="text" value="Peric">
+          <input matInput type="text" value="{{account.lastName}}" name="lastname" id="lastname">
         </mat-form-field>
       </div>
       <div class="acc-input">
         <label class="acc-input-labels">Country</label>
         <mat-form-field class="full-width">
           <mat-select required>
-            <mat-option *ngFor="let country of countries | async" [value]="country">{{ country }}</mat-option>
+            <mat-option *ngFor="let country of countries | async" [value]="country">{{ account.address.country }}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
       <div class="acc-input">
-        <label class="acc-input-labels">City</label>
+        <label class="acc-input-labels" for="city">City</label>
         <mat-form-field class="full-width">
-          <input matInput required value="Novi Sad">
+          <input matInput required value="{{account.address.city}}" name="city" id="city">
         </mat-form-field>
       </div>
       <div class="acc-input">
-        <label class="acc-input-labels">Street Address</label>
+        <label class="acc-input-labels" for="street">Street Address</label>
         <mat-form-field class="full-width">
-          <input matInput required value="Trg Dositeja Obradovica 6">
+          <input matInput required value="{{account.address.address}}" name="street" id="street">
         </mat-form-field>
       </div>
       <div class="acc-input">
-        <label class="acc-input-labels">Zip Code</label>
+        <label class="acc-input-labels" for="zipcode">Zip Code</label>
         <mat-form-field class="full-width">
-          <input matInput type="tel" required value="21000">
+          <input matInput type="tel" required value="{{account.address.zipCode}}"  name="zipcode" id="zipcode">
         </mat-form-field>
       </div>
       <div class="acc-input">
-        <label class="acc-input-labels">Phone</label>
+        <label class="acc-input-labels" for="phone">Phone</label>
         <mat-form-field class="full-width">
-          <input matInput type="tel" value="+3816514141">
+          <input matInput type="tel" value="{{account.phone}}"  name="phone" id="phone">
         </mat-form-field>
       </div>
     </form>
