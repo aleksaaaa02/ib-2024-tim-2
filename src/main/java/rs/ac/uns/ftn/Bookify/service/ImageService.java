@@ -18,8 +18,8 @@ public class ImageService implements IImageService {
     IImageRepository imageRepository;
 
     @Override
-    public Long save(byte[] bytes, String imageName) throws Exception {
-        String location = fileSystemRepository.save(bytes, imageName);
+    public Long save(byte[] bytes, String subFolderName, String imageName) throws Exception {
+        String location = fileSystemRepository.save(bytes, subFolderName, imageName);
         return imageRepository.save(new Image(location, imageName)).getId();
     }
 

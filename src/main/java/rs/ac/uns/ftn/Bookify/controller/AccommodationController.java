@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.Bookify.controller;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,9 @@ import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.model.Address;
 import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -22,6 +25,9 @@ import java.util.*;
 public class AccommodationController {
     //    @Autowired
     //    private IAccommodationService accommodationService;
+
+    @Autowired
+    private IImageService imageService;
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationBasicDTO>> getAccommodationBasics(@RequestParam("location") String location, @RequestParam("begin")
@@ -180,11 +186,13 @@ public class AccommodationController {
 
     @GetMapping(value = "/images/{imageId}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     public ResponseEntity<FileSystemResource> getAccommodationImage(@PathVariable Long imageId) {
+
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @PostMapping("/images/{accommodationId}")
-    public ResponseEntity<Long> uploadAccommodationImage(@PathVariable Long accommodationId, @RequestParam MultipartFile image) {
+    public ResponseEntity<Long> uploadAccommodationImage(@PathVariable Long accommodationId, @RequestParam MultipartFile image) throws Exception {
+        imageService.save(image.getBytes(), accommodationId.toString(), image.getName());
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }
