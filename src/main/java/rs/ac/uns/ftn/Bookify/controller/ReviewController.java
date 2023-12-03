@@ -75,21 +75,21 @@ public class ReviewController {
         return new ResponseEntity<ReviewDTO>(savedReview, HttpStatus.CREATED);
     }
 
-    @PutMapping(value="/reject/{reviewId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value="/reject/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDTO> rejectReview(@PathVariable Long reviewId) {
         //change to rejected
         ReviewDTO rejectReview = new ReviewDTO(1L, 4, "Nice", new Date(), false, true, 2L, ReviewType.ACCOMMODATION);
         return new ResponseEntity<ReviewDTO>(rejectReview, HttpStatus.OK);
     }
 
-    @PutMapping(value="/accept/{reviewId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value="/accept/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDTO> acceptReview(@PathVariable Long reviewId) {
         //change to accepted
         ReviewDTO acceptReview = new ReviewDTO(1L, 4, "Nice", new Date(), true, false, 2L, ReviewType.ACCOMMODATION);
         return new ResponseEntity<ReviewDTO>(acceptReview, HttpStatus.OK);
     }
 
-    @PutMapping(value="/report/{reviewId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value="/report/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReviewDTO> reportReview(@PathVariable Long reviewId) {
         //change to report
         ReviewDTO reportReview = new ReviewDTO(1L, 4, "Nice", new Date(), true, true, 2L, ReviewType.OWNER);

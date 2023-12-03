@@ -61,7 +61,7 @@ public class ReservationController {
         return new ResponseEntity<ReservationDTO>(savedReservation, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/cancel/{reservationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/cancel/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable Long reservationId) {
         //change status into canceled
         ReservationDTO canceledReservation = new ReservationDTO(1L, new Date(), new Date(),
@@ -69,7 +69,7 @@ public class ReservationController {
         return new ResponseEntity<ReservationDTO>(canceledReservation, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/accept/{reservationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/accept/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> acceptReservation(@PathVariable Long reservationId) {
         //change status into accepted
         ReservationDTO acceptedReservation = new ReservationDTO(1L, new Date(), new Date(),
@@ -77,7 +77,7 @@ public class ReservationController {
         return new ResponseEntity<ReservationDTO>(acceptedReservation, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/reject/{reservationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/reject/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationDTO> rejectReservation(@PathVariable Long reservationId) {
         //change status into rejected
         ReservationDTO rejectedReservation = new ReservationDTO(1L, new Date(), new Date(),

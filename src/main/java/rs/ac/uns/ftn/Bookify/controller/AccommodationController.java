@@ -106,13 +106,6 @@ public class AccommodationController {
         return new ResponseEntity<>(basicAccommodations, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationDTO> updateAccommodation(@PathVariable Long accommodationId) {
-        //update accommodation
-        AccommodationDTO accommodationDTO = new AccommodationDTO();
-        return new ResponseEntity<AccommodationDTO>(accommodationDTO, HttpStatus.OK);
-    }
-
     @GetMapping(value = "/charts", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationsChartDTO>> getChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end) {
@@ -174,7 +167,7 @@ public class AccommodationController {
 
     @PutMapping(value = "/reject/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccommodationDTO> rejectAccommodation(@PathVariable Long accommodationId) {
-        //change to accepted
+        //change to reject
         AccommodationDTO rejectAccommodation = new AccommodationDTO();
         return new ResponseEntity<AccommodationDTO>(rejectAccommodation, HttpStatus.OK);
     }

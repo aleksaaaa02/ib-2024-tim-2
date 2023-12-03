@@ -31,7 +31,7 @@ public class UserController {
     @Autowired
     private ImageService imageService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReportedUserDTO>> getReportedUsers() {
         //return all reported users
         Collection<ReportedUserDTO> reportedUsers = new HashSet<>();
