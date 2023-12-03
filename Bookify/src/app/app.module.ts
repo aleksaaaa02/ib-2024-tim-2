@@ -29,6 +29,7 @@ import { AuthenticationModule } from './feature-modules/authentication/authentic
 import { MatFormFieldModule } from '@angular/material/form-field'
 import {CarouselComponent} from "./feature-modules/accommodation/carousel/carousel.component";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         AuthenticationModule,
         MatFormFieldModule,
         CarouselComponent,
-        NgbModule
+        NgbModule,
+      HttpClientModule
     ],
   providers: [
     provideClientHydration()

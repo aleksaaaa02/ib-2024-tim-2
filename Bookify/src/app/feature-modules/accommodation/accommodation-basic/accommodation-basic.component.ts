@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
+import {AccommodationBasicModel} from "../model/accommodation-basic.model";
 
 @Component({
   selector: 'app-accommodation-basic',
@@ -7,4 +8,13 @@ import { Component } from '@angular/core';
 })
 export class AccommodationBasicComponent {
 
+  @Input()
+  basicAccommodation: AccommodationBasicModel
+
+  constructor() {
+  }
+
+  calculatePercent(): string {
+    return `calc(${this.basicAccommodation.avgRating}/5*100%)`;
+  }
 }

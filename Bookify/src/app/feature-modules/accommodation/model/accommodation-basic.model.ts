@@ -8,4 +8,6 @@ export interface AccommodationBasicModel {
   imageId: number;
   address: Address;
   pricePer: string;
+  type: string;
+  description: string;
 }
