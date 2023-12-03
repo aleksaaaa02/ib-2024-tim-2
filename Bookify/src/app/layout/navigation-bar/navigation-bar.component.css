@@ -10,22 +10,24 @@ mat-toolbar {
   border-radius: 50px;
   font-family: 'Montserrat', sans-serif;
   transition-delay: 0.2s;
-  transition: background-color 250ms;
+  transition: background-color 250ms linear 100ms, top 100ms linear 0ms,
+  left 180ms linear 0ms, right 180ms linear 0ms, width 130ms linear 0ms;
 }
 mat-toolbar.scrolled{
   background-color: #2E4057;
   position: fixed;
-  left: 10%;
-  right: 10%;
-  top: 2.5%;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  border-radius: 0px;
   overflow: hidden;
   z-index: 10;
-  width: 80%;
-  border-radius: 50px;
+  width: 100%;
   font-family: 'Montserrat', sans-serif;
-  transition: background-color 250ms;
-
+  transition: background-color 250ms linear 100ms, top 100ms linear 0ms,
+  left 180ms linear 0ms, right 180ms linear 0ms, width 130ms linear 0ms;
 }
+
 
 .spacer {
   flex: 1 1 auto;
