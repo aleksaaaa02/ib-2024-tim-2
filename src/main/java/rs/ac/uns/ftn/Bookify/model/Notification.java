@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.Length;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import rs.ac.uns.ftn.Bookify.enumerations.NotificationType;
 
 import java.util.Date;
@@ -28,4 +29,7 @@ public class Notification {
 
 	@Column(nullable = false)
 	private Date created;
+
+	@Column
+	private boolean seen;
 }

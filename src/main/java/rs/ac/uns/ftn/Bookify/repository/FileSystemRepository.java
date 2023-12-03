@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.Bookify.repository;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Repository;
 
@@ -11,10 +12,11 @@ import java.util.Date;
 
 @Repository
 public class FileSystemRepository {
-    private static final String RESOURCE_DIR = "../images/";
+    @Value("${image.path}")
+    private String IMAGES_DIR;
 
-    public String save(byte[] content, String imageName) throws IOException{
-        Path newImagePath = Paths.get(RESOURCE_DIR + new Date().getTime() + "-" + imageName);
+    public String save(byte[] content, String subFolderName, String imageName) throws IOException{
+        Path newImagePath = Paths.get(IMAGES_DIR + "/" +subFolderName + "/" + new Date().getTime() + "-" + imageName);
         Files.createDirectories(newImagePath.getParent());
         Files.write(newImagePath, content);
         return newImagePath.toString();

@@ -5,6 +5,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface IImageService {
-    public Long save(byte[] bytes, String imageName) throws Exception;
+    public Long save(byte[] bytes, String subFolderName,String imageName) throws Exception;
     public FileSystemResource find(Long imageId);
 }
