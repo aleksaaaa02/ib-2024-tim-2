@@ -20,7 +20,6 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import { AccommodationPageComponent } from './feature-modules/accommodation/accommodation-page/accommodation-page.component';
-import { NgImageSliderModule } from "ng-image-slider";
 import { ReserveComponent } from './feature-modules/accommodation/reserve/reserve.component';
 import { LandingPageComponent } from './layout/landing-page/landing-page.component';
 import { TopDestinationComponent } from './layout/top-destination/top-destination.component';
@@ -28,6 +27,8 @@ import { TopAccommodationComponent } from './layout/top-accommodation/top-accomm
 import { FooterComponent } from './layout/footer/footer.component';
 import { AuthenticationModule } from './feature-modules/authentication/authentication.module';
 import { MatFormFieldModule } from '@angular/material/form-field'
+import {CarouselComponent} from "./feature-modules/accommodation/carousel/carousel.component";
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -43,25 +44,26 @@ import { MatFormFieldModule } from '@angular/material/form-field'
     TopAccommodationComponent,
     FooterComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    LayoutModule,
-    AccountModule,
-    BrowserAnimationsModule,
-    MatButtonToggleModule,
-    MatCardModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatSliderModule,
-    MatInputModule,
-    MatSelectModule,
-    MatPaginatorModule,
-    MatDatepickerModule,
-    NgImageSliderModule,
-    AuthenticationModule,
-    MatFormFieldModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        LayoutModule,
+        AccountModule,
+        BrowserAnimationsModule,
+        MatButtonToggleModule,
+        MatCardModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatSliderModule,
+        MatInputModule,
+        MatSelectModule,
+        MatPaginatorModule,
+        MatDatepickerModule,
+        AuthenticationModule,
+        MatFormFieldModule,
+        CarouselComponent,
+        NgbModule
+    ],
   providers: [
     provideClientHydration()
   ],

@@ -37,8 +37,9 @@ input[type="number"], input[type="number"]:focus {
 }
 
 .date {
-  margin-left: 0.4rem;
   color: white;
+  margin: 0 0 0 0.4rem;
+  padding: 0;
 }
 
 ::placeholder {
