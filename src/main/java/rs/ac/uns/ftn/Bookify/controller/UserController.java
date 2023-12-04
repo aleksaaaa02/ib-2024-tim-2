@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/v1/users")
 public class UserController {
     @Autowired
