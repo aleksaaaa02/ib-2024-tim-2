@@ -25,7 +25,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin
 @RequestMapping("/api/v1/accommodations")
 public class AccommodationController {
     @Autowired
@@ -51,13 +51,13 @@ public class AccommodationController {
     @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationBasicDTO>> getAccommodationBasicsByFilter(@RequestBody FilterDTO filter) {
         //return all basic info of accommodations for search
-        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, null, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
                 "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet.");
-        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, null, AccommodationType.HOTEL, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.HOTEL, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
                 "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
@@ -83,13 +83,13 @@ public class AccommodationController {
     @GetMapping(value = "/top-accommodations", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationBasicDTO>> getTopAccommodations() {
         //returns most popular accommodations
-        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, null, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
                 "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet.");
-        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, null, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
                 "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
@@ -113,13 +113,13 @@ public class AccommodationController {
     @GetMapping(value = "/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationBasicDTO>> getOwnersAccommodations(@PathVariable Long ownerId) {
         //returns all accommodations for owner
-        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, null, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
                 "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet.");
-        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, null, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
                 "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
@@ -134,13 +134,13 @@ public class AccommodationController {
     @GetMapping("/favorites/{guestId}")
     public ResponseEntity<Collection<AccommodationBasicDTO>> getFavoritesAccommodations(@PathVariable Long guestId) {
         //returns all favorites accommodation of user
-        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, null, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
                 "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet.");
-        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, null, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
                 "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
                 "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
@@ -232,8 +232,7 @@ public class AccommodationController {
 
     @GetMapping(value = "/images/{imageId}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     public ResponseEntity<FileSystemResource> getAccommodationImage(@PathVariable Long imageId) {
-
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(imageService.find(imageId), HttpStatus.OK);
     }
 
     @PostMapping("/images/{accommodationId}")

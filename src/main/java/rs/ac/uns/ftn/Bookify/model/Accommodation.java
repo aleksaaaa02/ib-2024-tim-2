@@ -66,5 +66,5 @@ public class Accommodation {
     private Address address;
 
     @OneToMany
-    private Collection<Image> accommodationImages;
+    private Collection<Image> images;
 }

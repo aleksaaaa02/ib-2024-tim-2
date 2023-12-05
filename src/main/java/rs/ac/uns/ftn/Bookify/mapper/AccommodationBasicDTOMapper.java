@@ -14,6 +14,9 @@ public class AccommodationBasicDTOMapper {
     public AccommodationBasicDTOMapper(ModelMapper modelMapper) {this.modelMapper = modelMapper;}
 
     public static AccommodationBasicDTO fromAccommodationToBasicDTO(Accommodation accommodation) {
-        return modelMapper.map(accommodation, AccommodationBasicDTO.class);
+        AccommodationBasicDTO a = modelMapper.map(accommodation, AccommodationBasicDTO.class);
+        if (!accommodation.getImages().isEmpty())
+            a.setImageId(accommodation.getImages().iterator().next().getId());
+        return a;
     }
 }
