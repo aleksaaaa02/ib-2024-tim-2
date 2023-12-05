@@ -146,13 +146,13 @@ public class AccommodationController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationInsertDTO> insert(@RequestBody AccommodationInsertDTO accommodationDTO) {
+    public ResponseEntity<Accommodation> insert(@RequestBody AccommodationInsertDTO accommodationDTO) {
         //insert new accommodation
         Accommodation accommodation = AccommodationInesertDTOMapper.fromDTOtoAccommodation(accommodationDTO);
 
-        Accommodation a = accommodationService.save(accommodation);
-
-        return new ResponseEntity<AccommodationInsertDTO>(accommodationDTO, HttpStatus.CREATED);
+//        Accommodation a = accommodationService.save(accommodation);
+        accommodation.setId(1L);
+        return new ResponseEntity<Accommodation>(accommodation, HttpStatus.CREATED);
     }
 
     @PostMapping("/add-to-favorites/{guestId}/{accommodationId}")
@@ -202,6 +202,12 @@ public class AccommodationController {
     @PostMapping("/images/{accommodationId}")
     public ResponseEntity<Long> uploadAccommodationImage(@PathVariable Long accommodationId, @RequestParam MultipartFile image) throws Exception {
         imageService.save(image.getBytes(), accommodationId.toString(), image.getName());
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
+    @PostMapping("/{accommodationId}")
+    public ResponseEntity<Long> uploadAccommodationImages(@PathVariable Long accommodationId, @RequestParam("images") List<MultipartFile> images) throws Exception {
+//        imageService.save(accommodationId, images);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }
