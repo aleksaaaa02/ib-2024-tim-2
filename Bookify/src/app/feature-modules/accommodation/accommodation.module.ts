@@ -7,19 +7,23 @@ import { AccommodationLocationComponent } from './update/accommodation-location/
 import { MatSelectModule } from '@angular/material/select';
 import { AccommodationAmenitiesComponent } from './update/accommodation-amenities/accommodation-amenities.component';
 import { AccommodationPhotosComponent } from './update/accommodation-photos/accommodation-photos.component';
+import { AccommodationGuestsComponent } from './update/accommodation-guests/accommodation-guests.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [
     AccommodationBasicInformationComponent,
     AccommodationLocationComponent,
     AccommodationAmenitiesComponent,
-    AccommodationPhotosComponent
+    AccommodationPhotosComponent,
+    AccommodationGuestsComponent
   ],
   imports: [
     CommonModule,
     MatInputModule,
     FormsModule,
-    MatSelectModule
+    MatSelectModule,
+    MatButtonToggleModule
   ]
 })
 export class AccommodationModule { }
