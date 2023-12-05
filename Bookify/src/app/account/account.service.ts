@@ -3,7 +3,6 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Account} from "./model/account";
 import {environment} from "../../env/env";
-import {Resource} from "@angular/compiler-cli/src/ngtsc/metadata";
 
 @Injectable({
   providedIn: 'root'
@@ -15,20 +14,20 @@ export class AccountService {
   }
 
   getUser(userId: number): Observable<Account> {
-    return this.httpClient.get<Account>(environment.apiHost + "users/" +userId);
+    return this.httpClient.get<Account>(environment.apiHost + "users/" + userId);
   }
 
-  async getAccountImage(imageId: number | undefined): Promise<Blob> {
-    try {
-      const response = await fetch(environment.apiHost + "users/image/"+3);
-      return  await response.blob();
-
-    } catch (error) {
-      console.error('Error fetching countries:', error);
-      return new Blob();
-    }
+  getAccountImage(imageId: number | undefined): Observable<Blob> {
+    return this.httpClient.get(environment.apiHost + "users/image/" + 5, {responseType: "blob"});
   }
-  updateUser(userId: number | undefined, account: Account):Observable<Account> {
+
+  updateUser(userId: number | undefined, account: Account): Observable<Account> {
     return this.httpClient.put<Account>(environment.apiHost + "users", account);
+  }
+
+  updateAccountImage(userId: number | undefined, file: File): Observable<number> {
+    const data: FormData = new FormData();
+    data.append('image', file);
+    return this.httpClient.post<number>(environment.apiHost + "users/change-image/" + userId, data);
   }
 }

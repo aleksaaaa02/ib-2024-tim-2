@@ -7,7 +7,13 @@
     <div class="title-underline"></div>
     <div class="vertical-flex">
       <div id="account-pic">
-        <img alt="" class="image" [src]="image" />
+        <img alt="" class="image" [src]="image"/>
+        <div class="edit-button">
+          <label for="fileInput">
+            <span class="material-symbols-outlined">edit</span>
+          </label>
+          <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="image/*" class="custom-file-input"/>
+        </div>
       </div>
       <div>
         <form>
