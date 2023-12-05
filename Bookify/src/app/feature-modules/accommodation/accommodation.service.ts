@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {AccommodationBasicModel} from "./model/accommodation-basic.model";
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {HttpClient, HttpResponse} from "@angular/common/http";
+import {map, Observable} from "rxjs";
 import {environment} from "../../../env/env";
 import moment from 'moment';
 
@@ -20,5 +20,8 @@ export class AccommodationService {
                                                                                     "&begin=" + (moment(dateBegin)).format('DD.MM.YYYY') +
                                                                                     "&end=" + (moment(dateBegin)).format('DD.MM.YYYY') +
                                                                                     "&persons=" + persons)
+  }
+  getImage(imageId: number) : Observable<Blob> {
+    return this.httpClient.get(environment.apiHost + "accommodations/images/" + imageId, {responseType: 'blob'});
   }
 }
