@@ -8,7 +8,12 @@ import { LoginComponent } from './feature-modules/authentication/login/login.com
 import { RegistrationComponent } from './feature-modules/authentication/registration/registration.component';
 import { ForgotPasswordComponent } from './feature-modules/authentication/forgot-password/forgot-password.component';
 import { ConfirmationComponent } from './feature-modules/authentication/confirmation/confirmation.component';
-import { AccommodationCreateComponent } from './feature-modules/accommodation/accommodation-create/accommodation-create.component';
+import { AccommodationCreateComponent } from './feature-modules/accommodation/update/accommodation-create/accommodation-create.component';
+import { AccommodationLocationComponent } from './feature-modules/accommodation/update/accommodation-location/accommodation-location.component';
+import { AccommodationAmenitiesComponent } from './feature-modules/accommodation/update/accommodation-amenities/accommodation-amenities.component';
+import { AccommodationPhotosComponent } from './feature-modules/accommodation/update/accommodation-photos/accommodation-photos.component';
+import { AccommodationGuestsComponent } from './feature-modules/accommodation/update/accommodation-guests/accommodation-guests.component';
+import { AccommodationAvailabilityComponent } from './feature-modules/accommodation/update/accommodation-availability/accommodation-availability.component';
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -19,6 +24,12 @@ const routes: Routes = [
   { path: "accommodation", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
   { path: "account", component: AccountComponent },
+  { path: "accommodation/create/basic-info", component: AccommodationCreateComponent },
+  { path: "accommodation/create/location", component: AccommodationLocationComponent },
+  { path: "accommodation/create/amenities", component: AccommodationAmenitiesComponent },
+  { path: "accommodation/create/photos", component: AccommodationPhotosComponent },
+  { path: "accommodation/create/guests", component: AccommodationGuestsComponent },
+  { path: "accommodation/create/availability", component: AccommodationAvailabilityComponent },
   { path: "accommodation/create", component: AccommodationCreateComponent }
 ];
 

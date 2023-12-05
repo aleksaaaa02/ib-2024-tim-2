@@ -28,6 +28,7 @@ import { TopAccommodationComponent } from './layout/top-accommodation/top-accomm
 import { FooterComponent } from './layout/footer/footer.component';
 import { AuthenticationModule } from './feature-modules/authentication/authentication.module';
 import { MatFormFieldModule } from '@angular/material/form-field'
+import { AccommodationModule } from './feature-modules/accommodation/accommodation.module';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { MatFormFieldModule } from '@angular/material/form-field'
     MatDatepickerModule,
     NgImageSliderModule,
     AuthenticationModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    AccommodationModule
   ],
   providers: [
     provideClientHydration()
