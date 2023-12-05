@@ -18,7 +18,7 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "AND a.minGuest <= :persons " +
             "AND (LOWER(ad.city) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(ad.address) LIKE LOWER(CONCAT('%', :location, '%')) " +
-            "OR LOWER(a.name) LIKE LOWER(CONCAT('%', :location, '%'))) ")
+            "OR LOWER(ad.country) LIKE LOWER(CONCAT('%', :location, '%'))) ")
     List<Accommodation> findByLocationAndGuestRange(
             @Param("location") String location,
             @Param("persons") int persons);
