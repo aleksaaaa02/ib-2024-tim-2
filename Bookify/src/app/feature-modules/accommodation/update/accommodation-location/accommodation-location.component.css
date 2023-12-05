@@ -1,0 +1,28 @@
+mat-form-field {
+    width: 20vw;
+    margin-bottom: 10px;
+}
+
+mat-label {
+    float: inline-start;
+    width: 14vw;
+}
+
+.wrapper-item {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.left, .right {
+    float: left;
+    width: 45%;
+}
+
+.right {
+    width: 45%;
+    margin-left: 10%;
+    background-image: url('../../../../assets/images/map.webp');
+    background-size: cover;
+    height: 320px;
+}

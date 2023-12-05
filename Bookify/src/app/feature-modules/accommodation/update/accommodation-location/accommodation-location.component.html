@@ -1,0 +1,34 @@
+<div class="left">
+    <div class="wrapper-item">
+        <mat-label>Country</mat-label>
+        <mat-form-field>
+            <mat-select required [(ngModel)]="country" (ngModelChange)="onLocationChange()">
+                <mat-option *ngFor="let country of countries | async" [value]="country">{{ country }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    
+    <div class="wrapper-item">
+        <mat-label>City</mat-label>
+        <mat-form-field appearance="fill">
+            <input matInput required [(ngModel)]="city" (ngModelChange)="onLocationChange()">
+        </mat-form-field>
+    </div>
+    
+    <div class="wrapper-item">
+        <mat-label>Street address</mat-label>
+        <mat-form-field appearance="fill">
+            <input matInput required [(ngModel)]="streetAddress" (ngModelChange)="onLocationChange()">
+        </mat-form-field>
+    </div>
+    
+    <div class="wrapper-item">
+        <mat-label>Zip code</mat-label>
+        <mat-form-field appearance="fill">
+            <input matInput required [(ngModel)]="zipCode" (ngModelChange)="onLocationChange()">
+        </mat-form-field>
+    </div>
+</div>
+<div class="right">
+
+</div>
