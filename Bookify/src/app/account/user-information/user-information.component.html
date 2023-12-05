@@ -7,8 +7,7 @@
     <div class="title-underline"></div>
     <div class="vertical-flex">
       <div id="account-pic">
-        <img ngSrc="assets/images/icon.png" height="300" width="300" alt="">
-        <div class="title-underline"></div>
+        <img alt="" class="image" [src]="image" />
       </div>
       <div>
         <form>
@@ -20,7 +19,7 @@
           </div>
         </form>
         <div class="button-holder">
-          <button mat-button>CHANGE PASSWORD</button>
+          <button mat-button (click)="OnPasswordChangeClick()">CHANGE PASSWORD</button>
           <button mat-button>DELETE ACCOUNT</button>
         </div>
       </div>
@@ -29,55 +28,67 @@
   <div id="user-information" class="card">
     <label class="acc-title">User information</label>
     <div class="title-underline bottom-margin"></div>
-    <form>
+    <form [formGroup]="userInfoForm">
       <div class="acc-input">
         <label class="acc-input-labels" for="firstname">First Name</label>
         <mat-form-field appearance="fill" class="full-width">
-          <input matInput type="text" value="{{account.firstName}}" name="firstname" id="firstname">
+          <input matInput type="text"
+                 formControlName="firstname"
+                 name="firstname" id="firstname">
         </mat-form-field>
       </div>
       <div class="acc-input">
         <label class="acc-input-labels" for="lastname">Last Name</label>
         <mat-form-field class="full-width">
-          <input matInput type="text" value="{{account.lastName}}" name="lastname" id="lastname">
+          <input matInput type="text"
+                 formControlName="lastname"
+                 name="lastname" id="lastname">
         </mat-form-field>
       </div>
       <div class="acc-input">
         <label class="acc-input-labels">Country</label>
         <mat-form-field class="full-width">
-          <mat-select required>
-            <mat-option *ngFor="let country of countries | async" [value]="country">{{ account.address.country }}</mat-option>
+          <mat-select formControlName="country">
+            <mat-option *ngFor="let country of countries | async" [value]="country">{{ country }}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
       <div class="acc-input">
         <label class="acc-input-labels" for="city">City</label>
         <mat-form-field class="full-width">
-          <input matInput required value="{{account.address.city}}" name="city" id="city">
+          <input matInput
+                 formControlName="city"
+                 name="city" id="city">
         </mat-form-field>
       </div>
       <div class="acc-input">
         <label class="acc-input-labels" for="street">Street Address</label>
         <mat-form-field class="full-width">
-          <input matInput required value="{{account.address.address}}" name="street" id="street">
+          <input matInput
+                 formControlName="address"
+                 name="street" id="street">
         </mat-form-field>
       </div>
       <div class="acc-input">
         <label class="acc-input-labels" for="zipcode">Zip Code</label>
         <mat-form-field class="full-width">
-          <input matInput type="tel" required value="{{account.address.zipCode}}"  name="zipcode" id="zipcode">
+          <input matInput type="tel"
+                 formControlName="zipcode"
+                 name="zipcode" id="zipcode">
         </mat-form-field>
       </div>
       <div class="acc-input">
         <label class="acc-input-labels" for="phone">Phone</label>
         <mat-form-field class="full-width">
-          <input matInput type="tel" value="{{account.phone}}"  name="phone" id="phone">
+          <input matInput type="tel"
+                 formControlName="phone"
+                 name="phone" id="phone">
         </mat-form-field>
       </div>
     </form>
     <div class="button-holder-horizontal">
-      <button mat-button>EDIT ACCOUNT</button>
-      <button mat-button>SAVE CHANGES</button>
+      <button mat-button (click)="OnEditClick()">EDIT ACCOUNT</button>
+      <button mat-button (click)="OnSaveClick()">SAVE CHANGES</button>
     </div>
   </div>
 </div>

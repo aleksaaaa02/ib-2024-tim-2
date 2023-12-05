@@ -9,7 +9,7 @@ import {AccountService} from "../account.service";
 })
 export class AccountComponent implements OnInit {
 
-  account: Account;
+  account: Account = {}
 
   constructor(private accountService: AccountService) {
 
