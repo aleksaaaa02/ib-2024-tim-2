@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: "registration", component: RegistrationComponent },
   { path: "forgot-password", component: ForgotPasswordComponent },
   { path: "confirmation", component: ConfirmationComponent },
-  { path: "results/:search/:persons/:date-begin/:date-end", component: ResultsPageComponent },
+  { path: "results",component: ResultsPageComponent },
   { path: "accommodation", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
   { path:"account", component: AccountComponent }

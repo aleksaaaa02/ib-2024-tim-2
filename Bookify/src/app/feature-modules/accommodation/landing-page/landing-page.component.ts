@@ -23,6 +23,6 @@ export class LandingPageComponent implements OnInit{
     this.dateBegin = values.dateBegin;
     this.dateEnd = values.dateEnd;
 
-    this.router.navigate(['/results', this.search, this.persons, this.dateBegin, this.dateEnd]);
+    this.router.navigate(['/results', {"search": this.search, "persons": this.persons, "begin": this.dateBegin, "end": this.dateEnd}]);
   }
 }
