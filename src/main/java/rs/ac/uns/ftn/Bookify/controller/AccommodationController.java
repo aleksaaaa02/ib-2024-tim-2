@@ -39,7 +39,8 @@ public class AccommodationController {
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end")
                                                                                     @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons") int persons) {
         //return all basic info of accommodations for search
-        Collection<Accommodation> accommodations = accommodationService.getAccommodations();
+//        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(location, persons, begin, end).getContent();
+        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location);
 
         List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
                 .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)

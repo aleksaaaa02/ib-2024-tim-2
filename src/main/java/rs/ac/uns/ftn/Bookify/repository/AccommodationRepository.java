@@ -6,9 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.FluentQuery;
+import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -16,7 +18,6 @@ import java.util.function.Function;
 public class AccommodationRepository implements IAccommodationRepository{
     @Override
     public void flush() {
-
     }
 
     @Override
@@ -163,4 +164,22 @@ public class AccommodationRepository implements IAccommodationRepository{
     public Page<Accommodation> findAll(Pageable pageable) {
         return null;
     }
+
+    @Override
+    public List<Accommodation> findByLocationAndGuestRange(
+            @Param("location") String location,
+            @Param("persons") int persons) {
+        return null;
+    }
 }
+
+
+
+//    SELECT a FROM Accommodation a
+//    JOIN Address ad ON a.id = ad.id
+//    WHERE ad.counrty like "%?1%"
+//    OR ad.city like "%?1%"
+//    OR ad.address like "%?1%"
+//    AND a.maxGuest >= ?2
+//    AND a.minGUest <= ?2
+//}
