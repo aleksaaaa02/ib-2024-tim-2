@@ -10,6 +10,7 @@ import { AccommodationPhotosComponent } from './update/accommodation-photos/acco
 import { AccommodationGuestsComponent } from './update/accommodation-guests/accommodation-guests.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AccommodationAvailabilityComponent } from './update/accommodation-availability/accommodation-availability.component';
+import { AccommodationCreateComponent } from './update/accommodation-create/accommodation-create.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { AccommodationAvailabilityComponent } from './update/accommodation-avail
     AccommodationAmenitiesComponent,
     AccommodationPhotosComponent,
     AccommodationGuestsComponent,
-    AccommodationAvailabilityComponent
+    AccommodationAvailabilityComponent,
+    AccommodationCreateComponent
   ],
   imports: [
     CommonModule,
