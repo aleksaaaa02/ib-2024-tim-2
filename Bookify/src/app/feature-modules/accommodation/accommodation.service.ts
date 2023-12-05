@@ -11,7 +11,7 @@ import moment from 'moment';
 export class AccommodationService {
   private basicAccommodationList: AccommodationBasicModel[] = [];
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient) { 
   }
 
   getForSearch(location: string, dateBegin: Date, dateEnd: Date, persons: number): Observable<AccommodationBasicModel[]> {
