@@ -13,14 +13,13 @@ import java.util.List;
 public interface IAccommodationRepository extends JpaRepository<Accommodation, Long> {
     @Query("SELECT a FROM Accommodation a " +
             "JOIN FETCH a.address ad " +
-            "WHERE LOWER(ad.country) LIKE LOWER(CONCAT('%', :location, '%')) " +
-            "AND a.maxGuest >= :persons " +
+            "WHERE a.maxGuest >= :persons " +
             "AND a.minGuest <= :persons " +
             "AND (LOWER(ad.city) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(ad.address) LIKE LOWER(CONCAT('%', :location, '%')) " +
+            "OR LOWER(a.name) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(ad.country) LIKE LOWER(CONCAT('%', :location, '%'))) ")
     List<Accommodation> findByLocationAndGuestRange(
             @Param("location") String location,
             @Param("persons") int persons);
-
 }
