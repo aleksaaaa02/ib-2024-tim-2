@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { AccommodationService } from '../../accommodation.service';
 import { Router } from '@angular/router';
 import { Address } from '../../model/address.dto.model';
-import { Accommodation } from '../../model/accommodation.dto.model';
+import { AccommodationDTO } from '../../model/accommodation.dto.model';
+import { Accommodation } from '../../model/accommodation.model';
+import { File } from 'buffer';
 
 @Component({
   selector: 'app-accommodation-create',
@@ -17,7 +19,7 @@ export class AccommodationCreateComponent {
   locationStreetAddress: string = '';
   locationZipCode: string = '';
   amenitiesFilter: string[] = [];
-  photos: string[] = [];
+  images: string[] = [];
   type: string = '';
   minGuests: number = 0;
   maxGuests: number = 0;
@@ -51,7 +53,8 @@ export class AccommodationCreateComponent {
   }
 
   handlePhotosChange(data: string[]) {
-    this.photos = data;
+    this.images = data;
+
   }
 
   handleGuestsChange(data: any) {
@@ -73,11 +76,10 @@ export class AccommodationCreateComponent {
       address: this.locationStreetAddress,
       zipCode: this.locationZipCode
     }
-    const dto: Accommodation = {
+    const dto: AccommodationDTO = {
       name: this.basicInfoPropertyName,
       description: this.basicInfoDescription,
       filters: this.amenitiesFilter,
-      // photos: this.photos,
       accommodationType: this.type === '' ? null : this.type,
       minGuest: this.minGuests,
       maxGuest: this.maxGuests,
@@ -86,6 +88,13 @@ export class AccommodationCreateComponent {
       pricePer: this.pricePer === '' ? null : this.pricePer,
       address: addressDTO
     };
-    this.accommodationService.add(dto).subscribe();
+    this.accommodationService.add(dto).subscribe(
+      {
+        next: (data: Accommodation) => {
+          console.log(data);
+          this.accommodationService.addImages(data.id, this.images).subscribe();
+        },
+        error: (_) => { }
+      });
   }
 }

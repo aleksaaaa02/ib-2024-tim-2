@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { File } from 'buffer';
 
 @Component({
   selector: 'app-accommodation-photos',
@@ -19,7 +20,6 @@ export class AccommodationPhotosComponent {
         reader.onload = (e) => {
           if (e.target) {
             const imageDataURL = e.target.result as string;
-            // console.log(imageDataURL);
             this.selectedImages.push(imageDataURL);
           }
         };

@@ -1,6 +1,6 @@
     import { Address } from "./address.dto.model";
 
-    export interface Accommodation {
+    export interface AccommodationDTO {
         name: string;
         description: string;
         minGuest: number;
