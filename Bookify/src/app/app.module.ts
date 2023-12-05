@@ -21,7 +21,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import { AccommodationPageComponent } from './feature-modules/accommodation/accommodation-page/accommodation-page.component';
 import { ReserveComponent } from './feature-modules/accommodation/reserve/reserve.component';
-import { LandingPageComponent } from './layout/landing-page/landing-page.component';
+import { LandingPageComponent } from './feature-modules/accommodation/landing-page/landing-page.component';
 import { TopDestinationComponent } from './layout/top-destination/top-destination.component';
 import { TopAccommodationComponent } from './layout/top-accommodation/top-accommodation.component';
 import { FooterComponent } from './layout/footer/footer.component';
@@ -30,6 +30,8 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import {CarouselComponent} from "./feature-modules/accommodation/carousel/carousel.component";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
+import {DatapickerRangeComponent} from "./layout/datapicker-range/datapicker-range.component";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -64,7 +66,9 @@ import { HttpClientModule } from '@angular/common/http';
         MatFormFieldModule,
         CarouselComponent,
         NgbModule,
-      HttpClientModule
+        HttpClientModule,
+        DatapickerRangeComponent,
+        FormsModule
     ],
   providers: [
     provideClientHydration()

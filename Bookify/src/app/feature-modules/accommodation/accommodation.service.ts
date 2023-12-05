@@ -18,7 +18,7 @@ export class AccommodationService {
     return this.httpClient.get<AccommodationBasicModel[]>(environment.apiHost + 'accommodations/' +
                                                                                     "search?location=" + location +
                                                                                     "&begin=" + (moment(dateBegin)).format('DD.MM.YYYY') +
-                                                                                    "&end=" + (moment(dateBegin)).format('DD.MM.YYYY') +
+                                                                                    "&end=" + (moment(dateEnd)).format('DD.MM.YYYY') +
                                                                                     "&persons=" + persons)
   }
   getImage(imageId: number) : Observable<Blob> {
