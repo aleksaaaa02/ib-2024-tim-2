@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { AccommodationService } from '../../accommodation.service';
+import { Router } from '@angular/router';
+import { Address } from '../../model/address.dto.model';
+import { Accommodation } from '../../model/accommodation.dto.model';
 
 @Component({
   selector: 'app-accommodation-create',
@@ -21,7 +25,7 @@ export class AccommodationCreateComponent {
   cancellationDeadline: number = 0;
   pricePer: string = '';
 
-  // constructor(private accommodationService: AccommodationService, private router: Router) {}
+  constructor(private accommodationService: AccommodationService, private router: Router) { }
 
   handleBasicInfoChange(data: any) {
     this.basicInfoPropertyName = data.propertyName;
@@ -63,33 +67,25 @@ export class AccommodationCreateComponent {
   }
 
   onSubmit() {
-    // const addressDTO: Address = {
-    //   country: this.locationCountry,
-    //   city: this.locationCity,
-    //   streetAddress: this.locationStreetAddress,
-    //   zipCode: this.locationZipCode
-    // }
-    // const dto: Accommodation = {
-    //   name: this.basicInfoPropertyName,
-    //   description: this.basicInfoDescription,
-    //   filters: this.amenitiesFilter,
-    //   // photos: this.photos,
-    //   accommodationType: this.type,
-    //   minGuest: this.minGuests,
-    //   maxGuest: this.maxGuests,
-    //   manual: this.reservationAcceptance === 'manual',
-    //   cancellationDeadline: this.cancellationDeadline,
-    //   pricePer: this.pricePer,
-    //   address: addressDTO
-    // };
-    // console.log(dto);
-    // this.accommodationService.add(dto).subscribe(
-    //   // {
-    //   //   next: (data: Accommodation) => {
-    //   //     this.router.navigate(['']);
-    //   //   },
-    //   //   error: (_) => {}
-    //   // }
-    // );
+    const addressDTO: Address = {
+      country: this.locationCountry,
+      city: this.locationCity,
+      address: this.locationStreetAddress,
+      zipCode: this.locationZipCode
+    }
+    const dto: Accommodation = {
+      name: this.basicInfoPropertyName,
+      description: this.basicInfoDescription,
+      filters: this.amenitiesFilter,
+      // photos: this.photos,
+      accommodationType: this.type === '' ? null : this.type,
+      minGuest: this.minGuests,
+      maxGuest: this.maxGuests,
+      manual: this.reservationAcceptance === 'manual',
+      cancellationDeadline: this.cancellationDeadline,
+      pricePer: this.pricePer === '' ? null : this.pricePer,
+      address: addressDTO
+    };
+    this.accommodationService.add(dto).subscribe();
   }
 }

@@ -29,6 +29,7 @@ import { FooterComponent } from './layout/footer/footer.component';
 import { AuthenticationModule } from './feature-modules/authentication/authentication.module';
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { AccommodationModule } from './feature-modules/accommodation/accommodation.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { AccommodationModule } from './feature-modules/accommodation/accommodati
     NgImageSliderModule,
     AuthenticationModule,
     MatFormFieldModule,
-    AccommodationModule
+    AccommodationModule,
+    HttpClientModule
   ],
   providers: [
     provideClientHydration()
