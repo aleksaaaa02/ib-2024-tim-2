@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: "accommodation", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
   { path:"account", component: AccountComponent },
-  { path:"accommodation/create", component:  AccommodationCreateComponent}
+  { path:"accommodation/cr", component:  AccommodationCreateComponent}
 ];
 
 @NgModule({
