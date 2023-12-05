@@ -5,11 +5,13 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { AccommodationLocationComponent } from './update/accommodation-location/accommodation-location.component';
 import { MatSelectModule } from '@angular/material/select';
+import { AccommodationAmenitiesComponent } from './update/accommodation-amenities/accommodation-amenities.component';
 
 @NgModule({
   declarations: [
     AccommodationBasicInformationComponent,
-    AccommodationLocationComponent
+    AccommodationLocationComponent,
+    AccommodationAmenitiesComponent
   ],
   imports: [
     CommonModule,
