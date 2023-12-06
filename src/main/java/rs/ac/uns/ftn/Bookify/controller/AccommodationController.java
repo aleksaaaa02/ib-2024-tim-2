@@ -152,9 +152,8 @@ public class AccommodationController {
         //insert new accommodation
         Accommodation accommodation = AccommodationInesertDTOMapper.fromDTOtoAccommodation(accommodationDTO);
 
-//        Accommodation a = accommodationService.save(accommodation);
-        accommodation.setId(1L);
-        return new ResponseEntity<Accommodation>(accommodation, HttpStatus.CREATED);
+        Accommodation a = accommodationService.save(accommodation);
+        return new ResponseEntity<Accommodation>(a, HttpStatus.CREATED);
     }
 
     @PostMapping("/add-to-favorites/{guestId}/{accommodationId}")
@@ -209,7 +208,7 @@ public class AccommodationController {
 
     @PostMapping("/{accommodationId}")
     public ResponseEntity<Long> uploadAccommodationImages(@PathVariable Long accommodationId, @RequestParam("images") List<MultipartFile> images) throws Exception {
-//        imageService.save(accommodationId, images);
+        imageService.save(accommodationId, images);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
