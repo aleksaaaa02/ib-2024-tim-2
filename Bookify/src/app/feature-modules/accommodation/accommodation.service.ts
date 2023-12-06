@@ -14,13 +14,24 @@ export class AccommodationService {
   constructor(private httpClient: HttpClient) {
   }
 
-  getForSearch(location: string, dateBegin: Date, dateEnd: Date, persons: number): Observable<AccommodationBasicModel[]> {
+  getForSearch(location: string, dateBegin: Date, dateEnd: Date, persons: number, page: number, size: number): Observable<AccommodationBasicModel[]> {
     return this.httpClient.get<AccommodationBasicModel[]>(environment.apiHost + 'accommodations/' +
                                                                                     "search?location=" + location +
                                                                                     "&begin=" + (moment(dateBegin)).format('DD.MM.YYYY') +
                                                                                     "&end=" + (moment(dateEnd)).format('DD.MM.YYYY') +
-                                                                                    "&persons=" + persons)
+                                                                                    "&persons=" + persons +
+                                                                                    "&page=" + page +
+                                                                                    "&size=" + size);
   }
+
+  getCountForSearch(location: string, dateBegin: Date, dateEnd: Date, persons: number): Observable<number> {
+    return this.httpClient.get<number>(environment.apiHost + 'accommodations/' +
+                                                                  "search-count?location=" + location +
+                                                                  "&begin=" + (moment(dateBegin)).format('DD.MM.YYYY') +
+                                                                  "&end=" + (moment(dateEnd)).format('DD.MM.YYYY') +
+                                                                  "&persons=" + persons);
+  }
+
   getImage(imageId: number) : Observable<Blob> {
     return this.httpClient.get(environment.apiHost + "accommodations/images/" + imageId, {responseType: 'blob'});
   }
