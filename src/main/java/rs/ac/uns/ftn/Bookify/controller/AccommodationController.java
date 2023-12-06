@@ -3,6 +3,9 @@ package rs.ac.uns.ftn.Bookify.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,18 +38,40 @@ public class AccommodationController {
     private IImageService imageService;
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<AccommodationBasicDTO>> getAccommodationBasics(@RequestParam("location") String location, @RequestParam("begin")
-    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end")
-                                                                                    @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons") int persons) {
+    public ResponseEntity<List<AccommodationBasicDTO>> getAccommodationBasics(@RequestParam("location") String location, @RequestParam("begin")
+    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons")
+    int persons, @RequestParam("page") int page, @RequestParam("size") int size) {
         //return all basic info of accommodations for search
-//        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(location, persons, begin, end).getContent();
-        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location);
+
+        long totalResults = accommodationService.countByLocationAndGuestRange(persons, location);
+
+        int resultNumber = (int) totalResults - size*page;
+        if (resultNumber <= 0)
+            resultNumber = (int) totalResults;
+        else if (resultNumber > size)
+            resultNumber = size;
+
+        System.out.println(resultNumber);
+        System.out.println(page);
+
+        Pageable paging = PageRequest.of(page, resultNumber);
+        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, paging).getContent();
 
         List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
                 .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/search-count", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Long> getAccommodationBasicsCount(@RequestParam("location") String location, @RequestParam("begin")
+    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons")
+    int persons) {
+        //return all basic info of accommodations for search
+        long count = accommodationService.countByLocationAndGuestRange(persons, location);
+
+        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
     @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)

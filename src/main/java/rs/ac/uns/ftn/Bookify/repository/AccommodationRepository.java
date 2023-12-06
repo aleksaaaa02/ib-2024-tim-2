@@ -166,20 +166,15 @@ public class AccommodationRepository implements IAccommodationRepository{
     }
 
     @Override
-    public List<Accommodation> findByLocationAndGuestRange(
+    public Page<Accommodation> findByLocationAndGuestRange(
             @Param("location") String location,
-            @Param("persons") int persons) {
+            @Param("persons") int persons,
+            Pageable pageable) {
         return null;
     }
+
+    @Override
+    public long countByLocationAndGuestRange(String location, int persons) {
+        return 0;
+    }
 }
-
-
-
-//    SELECT a FROM Accommodation a
-//    JOIN Address ad ON a.id = ad.id
-//    WHERE ad.counrty like "%?1%"
-//    OR ad.city like "%?1%"
-//    OR ad.address like "%?1%"
-//    AND a.maxGuest >= ?2
-//    AND a.minGUest <= ?2
-//}

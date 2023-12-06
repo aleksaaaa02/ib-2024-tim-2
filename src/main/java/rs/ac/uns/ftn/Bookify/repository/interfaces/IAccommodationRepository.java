@@ -12,14 +12,27 @@ import java.util.List;
 
 public interface IAccommodationRepository extends JpaRepository<Accommodation, Long> {
     @Query("SELECT a FROM Accommodation a " +
-            "JOIN FETCH a.address ad " +
+            "JOIN a.address ad " +
             "WHERE a.maxGuest >= :persons " +
             "AND a.minGuest <= :persons " +
             "AND (LOWER(ad.city) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(ad.address) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(a.name) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(ad.country) LIKE LOWER(CONCAT('%', :location, '%'))) ")
-    List<Accommodation> findByLocationAndGuestRange(
+    Page<Accommodation> findByLocationAndGuestRange(
+            @Param("location") String location,
+            @Param("persons") int persons,
+            Pageable pageable);
+
+    @Query("SELECT COUNT(a) FROM Accommodation a " +
+            "JOIN a.address ad " +
+            "WHERE a.maxGuest >= :persons " +
+            "AND a.minGuest <= :persons " +
+            "AND (LOWER(ad.city) LIKE LOWER(CONCAT('%', :location, '%')) " +
+            "OR LOWER(ad.address) LIKE LOWER(CONCAT('%', :location, '%')) " +
+            "OR LOWER(a.name) LIKE LOWER(CONCAT('%', :location, '%')) " +
+            "OR LOWER(ad.country) LIKE LOWER(CONCAT('%', :location, '%'))) ")
+    long countByLocationAndGuestRange(
             @Param("location") String location,
             @Param("persons") int persons);
 }
