@@ -1,7 +1,7 @@
 <div class="wrapper-item">
     <mat-label>Cancellation deadline (days)</mat-label>
     <mat-form-field appearance="fill">
-        <input matInput required type="number" min="1" [(ngModel)]="cancellationDeadline" (ngModelChange)="onAvailabilityChanged()">
+        <input matInput required type="number" min="0" [(ngModel)]="cancellationDeadline" (ngModelChange)="onAvailabilityChanged()">
     </mat-form-field>
 </div>
 

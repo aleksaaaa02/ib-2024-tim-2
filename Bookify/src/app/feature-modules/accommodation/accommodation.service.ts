@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { AccommodationDTO } from './model/accommodation.dto.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -11,7 +11,20 @@ import { Accommodation } from './model/accommodation.model';
 export class AccommodationService {
   private accommodations: AccommodationDTO[] = [];
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, @Inject(LOCALE_ID) private locale: string) { }
+
+  async getCountries(): Promise<string[]> {
+      try {
+        const response = await fetch('https://restcountries.com/v3.1/all');
+        const countriesData = await response.json();
+        const countries = countriesData.map((country: any) => country.name.common);
+        countries.sort();
+        return countries;
+      } catch (error) {
+        console.error('Error fetching countries:', error);
+        return [];
+      }
+    }
 
   // getAll(): Observable<Accommodation[]> {
   //   return this.httpClient.get<Accommodation[]>(environment.apiAccommodation + '')

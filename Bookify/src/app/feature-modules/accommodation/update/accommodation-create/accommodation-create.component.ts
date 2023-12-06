@@ -6,6 +6,7 @@ import { AccommodationDTO } from '../../model/accommodation.dto.model';
 import { Accommodation } from '../../model/accommodation.model';
 import { File } from 'buffer';
 import { AccommodationBasicInformationComponent } from '../accommodation-basic-information/accommodation-basic-information.component';
+import { MatSnackBar } from '@angular/material/snack-bar'
 
 @Component({
   selector: 'app-accommodation-create',
@@ -30,7 +31,13 @@ export class AccommodationCreateComponent {
   cancellationDeadline: number = 0;
   pricePer: string = '';
 
-  constructor(private accommodationService: AccommodationService, private router: Router) { }
+  constructor(private accommodationService: AccommodationService, private router: Router, private _snackBar: MatSnackBar) { }
+
+  openSnackBar(message: string, action: string){
+    this._snackBar.open(message, action, {
+      duration: 2000,
+    });
+  }
 
   handleBasicInfoChange(data: any) {
     this.basicInfoPropertyName = data.propertyName;
@@ -74,34 +81,44 @@ export class AccommodationCreateComponent {
 
   onSubmit() {
 
-    console.log(this.basicInfo.validateForm())
-    // this.basicInfo.validateForm()
-
-    const addressDTO: Address = {
-      country: this.locationCountry,
-      city: this.locationCity,
-      address: this.locationStreetAddress,
-      zipCode: this.locationZipCode
+    if (this.isValid()) {
+      const addressDTO: Address = {
+        country: this.locationCountry,
+        city: this.locationCity,
+        address: this.locationStreetAddress,
+        zipCode: this.locationZipCode
+      }
+      const dto: AccommodationDTO = {
+        name: this.basicInfoPropertyName,
+        description: this.basicInfoDescription,
+        filters: this.amenitiesFilter,
+        accommodationType: this.type === '' ? null : this.type,
+        minGuest: this.minGuests,
+        maxGuest: this.maxGuests,
+        manual: this.reservationAcceptance === 'manual',
+        cancellationDeadline: this.cancellationDeadline,
+        pricePer: this.pricePer === '' ? null : this.pricePer,
+        address: addressDTO
+      };
+      // this.accommodationService.add(dto).subscribe(
+      //   {
+      //     next: (data: Accommodation) => {
+      //       console.log(data);
+      //       this.accommodationService.addImages(data.id, this.images).subscribe();
+      //     },
+      //     error: (_) => { }
+      //   });
+    } else {
+      this.openSnackBar('All field must be filled', 'Close');
     }
-    const dto: AccommodationDTO = {
-      name: this.basicInfoPropertyName,
-      description: this.basicInfoDescription,
-      filters: this.amenitiesFilter,
-      accommodationType: this.type === '' ? null : this.type,
-      minGuest: this.minGuests,
-      maxGuest: this.maxGuests,
-      manual: this.reservationAcceptance === 'manual',
-      cancellationDeadline: this.cancellationDeadline,
-      pricePer: this.pricePer === '' ? null : this.pricePer,
-      address: addressDTO
-    };
-    // this.accommodationService.add(dto).subscribe(
-    //   {
-    //     next: (data: Accommodation) => {
-    //       console.log(data);
-    //       this.accommodationService.addImages(data.id, this.images).subscribe();
-    //     },
-    //     error: (_) => { }
-    //   });
+    // this.basicInfo.validateForm()
+  }
+
+  isValid(): boolean {
+    return this.locationCountry !== '' && this.locationCity !== '' && this.locationStreetAddress !== ''
+      && this.locationZipCode !== '' && this.basicInfoPropertyName !== '' && this.basicInfoDescription !== '' &&
+      this.type !== '' && this.reservationAcceptance !== '' && this.pricePer !== '' && this.images.length > 0 &&
+      this.minGuests >= 0 && this.minGuests !== null && this.maxGuests >= 0 && this.maxGuests !== null &&
+      this.cancellationDeadline >= 0 && this.cancellationDeadline !== null && this.minGuests <= this.maxGuests;
   }
 }

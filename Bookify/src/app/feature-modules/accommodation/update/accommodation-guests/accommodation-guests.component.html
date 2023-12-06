@@ -12,14 +12,14 @@
 <div class="wrapper-item">
     <mat-label>Min guests</mat-label>
     <mat-form-field appearance="fill">
-        <input matInput required type="number" min="1" [(ngModel)]="minGuests" (ngModelChange)="onGuestsChange()">
+        <input matInput required type="number" min="0" [(ngModel)]="minGuests" (ngModelChange)="onGuestsChange()">
     </mat-form-field>
 </div>
 
 <div class="wrapper-item">
     <mat-label>Max guests</mat-label>
     <mat-form-field appearance="fill">
-        <input matInput required type="number" min="1" [(ngModel)]="maxGuests" (ngModelChange)="onGuestsChange()">
+        <input matInput required type="number" min="0" [(ngModel)]="maxGuests" (ngModelChange)="onGuestsChange()">
     </mat-form-field>
 </div>
 
