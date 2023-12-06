@@ -1,9 +1,9 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {AccommodationBasicModel} from "../model/accommodation-basic.model";
 import {AccommodationService} from "../accommodation.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";
-import {PageEvent} from "@angular/material/paginator";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-results-page',
@@ -12,6 +12,7 @@ import {PageEvent} from "@angular/material/paginator";
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class ResultsPageComponent implements OnInit{
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   accommodationModels: AccommodationBasicModel[]
   search: string;
   persons: number;
@@ -67,6 +68,9 @@ export class ResultsPageComponent implements OnInit{
     this.search = values.search;
     this.dateBegin = new Date(Date.parse(values.dateBegin));
     this.dateEnd = new Date(Date.parse(values.dateEnd));
+
+    this.paginator.pageIndex = 0;
+    this.currentPage = 1;
 
     this.resultCount();
     this.getResults();
