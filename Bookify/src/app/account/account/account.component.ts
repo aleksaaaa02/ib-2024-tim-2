@@ -16,12 +16,7 @@ export class AccountComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.accountService.getUser(1231).subscribe({
-      next: (data: Account) => {
-        this.account = data;
-      },
-      error: (_) => {console.log("Error occurred!")}
-    })
+
   }
 
 }

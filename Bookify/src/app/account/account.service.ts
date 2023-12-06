@@ -18,7 +18,11 @@ export class AccountService {
   }
 
   getAccountImage(imageId: number | undefined): Observable<Blob> {
-    return this.httpClient.get(environment.apiHost + "users/image/" + 5, {responseType: "blob"});
+    return this.httpClient.get(environment.apiHost + "users/image/" + imageId, {responseType: "blob"});
+  }
+
+  updatePassword(userId: number | undefined, newPassword: string): Observable<string>{
+      return this.httpClient.post<string>(environment.apiHost + "users/" + userId + "/change-password", newPassword);
   }
 
   updateUser(userId: number | undefined, account: Account): Observable<Account> {
