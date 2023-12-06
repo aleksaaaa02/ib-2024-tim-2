@@ -11,7 +11,6 @@ public class BookifyApplication {
 	public ModelMapper getModelMapper() {
 		return new ModelMapper();
 	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(BookifyApplication.class, args);
 	}

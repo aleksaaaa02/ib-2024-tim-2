@@ -1,17 +1,32 @@
 package rs.ac.uns.ftn.Bookify.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.model.Address;
+import rs.ac.uns.ftn.Bookify.model.Image;
+import rs.ac.uns.ftn.Bookify.model.User;
+import rs.ac.uns.ftn.Bookify.repository.interfaces.IUserRepository;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class UserService implements IUserService {
-    // @Autowired
-    // private UserRepository userRepository;
+    @Autowired
+    private IImageService imageService;
+
+    @Autowired
+    private IUserRepository userRepository;
+
+
     @Override
     public Collection<UserDTO> getAll() {
         Collection<UserDTO> users = new ArrayList<>();
@@ -22,10 +37,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDetailDTO get(Long userId) {
-        if(userId == 1231L)
-            return new UserDetailDTO(1231L, "test@example.com", "Pera","Peric", false, "+381412412", new Address(), null);
-        return null;
+    public UserDetailDTO find(Long userId) {
+        return userRepository.findUserAccount(userId);
     }
 
     @Override
@@ -36,13 +49,28 @@ public class UserService implements IUserService {
 
     @Override
     public UserDetailDTO update(UserDetailDTO updatedUser) {
-        updatedUser.setEmail("someotheradress@gmail.com");
-        updatedUser.setFirstName("Da izmenjeno je");
-        return updatedUser;
+        Optional<User> user = this.userRepository.findById(updatedUser.getId());
+        if(user.isEmpty()){
+            throw new RuntimeException("User not found");
+        }
+        User u = user.get();
+        updateUserData(updatedUser, u);
+        try {
+            userRepository.save(u);
+        } catch (Exception e){
+            return null;
+        }
+        return new UserDetailDTO(u);
     }
 
-
-    public boolean changePassword(Long userId, PasswordUpdateDTO newPassword){
+    public boolean changePassword(Long userId, String newPassword){
+        Optional<User> u = userRepository.findById(userId);
+        if(u.isEmpty()){
+            return false;
+        }
+        User user = u.get();
+        user.setPassword(newPassword); // TO-DO hash the password before storing it in database
+        userRepository.save(user);
         return true;
     }
 
@@ -77,5 +105,36 @@ public class UserService implements IUserService {
         return null;
     }
 
+    @Override
+    public Long updateImage(byte[] bytes, String imageName, Long userId) throws Exception {
+        Optional<User> u = userRepository.findById(userId);
+        if(u.isEmpty()){
+            throw new Exception();
+        }
+        Image image = imageService.save(bytes, "accounts", imageName);
+        User user = u.get();
+        user.setProfileImage(image);
+        try {
+            userRepository.save(user);
+        } catch (Exception e){
+            return -1L;
+        }
+        return image.getId();
+    }
+
+    @Override
+    public FileSystemResource getImage(Long imageId) {
+        return imageService.find(imageId);
+    }
+
+    private void updateUserData(UserDetailDTO updatedUser, User u) {
+        u.getAddress().setAddress(updatedUser.getAddress().getAddress());
+        u.getAddress().setCity(updatedUser.getAddress().getCity());
+        u.getAddress().setZipCode(updatedUser.getAddress().getZipCode());
+        u.getAddress().setCountry(updatedUser.getAddress().getCountry());
+        u.setPhone(updatedUser.getPhone());
+        u.setFirstName(updatedUser.getFirstName());
+        u.setLastName(updatedUser.getLastName());
+    }
 
 }

@@ -5,11 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
-import rs.ac.uns.ftn.Bookify.model.PricelistItem;
-
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 @Service
 public interface IAccommodationService {
@@ -18,4 +14,5 @@ public interface IAccommodationService {
     public double getTotalPrice(Long id, Date begin, Date end);
     public double getOnePrice(Long id, Date begin, Date end);
     public FileSystemResource getImages(Long id);
+    public Accommodation save(Accommodation accommodation);
 }

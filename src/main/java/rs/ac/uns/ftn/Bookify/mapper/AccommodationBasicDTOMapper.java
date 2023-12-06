@@ -10,7 +10,6 @@ import rs.ac.uns.ftn.Bookify.model.Accommodation;
 public class AccommodationBasicDTOMapper {
     private static ModelMapper modelMapper;
 
-    @Autowired
     public AccommodationBasicDTOMapper(ModelMapper modelMapper) {this.modelMapper = modelMapper;}
 
     public static AccommodationBasicDTO fromAccommodationToBasicDTO(Accommodation accommodation) {
