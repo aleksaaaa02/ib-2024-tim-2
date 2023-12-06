@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../env/env';
 import { Accommodation } from './model/accommodation.model';
+import { PriceList } from './model/priceList.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +44,10 @@ export class AccommodationService {
     })
     console.log(images);
     return this.httpClient.post<string[]>(environment.apiAccommodation + "/" + accommodationId, data);
+  }
+
+  addPriceList(accommodationId: number, priceList: PriceList) {
+    return this.httpClient.post<PriceList>(environment.apiAccommodation + "/price/" + accommodationId, priceList);
   }
 
   // getAccommodation(id: number): Observable<Accommodation> {

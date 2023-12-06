@@ -13,6 +13,11 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AccommodationAvailabilityComponent } from './update/accommodation-availability/accommodation-availability.component';
 import { AccommodationCreateComponent } from './update/accommodation-create/accommodation-create.component';
 import { AccommodationDatesComponent } from './update/accommodation-dates/accommodation-dates.component';
+import { AccommodationPriceListItemsComponent } from './update/accommodation-price-list-items/accommodation-price-list-items.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -23,7 +28,8 @@ import { AccommodationDatesComponent } from './update/accommodation-dates/accomm
     AccommodationGuestsComponent,
     AccommodationAvailabilityComponent,
     AccommodationCreateComponent,
-    AccommodationDatesComponent
+    AccommodationDatesComponent,
+    AccommodationPriceListItemsComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +37,10 @@ import { AccommodationDatesComponent } from './update/accommodation-dates/accomm
     FormsModule,
     MatSelectModule,
     MatButtonToggleModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule
   ],
   exports:[
     AccommodationBasicInformationComponent,
