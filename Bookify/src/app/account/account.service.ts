@@ -22,7 +22,7 @@ export class AccountService {
   }
 
   updatePassword(userId: number | undefined, newPassword: string): Observable<string>{
-      return this.httpClient.post<string>(environment.apiHost + "users/" + userId + "/change-password", newPassword);
+      return this.httpClient.post(environment.apiHost + "users/" + userId + "/change-password", newPassword, {responseType: "text"});
   }
 
   updateUser(userId: number | undefined, account: Account): Observable<Account> {

@@ -16,6 +16,7 @@ input[matInput]:disabled {
   color: black;
 }
 
+
 .image {
   width: 100%;
   height: 100%;
@@ -158,6 +159,10 @@ button[mat-button] {
   border-radius: 20px;
   background-color: #2E4057;
   color: white;
+}
+
+.disabled {
+  display: none;
 }
 
 .vertical-flex {

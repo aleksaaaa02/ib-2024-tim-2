@@ -5,6 +5,9 @@ import {Account} from "../model/account";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {PasswordChangeDialogComponent} from "../password-change-dialog/password-change-dialog.component";
+import {Router} from "@angular/router";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {DefaultSnackbarComponent} from "../../layout/default-snackbar/default-snackbar.component";
 
 @Component({
   selector: 'app-user-information',
@@ -14,7 +17,6 @@ import {PasswordChangeDialogComponent} from "../password-change-dialog/password-
 })
 export class UserInformationComponent implements OnInit {
   account: Account = {};
-
   countries: Promise<string[]> = Promise.resolve([]);
   isDisabled: boolean = true;
   image: string | ArrayBuffer | null = null;
@@ -52,13 +54,14 @@ export class UserInformationComponent implements OnInit {
 
   constructor(private authenticationService: AuthenticationService,
               private accountService: AccountService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private router: Router,
+              private snackbar: MatSnackBar) {
 
   }
 
   ngOnInit(): void {
-    console.log(this.account.imageId)
-    this.accountService.getUser(1231).subscribe({
+    this.accountService.getUser(1).subscribe({
       next: (data: Account) => {
         this.account = data;
         this.setFormData();
@@ -68,6 +71,7 @@ export class UserInformationComponent implements OnInit {
             const reader = new FileReader();
             reader.onloadend = () => {
               this.image = reader.result;
+
             }
             reader.readAsDataURL(data);
           },
@@ -78,6 +82,7 @@ export class UserInformationComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
+        this.openSnackBar('Ops something went wrong!');
       }
     });
     this.countries = this.authenticationService.getCountries();
@@ -95,37 +100,39 @@ export class UserInformationComponent implements OnInit {
       this.account.phone = this.userInfoForm.value.phone;
 
       this.accountService.updateUser(this.account.id, this.account).subscribe({
-        next: value => {
+        next: () => {
           this.isDisabled = true;
           this.toggleFormState();
+          this.openSnackBar('User information changed successfully!');
         },
         error: err => {
-          alert(err);
+          this.openSnackBar('Ops something went wrong!');
+          console.error(err);
         }
       })
     }
-    console.log(this.userInfoForm);
   }
 
   OnEditClick(): void {
     this.isDisabled = false;
     this.toggleFormState();
-    console.log(this.isDisabled);
-
   }
 
   OnPasswordChangeClick(): void {
     const dialogRef = this.dialog.open(PasswordChangeDialogComponent, {
-      data:{'password':'','repeatedpassword':''}
+      data: {'password': ''}
     });
     dialogRef.afterClosed().subscribe((result) => {
       const password = result.password;
       this.accountService.updatePassword(this.account.id, password).subscribe({
         next: value => {
-          console.log(value);
+          this.isDisabled = true;
+          this.toggleFormState();
+          this.openSnackBar('Password changed successfully!');
         },
         error: err => {
           console.error(err);
+          this.openSnackBar('Ops something went wrong!');
         }
       });
     });
@@ -133,6 +140,7 @@ export class UserInformationComponent implements OnInit {
 
   OnDeleteAccountClick(): void {
 
+    this.openSnackBar('Account has been deleted successfully!');
   }
 
   toggleFormState(): void {
@@ -144,7 +152,6 @@ export class UserInformationComponent implements OnInit {
   }
 
   setFormData(): void {
-    console.log(this.account);
     this.userInfoForm.get('firstname')?.setValue(this.account.firstName);
     this.userInfoForm.get('lastname')?.setValue(this.account.lastName);
     this.userInfoForm.get('phone')?.setValue(this.account.phone);
@@ -152,20 +159,43 @@ export class UserInformationComponent implements OnInit {
     this.userInfoForm.get('country')?.setValue(this.account.address?.country);
     this.userInfoForm.get('city')?.setValue(this.account.address?.city);
     this.userInfoForm.get('zipcode')?.setValue(this.account.address?.zipCode);
-    console.log(this.userInfoForm);
 
   }
 
   onFileSelected(event: Event): void {
-    let selectedFile = (event.target as HTMLInputElement).files?.item(0);
-
+    const selectedFile = (event.target as HTMLInputElement).files?.item(0);
     if (selectedFile && ['image/jpeg', 'image/png'].includes(selectedFile.type)) {
-      this.accountService.updateAccountImage(1231, selectedFile).subscribe({
-        next: (data: number) => {
-          console.log(data);
+      this.accountService.updateAccountImage(1, selectedFile).subscribe({
+        next: () => {
+          this.openSnackBar('Account image changed successfully!');
         },
-        error: err => {console.log(err);}
+        error: err => {
+          console.error(err);
+          this.openSnackBar('Ops something went wrong!');
+        }
       })
     }
+  }
+
+  refreshPage(): Function {
+    return () => {
+      const router = this.router;
+      router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+        router.navigate(["account"]);
+      });
+    }
+  }
+
+  openSnackBar(message: string): void {
+    this.snackbar.openFromComponent(DefaultSnackbarComponent, {
+      data: {action: this.refreshPage()},
+      announcementMessage: message
+    })
+  }
+
+  OnCancelClick(): void {
+    this.isDisabled = true;
+    this.toggleFormState();
+    this.setFormData();
   }
 }

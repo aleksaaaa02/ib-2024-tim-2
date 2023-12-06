@@ -1,4 +1,3 @@
 export interface DialogData {
-  password: string,
-  repeatedpassword: string
+  password: string
 }

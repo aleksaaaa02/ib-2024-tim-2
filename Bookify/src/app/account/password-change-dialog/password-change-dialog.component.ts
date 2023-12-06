@@ -11,7 +11,7 @@ import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "
 export class PasswordChangeDialogComponent {
 
   passwordForm: FormGroup = new FormGroup({
-    password: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required, Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)]),
     repeatedpassword: new FormControl('', [Validators.required])
   }, {
     validators: this.matchValidator('password', 'repeatedpassword')
