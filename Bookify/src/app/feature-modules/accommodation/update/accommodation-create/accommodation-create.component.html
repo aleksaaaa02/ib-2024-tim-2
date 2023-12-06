@@ -1,0 +1,16 @@
+<div class="wrapper">
+    <app-accommodation-basic-information
+        (basicInfoChanged)="handleBasicInfoChange($event)"></app-accommodation-basic-information>
+    <hr>
+    <app-accommodation-location (locationChanged)="handleLocationChange($event)"></app-accommodation-location>
+    <hr>
+    <app-accommodation-amenities (amenitiesChange)="handleAmenitiesChange($event)"></app-accommodation-amenities>
+    <hr>
+    <app-accommodation-photos (photosChanged)="handlePhotosChange($event)"></app-accommodation-photos>
+    <hr>
+    <app-accommodation-guests (guestsChanged)="handleGuestsChange($event)"></app-accommodation-guests>
+    <hr>
+    <app-accommodation-availability
+        (availibilityChanged)="handleAvailabilityChange($event)"></app-accommodation-availability>
+    <button mat-raised-button type="submit" class="submit-button button" (click)="onSubmit()">Submit</button>
+</div>
