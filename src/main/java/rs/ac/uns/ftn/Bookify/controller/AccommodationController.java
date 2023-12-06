@@ -222,5 +222,10 @@ public class AccommodationController {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
-
+    @GetMapping(value = "/{accommodationId}/getPrice", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<PriceListItemDTO>> getAccommodationPriceListItems(@PathVariable Long accommodationId) {
+        Collection<PricelistItem> pricelistItems = accommodationService.getAccommodationPriceListItems(accommodationId);
+        Collection<PriceListItemDTO> priceListItemDTOS = PriceListItemDTOMapper.fromPriceListItemtoDTO(pricelistItems);
+        return new ResponseEntity<>(priceListItemDTOS, HttpStatus.OK);
+    }
 }

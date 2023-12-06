@@ -6,6 +6,10 @@ import rs.ac.uns.ftn.Bookify.dto.PriceListItemDTO;
 import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+
 @Component
 public class PriceListItemDTOMapper {
     private static ModelMapper modelMapper;
@@ -20,6 +24,14 @@ public class PriceListItemDTOMapper {
 
     public static PriceListItemDTO fromPriceListItemtoDTO(PricelistItem dto){
         return modelMapper.map(dto, PriceListItemDTO.class);
+    }
+
+    public static Collection<PriceListItemDTO> fromPriceListItemtoDTO(Collection<PricelistItem> dto){
+        Collection<PriceListItemDTO> priceListItemDTOS = new ArrayList<>();
+        for(PricelistItem plt : dto){
+            priceListItemDTOS.add(modelMapper.map(plt, PriceListItemDTO.class));
+        }
+        return priceListItemDTOS;
     }
 
     public static Availability fromDTOtoAvailability(PriceListItemDTO dto){
