@@ -54,7 +54,7 @@ public class UserService implements IUserService {
         User u = user.get();
         updateUserData(updatedUser, u);
         this.userRepository.save(u);
-        return null;
+        return new UserDetailDTO(u);
     }
 
     public boolean changePassword(Long userId, String newPassword){
