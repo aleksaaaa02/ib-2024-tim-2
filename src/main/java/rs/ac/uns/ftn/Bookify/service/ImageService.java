@@ -21,9 +21,9 @@ public class ImageService implements IImageService {
     IImageRepository imageRepository;
 
     @Override
-    public Long save(byte[] bytes, String subFolderName, String imageName) throws Exception {
+    public Image save(byte[] bytes, String subFolderName, String imageName) throws Exception {
         String location = fileSystemRepository.save(bytes, subFolderName, imageName);
-        return imageRepository.save(new Image(location, imageName)).getId();
+        return imageRepository.save(new Image(location, imageName));
     }
 
     public Long save(Long accommodationId, List<MultipartFile> images) throws Exception {
@@ -39,4 +39,5 @@ public class ImageService implements IImageService {
         Image image = imageRepository.findById(imageId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return fileSystemRepository.findInFileSystem(image.getImagePath());
     }
+
 }

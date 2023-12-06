@@ -24,12 +24,11 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/v1/users")
 public class UserController {
     @Autowired
     private IUserService userService;
-    @Autowired
-    private ImageService imageService;
 
     @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReportedUserDTO>> getReportedUsers() {
@@ -48,8 +47,8 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDetailDTO> getUserById(@PathVariable Long userId) {
-        Optional<UserDetailDTO> user = Optional.ofNullable(userService.get(userId));
-        return user.map(userDetailDTO -> new ResponseEntity<>(userDetailDTO, HttpStatus.FOUND)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+        Optional<UserDetailDTO> user = Optional.ofNullable(userService.find(userId));
+        return user.map(userDetailDTO -> new ResponseEntity<>(userDetailDTO, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
@@ -68,7 +67,7 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/change-password")
-    public ResponseEntity<String> changePassword(@PathVariable Long userId, @RequestBody PasswordUpdateDTO newPassword) {
+    public ResponseEntity<String> changePassword(@PathVariable Long userId, @RequestBody String newPassword) {
         boolean success = userService.changePassword(userId, newPassword);
         if (success) {
             return new ResponseEntity<>("Password updated", HttpStatus.OK);
@@ -124,14 +123,17 @@ public class UserController {
     }
 
     @PostMapping("/change-image/{userId}")
-    public ResponseEntity<Long> changeAccountImage(@RequestParam MultipartFile image, @PathVariable Long userId) throws Exception {
-        Long id = imageService.save(image.getBytes(), "accounts","test");
+    public ResponseEntity<Long> changeAccountImage(@RequestParam("image") MultipartFile image, @PathVariable Long userId) throws Exception {
+        Long id = userService.updateImage(image.getBytes(), image.getName(), userId);
+        if(id < 0){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
     @GetMapping(value = "/image/{imageId}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     public ResponseEntity<FileSystemResource> getAccountImage(@PathVariable Long imageId) throws Exception {
-        FileSystemResource image = imageService.find(imageId);
+        FileSystemResource image = userService.getImage(imageId);
         return new ResponseEntity<>(image, HttpStatus.OK);
     }
 
