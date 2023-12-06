@@ -23,13 +23,13 @@ public class AccommodationService implements IAccommodationService {
     IImageService imageService;
 
     @Override
-    public Page<Accommodation> getAccommodationsForSearch(Integer persons, String location, Pageable pageable) {
-        return accommodationRepository.findByLocationAndGuestRange(location, persons, pageable);
+    public Page<Accommodation> getAccommodationsForSearch(Integer persons, String location, Date begin, Date end, Pageable pageable) {
+        return accommodationRepository.findByLocationAndGuestRange(location, persons, begin, end, pageable);
     }
 
     @Override
-    public long countByLocationAndGuestRange(Integer persons, String location) {
-        return accommodationRepository.countByLocationAndGuestRange(location, persons);
+    public long countByLocationAndGuestRange(Integer persons, String location, Date begin ,Date end) {
+        return accommodationRepository.countByLocationAndGuestRange(location, persons, begin, end);
     }
 
     @Override

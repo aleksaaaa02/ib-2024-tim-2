@@ -38,30 +38,31 @@ public class AccommodationController {
     private IImageService imageService;
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<AccommodationBasicDTO>> getAccommodationBasics(@RequestParam("location") String location, @RequestParam("begin")
+    public ResponseEntity<Collection<AccommodationBasicDTO>> getAccommodationBasics(@RequestParam("location") String location, @RequestParam("begin")
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons")
     int persons, @RequestParam("page") int page, @RequestParam("size") int size) {
         //return all basic info of accommodations for search
+        long totalResults = accommodationService.countByLocationAndGuestRange(persons, location, begin ,end);
+        if (totalResults > 0) {
+            int resultNumber = (int) totalResults - size * page;
+            if (resultNumber <= 0)
+                resultNumber = (int) totalResults;
+            else if (resultNumber > size)
+                resultNumber = size;
 
-        long totalResults = accommodationService.countByLocationAndGuestRange(persons, location);
+            Pageable paging = PageRequest.of(page, resultNumber);
+            Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, begin, end, paging).getContent();
 
-        int resultNumber = (int) totalResults - size*page;
-        if (resultNumber <= 0)
-            resultNumber = (int) totalResults;
-        else if (resultNumber > size)
-            resultNumber = size;
+            List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
+                    .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
+                    .collect(Collectors.toList());
 
-        System.out.println(resultNumber);
-        System.out.println(page);
-
-        Pageable paging = PageRequest.of(page, resultNumber);
-        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, paging).getContent();
-
-        List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
-                .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
+            return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
+        }
+        else {
+            Collection<AccommodationBasicDTO> accommodationBasicDTO = new HashSet<>();
+            return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
+        }
     }
 
     @GetMapping(value = "/search-count", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -69,7 +70,7 @@ public class AccommodationController {
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons")
     int persons) {
         //return all basic info of accommodations for search
-        long count = accommodationService.countByLocationAndGuestRange(persons, location);
+        long count = accommodationService.countByLocationAndGuestRange(persons, location, begin, end);
 
         return new ResponseEntity<>(count, HttpStatus.OK);
     }

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 public interface IAccommodationService {
-    public Page<Accommodation> getAccommodationsForSearch(Integer persons, String location, Pageable pageable);
-    public long countByLocationAndGuestRange(Integer persons, String location);
+    public Page<Accommodation> getAccommodationsForSearch(Integer persons, String location, Date begin, Date end, Pageable pageable);
+    public long countByLocationAndGuestRange(Integer persons, String location, Date begin, Date end);
     public FileSystemResource getImages(Long id);
 }
