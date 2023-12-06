@@ -22,8 +22,6 @@ import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
-
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -56,6 +54,11 @@ public class AccommodationController {
             List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
                     .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
                     .collect(Collectors.toList());
+
+            for (AccommodationBasicDTO accommodation : accommodationBasicDTO) {
+                accommodation.setTotalPrice((float) accommodationService.getTotalPrice(accommodation.getId(), begin, end));
+                accommodation.setPriceOne((float) accommodationService.getOnePrice(accommodation.getId(), begin, end));
+            }
 
             return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
         }

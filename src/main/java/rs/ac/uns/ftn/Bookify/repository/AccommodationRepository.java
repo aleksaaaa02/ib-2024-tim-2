@@ -8,8 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
+import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -178,5 +180,10 @@ public class AccommodationRepository implements IAccommodationRepository{
     @Override
     public long countByLocationAndGuestRange(String location, int persons, Date begin, Date end) {
         return 0;
+    }
+
+    @Override
+    public Optional<Double> findPriceForDay(Date date, Long accommodationId) {
+        return Optional.empty();
     }
 }

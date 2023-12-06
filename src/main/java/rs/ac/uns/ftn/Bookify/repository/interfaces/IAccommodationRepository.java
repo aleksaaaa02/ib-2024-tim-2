@@ -6,9 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
+import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface IAccommodationRepository extends JpaRepository<Accommodation, Long> {
     @Query("SELECT a FROM Accommodation a " +
@@ -49,4 +52,13 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             @Param("persons") int persons,
             @Param("begin") Date begin,
             @Param("end") Date end);
+
+    @Query("SELECT p.price " +
+            "FROM Accommodation a " +
+            "JOIN a.priceList p " +
+            "WHERE p.startDate <= :date AND p.endDate >= :date " +
+            "AND a.id = :accommodationId")
+    Optional<Double> findPriceForDay(
+            @Param("date") Date date,
+            @Param("accommodationId") Long accommodationId);
 }
