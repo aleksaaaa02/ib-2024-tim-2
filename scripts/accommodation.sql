@@ -206,3 +206,41 @@ VALUES
     (34, 'DEPOSIT_BOX'), (34, 'WHEELCHAIR'), (34, 'BAR'), (34, 'SWIMMING_POOL'), (34, 'LUNCH'),
     (35, 'AIRPORT_SHUTTLE'), (35, 'DINER'), (35, 'JACUZZI'), (35, 'SWIMMING_POOL'), (35, 'FRONT_DESK'),
     (35, 'GARDEN'), (36, 'WHEELCHAIR'), (36, 'BAR'), (36, 'FREE_WIFI'), (36, 'LUNCH');
+
+
+SET @path = '/Users/olivera/Documents/Bookify/images/';
+INSERT INTO image (image_name, image_path)
+VALUES
+    ('image', CONCAT(@path, '1/1.jpeg')), ('image', CONCAT(@path, '1/2.jpeg')),
+    ('image', CONCAT(@path, '2/1.jpeg')), ('image', CONCAT(@path, '2/2.jpeg')),
+    ('image', CONCAT(@path, '3/1.jpeg')), ('image', CONCAT(@path, '4/1.jpeg')),
+    ('image', CONCAT(@path, '5/1.jpeg')), ('image', CONCAT(@path, '6/1.jpeg')),
+    ('image', CONCAT(@path, '7/1.jpeg')), ('image', CONCAT(@path, '8/1.jpeg')),
+    ('image', CONCAT(@path, '9/1.jpeg')), ('image', CONCAT(@path, '10/1.jpeg')),
+    ('image', CONCAT(@path, '11/1.jpeg')), ('image', CONCAT(@path, '11/2.jpeg')),
+    ('image', CONCAT(@path, '12/1.jpeg')), ('image', CONCAT(@path, '12/2.jpeg')),
+    ('image', CONCAT(@path, '13/1.jpeg')), ('image', CONCAT(@path, '14/1.jpeg')),
+    ('image', CONCAT(@path, '15/1.jpeg')), ('image', CONCAT(@path, '16/1.jpeg')),
+    ('image', CONCAT(@path, '17/1.jpeg')), ('image', CONCAT(@path, '18/1.jpeg')),
+    ('image', CONCAT(@path, '19/1.jpeg')), ('image', CONCAT(@path, '20/1.jpeg')),
+    ('image', CONCAT(@path, '21/1.jpeg')), ('image', CONCAT(@path, '21/2.jpeg')),
+    ('image', CONCAT(@path, '22/1.jpeg')), ('image', CONCAT(@path, '22/2.jpeg')),
+    ('image', CONCAT(@path, '23/1.jpeg')), ('image', CONCAT(@path, '24/1.jpeg')),
+    ('image', CONCAT(@path, '25/1.jpeg')), ('image', CONCAT(@path, '26/1.jpeg')),
+    ('image', CONCAT(@path, '27/1.jpeg')), ('image', CONCAT(@path, '28/1.jpeg')),
+    ('image', CONCAT(@path, '29/1.jpeg')), ('image', CONCAT(@path, '30/1.jpeg')),
+    ('image', CONCAT(@path, '31/1.jpeg')), ('image', CONCAT(@path, '32/1.jpeg')),
+    ('image', CONCAT(@path, '33/1.jpeg')), ('image', CONCAT(@path, '34/1.jpeg')),
+    ('image', CONCAT(@path, '35/1.jpeg')), ('image', CONCAT(@path, '36/1.jpeg')),
+    ('image', CONCAT(@path, '23/2.jpeg')), ('image', CONCAT(@path, '24/2.jpeg')),
+    ('image', CONCAT(@path, '25/2.jpeg')), ('image', CONCAT(@path, '27/2.jpeg')),
+    ('image', CONCAT(@path, '28/2.jpeg')), ('image', CONCAT(@path, '29/2.jpeg'));
+
+INSERT INTO accommodations_images (accommodation_id, images_id)
+VALUES
+    (1, 1), (1, 2), (2, 3), (2, 4), (3, 5), (4, 6), (5, 7), (6, 8),
+    (7, 9), (8, 10), (9, 11), (10, 12), (11, 13), (11, 14), (12, 15), (12, 16),
+    (13, 17), (14, 18), (15, 19), (16, 20), (17, 21), (18, 22), (19, 23), (20, 24),
+    (21, 25), (21, 26), (22, 27), (22, 28), (23, 29), (24, 30), (25, 31), (26, 32),
+    (27, 33), (28, 34), (29, 35), (30, 36), (31, 37), (32, 38), (33, 39), (34, 40),
+    (35, 41), (36, 42), (23, 43), (24, 44), (25, 45), (27, 46), (28, 47), (29, 48);
