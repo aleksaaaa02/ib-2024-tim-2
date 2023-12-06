@@ -7,20 +7,25 @@
     <div class="title-underline"></div>
     <div class="vertical-flex">
       <div id="account-pic">
-        <img ngSrc="assets/images/icon.png" height="300" width="300" alt="">
-        <div class="title-underline"></div>
+        <img alt="" class="image" [src]="image"/>
+        <div class="edit-button">
+          <label for="fileInput">
+            <span class="material-symbols-outlined">edit</span>
+          </label>
+          <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="image/*" class="custom-file-input"/>
+        </div>
       </div>
       <div>
         <form>
           <div class="acc-input">
             <label class="acc-input-labels">Email</label>
             <mat-form-field class="full-width">
-              <input matInput type="text" value="pera.peric@example.com" disabled="true">
+              <input matInput type="text" value="{{account.email}}" disabled="true">
             </mat-form-field>
           </div>
         </form>
         <div class="button-holder">
-          <button mat-button>CHANGE PASSWORD</button>
+          <button mat-button (click)="OnPasswordChangeClick()">CHANGE PASSWORD</button>
           <button mat-button>DELETE ACCOUNT</button>
         </div>
       </div>
@@ -29,55 +34,68 @@
   <div id="user-information" class="card">
     <label class="acc-title">User information</label>
     <div class="title-underline bottom-margin"></div>
-    <form>
+    <form [formGroup]="userInfoForm">
       <div class="acc-input">
-        <label class="acc-input-labels">First Name</label>
+        <label class="acc-input-labels" for="firstname">First Name</label>
         <mat-form-field appearance="fill" class="full-width">
-          <input matInput type="text" value="Pera">
+          <input matInput type="text"
+                 formControlName="firstname"
+                 name="firstname" id="firstname">
         </mat-form-field>
       </div>
       <div class="acc-input">
-        <label class="acc-input-labels">Last Name</label>
+        <label class="acc-input-labels" for="lastname">Last Name</label>
         <mat-form-field class="full-width">
-          <input matInput type="text" value="Peric">
+          <input matInput type="text"
+                 formControlName="lastname"
+                 name="lastname" id="lastname">
         </mat-form-field>
       </div>
       <div class="acc-input">
         <label class="acc-input-labels">Country</label>
         <mat-form-field class="full-width">
-          <mat-select required>
+          <mat-select formControlName="country">
             <mat-option *ngFor="let country of countries | async" [value]="country">{{ country }}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
       <div class="acc-input">
-        <label class="acc-input-labels">City</label>
+        <label class="acc-input-labels" for="city">City</label>
         <mat-form-field class="full-width">
-          <input matInput required value="Novi Sad">
+          <input matInput
+                 formControlName="city"
+                 name="city" id="city">
         </mat-form-field>
       </div>
       <div class="acc-input">
-        <label class="acc-input-labels">Street Address</label>
+        <label class="acc-input-labels" for="street">Street Address</label>
         <mat-form-field class="full-width">
-          <input matInput required value="Trg Dositeja Obradovica 6">
+          <input matInput
+                 formControlName="address"
+                 name="street" id="street">
         </mat-form-field>
       </div>
       <div class="acc-input">
-        <label class="acc-input-labels">Zip Code</label>
+        <label class="acc-input-labels" for="zipcode">Zip Code</label>
         <mat-form-field class="full-width">
-          <input matInput type="tel" required value="21000">
+          <input matInput type="tel"
+                 formControlName="zipcode"
+                 name="zipcode" id="zipcode">
         </mat-form-field>
       </div>
       <div class="acc-input">
-        <label class="acc-input-labels">Phone</label>
+        <label class="acc-input-labels" for="phone">Phone</label>
         <mat-form-field class="full-width">
-          <input matInput type="tel" value="+3816514141">
+          <input matInput type="tel"
+                 formControlName="phone"
+                 name="phone" id="phone">
         </mat-form-field>
       </div>
     </form>
     <div class="button-holder-horizontal">
-      <button mat-button>EDIT ACCOUNT</button>
-      <button mat-button>SAVE CHANGES</button>
+      <button mat-button (click)="OnEditClick()" [ngClass]="{disabled: !isDisabled}" [disabled]="!isDisabled">EDIT ACCOUNT</button>
+      <button mat-button (click)="OnSaveClick()" [ngClass]="{disabled: isDisabled}" [disabled]="isDisabled">SAVE CHANGES</button>
+      <button mat-button (click)="OnCancelClick()" [ngClass]="{disabled: isDisabled}" [disabled]="isDisabled">CANCEL</button>
     </div>
   </div>
 </div>

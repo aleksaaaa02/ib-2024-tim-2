@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
-
+import { BrowserModule, provideClientHydration, withNoHttpTransferCache } from '@angular/platform-browser';
+import { AccommodationModule } from './feature-modules/accommodation/accommodation.module';
+import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutModule } from "./layout/layout.module";
@@ -28,8 +29,6 @@ import { TopAccommodationComponent } from './layout/top-accommodation/top-accomm
 import { FooterComponent } from './layout/footer/footer.component';
 import { AuthenticationModule } from './feature-modules/authentication/authentication.module';
 import { MatFormFieldModule } from '@angular/material/form-field'
-import { AccommodationModule } from './feature-modules/accommodation/accommodation.module';
-import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -67,7 +66,7 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule
   ],
   providers: [
-    provideClientHydration()
+    provideClientHydration(withNoHttpTransferCache())
   ],
   bootstrap: [AppComponent]
 })
