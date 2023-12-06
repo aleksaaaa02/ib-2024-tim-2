@@ -10,7 +10,7 @@ public interface IUserService {
     public UserDetailDTO find(Long userId);
     public Long create(UserRegisteredDTO newUser);
     public UserDetailDTO update(UserDetailDTO updatedUser);
-    public boolean changePassword(Long userId, PasswordUpdateDTO newPassword);
+    public boolean changePassword(Long userId, String newPassword);
     public boolean resetPassword();
     public boolean activateUser(Long userId);
     public boolean login(UserCredentialsDTO userCredentials);

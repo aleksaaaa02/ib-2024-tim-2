@@ -57,7 +57,14 @@ public class UserService implements IUserService {
         return null;
     }
 
-    public boolean changePassword(Long userId, PasswordUpdateDTO newPassword){
+    public boolean changePassword(Long userId, String newPassword){
+        Optional<User> u = userRepository.findById(userId);
+        if(u.isEmpty()){
+            return false;
+        }
+        User user = u.get();
+        user.setPassword(newPassword); // TO-DO hash the password before storing it in database
+        userRepository.save(user);
         return true;
     }
 

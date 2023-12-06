@@ -67,7 +67,7 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/change-password")
-    public ResponseEntity<String> changePassword(@PathVariable Long userId, @RequestBody PasswordUpdateDTO newPassword) {
+    public ResponseEntity<String> changePassword(@PathVariable Long userId, @RequestBody String newPassword) {
         boolean success = userService.changePassword(userId, newPassword);
         if (success) {
             return new ResponseEntity<>("Password updated", HttpStatus.OK);
