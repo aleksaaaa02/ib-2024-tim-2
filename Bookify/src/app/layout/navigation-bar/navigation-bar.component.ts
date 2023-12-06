@@ -29,7 +29,10 @@ export class NavigationBarComponent {
     }
 
     private checkIfInitialTransparent() : void{
-      this.isTransparentRoute = this.allowedScrollRoutes.includes(this.currentRoute);
+      if (this.currentRoute.includes('/results'))
+        this.isTransparentRoute = true;
+      else
+        this.isTransparentRoute = this.allowedScrollRoutes.includes(this.currentRoute);
       if(this.isTransparentRoute){
         this.isScrolled = false;
         return;

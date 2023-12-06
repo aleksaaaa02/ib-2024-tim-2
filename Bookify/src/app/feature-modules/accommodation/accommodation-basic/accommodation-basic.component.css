@@ -45,7 +45,6 @@
   font-size: small;
   margin-top: 0.2rem;
   margin-bottom: 0.2rem;
-  color: dimgray;
 }
 
 .title {
@@ -98,7 +97,7 @@
 }
 
 .average-rating::before {
-  --percent: calc(4.3/5*100%);
+  /*--percent: calc(4.2/5*100%);*/
   content: '★★★★★';
   font-size: 1.2rem;
   background:

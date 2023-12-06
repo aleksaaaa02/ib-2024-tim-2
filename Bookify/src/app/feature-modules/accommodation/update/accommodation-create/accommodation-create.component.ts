@@ -100,18 +100,17 @@ export class AccommodationCreateComponent {
         pricePer: this.pricePer === '' ? null : this.pricePer,
         address: addressDTO
       };
-      // this.accommodationService.add(dto).subscribe(
-      //   {
-      //     next: (data: Accommodation) => {
-      //       console.log(data);
-      //       this.accommodationService.addImages(data.id, this.images).subscribe();
-      //     },
-      //     error: (_) => { }
-      //   });
+      this.accommodationService.add(dto).subscribe(
+        {
+          next: (data: Accommodation) => {
+            console.log(data);
+            this.accommodationService.addImages(data.id, this.images).subscribe();
+          },
+          error: (_) => { }
+        });
     } else {
       this.openSnackBar('All field must be filled', 'Close');
     }
-    // this.basicInfo.validateForm()
   }
 
   isValid(): boolean {

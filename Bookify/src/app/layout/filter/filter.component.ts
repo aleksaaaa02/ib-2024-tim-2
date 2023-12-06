@@ -6,6 +6,15 @@ import { Component } from '@angular/core';
   styleUrl: './filter.component.css'
 })
 export class FilterComponent {
+  minPrice: number = 0;
+  maxPrice: number = 10000;
+
+  onSliderChange() {
+    // Log the values in the console
+    console.log('Min Price:', this.minPrice);
+    console.log('Max Price:', this.maxPrice);
+  }
+
   checkboxLabels: string[] = [
     'Free WiFi', 'Air conditioning', 'Terrace', 'Swimming pool', 'Bar', 'Sauna', 'Luggage storage',
     'Lunch', 'Airport shuttle', 'Wheelchair', 'Non-smoking', 'Free parking',

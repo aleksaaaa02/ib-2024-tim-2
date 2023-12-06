@@ -4,7 +4,7 @@
 
 .accommodation-card{
   margin-top: 3vh;
-  width: 28.5vw;
+  width: 32vw;
   height: 10vw;
   border-radius: 1.5em;
   background-color: white;
@@ -46,7 +46,7 @@
   font-size: 0.8rem;
   margin-top: 0.2rem;
   margin-bottom: 0.2rem;
-  color: dimgray;
+  color: dimgrey;
 }
 
 .title {
@@ -63,7 +63,7 @@
   color: whitesmoke;
   position: absolute;
   bottom: 0;
-  right: 2rem;
+  right: 1rem;
 }
 
 .book-button:hover {
