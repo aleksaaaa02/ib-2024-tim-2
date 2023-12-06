@@ -1,0 +1,15 @@
+<div class="wrapper-item">
+    <mat-label>Cancellation deadline (days)</mat-label>
+    <mat-form-field appearance="fill">
+        <input matInput required type="number" min="0" [(ngModel)]="cancellationDeadline" (ngModelChange)="onAvailabilityChanged()">
+    </mat-form-field>
+</div>
+
+<div class="wrapper-item">
+    <mat-label>Price per</mat-label>
+    <mat-button-toggle-group name="pricePer" [(ngModel)]="pricePer" (ngModelChange)="onAvailabilityChanged()" aria-label="Price Per">
+        <mat-button-toggle value="PERSON">Person</mat-button-toggle>
+        <mat-button-toggle value="ROOM">Room</mat-button-toggle>
+    </mat-button-toggle-group>
+</div>
+
