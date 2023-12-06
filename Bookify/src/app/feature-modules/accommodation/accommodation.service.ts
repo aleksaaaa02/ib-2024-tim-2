@@ -27,9 +27,9 @@ export class AccommodationService {
       }
     }
 
-  // getAll(): Observable<Accommodation[]> {
-  //   return this.httpClient.get<Accommodation[]>(environment.apiAccommodation + '')
-  // }
+  getAllPriceListItems(accommodationId: number): Observable<PriceList[]> {
+    return this.httpClient.get<PriceList[]>(environment.apiAccommodation + '/' + accommodationId + "/getPrice");
+  }
 
   add(accommodation: AccommodationDTO): Observable<Accommodation> {
     return this.httpClient.post<Accommodation>(environment.apiAccommodation, accommodation)
@@ -47,7 +47,7 @@ export class AccommodationService {
   }
 
   addPriceList(accommodationId: number, priceList: PriceList) {
-    return this.httpClient.post<PriceList>(environment.apiAccommodation + "/price/" + accommodationId, priceList);
+    return this.httpClient.post<PriceList>(environment.apiAccommodation + "/" + accommodationId + "/addPrice", priceList);
   }
 
   // getAccommodation(id: number): Observable<Accommodation> {

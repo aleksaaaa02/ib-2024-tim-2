@@ -11,7 +11,11 @@
         <mat-label>Price</mat-label>
         <input matInput type="number" name="price" formControlName="price" min="0" />
     </mat-form-field>
+    <mat-error *ngIf="createAvailabilityForm.get('checkIn')!.hasError('datePast')">
+        {{ createAvailabilityForm.get('checkIn')!.getError('message') }}
+    </mat-error>
+    <mat-error *ngIf="createAvailabilityForm.get('checkOut')!.hasError('dateComparison')">
+        {{ createAvailabilityForm.get('checkOut')!.getError('message') }}
+    </mat-error>
 </form>
 <button (click)="create()" class="submit-button" color="primary" type="submit" mat-raised-button>Create</button>
-
-<app-accommodation-price-list-items></app-accommodation-price-list-items>
