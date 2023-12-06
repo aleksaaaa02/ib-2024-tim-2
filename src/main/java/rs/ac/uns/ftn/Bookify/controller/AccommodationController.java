@@ -213,10 +213,14 @@ public class AccommodationController {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
-    @PostMapping("/price/{accommodationId}")
+    @PostMapping("/{accommodationId}/addPrice")
     public ResponseEntity<Long> addPriceListItem(@PathVariable Long accommodationId, @RequestBody PriceListItemDTO dto) {
-
         PricelistItem item = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
+        Availability availability = PriceListItemDTOMapper.fromDTOtoAvailability(dto);
+        accommodationService.addPriceList(accommodationId, item);
+        accommodationService.addAvailability(accommodationId, availability);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
+
+
 }
