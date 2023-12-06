@@ -37,5 +37,5 @@ public class Review {
 	private ReviewType reviewType;
 
 	@ManyToOne
-	private Guest guestId;
+	private Guest guest;
 }
