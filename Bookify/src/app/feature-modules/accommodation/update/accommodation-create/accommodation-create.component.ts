@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AccommodationService } from '../../accommodation.service';
 import { Router } from '@angular/router';
 import { Address } from '../../model/address.dto.model';
 import { AccommodationDTO } from '../../model/accommodation.dto.model';
 import { Accommodation } from '../../model/accommodation.model';
 import { File } from 'buffer';
+import { AccommodationBasicInformationComponent } from '../accommodation-basic-information/accommodation-basic-information.component';
 
 @Component({
   selector: 'app-accommodation-create',
@@ -12,6 +13,8 @@ import { File } from 'buffer';
   styleUrl: './accommodation-create.component.css'
 })
 export class AccommodationCreateComponent {
+  @ViewChild(AccommodationBasicInformationComponent) basicInfo!: AccommodationBasicInformationComponent;
+
   basicInfoPropertyName: string = '';
   basicInfoDescription: string = '';
   locationCountry: string = '';
@@ -70,6 +73,10 @@ export class AccommodationCreateComponent {
   }
 
   onSubmit() {
+
+    console.log(this.basicInfo.validateForm())
+    // this.basicInfo.validateForm()
+
     const addressDTO: Address = {
       country: this.locationCountry,
       city: this.locationCity,
@@ -88,13 +95,13 @@ export class AccommodationCreateComponent {
       pricePer: this.pricePer === '' ? null : this.pricePer,
       address: addressDTO
     };
-    this.accommodationService.add(dto).subscribe(
-      {
-        next: (data: Accommodation) => {
-          console.log(data);
-          this.accommodationService.addImages(data.id, this.images).subscribe();
-        },
-        error: (_) => { }
-      });
+    // this.accommodationService.add(dto).subscribe(
+    //   {
+    //     next: (data: Accommodation) => {
+    //       console.log(data);
+    //       this.accommodationService.addImages(data.id, this.images).subscribe();
+    //     },
+    //     error: (_) => { }
+    //   });
   }
 }
