@@ -1,12 +1,13 @@
 package rs.ac.uns.ftn.Bookify.service.interfaces;
 
+import org.springframework.core.io.FileSystemResource;
 import rs.ac.uns.ftn.Bookify.dto.*;
 
 import java.util.Collection;
 
 public interface IUserService {
     public Collection<UserDTO> getAll();
-    public UserDetailDTO get(Long userId);
+    public UserDetailDTO find(Long userId);
     public Long create(UserRegisteredDTO newUser);
     public UserDetailDTO update(UserDetailDTO updatedUser);
     public boolean changePassword(Long userId, PasswordUpdateDTO newPassword);
@@ -16,4 +17,6 @@ public interface IUserService {
     public boolean deleteUser(Long userId);
     public boolean blockUser(Long userId);
     public Collection<UserDTO> searchUsers(String searchParam);
+    public Long updateImage(byte[] bytes, String imageName, Long userId) throws Exception;
+    public FileSystemResource getImage(Long imageId);
 }

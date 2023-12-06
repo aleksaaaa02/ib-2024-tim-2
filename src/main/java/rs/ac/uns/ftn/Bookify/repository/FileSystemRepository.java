@@ -16,7 +16,7 @@ public class FileSystemRepository {
     private String IMAGES_DIR;
 
     public String save(byte[] content, String subFolderName, String imageName) throws IOException{
-        Path newImagePath = Paths.get(IMAGES_DIR + "/" +subFolderName + "/" + new Date().getTime() + "-" + imageName);
+        Path newImagePath = Paths.get(IMAGES_DIR + "/" +subFolderName + "/" + new Date().getTime() + "-" + imageName + ".png");
         Files.createDirectories(newImagePath.getParent());
         Files.write(newImagePath, content);
         return newImagePath.toString();
