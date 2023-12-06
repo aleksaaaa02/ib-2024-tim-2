@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.Bookify.controller;
 
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,21 +11,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.Bookify.dto.*;
+import rs.ac.uns.ftn.Bookify.mapper.AccommodationInesertDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.model.Address;
 import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 
 import java.io.IOException;
 import java.util.*;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/v1/accommodations")
 public class AccommodationController {
-    //    @Autowired
-    //    private IAccommodationService accommodationService;
+
+    @Autowired
+    private IAccommodationService accommodationService;
 
     @Autowired
     private IImageService imageService;
@@ -141,9 +146,12 @@ public class AccommodationController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationDTO> insert(@RequestBody AccommodationDTO accommodation) {
+    public ResponseEntity<Accommodation> insert(@RequestBody AccommodationInsertDTO accommodationDTO) {
         //insert new accommodation
-        return new ResponseEntity<AccommodationDTO>(accommodation, HttpStatus.CREATED);
+        Accommodation accommodation = AccommodationInesertDTOMapper.fromDTOtoAccommodation(accommodationDTO);
+
+        Accommodation a = accommodationService.save(accommodation);
+        return new ResponseEntity<Accommodation>(a, HttpStatus.CREATED);
     }
 
     @PostMapping("/add-to-favorites/{guestId}/{accommodationId}")
@@ -193,6 +201,12 @@ public class AccommodationController {
     @PostMapping("/images/{accommodationId}")
     public ResponseEntity<Long> uploadAccommodationImage(@PathVariable Long accommodationId, @RequestParam MultipartFile image) throws Exception {
         imageService.save(image.getBytes(), accommodationId.toString(), image.getName());
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
+    @PostMapping("/{accommodationId}")
+    public ResponseEntity<Long> uploadAccommodationImages(@PathVariable Long accommodationId, @RequestParam("images") List<MultipartFile> images) throws Exception {
+        imageService.save(accommodationId, images);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }
