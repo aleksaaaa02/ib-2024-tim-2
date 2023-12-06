@@ -19,13 +19,13 @@
   <div class="inline-price">
     <span class="material-symbols-outlined">shoppingmode</span>
     <p class="subcategory">Price</p>
-    <input class="input-field input-margin" placeholder="Minimum"/>
+    <input class="input-field input-margin" value="{{ minPrice }}" disabled/>
     <p id="line">-</p>
-    <input class="input-field" placeholder="Maximum"/>
+    <input class="input-field" value="{{ maxPrice }}" disabled/>
   </div>
-  <mat-slider min="0" max="10000">
-    <input value="300" matSliderStartThumb>
-    <input value="4000" matSliderEndThumb>
+  <mat-slider min="0" max="10000" (input)="onSliderChange()">
+    <input [(ngModel)]="minPrice" matSliderStartThumb>
+    <input [(ngModel)]="maxPrice" matSliderEndThumb>
   </mat-slider>
   <button class="button-right">Filter</button>
 </div>

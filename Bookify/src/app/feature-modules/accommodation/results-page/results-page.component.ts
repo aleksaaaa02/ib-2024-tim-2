@@ -66,7 +66,7 @@ export class ResultsPageComponent implements OnInit{
     this.persons = values.persons;
     this.search = values.search;
     this.dateBegin = new Date(Date.parse(values.dateBegin));
-    this.dateEnd = new Date(Date.parse(values.dateEnd)); 
+    this.dateEnd = new Date(Date.parse(values.dateEnd));
 
     this.resultCount();
     this.getResults();
