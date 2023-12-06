@@ -22,7 +22,7 @@ mat-label {
 .right {
     width: 45%;
     margin-left: 10%;
-    background-image: url('../../../../assets/images/map.webp');
+    background-image: url('../../../../../assets/images/map.webp');
     background-size: cover;
     height: 320px;
 }
