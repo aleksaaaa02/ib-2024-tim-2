@@ -125,6 +125,9 @@ public class UserController {
     @PostMapping("/change-image/{userId}")
     public ResponseEntity<Long> changeAccountImage(@RequestParam("image") MultipartFile image, @PathVariable Long userId) throws Exception {
         Long id = userService.updateImage(image.getBytes(), image.getName(), userId);
+        if(id < 0){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 

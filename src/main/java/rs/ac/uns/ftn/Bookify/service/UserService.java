@@ -2,7 +2,9 @@ package rs.ac.uns.ftn.Bookify.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.model.Address;
 import rs.ac.uns.ftn.Bookify.model.Image;
@@ -53,7 +55,11 @@ public class UserService implements IUserService {
         }
         User u = user.get();
         updateUserData(updatedUser, u);
-        this.userRepository.save(u);
+        try {
+            userRepository.save(u);
+        } catch (Exception e){
+            return null;
+        }
         return new UserDetailDTO(u);
     }
 
@@ -108,7 +114,11 @@ public class UserService implements IUserService {
         Image image = imageService.save(bytes, "accounts", imageName);
         User user = u.get();
         user.setProfileImage(image);
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (Exception e){
+            return -1L;
+        }
         return image.getId();
     }
 
