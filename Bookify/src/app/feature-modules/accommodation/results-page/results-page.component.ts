@@ -48,8 +48,14 @@ export class ResultsPageComponent implements OnInit{
 
   onPageChange(event: PageEvent) {
     this.pageSize = event.pageSize;
-    this.currentPage = event.pageIndex + 1;
+    if (this.currentPage != event.pageIndex + 1) {
+      this.currentPage = event.pageIndex + 1;
 
+      window.scrollTo({
+        top: 1000,
+        behavior: 'smooth'
+      });
+    }
     this.getResults();
   }
 
