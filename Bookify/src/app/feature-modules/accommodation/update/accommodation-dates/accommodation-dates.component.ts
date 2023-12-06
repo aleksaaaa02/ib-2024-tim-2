@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AccommodationService } from '../../accommodation.service';
 import { Router } from '@angular/router';
-import { PriceList } from '../../model/priceList.dto';
+import { PriceListDTO } from '../../model/priceList.dto.model';
 
 @Component({
   selector: 'app-accommodation-dates',
@@ -52,7 +52,7 @@ export class AccommodationDatesComponent {
         const checkOutValue = checkOutControl.value;
         const priceValue = priceControl.value;
         // Create PriceList object
-        const priceList: PriceList = {
+        const priceList: PriceListDTO = {
           startDate: new Date(checkInValue),
           endDate: new Date(checkOutValue),
           price: priceValue

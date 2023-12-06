@@ -3,8 +3,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AccommodationService } from '../../accommodation.service';
-import { PriceList } from '../../model/priceList.dto';
+import { PriceListDTO } from '../../model/priceList.dto.model';
 import { DatePipe } from '@angular/common';
+import { PriceList } from '../../model/priceList.model';
 
 @Component({
   selector: 'app-accommodation-price-list-items',
@@ -15,14 +16,14 @@ import { DatePipe } from '@angular/common';
 export class AccommodationPriceListItemsComponent implements OnInit, AfterViewInit {
   priceListItems!: PriceList[];
   dataSource!: MatTableDataSource<PriceList>;
-  displayedColumns: string[] = ['formattedStartDate', 'formattedEndDate', 'price'];
+  displayedColumns: string[] = ['formattedStartDate', 'formattedEndDate', 'price', 'edit', 'delete'];
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   @ViewChild(MatSort)
   sort!: MatSort;
 
-  constructor(private service: AccommodationService,private datePipe: DatePipe) {
+  constructor(private service: AccommodationService, private datePipe: DatePipe) {
 
   }
 
@@ -31,11 +32,11 @@ export class AccommodationPriceListItemsComponent implements OnInit, AfterViewIn
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    // this.dataSource.paginator = this.paginator;
+    // this.dataSource.sort = this.sort;
   }
 
-  getPriceList(){
+  getPriceList() {
     this.service.getAllPriceListItems(1).subscribe({
       next: (data: PriceList[]) => {
         this.priceListItems = data;
@@ -47,13 +48,20 @@ export class AccommodationPriceListItemsComponent implements OnInit, AfterViewIn
             item.formattedEndDate = this.datePipe.transform(item.endDate, 'yyyy-MM-dd') || '';
           }
         });
+        console.log(this.priceListItems);
         this.dataSource = new MatTableDataSource<PriceList>(this.priceListItems);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
-      error: (_) => {console.log("GRESK!")}
+      error: (_) => { console.log("GRESK!") }
     });
   }
 
-
+  deletePrice(element: PriceList): void {
+    this.service.deletePriceListItem(element).subscribe({
+      next: (_) => {
+        this.getPriceList();
+      }
+    })
+  }
 }

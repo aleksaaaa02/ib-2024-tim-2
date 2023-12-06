@@ -5,6 +5,10 @@
     margin-bottom: 300px;
 }
 
-.wrapper{
+.wrapper {
     padding-bottom: 30px;
+}
+
+.material-symbols-outlined {
+    cursor: pointer;
 }
