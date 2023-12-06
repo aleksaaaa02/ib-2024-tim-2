@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/v1/notifications")
 public class NotificationController {
 

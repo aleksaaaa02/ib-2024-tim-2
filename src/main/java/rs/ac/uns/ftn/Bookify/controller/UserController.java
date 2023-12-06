@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.Bookify.dto.*;
-import rs.ac.uns.ftn.Bookify.service.ImageService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
 import java.util.Date;
@@ -20,7 +19,6 @@ import rs.ac.uns.ftn.Bookify.dto.ReportedUserDTO;
 import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Owner;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 
 @RestController

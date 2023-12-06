@@ -1,6 +1,6 @@
 package rs.ac.uns.ftn.Bookify.dto;
-
 import lombok.*;
+import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.model.Address;
 
@@ -16,5 +16,7 @@ public class AccommodationBasicDTO {
     public PricePer pricePer;
     public float priceOne;
     private Long imageId;
+    private AccommodationType type;
+    private String description;
 }
 

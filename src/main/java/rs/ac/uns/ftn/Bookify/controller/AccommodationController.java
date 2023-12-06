@@ -1,9 +1,9 @@
 package rs.ac.uns.ftn.Bookify.controller;
 
-
-import ch.qos.logback.core.net.SyslogOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.Bookify.dto.*;
+import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
+import rs.ac.uns.ftn.Bookify.mapper.AccommodationBasicDTOMapper;
 import rs.ac.uns.ftn.Bookify.mapper.AccommodationInesertDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
@@ -19,15 +21,13 @@ import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
-
-import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/accommodations")
 public class AccommodationController {
-
     @Autowired
     private IAccommodationService accommodationService;
 
@@ -36,22 +36,62 @@ public class AccommodationController {
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationBasicDTO>> getAccommodationBasics(@RequestParam("location") String location, @RequestParam("begin")
-    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end")
-                                                                                    @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons") int persons) {
+    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons")
+    int persons, @RequestParam("page") int page, @RequestParam("size") int size) {
         //return all basic info of accommodations for search
-        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, null);
-        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, null);
-        Collection<AccommodationBasicDTO> basicAccommodations = new HashSet<>();
-        basicAccommodations.add(basicDTO1);
-        basicAccommodations.add(basicDTO2);
-        return new ResponseEntity<>(basicAccommodations, HttpStatus.OK);
+        long totalResults = accommodationService.countByLocationAndGuestRange(persons, location, begin ,end);
+        if (totalResults > 0) {
+            int resultNumber = (int) totalResults - size * page;
+            if (resultNumber <= 0)
+                resultNumber = (int) totalResults;
+            else if (resultNumber > size)
+                resultNumber = size;
+
+            Pageable paging = PageRequest.of(page, resultNumber);
+            Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, begin, end, paging).getContent();
+
+            List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
+                    .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
+                    .collect(Collectors.toList());
+
+            for (AccommodationBasicDTO accommodation : accommodationBasicDTO) {
+                accommodation.setTotalPrice((float) accommodationService.getTotalPrice(accommodation.getId(), begin, end));
+                accommodation.setPriceOne((float) accommodationService.getOnePrice(accommodation.getId(), begin, end));
+            }
+
+            return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
+        }
+        else {
+            Collection<AccommodationBasicDTO> accommodationBasicDTO = new HashSet<>();
+            return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping(value = "/search-count", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Long> getAccommodationBasicsCount(@RequestParam("location") String location, @RequestParam("begin")
+    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons")
+    int persons) {
+        //return all basic info of accommodations for search
+        long count = accommodationService.countByLocationAndGuestRange(persons, location, begin, end);
+
+        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
     @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationBasicDTO>> getAccommodationBasicsByFilter(@RequestBody FilterDTO filter) {
         //return all basic info of accommodations for search
-        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, null);
-        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, null);
+        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet.");
+        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.HOTEL, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet.");
         Collection<AccommodationBasicDTO> basicAccommodations = new HashSet<>();
         basicAccommodations.add(basicDTO1);
         basicAccommodations.add(basicDTO2);
@@ -72,8 +112,18 @@ public class AccommodationController {
     @GetMapping(value = "/top-accommodations", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationBasicDTO>> getTopAccommodations() {
         //returns most popular accommodations
-        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, null);
-        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, null);
+        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet.");
+        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet.");
         Collection<AccommodationBasicDTO> basicAccommodations = new HashSet<>();
         basicAccommodations.add(basicDTO1);
         basicAccommodations.add(basicDTO2);
@@ -92,8 +142,18 @@ public class AccommodationController {
     @GetMapping(value = "/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationBasicDTO>> getOwnersAccommodations(@PathVariable Long ownerId) {
         //returns all accommodations for owner
-        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, null);
-        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, null);
+        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet.");
+        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet.");
         Collection<AccommodationBasicDTO> basicAccommodations = new HashSet<>();
         basicAccommodations.add(basicDTO1);
         basicAccommodations.add(basicDTO2);
@@ -103,8 +163,18 @@ public class AccommodationController {
     @GetMapping("/favorites/{guestId}")
     public ResponseEntity<Collection<AccommodationBasicDTO>> getFavoritesAccommodations(@PathVariable Long guestId) {
         //returns all favorites accommodation of user
-        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, null);
-        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, null);
+        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet.");
+        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
+                "      bibendum luctus. Lorem ipsum dolor sit amet.");
         Collection<AccommodationBasicDTO> basicAccommodations = new HashSet<>();
         basicAccommodations.add(basicDTO1);
         basicAccommodations.add(basicDTO2);
@@ -194,8 +264,7 @@ public class AccommodationController {
 
     @GetMapping(value = "/images/{imageId}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     public ResponseEntity<FileSystemResource> getAccommodationImage(@PathVariable Long imageId) {
-
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(imageService.find(imageId), HttpStatus.OK);
     }
 
     @PostMapping("/images/{accommodationId}")
