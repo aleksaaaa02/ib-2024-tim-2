@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.Bookify.controller;
 
 
 import ch.qos.logback.core.net.SyslogOutputStream;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.mapper.AccommodationInesertDTOMapper;
+import rs.ac.uns.ftn.Bookify.mapper.PriceListItemDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.model.Address;
@@ -208,6 +210,13 @@ public class AccommodationController {
     @PostMapping("/{accommodationId}")
     public ResponseEntity<Long> uploadAccommodationImages(@PathVariable Long accommodationId, @RequestParam("images") List<MultipartFile> images) throws Exception {
 //        imageService.save(accommodationId, images);
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
+    @PostMapping("/price/{accommodationId}")
+    public ResponseEntity<Long> addPriceListItem(@PathVariable Long accommodationId, @RequestBody PriceListItemDTO dto) {
+
+        PricelistItem item = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }
