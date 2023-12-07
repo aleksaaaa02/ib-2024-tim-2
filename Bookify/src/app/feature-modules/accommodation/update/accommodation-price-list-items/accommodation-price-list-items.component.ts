@@ -14,6 +14,8 @@ import { PriceList } from '../../model/priceList.model';
   providers: [DatePipe]
 })
 export class AccommodationPriceListItemsComponent implements OnInit, AfterViewInit {
+  selectedPriceList: PriceList;
+  shouldEdit: boolean;
   priceListItems!: PriceList[];
   dataSource!: MatTableDataSource<PriceList>;
   displayedColumns: string[] = ['formattedStartDate', 'formattedEndDate', 'price', 'edit', 'delete'];
@@ -55,6 +57,11 @@ export class AccommodationPriceListItemsComponent implements OnInit, AfterViewIn
       },
       error: (_) => { console.log("GRESK!") }
     });
+  }
+
+  onEditClicked(priceItem: PriceList) {
+    this.shouldEdit = true;
+    this.selectedPriceList = priceItem;
   }
 
   deletePrice(element: PriceList): void {

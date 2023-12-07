@@ -1,23 +1,12 @@
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-
 <div class="search-card">
   <div class="inline">
     <span class="material-symbols-outlined icon">search</span>
-    <input type="text" placeholder="Search destination">
+    <input [(ngModel)]="search" type="text" placeholder="Search destination">
   </div>
-  <div class="inline">
-    <span class="material-symbols-outlined icon">edit_calendar</span>
-    <p class="date">Check in</p>
-  </div>
-  <div class="inline">
-    <span class="material-symbols-outlined icon">edit_calendar</span>
-    <p class="date">Check out</p>
-  </div>
+    <app-datapicker-range #dateComponent></app-datapicker-range>
   <div class="inline">
     <span class="material-symbols-outlined icon">person</span>
-    <input type="number" value="2">
+    <input type="number" [(ngModel)]="persons"  value="2">
   </div>
-  <button class="button-right" routerLink="results">Search</button>
+  <button class="button-right" (click)="onButtonPress()">Search</button>
 </div>

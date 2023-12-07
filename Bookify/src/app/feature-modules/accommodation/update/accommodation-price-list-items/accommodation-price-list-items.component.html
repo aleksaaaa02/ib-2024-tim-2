@@ -1,5 +1,5 @@
 <div class="wrapper">
-  <app-accommodation-dates (priceListUpdate)="getPriceList()"></app-accommodation-dates>
+  <app-accommodation-dates (priceListUpdate)="getPriceList()" [priceList]="selectedPriceList" [shouldEdit]="shouldEdit"></app-accommodation-dates>
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
 
@@ -20,7 +20,7 @@
 
       <ng-container matColumnDef="edit">
         <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element"> <span class="material-symbols-outlined">
+        <td mat-cell *matCellDef="let element"> <span class="material-symbols-outlined" (click)="onEditClicked(element)">
             edit
           </span></td>
       </ng-container>

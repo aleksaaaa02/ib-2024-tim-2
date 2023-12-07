@@ -1,20 +1,13 @@
-<div class="container">
-  <div class="inline">
+<div>
+  <div class="inline title-main">
     <span class="material-symbols-outlined favorite">favorite</span>
-  <p id="hotel-name">Scandinavic Havet Hotel</p>
+    <p id="hotel-name">Scandinavic Havet Hotel</p>
     <meter class="average-rating" min="0" max="5" value="4.3"></meter>
   </div>
 
-  <div #contrainer id="image-slider" [ngStyle]="{width: 800 +'px', height: 400 + 'px'}">
-  <ng-image-slider #nav
-                   [images]="imageObject"
-                   [infinite]="false"
-                   [autoSlide]="1"
-                   [manageImageRatio]=false
-                   [imageSize]="{width: contrainer.style.width, space:0, height: 400 + 'px'}"
-                   slideImage="1"></ng-image-slider>
+  <div id="carousel">
+    <app-carousel></app-carousel>
   </div>
-
 
   <div class="two-part">
     <div id="amenities">

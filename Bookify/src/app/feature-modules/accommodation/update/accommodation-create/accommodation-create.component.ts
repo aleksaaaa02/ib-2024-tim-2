@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { Address } from '../../model/address.dto.model';
 import { AccommodationDTO } from '../../model/accommodation.dto.model';
 import { Accommodation } from '../../model/accommodation.model';
-import { File } from 'buffer';
 import { AccommodationBasicInformationComponent } from '../accommodation-basic-information/accommodation-basic-information.component';
 import { MatSnackBar } from '@angular/material/snack-bar'
 
@@ -100,18 +99,17 @@ export class AccommodationCreateComponent {
         pricePer: this.pricePer === '' ? null : this.pricePer,
         address: addressDTO
       };
-      // this.accommodationService.add(dto).subscribe(
-      //   {
-      //     next: (data: Accommodation) => {
-      //       console.log(data);
-      //       this.accommodationService.addImages(data.id, this.images).subscribe();
-      //     },
-      //     error: (_) => { }
-      //   });
+      this.accommodationService.add(dto).subscribe(
+        {
+          next: (data: Accommodation) => {
+            console.log(data);
+            this.accommodationService.addImages(data.id, this.images).subscribe();
+          },
+          error: (_) => { }
+        });
     } else {
       this.openSnackBar('All field must be filled', 'Close');
     }
-    // this.basicInfo.validateForm()
   }
 
   isValid(): boolean {
