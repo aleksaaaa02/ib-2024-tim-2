@@ -1,13 +1,12 @@
 package rs.ac.uns.ftn.Bookify.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.server.Cookie;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.AccommodationBasicDTO;
 import rs.ac.uns.ftn.Bookify.dto.FilterDTO;
+import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
+import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
@@ -60,14 +59,35 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public List<AccommodationBasicDTO> getForFilter(List<AccommodationBasicDTO> accommodationBasicDTO, FilterDTO filter) {
-        List<AccommodationBasicDTO> accommodationFilter = new ArrayList<>();
-        for (AccommodationBasicDTO accommodation : accommodationBasicDTO) {
-            if (accommodation.getTotalPrice() <= filter.getMaxPrice() && accommodation.getTotalPrice() > filter.getMinPrice() || filter.getMinPrice() == -1){
+    public List<Accommodation> getForFilter(List<Accommodation> accommodations, FilterDTO filter){
+        List<Accommodation> accommodationFilter = new ArrayList<>();
+        for (Accommodation accommodation : accommodations) {
+            if (fitsAccommodationType(accommodation, filter.getTypes()) && fitsFilters(accommodation, filter.getFilters()))
                 accommodationFilter.add(accommodation);
-            }
         }
         return accommodationFilter;
+    }
+
+    @Override
+    public List<AccommodationBasicDTO> getForPriceRange(List<AccommodationBasicDTO> accommodations, FilterDTO filter) {
+        List<AccommodationBasicDTO> accommodationFilter = new ArrayList<>();
+        for (AccommodationBasicDTO accommodation : accommodations) {
+            if (fitsPriceRange(accommodation, filter.getMinPrice(), filter.getMaxPrice()))
+                accommodationFilter.add(accommodation);
+        }
+        return accommodationFilter;
+    }
+
+    private boolean fitsPriceRange(AccommodationBasicDTO accommodation, float minPrice, float maxPrice) {
+        return (minPrice == -1 || accommodation.getTotalPrice() <= maxPrice && accommodation.getTotalPrice() > minPrice);
+    }
+
+    private boolean fitsAccommodationType(Accommodation accommodation, List<AccommodationType> type) {
+        return type.contains(accommodation.getAccommodationType());
+    }
+
+    private boolean fitsFilters(Accommodation accommodation, List<Filter> filters) {
+        return accommodation.getFilters().containsAll(filters);
     }
 
     @Override

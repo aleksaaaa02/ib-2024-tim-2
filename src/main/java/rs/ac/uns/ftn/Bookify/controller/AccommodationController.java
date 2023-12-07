@@ -70,13 +70,15 @@ public class AccommodationController {
     int persons, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String sort, @RequestBody FilterDTO filter) {
         //return all basic info of accommodations for search
         Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, begin, end);
+        System.out.println(filter.getTypes());
+        accommodations = accommodationService.getForFilter((List<Accommodation>) accommodations, filter);
 
         List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
                     .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
                     .collect(Collectors.toList());
 
         accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, begin, end, persons);
-        accommodationBasicDTO = accommodationService.getForFilter(accommodationBasicDTO, filter);
+        accommodationBasicDTO = accommodationService.getForPriceRange(accommodationBasicDTO, filter);
         accommodationBasicDTO = accommodationService.sortAccommodationBasicDTO(accommodationBasicDTO, sort);
         int totalResults = accommodationBasicDTO.size();
 

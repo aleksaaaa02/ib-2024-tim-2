@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.AccommodationBasicDTO;
 import rs.ac.uns.ftn.Bookify.dto.FilterDTO;
+import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
+import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 
 import java.util.Collection;
@@ -18,7 +20,8 @@ public interface IAccommodationService {
     public long countByLocationAndGuestRange(Integer persons, String location, Date begin, Date end);
     public List<AccommodationBasicDTO> sortAccommodationBasicDTO(List<AccommodationBasicDTO> accommodations, String sort);
     public List<AccommodationBasicDTO> setPrices(List<AccommodationBasicDTO> accommodationBasicDTO, Date begin, Date end, int persons);
-    public List<AccommodationBasicDTO> getForFilter(List<AccommodationBasicDTO> accommodationBasicDTO, FilterDTO filter);
+    public List<Accommodation> getForFilter(List<Accommodation> accommodations, FilterDTO filter);
+    public List<AccommodationBasicDTO> getForPriceRange(List<AccommodationBasicDTO> accommodations, FilterDTO filter);
     public double getTotalPrice(Long id, Date begin, Date end);
     public double getOnePrice(Long id, Date begin, Date end);
     public FileSystemResource getImages(Long id);

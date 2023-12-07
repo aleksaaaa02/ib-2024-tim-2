@@ -205,7 +205,7 @@ VALUES
     (33, 'AIRPORT_SHUTTLE'), (33, 'HEATING'), (33, 'FREE_PARKING'), (33, 'FREE_WIFI'), (33, 'CITY_CENTER'),
     (34, 'DEPOSIT_BOX'), (34, 'WHEELCHAIR'), (34, 'BAR'), (34, 'SWIMMING_POOL'), (34, 'LUNCH'),
     (35, 'AIRPORT_SHUTTLE'), (35, 'DINER'), (35, 'JACUZZI'), (35, 'SWIMMING_POOL'), (35, 'FRONT_DESK'),
-    (35, 'GARDEN'), (36, 'WHEELCHAIR'), (36, 'BAR'), (36, 'FREE_WIFI'), (36, 'LUNCH');
+    (36, 'GARDEN'), (36, 'WHEELCHAIR'), (36, 'BAR'), (36, 'FREE_WIFI'), (36, 'LUNCH');
 
 
 SET @path = '/Users/olivera/Documents/Bookify/images/';
