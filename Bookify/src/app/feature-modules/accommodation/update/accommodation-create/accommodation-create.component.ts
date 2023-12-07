@@ -1,10 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { AccommodationService } from '../../accommodation.service';
 import { Router } from '@angular/router';
 import { Address } from '../../model/address.dto.model';
 import { AccommodationDTO } from '../../model/accommodation.dto.model';
 import { Accommodation } from '../../model/accommodation.model';
-import { File } from 'buffer';
 import { AccommodationBasicInformationComponent } from '../accommodation-basic-information/accommodation-basic-information.component';
 import { MatSnackBar } from '@angular/material/snack-bar'
 
@@ -103,8 +102,11 @@ export class AccommodationCreateComponent {
       this.accommodationService.add(dto).subscribe(
         {
           next: (data: Accommodation) => {
-            console.log(data);
-            this.accommodationService.addImages(data.id, this.images).subscribe();
+            this.accommodationService.addImages(data.id, this.images).subscribe({
+              next: () => {
+                this.router.navigate(['/accommodation/create/price', data.id]);
+              }
+            });
           },
           error: (_) => { }
         });

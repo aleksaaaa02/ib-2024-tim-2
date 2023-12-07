@@ -2,7 +2,7 @@
     <div class="wrapper-item">
         <mat-label>Property Name</mat-label>
         <mat-form-field>
-            <input matInput [(ngModel)]="propertyName" name="propertyName" required #propertyNameInput="ngModel"
+            <input matInput [(ngModel)]="propertyName" [ngModelOptions]="{standalone: true}" name="propertyName" required #propertyNameInput="ngModel"
                 (ngModelChange)="onBasicInfoChange()">
             <mat-error *ngIf="propertyNameInput.invalid && propertyNameInput.touched">Property Name is required</mat-error>
         </mat-form-field>
@@ -10,7 +10,7 @@
     <div class="wrapper-item">
         <mat-label>Description</mat-label>
         <mat-form-field class="description">
-            <textarea matInput [(ngModel)]="description" name="description" required #descriptionInput="ngModel"
+            <textarea matInput [(ngModel)]="description" [ngModelOptions]="{standalone: true}" name="description" required #descriptionInput="ngModel"
                 (ngModelChange)="onBasicInfoChange()"></textarea>
             <mat-error *ngIf="descriptionInput.invalid && descriptionInput.touched">Description is required</mat-error>
         </mat-form-field>
