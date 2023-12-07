@@ -1,14 +1,15 @@
 package rs.ac.uns.ftn.Bookify.service.interfaces;
 
+
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.AccommodationBasicDTO;
 import rs.ac.uns.ftn.Bookify.dto.FilterDTO;
-import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
-import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
+import rs.ac.uns.ftn.Bookify.model.Availability;
+import rs.ac.uns.ftn.Bookify.model.PricelistItem;
+
+import java.util.Collection;
 
 import java.util.Collection;
 import java.util.Date;
@@ -26,4 +27,11 @@ public interface IAccommodationService {
     public double getOnePrice(Long id, Date begin, Date end);
     public FileSystemResource getImages(Long id);
     public Accommodation save(Accommodation accommodation);
+    public Long addPriceList(Long accommodationId, PricelistItem item);
+    public Long addAvailability(Long accommodationId, Availability availability);
+    public Collection<PricelistItem> getAccommodationPriceListItems(Long accommodationId);
+    public Boolean deletePriceListItem(Long accommodationId, Long priceListItemId);
+    public Boolean deleteAvailabilityItem(Long accommodationId, Long priceListItemId);
+    public Long updatePriceListItem(Long accommodationId, PricelistItem item);
+    public Long updateAvailabilityItem(Long accommodationId, Availability availability);
 }

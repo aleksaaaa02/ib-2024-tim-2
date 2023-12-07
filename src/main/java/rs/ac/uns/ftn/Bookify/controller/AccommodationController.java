@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.Bookify.controller;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +16,7 @@ import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
 import rs.ac.uns.ftn.Bookify.mapper.AccommodationBasicDTOMapper;
 import rs.ac.uns.ftn.Bookify.mapper.AccommodationInesertDTOMapper;
+import rs.ac.uns.ftn.Bookify.mapper.PriceListItemDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.model.Address;
@@ -270,5 +273,51 @@ public class AccommodationController {
     public ResponseEntity<Long> uploadAccommodationImages(@PathVariable Long accommodationId, @RequestParam("images") List<MultipartFile> images) throws Exception {
         imageService.save(accommodationId, images);
         return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
+    @PostMapping("/{accommodationId}/addPrice")
+    public ResponseEntity<Long> addPriceListItem(@PathVariable Long accommodationId, @RequestBody PriceListItemDTO dto) {
+        PricelistItem item = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
+        Availability availability = PriceListItemDTOMapper.fromDTOtoAvailability(dto);
+        if (accommodationService.addPriceList(accommodationId, item) == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        if (accommodationService.addAvailability(accommodationId, availability) == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(accommodationId, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{accommodationId}/getPrice", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<PricelistItem>> getAccommodationPriceListItems(@PathVariable Long accommodationId) {
+        Collection<PricelistItem> priceListItems = accommodationService.getAccommodationPriceListItems(accommodationId);
+//        Collection<PriceListItemDTO> priceListItemDTOS = PriceListItemDTOMapper.fromPriceListItemtoDTO(pricelistItems);
+        return new ResponseEntity<>(priceListItems, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/price/{accommodationId}/{priceListItemId}")
+    public ResponseEntity<ReservationDTO> deletePriceList(@PathVariable Long accommodationId, @PathVariable Long priceListItemId) {
+        accommodationService.deletePriceListItem(accommodationId, priceListItemId);
+        accommodationService.deleteAvailabilityItem(accommodationId, priceListItemId);
+        return new ResponseEntity<ReservationDTO>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping(value = "/price/{accommodationId}/{priceListItemId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PricelistItem> updatePriceListItem(@PathVariable Long accommodationId, @PathVariable Long priceListItemId, @RequestBody PriceListItemDTO dto) {
+        PricelistItem item = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
+        item.setId(priceListItemId);
+
+        if (accommodationService.updatePriceListItem(accommodationId, item) == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        Availability availability = PriceListItemDTOMapper.fromDTOtoAvailability(dto);
+        availability.setId(priceListItemId);
+
+        if (accommodationService.updateAvailabilityItem(accommodationId, availability) == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<PricelistItem>(item, HttpStatus.OK);
     }
 }

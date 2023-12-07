@@ -4,14 +4,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
+import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
+
+
+import org.springframework.data.repository.query.Param;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 public interface IAccommodationRepository extends JpaRepository<Accommodation, Long> {
@@ -33,6 +35,12 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             @Param("persons") int persons,
             @Param("begin") Date begin,
             @Param("end") Date end);
+
+    @Query("select a.priceList from Accommodation a  join a.priceList where a.id=?1")
+    public Collection<PricelistItem> getPriceListItems(Long accommodationId);
+
+    @Query("select a.availability from Accommodation a  join a.availability where a.id=?1")
+    public Collection<Availability> getAvailabilities(Long accommodationId);
 
     @Query("SELECT COUNT(a) FROM Accommodation a " +
             "JOIN a.address ad " +

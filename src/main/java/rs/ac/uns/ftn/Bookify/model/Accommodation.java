@@ -42,9 +42,9 @@ public class Accommodation {
     @Column(nullable = false)
     private boolean manual = true;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private Collection<PricelistItem> priceList;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private Collection<Availability> availability;
     @OneToMany
     private Collection<Review> reviews;

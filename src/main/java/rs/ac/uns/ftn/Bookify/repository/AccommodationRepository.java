@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.data.repository.query.Param;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
+import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
 
@@ -170,6 +171,16 @@ public class AccommodationRepository implements IAccommodationRepository{
 
     @Override
     public Collection<Accommodation> findByLocationAndGuestRange(String location, int persons, Date begin, Date end) {
+        return null;
+    }
+
+    @Override
+    public Collection<PricelistItem> getPriceListItems(Long accommodationId) {
+        return null;
+    }
+
+    @Override
+    public Collection<Availability> getAvailabilities(Long accommodationId) {
         return null;
     }
 
