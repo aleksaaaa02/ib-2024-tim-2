@@ -3,7 +3,7 @@
   width: 70%;
   border-radius: 1.2em;
   background-color: rgba(170, 169, 169, 0.7);
-  padding: 1rem;
+  padding: 1.5rem;
 }
 
 .inline {
@@ -18,6 +18,15 @@
   align-items: center;
   margin-top: 2rem;
   height: 3vh;
+}
+
+.inline-type {
+  margin-left: 2rem;
+  display: flex;
+}
+
+.checkbox-type {
+  margin: 0 0 0 1.5rem;
 }
 
 .material-symbols-outlined {
@@ -102,8 +111,8 @@ mat-slider {
   background-color: #e3e3e3;
 }
 
-.checkbox-wrapper-42 {
-  margin: 1rem 0 0 0;
+.checkbox-filter {
+  margin: 0.8rem 0 0 0;
 }
 
 .checkbox-wrapper-42 input[type="checkbox"] {

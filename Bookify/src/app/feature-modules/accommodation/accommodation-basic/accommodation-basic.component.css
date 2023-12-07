@@ -10,11 +10,11 @@
   border-radius: 1.5em;
   background-color: whitesmoke;
   display: grid;
-  grid-template-columns: 25% 55% 20%;
+  grid-template-columns: 30% 50% 20%;
 }
 
 .column-left {
-  width: 14vw;
+  width: 17.5vw;
 }
 
 .column-center {

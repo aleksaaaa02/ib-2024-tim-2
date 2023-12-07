@@ -6,6 +6,8 @@ import {environment} from "../../../env/env";
 import moment from 'moment';
 import { AccommodationDTO } from './model/accommodation.dto.model';
 import { Accommodation } from './model/accommodation.model';
+import {FilterDTO} from "./model/filter.dto.model";
+import {SearchResponseDTO} from "./model/search-response.dto.model";
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +18,8 @@ export class AccommodationService {
 
   constructor(private httpClient: HttpClient, @Inject(LOCALE_ID) private locale: string) { }
 
-  getForSearch(location: string, dateBegin: Date, dateEnd: Date, persons: number, page: number, size: number): Observable<AccommodationBasicModel[]> {
-    return this.httpClient.get<AccommodationBasicModel[]>(environment.apiHost + 'accommodations/' +
+  getForSearch(location: string, dateBegin: Date, dateEnd: Date, persons: number, page: number, size: number): Observable<SearchResponseDTO> {
+    return this.httpClient.get<SearchResponseDTO>(environment.apiHost + 'accommodations/' +
                                                                                     "search?location=" + location +
                                                                                     "&begin=" + (moment(dateBegin)).format('DD.MM.YYYY') +
                                                                                     "&end=" + (moment(dateEnd)).format('DD.MM.YYYY') +
@@ -26,12 +28,15 @@ export class AccommodationService {
                                                                                     "&size=" + size);
   }
 
-  getCountForSearch(location: string, dateBegin: Date, dateEnd: Date, persons: number): Observable<number> {
-    return this.httpClient.get<number>(environment.apiHost + 'accommodations/' +
-                                                                  "search-count?location=" + location +
-                                                                  "&begin=" + (moment(dateBegin)).format('DD.MM.YYYY') +
-                                                                  "&end=" + (moment(dateEnd)).format('DD.MM.YYYY') +
-                                                                  "&persons=" + persons);
+  getForFilterAndSort(location: string, dateBegin: Date, dateEnd: Date, persons: number, page: number, size: number, sort: string, filter: FilterDTO): Observable<SearchResponseDTO> {
+    return this.httpClient.post<SearchResponseDTO>(environment.apiHost + 'accommodations/' +
+                                                                                    "filter?location=" + location +
+                                                                                    "&begin=" + (moment(dateBegin)).format('DD.MM.YYYY') +
+                                                                                    "&end=" + (moment(dateEnd)).format('DD.MM.YYYY') +
+                                                                                    "&persons=" + persons +
+                                                                                    "&page=" + page +
+                                                                                    "&size=" + size +
+                                                                                    "&sort=" + sort, filter);
   }
 
   getImage(imageId: number) : Observable<Blob> {

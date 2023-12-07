@@ -47,7 +47,9 @@
 }
 
 #sort {
+  width: 18vw;
   margin-left: 16vw;
+  margin-top: 4rem;
 }
 
 mat-paginator {
