@@ -20,21 +20,13 @@
     <span class="material-symbols-outlined">apartment</span>
     <p class="subcategory">Accommodation type</p>
     <div class="inline-type">
+      @for (label of accommodationCheckbox; track label) {
       <div class="checkbox-wrapper-42 checkbox-type">
-        <input id="cbx-hotel" type="checkbox" checked/>
-        <label class="cbx" for="cbx-hotel"></label>
-        <label class="lbl" for="cbx-hotel">Hotel</label>
+        <input id="cbx-{{ label }}" type="checkbox" checked/>
+        <label class="cbx" for="cbx-{{ label }}"></label>
+        <label class="lbl" for="cbx-{{ label }}">{{ label }}</label>
       </div>
-      <div class="checkbox-wrapper-42 checkbox-type">
-        <input id="cbx-apartment" type="checkbox" checked/>
-        <label class="cbx" for="cbx-apartment" ></label>
-        <label class="lbl" for="cbx-apartment">Apartment</label>
-      </div>
-      <div class="checkbox-wrapper-42 checkbox-type">
-        <input id="cbx-room" type="checkbox" checked/>
-        <label class="cbx" for="cbx-room"></label>
-        <label class="lbl" for="cbx-room">Room</label>
-      </div>
+      }
     </div>
   </div>
   <div class="inline-price">

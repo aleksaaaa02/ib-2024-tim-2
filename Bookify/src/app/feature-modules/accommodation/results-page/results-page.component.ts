@@ -23,7 +23,7 @@ export class ResultsPageComponent implements OnInit{
   currentPage = 1;
   pageSize = 5;
   allResults: number;
-  sort: string;
+  sort: string = "";
   filter: FilterDTO = {maxPrice: -1, minPrice: -1, filters: [], types: []}
 
   constructor(private accommodationService: AccommodationService, private route: ActivatedRoute, private router: Router) {}
@@ -95,6 +95,7 @@ export class ResultsPageComponent implements OnInit{
     this.currentPage = 1;
     this.paginator.pageIndex = 0;
     this.filter = filter;
+    console.log(this.filter);
     this.getSortAndFilterResults();
   }
 
