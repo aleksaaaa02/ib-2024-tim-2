@@ -55,7 +55,10 @@ public class AccommodationController {
                     .collect(Collectors.toList());
 
             for (AccommodationBasicDTO accommodation : accommodationBasicDTO) {
-                accommodation.setTotalPrice((float) accommodationService.getTotalPrice(accommodation.getId(), begin, end));
+                if (accommodation.getPricePer() == PricePer.PERSON)
+                    accommodation.setTotalPrice((float) accommodationService.getTotalPrice(accommodation.getId(), begin, end) * persons);
+                else
+                    accommodation.setTotalPrice((float) accommodationService.getTotalPrice(accommodation.getId(), begin, end));
                 accommodation.setPriceOne((float) accommodationService.getOnePrice(accommodation.getId(), begin, end));
             }
 
@@ -77,25 +80,30 @@ public class AccommodationController {
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<AccommodationBasicDTO>> getAccommodationBasicsByFilter(@RequestBody FilterDTO filter) {
+    @PostMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<AccommodationBasicDTO>> getAccommodationBasicsByFilter(@RequestParam("location") String location, @RequestParam("begin")
+    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons")
+    int persons, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String sort, @RequestBody FilterDTO filter) {
         //return all basic info of accommodations for search
-        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
-                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet.");
-        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.HOTEL, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
-                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet.");
-        Collection<AccommodationBasicDTO> basicAccommodations = new HashSet<>();
-        basicAccommodations.add(basicDTO1);
-        basicAccommodations.add(basicDTO2);
-        return new ResponseEntity<>(basicAccommodations, HttpStatus.OK);
+
+        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, begin, end);
+
+        List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
+                    .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
+                    .collect(Collectors.toList());
+
+        for (AccommodationBasicDTO accommodation : accommodationBasicDTO) {
+            if (accommodation.getPricePer() == PricePer.PERSON)
+                accommodation.setTotalPrice((float) accommodationService.getTotalPrice(accommodation.getId(), begin, end) * persons);
+            else
+                accommodation.setTotalPrice((float) accommodationService.getTotalPrice(accommodation.getId(), begin, end));
+            accommodation.setPriceOne((float) accommodationService.getOnePrice(accommodation.getId(), begin, end));
+        }
+        accommodationBasicDTO = accommodationService.sortAccommodationBasicDTO(accommodationBasicDTO, sort);
+        System.out.println("FROM: " + page*size + "  TO: " + (page+1)*size);
+        accommodationBasicDTO = accommodationBasicDTO.subList(page*size, (page+1)*size);
+
+        return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/details/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
