@@ -26,9 +26,7 @@ export class AccommodationPriceListItemsComponent implements OnInit, AfterViewIn
   sort!: MatSort;
 
 
-  constructor(private service: AccommodationService, private datePipe: DatePipe) {
-
-  }
+  constructor(private service: AccommodationService, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     this.getPriceList();
@@ -51,30 +49,28 @@ export class AccommodationPriceListItemsComponent implements OnInit, AfterViewIn
             item.formattedEndDate = this.datePipe.transform(item.endDate, 'yyyy-MM-dd') || '';
           }
         });
-        console.log(this.priceListItems);
         this.dataSource = new MatTableDataSource<PriceList>(this.priceListItems);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
-      error: (_) => { console.log("GRESK!") }
+      error: (_) => { console.log("GRESKA!") }
     });
   }
 
   onEditClicked(priceItem: PriceList) {
-    console.log("Click edit");
     this.shouldEdit = true;
     this.selectedPriceList = priceItem;
   }
 
   deletePrice(element: PriceList): void {
-    this.service.deletePriceListItem(1,element).subscribe({
+    this.service.deletePriceListItem(1, element).subscribe({
       next: (_) => {
         this.getPriceList();
       }
     })
   }
 
-  shouldEdited(shouldE : boolean) {
+  shouldEdited(shouldE: boolean) {
     this.shouldEdit = shouldE;
   }
 }
