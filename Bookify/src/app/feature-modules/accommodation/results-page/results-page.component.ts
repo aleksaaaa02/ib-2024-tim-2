@@ -4,6 +4,7 @@ import {AccommodationService} from "../accommodation.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {FilterDTO} from "../model/filter.dto.model";
 
 @Component({
   selector: 'app-results-page',
@@ -21,8 +22,32 @@ export class ResultsPageComponent implements OnInit{
   currentPage = 1;
   pageSize = 5;
   allResults: number;
+  sort: string;
 
   constructor(private accommodationService: AccommodationService, private route: ActivatedRoute, private router: Router) {}
+
+  onSortChange() {
+    this.currentPage = 1;
+    this.paginator.pageIndex = 0;
+    this.getSortAndFilterResults();
+  }
+
+  getSortAndFilterResults(){
+    let filter: FilterDTO = {
+      filters: [],
+      types: [],
+      minPrice: 0,
+      maxPrice: 0
+    }
+    this.accommodationService.getForFilterAndSort(this.search, this.dateBegin, this.dateEnd, this.persons, this.currentPage-1, this.pageSize, this.sort, filter).subscribe({
+      next: (data) => {
+        this.accommodationModels = data;
+      },
+      error: (_) => {
+        console.log("Error occurred!");
+      }
+    });
+  }
 
   resultCount() {
     this.accommodationService.getCountForSearch(this.search, this.dateBegin, this.dateEnd, this.persons).subscribe({
@@ -47,7 +72,10 @@ export class ResultsPageComponent implements OnInit{
   }
 
   onPageChange(event: PageEvent) {
-    this.pageSize = event.pageSize;
+    if (this.pageSize != event.pageSize) {
+      this.pageSize = event.pageSize;
+      this.paginator.pageIndex = 0;
+    }
     if (this.currentPage != event.pageIndex + 1) {
       this.currentPage = event.pageIndex + 1;
 
@@ -56,7 +84,11 @@ export class ResultsPageComponent implements OnInit{
         behavior: 'smooth'
       });
     }
-    this.getResults();
+    const array: Array<string> = ['Name', 'Lowest', 'Highest'];
+    if (array.indexOf(this.sort) != -1)
+      this.getSortAndFilterResults();
+    else
+      this.getResults();
   }
 
   ngOnInit(): void {

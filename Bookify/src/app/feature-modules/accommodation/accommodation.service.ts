@@ -6,6 +6,7 @@ import {environment} from "../../../env/env";
 import moment from 'moment';
 import { AccommodationDTO } from './model/accommodation.dto.model';
 import { Accommodation } from './model/accommodation.model';
+import {FilterDTO} from "./model/filter.dto.model";
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,17 @@ export class AccommodationService {
                                                                                     "&persons=" + persons +
                                                                                     "&page=" + page +
                                                                                     "&size=" + size);
+  }
+
+  getForFilterAndSort(location: string, dateBegin: Date, dateEnd: Date, persons: number, page: number, size: number, sort: string, filter: FilterDTO): Observable<AccommodationBasicModel[]> {
+    return this.httpClient.post<AccommodationBasicModel[]>(environment.apiHost + 'accommodations/' +
+                                                                                    "filter?location=" + location +
+                                                                                    "&begin=" + (moment(dateBegin)).format('DD.MM.YYYY') +
+                                                                                    "&end=" + (moment(dateEnd)).format('DD.MM.YYYY') +
+                                                                                    "&persons=" + persons +
+                                                                                    "&page=" + page +
+                                                                                    "&size=" + size +
+                                                                                    "&sort=" + sort, filter);
   }
 
   getCountForSearch(location: string, dateBegin: Date, dateEnd: Date, persons: number): Observable<number> {

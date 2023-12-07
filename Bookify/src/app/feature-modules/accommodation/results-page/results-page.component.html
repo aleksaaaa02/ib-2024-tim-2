@@ -10,12 +10,10 @@
   <div id="list">
     <mat-form-field appearance="outline" id="sort">
       <mat-label>Sort by</mat-label>
-      <mat-select>
-        <mat-option>None</mat-option>
-        <mat-option>Name</mat-option>
-        <mat-option>Popularity</mat-option>
-        <mat-option>Price lowest to highest</mat-option>
-        <mat-option>Price highest to lowest</mat-option>
+      <mat-select [(ngModel)]="sort" (ngModelChange)="onSortChange()">
+        <mat-option value="Name">Name</mat-option>
+        <mat-option value="Lowest">Price lowest to highest</mat-option>
+        <mat-option value="Highest">Price highest to lowest</mat-option>
       </mat-select>
     </mat-form-field>
     @for (basicAccommodation of accommodationModels; track basicAccommodation.id) {
