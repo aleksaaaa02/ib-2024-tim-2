@@ -34,10 +34,10 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public Long addPriceList(Long accommodationId, PricelistItem item) {
         Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
-        accommodation.getPriceList().add(item);
         if(!checkDatesPriceItem(accommodation, item)){
             return null;
         }
+        accommodation.getPriceList().add(item);
         priceListItemRepository.save(item);
         accommodationRepository.save(accommodation);
         return accommodationId;
@@ -78,10 +78,10 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public Long addAvailability(Long accommodationId, Availability availability) {
         Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
-        accommodation.getAvailability().add(availability);
         if(!checkDatesAvailability(accommodation, availability)){
             return null;
         }
+        accommodation.getAvailability().add(availability);
         availabilityRepository.save(availability);
         accommodationRepository.save(accommodation);
         return accommodationId;
