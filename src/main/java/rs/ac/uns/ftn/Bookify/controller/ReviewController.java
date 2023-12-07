@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/v1/reviews")
 public class ReviewController {
 //    @Autowired
