@@ -54,13 +54,7 @@ public class AccommodationController {
                     .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
                     .collect(Collectors.toList());
 
-            for (AccommodationBasicDTO accommodation : accommodationBasicDTO) {
-                if (accommodation.getPricePer() == PricePer.PERSON)
-                    accommodation.setTotalPrice((float) accommodationService.getTotalPrice(accommodation.getId(), begin, end) * persons);
-                else
-                    accommodation.setTotalPrice((float) accommodationService.getTotalPrice(accommodation.getId(), begin, end));
-                accommodation.setPriceOne((float) accommodationService.getOnePrice(accommodation.getId(), begin, end));
-            }
+            accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, begin, end, persons);
 
             return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
         }
@@ -76,7 +70,6 @@ public class AccommodationController {
     int persons) {
         //return all basic info of accommodations for search
         long count = accommodationService.countByLocationAndGuestRange(persons, location, begin, end);
-
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
@@ -92,13 +85,8 @@ public class AccommodationController {
                     .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
                     .collect(Collectors.toList());
 
-        for (AccommodationBasicDTO accommodation : accommodationBasicDTO) {
-            if (accommodation.getPricePer() == PricePer.PERSON)
-                accommodation.setTotalPrice((float) accommodationService.getTotalPrice(accommodation.getId(), begin, end) * persons);
-            else
-                accommodation.setTotalPrice((float) accommodationService.getTotalPrice(accommodation.getId(), begin, end));
-            accommodation.setPriceOne((float) accommodationService.getOnePrice(accommodation.getId(), begin, end));
-        }
+        accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, begin, end, persons);
+
         accommodationBasicDTO = accommodationService.sortAccommodationBasicDTO(accommodationBasicDTO, sort);
         if ((page+1)*size > accommodationBasicDTO.size())
             accommodationBasicDTO = accommodationBasicDTO.subList(page*size, accommodationBasicDTO.size());

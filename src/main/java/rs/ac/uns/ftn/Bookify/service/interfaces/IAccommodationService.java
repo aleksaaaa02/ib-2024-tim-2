@@ -17,6 +17,7 @@ public interface IAccommodationService {
     public Collection<Accommodation> getAccommodationsForSearch(Integer persons, String location, Date begin, Date end);
     public long countByLocationAndGuestRange(Integer persons, String location, Date begin, Date end);
     public List<AccommodationBasicDTO> sortAccommodationBasicDTO(List<AccommodationBasicDTO> accommodations, String sort);
+    public List<AccommodationBasicDTO> setPrices(List<AccommodationBasicDTO> accommodationBasicDTO, Date begin, Date end, int persons);
     public double getTotalPrice(Long id, Date begin, Date end);
     public double getOnePrice(Long id, Date begin, Date end);
     public FileSystemResource getImages(Long id);
