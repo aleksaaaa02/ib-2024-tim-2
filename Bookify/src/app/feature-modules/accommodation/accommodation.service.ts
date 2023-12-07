@@ -61,8 +61,8 @@ export class AccommodationService {
     return this.httpClient.post<Accommodation>(environment.apiAccommodation, accommodation)
   }
 
-  deletePriceListItem(priceListItem: PriceList): Observable<PriceList> {
-    return this.httpClient.delete<PriceList>(environment.apiAccommodation + "/price/" + priceListItem.id);
+  deletePriceListItem(accommodationId: number, priceListItem: PriceList): Observable<PriceList> {
+    return this.httpClient.delete<PriceList>(environment.apiAccommodation + "/price/" + accommodationId + "/" + priceListItem.id);
   }
 
   addImages(accommodationId: number, images: string[]) {

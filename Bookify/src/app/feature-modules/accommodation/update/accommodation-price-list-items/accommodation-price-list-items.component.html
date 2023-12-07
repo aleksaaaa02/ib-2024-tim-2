@@ -1,5 +1,5 @@
 <div class="wrapper">
-  <app-accommodation-dates (priceListUpdate)="getPriceList()" [priceList]="selectedPriceList" [shouldEdit]="shouldEdit"></app-accommodation-dates>
+  <app-accommodation-dates (priceListUpdate)="getPriceList()" [priceList]="selectedPriceList" [shouldEdit]="shouldEdit" (should)="shouldEdited($event)"></app-accommodation-dates>
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
 

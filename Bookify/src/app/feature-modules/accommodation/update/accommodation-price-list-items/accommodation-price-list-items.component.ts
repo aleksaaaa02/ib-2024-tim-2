@@ -25,6 +25,7 @@ export class AccommodationPriceListItemsComponent implements OnInit, AfterViewIn
   @ViewChild(MatSort)
   sort!: MatSort;
 
+
   constructor(private service: AccommodationService, private datePipe: DatePipe) {
 
   }
@@ -60,15 +61,20 @@ export class AccommodationPriceListItemsComponent implements OnInit, AfterViewIn
   }
 
   onEditClicked(priceItem: PriceList) {
+    console.log("Click edit");
     this.shouldEdit = true;
     this.selectedPriceList = priceItem;
   }
 
   deletePrice(element: PriceList): void {
-    this.service.deletePriceListItem(element).subscribe({
+    this.service.deletePriceListItem(1,element).subscribe({
       next: (_) => {
         this.getPriceList();
       }
     })
+  }
+
+  shouldEdited(shouldE : boolean) {
+    this.shouldEdit = shouldE;
   }
 }

@@ -15,6 +15,7 @@ export class AccommodationDatesComponent implements OnChanges {
   @Output() priceListUpdate = new EventEmitter<null>();
   @Input() priceList: PriceList;
   @Input() shouldEdit: boolean = false;
+  @Output() should = new EventEmitter<boolean>();
   
   createAvailabilityForm!: FormGroup;
   //  new FormGroup({
@@ -32,7 +33,8 @@ export class AccommodationDatesComponent implements OnChanges {
   }
   
   ngOnChanges(changes: SimpleChanges): void {
-    console.log("CH");
+    console.log(this.priceList);
+    console.log(this.shouldEdit);
     if (this.priceList && this.shouldEdit) {
       const checkIn = this.datePipe.transform(this.priceList.startDate, 'yyyy-MM-dd');
       const checkOut = this.datePipe.transform(this.priceList.endDate, 'yyyy-MM-dd');
@@ -58,9 +60,15 @@ export class AccommodationDatesComponent implements OnChanges {
   }
   
   new() {
-    console.log("AAA");
+    console.log("NEW");
     this.shouldEdit = false;
-    this.createAvailabilityForm.reset();
+    this.should.emit(false);
+    if(this.createAvailabilityForm.get('price')){
+      this.createAvailabilityForm.get('price')?.setValue("");
+      this.createAvailabilityForm.get('formattedStartDate')?.setValue("");
+      this.createAvailabilityForm.get('formattedEndDate')?.setValue("");
+    }
+    // this.createAvailabilityForm.reset();
   }
 
   create() {
@@ -70,7 +78,7 @@ export class AccommodationDatesComponent implements OnChanges {
       const priceControl = this.createAvailabilityForm.get('price');
       
       if (checkInControl && checkOutControl && priceControl) {
-        console.log("PROSLO");
+        console.log("created");
         const checkInValue = checkInControl.value;
         const checkOutValue = checkOutControl.value;
         const priceValue = priceControl.value;
@@ -81,17 +89,17 @@ export class AccommodationDatesComponent implements OnChanges {
           price: priceValue
         };
 
-        this.accommodationService.addPriceList(1, priceList).subscribe(
-          {
-            next: (data) => {
-              this.priceListUpdate.emit()
-            },
-            error: (_) => { }
-          }
-        )
+        // this.accommodationService.addPriceList(1, priceList).subscribe(
+        //   {
+        //     next: (data) => {
+        //       this.priceListUpdate.emit()
+        //     },
+        //     error: (_) => { }
+        //   }
+        // )
       }
     } else {
-      console.log("NIJE PROSLO");
+      console.log("create fail");
     }
   }
 
@@ -102,7 +110,7 @@ export class AccommodationDatesComponent implements OnChanges {
       const priceControl = this.createAvailabilityForm.get('price');
 
       if (checkInControl && checkOutControl && priceControl) {
-        console.log("PROSLO2");
+        console.log("updated");
         const checkInValue = checkInControl.value;
         const checkOutValue = checkOutControl.value;
         const priceValue = priceControl.value;
@@ -113,17 +121,17 @@ export class AccommodationDatesComponent implements OnChanges {
           price: priceValue
         };
 
-        this.accommodationService.updatePriceList(this.priceList.id, priceList).subscribe(
-          {
-            next: (data) => {
-              this.priceListUpdate.emit()
-            },
-            error: (_) => { }
-          }
-        )
+        // this.accommodationService.updatePriceList(this.priceList.id, priceList).subscribe(
+        //   {
+        //     next: (data) => {
+        //       this.priceListUpdate.emit()
+        //     },
+        //     error: (_) => { }
+        //   }
+        // )
       }
     } else {
-      console.log("NIJE PROSLO2");
+      console.log("update fail");
     }
   }
 
