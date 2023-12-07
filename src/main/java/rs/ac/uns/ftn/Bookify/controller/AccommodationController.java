@@ -228,10 +228,10 @@ public class AccommodationController {
         return new ResponseEntity<>(priceListItems, HttpStatus.OK);
     }
 
-    @DeleteMapping("/price/{priceListItemId}")
-    public ResponseEntity<ReservationDTO> deletePriceList(@PathVariable Long priceListItemId) {
-//        accommodationService.deletePriceListItem(priceListItemId);
-//        accommodationService.deleteAvailabilityItem(priceListItemId);
+    @DeleteMapping("/price/{accommodationId}/{priceListItemId}")
+    public ResponseEntity<ReservationDTO> deletePriceList(@PathVariable Long accommodationId, @PathVariable Long priceListItemId) {
+        accommodationService.deletePriceListItem(accommodationId, priceListItemId);
+        accommodationService.deleteAvailabilityItem(accommodationId, priceListItemId);
         return new ResponseEntity<ReservationDTO>(HttpStatus.NO_CONTENT);
     }
 

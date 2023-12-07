@@ -54,15 +54,21 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public Boolean deletePriceListItem(Long priceListItemId) {
+    public Boolean deletePriceListItem(Long accommodationId, Long priceListItemId) {
         PricelistItem item = priceListItemRepository.getReferenceById(priceListItemId);
+        Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
+        accommodation.getPriceList().removeIf(priceListItem -> priceListItem.getId().equals(priceListItemId));
+        accommodationRepository.save(accommodation);
         priceListItemRepository.delete(item);
         return true;
     }
 
     @Override
-    public Boolean deleteAvailabilityItem(Long availabilityId) {
+    public Boolean deleteAvailabilityItem(Long accommodationId, Long availabilityId) {
         Availability item = availabilityRepository.getReferenceById(availabilityId);
+        Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
+        accommodation.getAvailability().removeIf(availability -> availability.getId().equals(availabilityId));
+        accommodationRepository.save(accommodation);
         availabilityRepository.delete(item);
         return true;
     }

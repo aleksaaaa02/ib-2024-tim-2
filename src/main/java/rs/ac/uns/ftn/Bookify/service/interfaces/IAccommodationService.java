@@ -12,8 +12,8 @@ public interface IAccommodationService {
     public Long addPriceList(Long accommodationId, PricelistItem item);
     public Long addAvailability(Long accommodationId, Availability availability);
     public Collection<PricelistItem> getAccommodationPriceListItems(Long accommodationId);
-    public Boolean deletePriceListItem(Long priceListItemId);
-    public Boolean deleteAvailabilityItem(Long priceListItemId);
+    public Boolean deletePriceListItem(Long accommodationId, Long priceListItemId);
+    public Boolean deleteAvailabilityItem(Long accommodationId, Long priceListItemId);
     public void updatePriceListItem(PricelistItem item);
     public void updateAvailabilityItem(Availability availability);
 }
