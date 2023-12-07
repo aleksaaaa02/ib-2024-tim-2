@@ -3,9 +3,9 @@
     <img src="../../../../assets/images/landing.png" class="landing"/>
     <p id="moto">Live life with no excuses, travel with no regret.</p>
     <p id="person">- Oscar Wilde</p>
-    <app-search class="search-bar" (buttonPressed)="handleButtonPress($event)"></app-search>
+    <app-search class="search-bar" (buttonPressed)="searchPress($event)"></app-search>
   </div>
-  <app-filter class="filter-comp"></app-filter>
+  <app-filter class="filter-comp" (buttonPressed)="filterPress($event)"></app-filter>
 
   <div id="list">
     <mat-form-field appearance="outline" id="sort">

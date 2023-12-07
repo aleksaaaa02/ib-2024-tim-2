@@ -2,9 +2,9 @@ import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/co
 import {AccommodationBasicModel} from "../model/accommodation-basic.model";
 import {AccommodationService} from "../accommodation.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {Observable} from "rxjs";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {FilterDTO} from "../model/filter.dto.model";
+import {FilterComponent} from "../../../layout/filter/filter.component";
 
 @Component({
   selector: 'app-results-page',
@@ -14,6 +14,7 @@ import {FilterDTO} from "../model/filter.dto.model";
 })
 export class ResultsPageComponent implements OnInit{
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(FilterComponent) filterComponent: FilterComponent;
   accommodationModels: AccommodationBasicModel[]
   search: string;
   persons: number;
@@ -23,6 +24,7 @@ export class ResultsPageComponent implements OnInit{
   pageSize = 5;
   allResults: number;
   sort: string;
+  filter: FilterDTO = {maxPrice: -1, minPrice: -1, filters: [], types: []}
 
   constructor(private accommodationService: AccommodationService, private route: ActivatedRoute, private router: Router) {}
 
@@ -33,15 +35,10 @@ export class ResultsPageComponent implements OnInit{
   }
 
   getSortAndFilterResults(){
-    let filter: FilterDTO = {
-      filters: [],
-      types: [],
-      minPrice: 0,
-      maxPrice: 0
-    }
-    this.accommodationService.getForFilterAndSort(this.search, this.dateBegin, this.dateEnd, this.persons, this.currentPage-1, this.pageSize, this.sort, filter).subscribe({
+    this.accommodationService.getForFilterAndSort(this.search, this.dateBegin, this.dateEnd, this.persons, this.currentPage-1, this.pageSize, this.sort, this.filter).subscribe({
       next: (data) => {
-        this.accommodationModels = data;
+        this.accommodationModels = data.accommodations;
+        this.allResults = data.results;
       },
       error: (_) => {
         console.log("Error occurred!");
@@ -49,21 +46,15 @@ export class ResultsPageComponent implements OnInit{
     });
   }
 
-  resultCount() {
-    this.accommodationService.getCountForSearch(this.search, this.dateBegin, this.dateEnd, this.persons).subscribe({
-      next: (data) => {
-        this.allResults = data;
-      },
-      error: (_) => {
-        console.log("Error occurred!");
-      }
-    })
-  }
-
   getResults() {
     this.accommodationService.getForSearch(this.search, this.dateBegin, this.dateEnd, this.persons, this.currentPage-1, this.pageSize).subscribe({
       next: (data) => {
-        this.accommodationModels = data;
+        this.accommodationModels = data.accommodations;
+        this.allResults = data.results;
+        this.filterComponent.minPossiblePrice = data.minPrice;
+        this.filterComponent.minPrice = data.minPrice;
+        this.filterComponent.maxPossiblePrice = data.maxPrice;
+        this.filterComponent.maxPrice = data.maxPrice;
       },
       error: (_) => {
         console.log("Error occurred!");
@@ -97,11 +88,17 @@ export class ResultsPageComponent implements OnInit{
     this.dateBegin = new Date(Date.parse(<string>this.route.snapshot.params['begin']));
     this.dateEnd = new Date(Date.parse(<string>this.route.snapshot.params['end']));
 
-    this.resultCount();
     this.getResults();
   }
 
-  handleButtonPress(values: { search: string; persons: number, dateBegin: string, dateEnd: string}): void {
+  filterPress(filter: FilterDTO){
+    this.currentPage = 1;
+    this.paginator.pageIndex = 0;
+    this.filter = filter;
+    this.getSortAndFilterResults();
+  }
+
+  searchPress(values: { search: string; persons: number, dateBegin: string, dateEnd: string}): void {
     this.persons = values.persons;
     this.search = values.search;
     this.dateBegin = new Date(Date.parse(values.dateBegin));
@@ -110,7 +107,6 @@ export class ResultsPageComponent implements OnInit{
     this.paginator.pageIndex = 0;
     this.currentPage = 1;
 
-    this.resultCount();
     this.getResults();
 
     this.router.navigate(['/results', {"search": values.search, "persons": values.persons, "begin": values.dateBegin, "end": values.dateEnd}]);

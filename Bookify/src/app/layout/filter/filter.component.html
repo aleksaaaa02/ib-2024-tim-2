@@ -21,17 +21,17 @@
     <p class="subcategory">Accommodation type</p>
     <div class="inline-type">
       <div class="checkbox-wrapper-42 checkbox-type">
-        <input id="cbx-hotel" type="checkbox" />
+        <input id="cbx-hotel" type="checkbox" checked/>
         <label class="cbx" for="cbx-hotel"></label>
         <label class="lbl" for="cbx-hotel">Hotel</label>
       </div>
       <div class="checkbox-wrapper-42 checkbox-type">
-        <input id="cbx-apartment" type="checkbox" />
-        <label class="cbx" for="cbx-apartment"></label>
+        <input id="cbx-apartment" type="checkbox" checked/>
+        <label class="cbx" for="cbx-apartment" ></label>
         <label class="lbl" for="cbx-apartment">Apartment</label>
       </div>
       <div class="checkbox-wrapper-42 checkbox-type">
-        <input id="cbx-room" type="checkbox" />
+        <input id="cbx-room" type="checkbox" checked/>
         <label class="cbx" for="cbx-room"></label>
         <label class="lbl" for="cbx-room">Room</label>
       </div>
@@ -44,9 +44,9 @@
     <p id="line">-</p>
     <input class="input-field" value="{{ maxPrice }}" disabled/>
   </div>
-  <mat-slider min="0" max="10000" (input)="onSliderChange()">
+  <mat-slider min="{{ minPossiblePrice }}" max="{{ maxPossiblePrice }}">
     <input [(ngModel)]="minPrice" matSliderStartThumb>
     <input [(ngModel)]="maxPrice" matSliderEndThumb>
   </mat-slider>
-  <button class="button-right">Filter</button>
+  <button class="button-right" (click)="onButtonPress()">Filter</button>
 </div>

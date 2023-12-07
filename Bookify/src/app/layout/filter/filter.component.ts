@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
+import {FilterDTO} from "../../feature-modules/accommodation/model/filter.dto.model";
 
 @Component({
   selector: 'app-filter',
@@ -8,11 +9,19 @@ import { Component } from '@angular/core';
 export class FilterComponent {
   minPrice: number = 0;
   maxPrice: number = 10000;
+  minPossiblePrice: number = 0;
+  maxPossiblePrice: number = 10000;
 
-  onSliderChange() {
-    // Log the values in the console
-    console.log('Min Price:', this.minPrice);
-    console.log('Max Price:', this.maxPrice);
+  @Output() buttonPressed= new EventEmitter<FilterDTO>();
+
+  onButtonPress(): void {
+    let filter: FilterDTO = {
+      filters: [],
+      types: [],
+      minPrice: this.minPrice,
+      maxPrice: this.maxPrice
+    }
+    this.buttonPressed.emit(filter);
   }
 
   checkboxLabels: string[] = [
