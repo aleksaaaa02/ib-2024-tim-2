@@ -35,67 +35,60 @@ public class AccommodationController {
     private IImageService imageService;
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<AccommodationBasicDTO>> getAccommodationBasics(@RequestParam("location") String location, @RequestParam("begin")
+    public ResponseEntity<SearchResponseDTO> getAccommodationBasics(@RequestParam("location") String location, @RequestParam("begin")
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons")
     int persons, @RequestParam("page") int page, @RequestParam("size") int size) {
         //return all basic info of accommodations for search
+        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, begin, end);
+
+        List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
+                .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
+                .collect(Collectors.toList());
+
+        accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, begin, end, persons);
         long totalResults = accommodationService.countByLocationAndGuestRange(persons, location, begin ,end);
-        if (totalResults > 0) {
-            int resultNumber = (int) totalResults - size * page;
-            if (resultNumber <= 0)
-                resultNumber = (int) totalResults;
-            else if (resultNumber > size)
-                resultNumber = size;
+        float minPrice, maxPrice;
+        try {
+            minPrice = accommodationBasicDTO.stream().min(Comparator.comparingDouble(AccommodationBasicDTO::getTotalPrice)).orElse(null).getTotalPrice();
+            maxPrice = accommodationBasicDTO.stream().max(Comparator.comparingDouble(AccommodationBasicDTO::getTotalPrice)).orElse(null).getTotalPrice();
+        } catch (NullPointerException e){
+            minPrice = 0;
+            maxPrice = 0;
+        }
+        if ((page+1)*size > accommodationBasicDTO.size())
+            accommodationBasicDTO = accommodationBasicDTO.subList(page*size, accommodationBasicDTO.size());
+        else
+            accommodationBasicDTO = accommodationBasicDTO.subList(page*size, (page+1)*size);
+        SearchResponseDTO searchResponseDTO = new SearchResponseDTO(accommodationBasicDTO, (int) totalResults, minPrice, maxPrice);
 
-            Pageable paging = PageRequest.of(page, resultNumber);
-            Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, begin, end, paging).getContent();
+        return new ResponseEntity<>(searchResponseDTO, HttpStatus.OK);
+    }
 
-            List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
+    @PostMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SearchResponseDTO> getAccommodationBasicsByFilter(@RequestParam("location") String location, @RequestParam("begin")
+    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons")
+    int persons, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String sort, @RequestBody FilterDTO filter) {
+        //return all basic info of accommodations for search
+        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, begin, end);
+        System.out.println(filter.getTypes());
+        accommodations = accommodationService.getForFilter((List<Accommodation>) accommodations, filter);
+
+        List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
                     .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
                     .collect(Collectors.toList());
 
-            for (AccommodationBasicDTO accommodation : accommodationBasicDTO) {
-                accommodation.setTotalPrice((float) accommodationService.getTotalPrice(accommodation.getId(), begin, end));
-                accommodation.setPriceOne((float) accommodationService.getOnePrice(accommodation.getId(), begin, end));
-            }
+        accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, begin, end, persons);
+        accommodationBasicDTO = accommodationService.getForPriceRange(accommodationBasicDTO, filter);
+        accommodationBasicDTO = accommodationService.sortAccommodationBasicDTO(accommodationBasicDTO, sort);
+        int totalResults = accommodationBasicDTO.size();
 
-            return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
-        }
-        else {
-            Collection<AccommodationBasicDTO> accommodationBasicDTO = new HashSet<>();
-            return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
-        }
-    }
+        if ((page+1)*size > accommodationBasicDTO.size())
+            accommodationBasicDTO = accommodationBasicDTO.subList(page*size, accommodationBasicDTO.size());
+        else
+            accommodationBasicDTO = accommodationBasicDTO.subList(page*size, (page+1)*size);
+        SearchResponseDTO searchResponseDTO = new SearchResponseDTO(accommodationBasicDTO, totalResults, 0, 0);
 
-    @GetMapping(value = "/search-count", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Long> getAccommodationBasicsCount(@RequestParam("location") String location, @RequestParam("begin")
-    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons")
-    int persons) {
-        //return all basic info of accommodations for search
-        long count = accommodationService.countByLocationAndGuestRange(persons, location, begin, end);
-
-        return new ResponseEntity<>(count, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<AccommodationBasicDTO>> getAccommodationBasicsByFilter(@RequestBody FilterDTO filter) {
-        //return all basic info of accommodations for search
-        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
-                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet.");
-        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.HOTEL, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
-                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet.");
-        Collection<AccommodationBasicDTO> basicAccommodations = new HashSet<>();
-        basicAccommodations.add(basicDTO1);
-        basicAccommodations.add(basicDTO2);
-        return new ResponseEntity<>(basicAccommodations, HttpStatus.OK);
+        return new ResponseEntity<>(searchResponseDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/details/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)

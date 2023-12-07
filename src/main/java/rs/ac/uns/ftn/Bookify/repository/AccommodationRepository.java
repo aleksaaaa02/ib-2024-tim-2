@@ -12,6 +12,7 @@ import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -168,12 +169,7 @@ public class AccommodationRepository implements IAccommodationRepository{
     }
 
     @Override
-    public Page<Accommodation> findByLocationAndGuestRange(
-            @Param("location") String location,
-            @Param("persons") int persons,
-            @Param("begin") Date begin,
-            @Param("end") Date end,
-            Pageable pageable) {
+    public Collection<Accommodation> findByLocationAndGuestRange(String location, int persons, Date begin, Date end) {
         return null;
     }
 

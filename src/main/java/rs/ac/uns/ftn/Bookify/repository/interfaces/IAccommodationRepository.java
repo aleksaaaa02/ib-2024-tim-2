@@ -9,6 +9,7 @@ import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -27,12 +28,11 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "OR LOWER(ad.address) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(a.name) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(ad.country) LIKE LOWER(CONCAT('%', :location, '%'))) ")
-    Page<Accommodation> findByLocationAndGuestRange(
+    Collection<Accommodation> findByLocationAndGuestRange(
             @Param("location") String location,
             @Param("persons") int persons,
             @Param("begin") Date begin,
-            @Param("end") Date end,
-            Pageable pageable);
+            @Param("end") Date end);
 
     @Query("SELECT COUNT(a) FROM Accommodation a " +
             "JOIN a.address ad " +
