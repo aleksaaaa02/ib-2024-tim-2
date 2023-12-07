@@ -7,12 +7,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.AccommodationBasicDTO;
+import rs.ac.uns.ftn.Bookify.dto.FilterDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -24,11 +26,6 @@ public class AccommodationService implements IAccommodationService {
 
     @Autowired
     IImageService imageService;
-
-    @Override
-    public Page<Accommodation> getAccommodationsForSearch(Integer persons, String location, Date begin, Date end, Pageable pageable) {
-        return accommodationRepository.findByLocationAndGuestRange(location, persons, begin, end, pageable);
-    }
 
     @Override
     public Collection<Accommodation> getAccommodationsForSearch(Integer persons, String location, Date begin, Date end) {
@@ -63,6 +60,17 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
+    public List<AccommodationBasicDTO> getForFilter(List<AccommodationBasicDTO> accommodationBasicDTO, FilterDTO filter) {
+        List<AccommodationBasicDTO> accommodationFilter = new ArrayList<>();
+        for (AccommodationBasicDTO accommodation : accommodationBasicDTO) {
+            if (accommodation.getTotalPrice() <= filter.getMaxPrice() && accommodation.getTotalPrice() > filter.getMinPrice() || filter.getMinPrice() == -1){
+                accommodationFilter.add(accommodation);
+            }
+        }
+        return accommodationFilter;
+    }
+
+    @Override
     public double getTotalPrice(Long id, Date begin, Date end) {
         LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -71,7 +79,9 @@ public class AccommodationService implements IAccommodationService {
             price += accommodationRepository.findPriceForDay(Date.from(beginL.atStartOfDay(ZoneId.systemDefault()).toInstant()), id).get();
             beginL = beginL.plusDays(1);
         }
-        return price;
+        BigDecimal originalBigDecimal = BigDecimal.valueOf(price);
+        BigDecimal roundedValue = originalBigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return roundedValue.floatValue();
     }
 
     @Override
@@ -85,7 +95,9 @@ public class AccommodationService implements IAccommodationService {
             days += 1;
             beginL = beginL.plusDays(1);
         }
-        return price / days;
+        BigDecimal originalBigDecimal = BigDecimal.valueOf(price/days);
+        BigDecimal roundedValue = originalBigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return roundedValue.floatValue();
     }
 
     @Override

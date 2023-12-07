@@ -169,16 +169,6 @@ public class AccommodationRepository implements IAccommodationRepository{
     }
 
     @Override
-    public Page<Accommodation> findByLocationAndGuestRange(
-            @Param("location") String location,
-            @Param("persons") int persons,
-            @Param("begin") Date begin,
-            @Param("end") Date end,
-            Pageable pageable) {
-        return null;
-    }
-
-    @Override
     public Collection<Accommodation> findByLocationAndGuestRange(String location, int persons, Date begin, Date end) {
         return null;
     }
