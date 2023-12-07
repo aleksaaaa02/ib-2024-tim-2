@@ -80,8 +80,8 @@ export class AccommodationService {
     return this.httpClient.post<PriceListDTO>(environment.apiAccommodation + "/" + accommodationId + "/addPrice", priceList);
   }
 
-  updatePriceList(priceListItemId: number, priceList: PriceListDTO){
-    return this.httpClient.put<PriceListDTO>(environment.apiAccommodation + "/price/" + priceListItemId , priceList);
+  updatePriceList(accommodationId: number, priceListItemId: number, priceList: PriceListDTO){
+    return this.httpClient.put<PriceListDTO>(environment.apiAccommodation + "/price/" + accommodationId + "/" + priceListItemId , priceList);
   }
 
 }

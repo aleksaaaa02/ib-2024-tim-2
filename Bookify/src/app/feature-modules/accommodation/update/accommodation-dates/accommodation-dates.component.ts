@@ -87,15 +87,15 @@ export class AccommodationDatesComponent implements OnChanges {
           endDate: new Date(checkOutValue),
           price: priceValue
         };
- 
+
         this.accommodationService.addPriceList(1, priceList).subscribe(
           {
             next: (data) => {
               this.priceListUpdate.emit()
             },
             error: (_) => {
-              this.openSnackBar("Bad request", "cancel");
-             }
+              this.openSnackBar("Dates overlaping", "cancel");
+            }
           }
         )
       }
@@ -123,13 +123,14 @@ export class AccommodationDatesComponent implements OnChanges {
           price: priceValue
         };
 
-        this.accommodationService.updatePriceList(this.priceList.id, priceList).subscribe(
+        this.accommodationService.updatePriceList(1, this.priceList.id, priceList).subscribe(
           {
             next: (data) => {
-              this.priceListUpdate.emit()
+              console.log(data);
+              this.priceListUpdate.emit();
             },
-            error: (_) => { 
-              console.log("UPSIC");
+            error: (_) => {
+              this.openSnackBar("Dates overlaping", "cancel");
             }
           }
         )
@@ -149,8 +150,8 @@ export function dateComparisonValidator(): ValidatorFn {
       const checkInDate = checkInControl.value;
       const checkOutDate = checkOutControl.value;
 
-      if (checkInDate && checkOutDate && new Date(checkOutDate) < new Date(checkInDate)) {
-        return { dateComparison: true, message: 'Check out date cannot be before check in date' };
+      if (checkInDate && checkOutDate && new Date(checkOutDate) <= new Date(checkInDate)) {
+        return { dateComparison: true, message: 'Check out date must be after check in date' };
       }
 
     }
