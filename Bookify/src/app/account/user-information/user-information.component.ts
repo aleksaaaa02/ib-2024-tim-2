@@ -8,6 +8,7 @@ import {PasswordChangeDialogComponent} from "../password-change-dialog/password-
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {DefaultSnackbarComponent} from "../../layout/default-snackbar/default-snackbar.component";
+import {AccountDeleteDialogComponent} from "../account-delete-dialog/account-delete-dialog.component";
 
 @Component({
   selector: 'app-user-information',
@@ -82,7 +83,7 @@ export class UserInformationComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        this.openSnackBar('Ops something went wrong!');
+        this.openSnackBar('Ops something went wrong!', "account");
       }
     });
     this.countries = this.authenticationService.getCountries();
@@ -103,10 +104,10 @@ export class UserInformationComponent implements OnInit {
         next: () => {
           this.isDisabled = true;
           this.toggleFormState();
-          this.openSnackBar('User information changed successfully!');
+          this.openSnackBar('User information changed successfully!', "account");
         },
         error: err => {
-          this.openSnackBar('Ops something went wrong!');
+          this.openSnackBar('Ops something went wrong!', "account");
           console.error(err);
         }
       })
@@ -125,22 +126,35 @@ export class UserInformationComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       const password = result.password;
       this.accountService.updatePassword(this.account.id, password).subscribe({
-        next: value => {
+        next: (value: string) => {
           this.isDisabled = true;
           this.toggleFormState();
-          this.openSnackBar('Password changed successfully!');
+          this.openSnackBar('Password changed successfully!', "account");
         },
         error: err => {
           console.error(err);
-          this.openSnackBar('Ops something went wrong!');
+          this.openSnackBar('Ops something went wrong!', "account");
         }
       });
     });
   }
 
   OnDeleteAccountClick(): void {
+    this.dialog.open(AccountDeleteDialogComponent).afterClosed().subscribe({
+      next: (value: boolean) => {
+        if (value) {
+          this.accountService.deleteAccount(this.account.id).subscribe({
+            next: (value: string) => {
+              this.openSnackBar(value, "");
+            },
+            error: err => {
+              console.error(err);
+            }
+          });
+        }
+      }
+    });
 
-    this.openSnackBar('Account has been deleted successfully!');
   }
 
   toggleFormState(): void {
@@ -167,28 +181,29 @@ export class UserInformationComponent implements OnInit {
     if (selectedFile && ['image/jpeg', 'image/png'].includes(selectedFile.type)) {
       this.accountService.updateAccountImage(1, selectedFile).subscribe({
         next: () => {
-          this.openSnackBar('Account image changed successfully!');
+          this.openSnackBar('Account image changed successfully!', "account");
         },
         error: err => {
           console.error(err);
-          this.openSnackBar('Ops something went wrong!');
+          this.openSnackBar('Ops something went wrong!', "account");
         }
       })
     }
   }
 
-  refreshPage(): Function {
+  refreshPage(route: string): Function {
     return () => {
       const router = this.router;
       router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
-        router.navigate(["account"]);
+        router.navigate([route]);
       });
     }
   }
 
-  openSnackBar(message: string): void {
+
+  openSnackBar(message: string, route: string): void {
     this.snackbar.openFromComponent(DefaultSnackbarComponent, {
-      data: {action: this.refreshPage()},
+      data: {action: this.refreshPage(route)},
       announcementMessage: message
     })
   }

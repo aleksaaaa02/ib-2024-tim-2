@@ -10,6 +10,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { PasswordChangeDialogComponent } from './password-change-dialog/password-change-dialog.component';
+import { AccountDeleteDialogComponent } from './account-delete-dialog/account-delete-dialog.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { PasswordChangeDialogComponent } from './password-change-dialog/password
     UserInformationComponent,
     NotificationsComponent,
     NotificationSettingsComponent,
-    PasswordChangeDialogComponent
+    PasswordChangeDialogComponent,
+    AccountDeleteDialogComponent
   ],
   imports: [
     CommonModule,

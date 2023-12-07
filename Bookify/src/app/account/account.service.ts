@@ -34,4 +34,7 @@ export class AccountService {
     data.append('image', file);
     return this.httpClient.post<number>(environment.apiHost + "users/change-image/" + userId, data);
   }
+  deleteAccount(userId: number | undefined): Observable<string>{
+    return this.httpClient.delete(environment.apiHost + "users/" + userId, {responseType: "text"});
+  }
 }
