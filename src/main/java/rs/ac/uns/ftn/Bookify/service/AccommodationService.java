@@ -52,4 +52,28 @@ public class AccommodationService implements IAccommodationService {
     public Collection<PricelistItem> getAccommodationPriceListItems(Long accommodationId) {
         return accommodationRepository.getPriceListItems(accommodationId);
     }
+
+    @Override
+    public Boolean deletePriceListItem(Long priceListItemId) {
+        PricelistItem item = priceListItemRepository.getReferenceById(priceListItemId);
+        priceListItemRepository.delete(item);
+        return true;
+    }
+
+    @Override
+    public Boolean deleteAvailabilityItem(Long availabilityId) {
+        Availability item = availabilityRepository.getReferenceById(availabilityId);
+        availabilityRepository.delete(item);
+        return true;
+    }
+
+    @Override
+    public void updatePriceListItem(PricelistItem item) {
+        priceListItemRepository.save(item);
+    }
+
+    @Override
+    public void updateAvailabilityItem(Availability availability) {
+        availabilityRepository.save(availability);
+    }
 }

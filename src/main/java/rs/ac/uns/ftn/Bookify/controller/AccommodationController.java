@@ -222,9 +222,29 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/{accommodationId}/getPrice", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<PriceListItemDTO>> getAccommodationPriceListItems(@PathVariable Long accommodationId) {
-        Collection<PricelistItem> pricelistItems = accommodationService.getAccommodationPriceListItems(accommodationId);
-        Collection<PriceListItemDTO> priceListItemDTOS = PriceListItemDTOMapper.fromPriceListItemtoDTO(pricelistItems);
-        return new ResponseEntity<>(priceListItemDTOS, HttpStatus.OK);
+    public ResponseEntity<Collection<PricelistItem>> getAccommodationPriceListItems(@PathVariable Long accommodationId) {
+        Collection<PricelistItem> priceListItems = accommodationService.getAccommodationPriceListItems(accommodationId);
+//        Collection<PriceListItemDTO> priceListItemDTOS = PriceListItemDTOMapper.fromPriceListItemtoDTO(pricelistItems);
+        return new ResponseEntity<>(priceListItems, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/price/{priceListItemId}")
+    public ResponseEntity<ReservationDTO> deletePriceList(@PathVariable Long priceListItemId) {
+//        accommodationService.deletePriceListItem(priceListItemId);
+//        accommodationService.deleteAvailabilityItem(priceListItemId);
+        return new ResponseEntity<ReservationDTO>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping(value = "/price/{priceListItemId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PricelistItem> updatePriceListItem(@PathVariable Long priceListItemId, @RequestBody PriceListItemDTO dto) {
+        PricelistItem item = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
+        item.setId(priceListItemId);
+        accommodationService.updatePriceListItem(item);
+
+        Availability availability = PriceListItemDTOMapper.fromDTOtoAvailability(dto);
+        availability.setId(priceListItemId);
+        accommodationService.updateAvailabilityItem(availability);
+
+        return new ResponseEntity<PricelistItem>(item, HttpStatus.OK);
     }
 }
