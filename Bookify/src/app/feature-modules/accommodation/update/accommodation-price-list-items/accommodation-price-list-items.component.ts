@@ -6,6 +6,7 @@ import { AccommodationService } from '../../accommodation.service';
 import { PriceListDTO } from '../../model/priceList.dto.model';
 import { DatePipe } from '@angular/common';
 import { PriceList } from '../../model/priceList.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-accommodation-price-list-items',
@@ -14,11 +15,13 @@ import { PriceList } from '../../model/priceList.model';
   providers: [DatePipe]
 })
 export class AccommodationPriceListItemsComponent implements OnInit, AfterViewInit {
+
   selectedPriceList: PriceList;
   shouldEdit: boolean;
   priceListItems!: PriceList[];
   dataSource!: MatTableDataSource<PriceList>;
   displayedColumns: string[] = ['formattedStartDate', 'formattedEndDate', 'price', 'edit', 'delete'];
+  accommodationId: number;
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -26,9 +29,13 @@ export class AccommodationPriceListItemsComponent implements OnInit, AfterViewIn
   sort!: MatSort;
 
 
-  constructor(private service: AccommodationService, private datePipe: DatePipe) { }
+  constructor(private service: AccommodationService, private datePipe: DatePipe, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      const accommodationId = +params['accommodationId'];
+      this.accommodationId = accommodationId;
+    });
     this.getPriceList();
   }
 
@@ -38,7 +45,7 @@ export class AccommodationPriceListItemsComponent implements OnInit, AfterViewIn
   }
 
   getPriceList() {
-    this.service.getAllPriceListItems(1).subscribe({
+    this.service.getAllPriceListItems(this.accommodationId).subscribe({
       next: (data: PriceList[]) => {
         this.priceListItems = data;
         this.priceListItems.forEach(item => {
@@ -63,7 +70,7 @@ export class AccommodationPriceListItemsComponent implements OnInit, AfterViewIn
   }
 
   deletePrice(element: PriceList): void {
-    this.service.deletePriceListItem(1, element).subscribe({
+    this.service.deletePriceListItem(this.accommodationId, element).subscribe({
       next: (_) => {
         this.getPriceList();
       }
@@ -72,5 +79,10 @@ export class AccommodationPriceListItemsComponent implements OnInit, AfterViewIn
 
   shouldEdited(shouldE: boolean) {
     this.shouldEdit = shouldE;
+  }
+
+  finish() {
+    //treba na stranicu sa listom svih vlasnikovih smestaja
+    this.router.navigate(['/'])
   }
 }

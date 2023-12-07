@@ -34,7 +34,7 @@ const routes: Routes = [
   { path: "accommodation/create/availability", component: AccommodationAvailabilityComponent },
   { path: "accommodation/create", component: AccommodationCreateComponent },
   { path: "accommodation/create/dates", component: AccommodationDatesComponent },
-  { path: "accommodation/create/price", component: AccommodationPriceListItemsComponent }
+  { path: "accommodation/create/price/:accommodationId", component: AccommodationPriceListItemsComponent }
 ];
 
 @NgModule({

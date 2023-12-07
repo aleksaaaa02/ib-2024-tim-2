@@ -16,6 +16,7 @@ export class AccommodationDatesComponent implements OnChanges {
   @Output() priceListUpdate = new EventEmitter<null>();
   @Input() priceList: PriceList;
   @Input() shouldEdit: boolean = false;
+  @Input() accommodationId: number;
   @Output() should = new EventEmitter<boolean>();
 
   createAvailabilityForm!: FormGroup;
@@ -81,14 +82,14 @@ export class AccommodationDatesComponent implements OnChanges {
         const checkInValue = checkInControl.value;
         const checkOutValue = checkOutControl.value;
         const priceValue = priceControl.value;
-
+        
         const priceList: PriceListDTO = {
           startDate: new Date(checkInValue),
           endDate: new Date(checkOutValue),
           price: priceValue
         };
-
-        this.accommodationService.addPriceList(1, priceList).subscribe(
+        
+        this.accommodationService.addPriceList(this.accommodationId, priceList).subscribe(
           {
             next: (data) => {
               this.priceListUpdate.emit()
@@ -123,10 +124,9 @@ export class AccommodationDatesComponent implements OnChanges {
           price: priceValue
         };
 
-        this.accommodationService.updatePriceList(1, this.priceList.id, priceList).subscribe(
+        this.accommodationService.updatePriceList(this.accommodationId, this.priceList.id, priceList).subscribe(
           {
             next: (data) => {
-              console.log(data);
               this.priceListUpdate.emit();
             },
             error: (_) => {

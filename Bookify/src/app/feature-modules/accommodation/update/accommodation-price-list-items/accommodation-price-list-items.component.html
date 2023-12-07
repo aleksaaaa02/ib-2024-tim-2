@@ -1,5 +1,5 @@
 <div class="wrapper">
-  <app-accommodation-dates (priceListUpdate)="getPriceList()" [priceList]="selectedPriceList" [shouldEdit]="shouldEdit" (should)="shouldEdited($event)"></app-accommodation-dates>
+  <app-accommodation-dates (priceListUpdate)="getPriceList()" [priceList]="selectedPriceList" [shouldEdit]="shouldEdit" [accommodationId]="accommodationId" (should)="shouldEdited($event)"></app-accommodation-dates>
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
 
@@ -40,4 +40,5 @@
       #paginator>
     </mat-paginator>
   </div>
+  <button (click)="finish()" class="submit-button" color="primary" type="submit" mat-raised-button>Finish</button>
 </div>

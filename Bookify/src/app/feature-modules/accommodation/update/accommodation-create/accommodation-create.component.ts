@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { AccommodationService } from '../../accommodation.service';
 import { Router } from '@angular/router';
 import { Address } from '../../model/address.dto.model';
@@ -102,8 +102,11 @@ export class AccommodationCreateComponent {
       this.accommodationService.add(dto).subscribe(
         {
           next: (data: Accommodation) => {
-            console.log(data);
-            this.accommodationService.addImages(data.id, this.images).subscribe();
+            this.accommodationService.addImages(data.id, this.images).subscribe({
+              next: () => {
+                this.router.navigate(['/accommodation/create/price', data.id]);
+              }
+            });
           },
           error: (_) => { }
         });
