@@ -35,7 +35,7 @@ public class AccommodationService implements IAccommodationService {
     public Long addPriceList(Long accommodationId, PricelistItem item) {
         Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
         accommodation.getPriceList().add(item);
-        if(!checkDatesPriceItem(accommodationId, item)){
+        if(!checkDatesPriceItem(accommodation, item)){
             return null;
         }
         priceListItemRepository.save(item);
@@ -43,8 +43,8 @@ public class AccommodationService implements IAccommodationService {
         return accommodationId;
     }
 
-    private boolean checkDatesPriceItem(Long accommodationId, PricelistItem item) {
-        Collection<PricelistItem> pricelistItemList = accommodationRepository.getPriceListItems(accommodationId);
+    private boolean checkDatesPriceItem(Accommodation accommodation, PricelistItem item) {
+        Collection<PricelistItem> pricelistItemList = accommodation.getPriceList();
         for (PricelistItem pricelistItem : pricelistItemList) {
             if (dateCheck(item.getStartDate(), pricelistItem.getStartDate(), pricelistItem.getEndDate()) ||
                     dateCheck(item.getEndDate(), pricelistItem.getStartDate(), pricelistItem.getEndDate()) ||
@@ -55,8 +55,8 @@ public class AccommodationService implements IAccommodationService {
         return true;
     }
 
-    private boolean checkDatesAvailability(Long accommodationId, Availability availability){
-        Collection<Availability> availabilities = accommodationRepository.getAvailabilities(accommodationId);
+    private boolean checkDatesAvailability(Accommodation accommodation, Availability availability){
+        Collection<Availability> availabilities = accommodation.getAvailability();
         for (Availability availabilityItem : availabilities){
             if (dateCheck(availability.getStartDate(), availabilityItem.getStartDate(), availabilityItem.getEndDate()) ||
                     dateCheck(availability.getEndDate(), availabilityItem.getStartDate(), availabilityItem.getEndDate()) ||
@@ -68,7 +68,7 @@ public class AccommodationService implements IAccommodationService {
     }
 
     private static boolean dateCheck(Date itemDate, Date startDate, Date endDate) {
-        return itemDate.compareTo(startDate) > 0 && itemDate.compareTo(endDate) < 0;
+        return itemDate.compareTo(startDate) >= 0 && itemDate.compareTo(endDate) <= 0;
     }
 
     private static boolean dateRangeContains(Date itemStartDate, Date itemEndDate, Date startDate, Date endDate) {
@@ -79,7 +79,7 @@ public class AccommodationService implements IAccommodationService {
     public Long addAvailability(Long accommodationId, Availability availability) {
         Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
         accommodation.getAvailability().add(availability);
-        if(!checkDatesAvailability(accommodationId, availability)){
+        if(!checkDatesAvailability(accommodation, availability)){
             return null;
         }
         availabilityRepository.save(availability);
@@ -113,12 +113,28 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public void updatePriceListItem(PricelistItem item) {
+    public Long updatePriceListItem(Long accommodationId, PricelistItem item) {
+        Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
+        PricelistItem pricelistItem = priceListItemRepository.getReferenceById(item.getId());
+        accommodation.getPriceList().remove(pricelistItem);
+        if(!checkDatesPriceItem(accommodation, item)){
+            return null;
+        }
+        accommodation.getPriceList().add(pricelistItem);
         priceListItemRepository.save(item);
+        return accommodationId;
     }
 
     @Override
-    public void updateAvailabilityItem(Availability availability) {
+    public Long updateAvailabilityItem(Long accommodationId, Availability availability) {
+        Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
+        Availability availabilityTemp = availabilityRepository.getReferenceById(availability.getId());
+        accommodation.getAvailability().remove(availabilityTemp);
+        if(!checkDatesAvailability(accommodation, availability)){
+            return null;
+        }
+        accommodation.getAvailability().add(availabilityTemp);
         availabilityRepository.save(availability);
+        return accommodationId;
     }
 }
