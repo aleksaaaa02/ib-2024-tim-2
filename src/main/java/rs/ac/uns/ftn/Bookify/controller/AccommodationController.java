@@ -100,8 +100,10 @@ public class AccommodationController {
             accommodation.setPriceOne((float) accommodationService.getOnePrice(accommodation.getId(), begin, end));
         }
         accommodationBasicDTO = accommodationService.sortAccommodationBasicDTO(accommodationBasicDTO, sort);
-        System.out.println("FROM: " + page*size + "  TO: " + (page+1)*size);
-        accommodationBasicDTO = accommodationBasicDTO.subList(page*size, (page+1)*size);
+        if ((page+1)*size > accommodationBasicDTO.size())
+            accommodationBasicDTO = accommodationBasicDTO.subList(page*size, accommodationBasicDTO.size());
+        else
+            accommodationBasicDTO = accommodationBasicDTO.subList(page*size, (page+1)*size);
 
         return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
     }
