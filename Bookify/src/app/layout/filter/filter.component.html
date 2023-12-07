@@ -9,12 +9,33 @@
   <hr class="rounded">
   <div class="filters">
     @for (label of checkboxLabels; track label) {
-    <div class="checkbox-wrapper-42">
+    <div class="checkbox-wrapper-42 checkbox-filter">
       <input id="cbx-{{ label }}" type="checkbox" />
       <label class="cbx" for="cbx-{{ label }}"></label>
       <label class="lbl" for="cbx-{{ label }}">{{ label }}</label>
     </div>
     }
+  </div>
+  <div class="inline-price">
+    <span class="material-symbols-outlined">apartment</span>
+    <p class="subcategory">Accommodation type</p>
+    <div class="inline-type">
+      <div class="checkbox-wrapper-42 checkbox-type">
+        <input id="cbx-hotel" type="checkbox" />
+        <label class="cbx" for="cbx-hotel"></label>
+        <label class="lbl" for="cbx-hotel">Hotel</label>
+      </div>
+      <div class="checkbox-wrapper-42 checkbox-type">
+        <input id="cbx-apartment" type="checkbox" />
+        <label class="cbx" for="cbx-apartment"></label>
+        <label class="lbl" for="cbx-apartment">Apartment</label>
+      </div>
+      <div class="checkbox-wrapper-42 checkbox-type">
+        <input id="cbx-room" type="checkbox" />
+        <label class="cbx" for="cbx-room"></label>
+        <label class="lbl" for="cbx-room">Room</label>
+      </div>
+    </div>
   </div>
   <div class="inline-price">
     <span class="material-symbols-outlined">shoppingmode</span>
