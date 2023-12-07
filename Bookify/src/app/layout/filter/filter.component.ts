@@ -57,4 +57,15 @@ export class FilterComponent {
     }
     return label.toUpperCase().replace(/[^A-Z]/g, '_');
   }
+
+  resetFilter(){
+    for (const el of this.checkboxLabels){
+      const c = document.getElementById("cbx-" + el) as HTMLInputElement;
+      c.checked = false;
+    }
+    for (const el of this.accommodationCheckbox){
+      const c = document.getElementById("cbx-" + el) as HTMLInputElement;
+      c.checked = true;
+    }
+  }
 }

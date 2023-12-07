@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {FilterDTO} from "../model/filter.dto.model";
 import {FilterComponent} from "../../../layout/filter/filter.component";
+import {empty, filter} from "rxjs";
 
 @Component({
   selector: 'app-results-page',
@@ -24,7 +25,7 @@ export class ResultsPageComponent implements OnInit{
   pageSize = 5;
   allResults: number;
   sort: string = "";
-  filter: FilterDTO = {maxPrice: -1, minPrice: -1, filters: [], types: []}
+  filter: FilterDTO = {maxPrice: -1, minPrice: -1, filters: [], types: ["HOTEL", "APARTMENT", "ROOM"]}
 
   constructor(private accommodationService: AccommodationService, private route: ActivatedRoute, private router: Router) {}
 
@@ -76,7 +77,7 @@ export class ResultsPageComponent implements OnInit{
       });
     }
     const array: Array<string> = ['Name', 'Lowest', 'Highest'];
-    if (array.indexOf(this.sort) != -1)
+    if (array.indexOf(this.sort) != -1 || this.filter.maxPrice != -1 || this.filter.filters.length != 0 || this.filter.types.length != 0)
       this.getSortAndFilterResults();
     else
       this.getResults();
@@ -95,7 +96,6 @@ export class ResultsPageComponent implements OnInit{
     this.currentPage = 1;
     this.paginator.pageIndex = 0;
     this.filter = filter;
-    console.log(this.filter);
     this.getSortAndFilterResults();
   }
 
@@ -108,6 +108,9 @@ export class ResultsPageComponent implements OnInit{
     this.paginator.pageIndex = 0;
     this.currentPage = 1;
 
+    this.filter = {maxPrice: -1, minPrice: -1, filters: [], types: ["HOTEL", "APARTMENT", "ROOM"]}
+    this.filterComponent.resetFilter();
+    this.sort = "";
     this.getResults();
 
     this.router.navigate(['/results', {"search": values.search, "persons": values.persons, "begin": values.dateBegin, "end": values.dateEnd}]);
