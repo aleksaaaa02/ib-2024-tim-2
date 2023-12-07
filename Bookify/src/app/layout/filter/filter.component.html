@@ -9,12 +9,25 @@
   <hr class="rounded">
   <div class="filters">
     @for (label of checkboxLabels; track label) {
-    <div class="checkbox-wrapper-42">
+    <div class="checkbox-wrapper-42 checkbox-filter">
       <input id="cbx-{{ label }}" type="checkbox" />
       <label class="cbx" for="cbx-{{ label }}"></label>
       <label class="lbl" for="cbx-{{ label }}">{{ label }}</label>
     </div>
     }
+  </div>
+  <div class="inline-price">
+    <span class="material-symbols-outlined">apartment</span>
+    <p class="subcategory">Accommodation type</p>
+    <div class="inline-type">
+      @for (label of accommodationCheckbox; track label) {
+      <div class="checkbox-wrapper-42 checkbox-type">
+        <input id="cbx-{{ label }}" type="checkbox" checked/>
+        <label class="cbx" for="cbx-{{ label }}"></label>
+        <label class="lbl" for="cbx-{{ label }}">{{ label }}</label>
+      </div>
+      }
+    </div>
   </div>
   <div class="inline-price">
     <span class="material-symbols-outlined">shoppingmode</span>
@@ -23,9 +36,9 @@
     <p id="line">-</p>
     <input class="input-field" value="{{ maxPrice }}" disabled/>
   </div>
-  <mat-slider min="0" max="10000" (input)="onSliderChange()">
+  <mat-slider min="{{ minPossiblePrice }}" max="{{ maxPossiblePrice }}">
     <input [(ngModel)]="minPrice" matSliderStartThumb>
     <input [(ngModel)]="maxPrice" matSliderEndThumb>
   </mat-slider>
-  <button class="button-right">Filter</button>
+  <button class="button-right" (click)="onButtonPress()">Filter</button>
 </div>
