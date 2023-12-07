@@ -216,9 +216,13 @@ public class AccommodationController {
     public ResponseEntity<Long> addPriceListItem(@PathVariable Long accommodationId, @RequestBody PriceListItemDTO dto) {
         PricelistItem item = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
         Availability availability = PriceListItemDTOMapper.fromDTOtoAvailability(dto);
-        accommodationService.addPriceList(accommodationId, item);
-        accommodationService.addAvailability(accommodationId, availability);
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        if (accommodationService.addPriceList(accommodationId, item) == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        if(accommodationService.addAvailability(accommodationId, availability)==null){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(accommodationId, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{accommodationId}/getPrice", produces = MediaType.APPLICATION_JSON_VALUE)

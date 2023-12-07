@@ -12,6 +12,7 @@ import rs.ac.uns.ftn.Bookify.repository.interfaces.IPriceListItemRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 
 import java.util.Collection;
+import java.util.Date;
 
 @Service
 public class AccommodationService implements IAccommodationService {
@@ -34,15 +35,53 @@ public class AccommodationService implements IAccommodationService {
     public Long addPriceList(Long accommodationId, PricelistItem item) {
         Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
         accommodation.getPriceList().add(item);
+        if(!checkDatesPriceItem(accommodationId, item)){
+            return null;
+        }
         priceListItemRepository.save(item);
         accommodationRepository.save(accommodation);
         return accommodationId;
+    }
+
+    private boolean checkDatesPriceItem(Long accommodationId, PricelistItem item) {
+        Collection<PricelistItem> pricelistItemList = accommodationRepository.getPriceListItems(accommodationId);
+        for (PricelistItem pricelistItem : pricelistItemList) {
+            if (dateCheck(item.getStartDate(), pricelistItem.getStartDate(), pricelistItem.getEndDate()) ||
+                    dateCheck(item.getEndDate(), pricelistItem.getStartDate(), pricelistItem.getEndDate()) ||
+                    dateRangeContains(item.getStartDate(), item.getEndDate(), pricelistItem.getStartDate(), pricelistItem.getEndDate())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkDatesAvailability(Long accommodationId, Availability availability){
+        Collection<Availability> availabilities = accommodationRepository.getAvailabilities(accommodationId);
+        for (Availability availabilityItem : availabilities){
+            if (dateCheck(availability.getStartDate(), availabilityItem.getStartDate(), availabilityItem.getEndDate()) ||
+                    dateCheck(availability.getEndDate(), availabilityItem.getStartDate(), availabilityItem.getEndDate()) ||
+                    dateRangeContains(availability.getStartDate(), availability.getEndDate(), availabilityItem.getStartDate(), availabilityItem.getEndDate())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean dateCheck(Date itemDate, Date startDate, Date endDate) {
+        return itemDate.compareTo(startDate) > 0 && itemDate.compareTo(endDate) < 0;
+    }
+
+    private static boolean dateRangeContains(Date itemStartDate, Date itemEndDate, Date startDate, Date endDate) {
+        return itemStartDate.compareTo(startDate) <= 0 && itemEndDate.compareTo(endDate) >= 0;
     }
 
     @Override
     public Long addAvailability(Long accommodationId, Availability availability) {
         Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
         accommodation.getAvailability().add(availability);
+        if(!checkDatesAvailability(accommodationId, availability)){
+            return null;
+        }
         availabilityRepository.save(availability);
         accommodationRepository.save(accommodation);
         return accommodationId;
