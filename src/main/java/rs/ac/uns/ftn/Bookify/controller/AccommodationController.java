@@ -258,10 +258,15 @@ public class AccommodationController {
         return new ResponseEntity<>("Accommodation removed", HttpStatus.OK);
     }
 
-    @GetMapping(value = "/images/{imageId}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    @GetMapping(value = "/image/{imageId}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     public ResponseEntity<FileSystemResource> getAccommodationImage(@PathVariable Long imageId) {
         return new ResponseEntity<>(imageService.find(imageId), HttpStatus.OK);
     }
+
+//    @GetMapping(value = "/images/{accommodationId}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+//    public ResponseEntity<FileSystemResource[]> getAccommodationImages(@PathVariable Long accommodationId) {
+//        return new ResponseEntity<>(imageService.findAll(accommodationId), HttpStatus.OK);
+//    }
 
     @PostMapping("/images/{accommodationId}")
     public ResponseEntity<Long> uploadAccommodationImage(@PathVariable Long accommodationId, @RequestParam MultipartFile image) throws Exception {
