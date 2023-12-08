@@ -5,7 +5,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {FilterDTO} from "../model/filter.dto.model";
 import {FilterComponent} from "../../../layout/filter/filter.component";
-import {empty, filter} from "rxjs";
 
 @Component({
   selector: 'app-results-page',

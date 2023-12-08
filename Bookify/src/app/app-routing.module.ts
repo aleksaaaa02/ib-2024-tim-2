@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AccountComponent } from "./account/account/account.component";
+import { AccountComponent } from "./feature-modules/account/account/account.component";
 import { ResultsPageComponent } from "./feature-modules/accommodation/results-page/results-page.component";
 import { AccommodationPageComponent } from "./feature-modules/accommodation/accommodation-page/accommodation-page.component";
 import { LandingPageComponent } from "./feature-modules/accommodation/landing-page/landing-page.component";
@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: "forgot-password", component: ForgotPasswordComponent },
   { path: "confirmation", component: ConfirmationComponent },
   { path: "results",component: ResultsPageComponent },
-  { path: "accommodation", component: AccommodationPageComponent },
+  { path: "accommodation/:accommodationId", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
   { path: "account", component: AccountComponent },
   { path: "accommodation/create/basic-info", component: AccommodationCreateComponent },

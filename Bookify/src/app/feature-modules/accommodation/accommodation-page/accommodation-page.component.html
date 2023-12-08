@@ -1,7 +1,7 @@
 <div>
   <div class="inline title-main">
     <span class="material-symbols-outlined favorite">favorite</span>
-    <p id="hotel-name">Scandinavic Havet Hotel</p>
+    <p id="hotel-name">{{ accommodation.name }}</p>
     <meter class="average-rating" min="0" max="5" value="4.3"></meter>
   </div>
 
@@ -28,20 +28,14 @@
       <div id="map">
         <app-map></app-map>
       </div>
-      <p id="address">Bulevar Slobodana Jovanovica 46, Novi Sad, Srbija</p>
+      <p id="address">{{accommodation.address.address}}, {{accommodation.address.city}}, {{accommodation.address.country}}</p>
     </div>
   </div>
   <div class="two-part">
     <div id="description">
       <p class="subcategory">Description</p>
       <hr/>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Quisque porttitor convallis rhoncus.
-        Nunc semper, justo a bibendum luctus, lorem arcu accumsan massa,
-        sed scelerisque lorem felis nec quam. Curabitur at magna metus.
-        Pellentesque habitant morbi tristique sene.
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Quisque porttitor convallis rhoncus.</p>
+      <p>{{accommodation.description}}</p>
     </div>
     <div id="owner">
       <p class="subcategory">Owner</p>
@@ -61,5 +55,4 @@
   <div class="two-part">
     <app-reserve></app-reserve>
   </div>
-
 </div>
