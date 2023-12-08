@@ -109,13 +109,6 @@ img {
   object-fit: contain;
 }
 
-#map {
-  width: 22rem;
-  height: 11rem;
-  display: flex;
-  margin: 1rem auto 0 auto;
-}
-
 #address {
   margin-top: 1.3vh;
   font-size: small;
@@ -193,4 +186,11 @@ img {
 
 .title-main {
   margin-top: 10vh;
+}
+
+#map {
+  width: 21rem;
+  height: 12rem;
+  display: flex;
+  margin: 0.5rem auto 0 auto;
 }

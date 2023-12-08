@@ -32,6 +32,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import {DatapickerRangeComponent} from "./layout/datapicker-range/datapicker-range.component";
 import {FormsModule} from "@angular/forms";
+import {SharedModule} from "./shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -48,28 +49,29 @@ import {FormsModule} from "@angular/forms";
     FooterComponent
   ],
   imports: [
-      BrowserModule,
-      AppRoutingModule,
-      LayoutModule,
-      AccountModule,
-      BrowserAnimationsModule,
-      MatButtonToggleModule,
-      MatCardModule,
-      MatButtonModule,
-      MatCheckboxModule,
-      MatSliderModule,
-      MatInputModule,
-      MatSelectModule,
-      MatPaginatorModule,
-      MatDatepickerModule,
-      AuthenticationModule,
-      MatFormFieldModule,
-      CarouselComponent,
-      NgbModule,
-      HttpClientModule,
-      DatapickerRangeComponent,
-      FormsModule,
-      AccommodationModule,
+    BrowserModule,
+    AppRoutingModule,
+    LayoutModule,
+    AccountModule,
+    BrowserAnimationsModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatSliderModule,
+    MatInputModule,
+    MatSelectModule,
+    MatPaginatorModule,
+    MatDatepickerModule,
+    AuthenticationModule,
+    MatFormFieldModule,
+    CarouselComponent,
+    NgbModule,
+    HttpClientModule,
+    DatapickerRangeComponent,
+    FormsModule,
+    AccommodationModule,
+    SharedModule,
   ],
   providers: [
     provideClientHydration(withNoHttpTransferCache())
