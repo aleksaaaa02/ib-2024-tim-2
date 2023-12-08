@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import rs.ac.uns.ftn.Bookify.enumerations.NotificationType;
 
 import java.util.List;
@@ -14,6 +16,8 @@ import java.util.Map;
 @AllArgsConstructor
 @Entity
 @DiscriminatorValue("OWNER")
+@SQLDelete(sql = "UPDATE users SET deleted = true WHERE id=?")
+@Where(clause = "deleted = false")
 public class Owner extends User {
 
     @ElementCollection
