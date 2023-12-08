@@ -25,7 +25,7 @@ export class AccountService {
       return this.httpClient.post(environment.apiHost + "users/" + userId + "/change-password", newPassword, {responseType: "text"});
   }
 
-  updateUser(userId: number | undefined, account: Account): Observable<Account> {
+  updateUser(account: Account): Observable<Account> {
     return this.httpClient.put<Account>(environment.apiHost + "users", account);
   }
 

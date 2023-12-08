@@ -60,13 +60,13 @@ input[matInput]:disabled {
 }
 
 #account-information {
-  width: 40%;
-  margin-right: 1rem;
+  width: 45%;
+  margin-right: 0.5rem;
 }
 
 #user-information {
   width: 50%;
-  margin-left: 1rem;
+  margin-left: 0.5rem;
 }
 
 .full-width {
@@ -156,9 +156,11 @@ input[matInput]:disabled {
 button[mat-button] {
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
-  border-radius: 20px;
+  font-size: 0.85em;
+  border-radius: 5rem;  
   background-color: #2E4057;
   color: white;
+  padding: 1em;
 }
 
 .disabled {

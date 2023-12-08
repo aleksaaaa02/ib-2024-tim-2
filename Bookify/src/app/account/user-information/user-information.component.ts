@@ -100,7 +100,7 @@ export class UserInformationComponent implements OnInit {
       this.account.address.zipCode = this.userInfoForm.value.zipcode;
       this.account.phone = this.userInfoForm.value.phone;
 
-      this.accountService.updateUser(this.account.id, this.account).subscribe({
+      this.accountService.updateUser(this.account).subscribe({
         next: () => {
           this.isDisabled = true;
           this.toggleFormState();
@@ -147,8 +147,9 @@ export class UserInformationComponent implements OnInit {
             next: (value: string) => {
               this.openSnackBar(value, "");
             },
-            error: err => {
-              console.error(err);
+            error: (err) => {
+              console.log(err);
+              this.openSnackBar(err.error, "account");
             }
           });
         }
