@@ -14,8 +14,7 @@ import { AccommodationAmenitiesComponent } from './feature-modules/accommodation
 import { AccommodationPhotosComponent } from './feature-modules/accommodation/update/accommodation-photos/accommodation-photos.component';
 import { AccommodationGuestsComponent } from './feature-modules/accommodation/update/accommodation-guests/accommodation-guests.component';
 import { AccommodationAvailabilityComponent } from './feature-modules/accommodation/update/accommodation-availability/accommodation-availability.component';
-import { AccommodationDatesComponent } from './feature-modules/accommodation/update/accommodation-dates/accommodation-dates.component';
-import { AccommodationPriceListItemsComponent } from './feature-modules/accommodation/update/accommodation-price-list-items/accommodation-price-list-items.component';
+import { CalendarComponent } from './feature-modules/accommodation/update/calendar/calendar.component';
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -25,6 +24,7 @@ const routes: Routes = [
   { path: "results",component: ResultsPageComponent },
   { path: "accommodation/:accommodationId", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
+  { path: 'accommodation/calendar/:accommodationId', component: CalendarComponent },
   { path: "account", component: AccountComponent },
   { path: "accommodation/create/basic-info", component: AccommodationCreateComponent },
   { path: "accommodation/create/location", component: AccommodationLocationComponent },
@@ -32,9 +32,7 @@ const routes: Routes = [
   { path: "accommodation/create/photos", component: AccommodationPhotosComponent },
   { path: "accommodation/create/guests", component: AccommodationGuestsComponent },
   { path: "accommodation/create/availability", component: AccommodationAvailabilityComponent },
-  { path: "accommodation/create", component: AccommodationCreateComponent },
-  { path: "accommodation/create/dates", component: AccommodationDatesComponent },
-  { path: "accommodation/create/price/:accommodationId", component: AccommodationPriceListItemsComponent }
+  { path: "accommodation/create", component: AccommodationCreateComponent }
 ];
 
 @NgModule({

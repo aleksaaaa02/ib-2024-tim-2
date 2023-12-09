@@ -76,8 +76,8 @@ export class AccommodationService {
     return this.httpClient.post<Accommodation>(environment.apiAccommodation, accommodation)
   }
 
-  deletePriceListItem(accommodationId: number, priceListItem: PriceList): Observable<PriceList> {
-    return this.httpClient.delete<PriceList>(environment.apiAccommodation + "/price/" + accommodationId + "/" + priceListItem.id);
+  deletePriceListItem(accommodationId: number, priceListItem: PriceListDTO): Observable<PriceList> {
+    return this.httpClient.delete<PriceList>(environment.apiAccommodation + "/price/" + accommodationId, {"body": priceListItem});
   }
 
   addImages(accommodationId: number, images: string[]) {
@@ -94,9 +94,4 @@ export class AccommodationService {
   addPriceList(accommodationId: number, priceList: PriceListDTO) {
     return this.httpClient.post<PriceListDTO>(environment.apiAccommodation + "/" + accommodationId + "/addPrice", priceList);
   }
-
-  updatePriceList(accommodationId: number, priceListItemId: number, priceList: PriceListDTO) {
-    return this.httpClient.put<PriceListDTO>(environment.apiAccommodation + "/price/" + accommodationId + "/" + priceListItemId, priceList);
-  }
-
 }

@@ -4,7 +4,6 @@ import { AccommodationModule } from './feature-modules/accommodation/accommodati
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutModule } from "./layout/layout.module";
-import { AccountModule } from "./feature-modules/account/account.module";
 import { AccommodationBasicComponent } from './feature-modules/accommodation/accommodation-basic/accommodation-basic.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -33,6 +32,7 @@ import { HttpClientModule } from '@angular/common/http';
 import {DatapickerRangeComponent} from "./layout/datapicker-range/datapicker-range.component";
 import {FormsModule} from "@angular/forms";
 import {SharedModule} from "./shared/shared.module";
+import {AccountModule} from "./feature-modules/account/account.module";
 
 @NgModule({
   declarations: [

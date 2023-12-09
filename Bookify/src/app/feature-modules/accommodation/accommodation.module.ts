@@ -12,12 +12,11 @@ import { AccommodationGuestsComponent } from './update/accommodation-guests/acco
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AccommodationAvailabilityComponent } from './update/accommodation-availability/accommodation-availability.component';
 import { AccommodationCreateComponent } from './update/accommodation-create/accommodation-create.component';
-import { AccommodationDatesComponent } from './update/accommodation-dates/accommodation-dates.component';
-import { AccommodationPriceListItemsComponent } from './update/accommodation-price-list-items/accommodation-price-list-items.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import {SharedModule} from "../../shared/shared.module";
+import { SharedModule } from "../../shared/shared.module";
+import { CalendarComponent } from './update/calendar/calendar.component';
 
 @NgModule({
   declarations: [
@@ -28,8 +27,7 @@ import {SharedModule} from "../../shared/shared.module";
     AccommodationGuestsComponent,
     AccommodationAvailabilityComponent,
     AccommodationCreateComponent,
-    AccommodationDatesComponent,
-    AccommodationPriceListItemsComponent
+    CalendarComponent
   ],
   imports: [
     CommonModule,
@@ -50,7 +48,8 @@ import {SharedModule} from "../../shared/shared.module";
     AccommodationPhotosComponent,
     AccommodationGuestsComponent,
     AccommodationAvailabilityComponent,
-    AccommodationCreateComponent
+    AccommodationCreateComponent,
+    CalendarComponent
   ]
 })
 export class AccommodationModule { }

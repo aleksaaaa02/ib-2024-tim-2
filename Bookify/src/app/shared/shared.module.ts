@@ -13,7 +13,7 @@ import {MaterialModule} from "../infrastructure/material/material.module";
     CommonModule,
     MaterialModule
   ],
-  exports: [
+  exports:[
     MapComponent
   ]
 })
