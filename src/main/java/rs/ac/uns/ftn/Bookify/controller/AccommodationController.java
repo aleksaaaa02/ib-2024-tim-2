@@ -1,11 +1,6 @@
 package rs.ac.uns.ftn.Bookify.controller;
-
-import ch.qos.logback.core.net.SyslogOutputStream;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,6 +21,7 @@ import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,14 +40,17 @@ public class AccommodationController {
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons")
     int persons, @RequestParam("page") int page, @RequestParam("size") int size) {
         //return all basic info of accommodations for search
-        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, begin, end);
+        LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, beginL, endL);
 
         List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
                 .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
                 .collect(Collectors.toList());
 
-        accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, begin, end, persons);
-        long totalResults = accommodationService.countByLocationAndGuestRange(persons, location, begin ,end);
+        accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, beginL, endL, persons);
+        long totalResults = accommodationService.countByLocationAndGuestRange(persons, location, beginL ,endL);
         float minPrice, maxPrice;
         try {
             minPrice = accommodationBasicDTO.stream().min(Comparator.comparingDouble(AccommodationBasicDTO::getTotalPrice)).orElse(null).getTotalPrice();
@@ -74,7 +73,10 @@ public class AccommodationController {
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons")
     int persons, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String sort, @RequestBody FilterDTO filter) {
         //return all basic info of accommodations for search
-        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, begin, end);
+        LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, beginL, endL);
         System.out.println(filter.getTypes());
         accommodations = accommodationService.getForFilter((List<Accommodation>) accommodations, filter);
 
@@ -82,7 +84,7 @@ public class AccommodationController {
                     .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
                     .collect(Collectors.toList());
 
-        accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, begin, end, persons);
+        accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, beginL, endL, persons);
         accommodationBasicDTO = accommodationService.getForPriceRange(accommodationBasicDTO, filter);
         accommodationBasicDTO = accommodationService.sortAccommodationBasicDTO(accommodationBasicDTO, sort);
         int totalResults = accommodationBasicDTO.size();
