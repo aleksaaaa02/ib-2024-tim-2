@@ -2,43 +2,41 @@ package rs.ac.uns.ftn.Bookify.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import rs.ac.uns.ftn.Bookify.dto.*;
-import rs.ac.uns.ftn.Bookify.model.Address;
-import rs.ac.uns.ftn.Bookify.model.Image;
-import rs.ac.uns.ftn.Bookify.model.User;
+import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IUserRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
 @Service
 public class UserService implements IUserService {
-    @Autowired
-    private IImageService imageService;
+    private final IImageService imageService;
+
+    private final IUserRepository userRepository;
+    private final IReservationService reservationService;
 
     @Autowired
-    private IUserRepository userRepository;
+    public UserService(IImageService imageService, IUserRepository userRepository, IReservationService reservationService) {
+        this.imageService = imageService;
+        this.userRepository = userRepository;
+        this.reservationService = reservationService;
+    }
 
 
     @Override
-    public Collection<UserDTO> getAll() {
-        Collection<UserDTO> users = new ArrayList<>();
-        for(int i = 0; i < 10; i++){
-            users.add(new UserDTO(1231L, "test@example.com", "Pera","Peric", false));
-        }
-        return users;
+    public Collection<User> getAll() {
+        return null;
     }
 
     @Override
-    public UserDetailDTO find(Long userId) {
-        return userRepository.findUserAccount(userId);
+    public User get(Long userId) {
+        Optional<User> u = userRepository.findById(userId);
+        return u.orElse(null);
     }
 
     @Override
@@ -48,24 +46,24 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDetailDTO update(UserDetailDTO updatedUser) {
+    public User update(UserDetailDTO updatedUser) {
         Optional<User> user = this.userRepository.findById(updatedUser.getId());
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             throw new RuntimeException("User not found");
         }
         User u = user.get();
         updateUserData(updatedUser, u);
         try {
             userRepository.save(u);
-        } catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
-        return new UserDetailDTO(u);
+        return u;
     }
 
-    public boolean changePassword(Long userId, String newPassword){
+    public boolean changePassword(Long userId, String newPassword) {
         Optional<User> u = userRepository.findById(userId);
-        if(u.isEmpty()){
+        if (u.isEmpty()) {
             return false;
         }
         User user = u.get();
@@ -91,24 +89,48 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean deleteUser(Long userId) {
-        return true;
+    public boolean delete(Long userId) {
+        Optional<User> u = userRepository.findById(userId);
+        if (u.isEmpty()) {
+            return false;
+        }
+        return deleteUser(u.get());
+    }
+
+    private boolean deleteUser(User user) {
+        if(deletionIsPossibility(user)) {
+            userRepository.deleteById(user.getId());
+            return true;
+        }
+        return false;
+    }
+
+    private String getRole(User user) {
+        String role;
+        if (user instanceof Owner) {
+            role = "OWNER";
+        } else if (user instanceof Admin) {
+            role = "ADMIN";
+        } else {
+            role = "GUEST";
+        }
+        return role;
     }
 
     @Override
-    public boolean blockUser(Long userId) {
+    public boolean block(Long userId) {
         return false;
     }
 
     @Override
-    public Collection<UserDTO> searchUsers(String searchParam) {
+    public Collection<User> searchUsers(String searchParam) {
         return null;
     }
 
     @Override
     public Long updateImage(byte[] bytes, String imageName, Long userId) throws Exception {
         Optional<User> u = userRepository.findById(userId);
-        if(u.isEmpty()){
+        if (u.isEmpty()) {
             throw new Exception();
         }
         Image image = imageService.save(bytes, "accounts", imageName);
@@ -116,7 +138,7 @@ public class UserService implements IUserService {
         user.setProfileImage(image);
         try {
             userRepository.save(user);
-        } catch (Exception e){
+        } catch (Exception e) {
             return -1L;
         }
         return image.getId();
@@ -137,4 +159,17 @@ public class UserService implements IUserService {
         u.setLastName(updatedUser.getLastName());
     }
 
+    private boolean deletionIsPossibility(User user) {
+        switch (getRole(user)) {
+            case "OWNER":
+                for(Accommodation acc :((Owner)user).getAccommodations()){
+                    if(reservationService.hasFutureReservationsAccommodation(acc)) return false;
+                }
+                return true;
+            case "GUEST":
+                return !reservationService.hasFutureReservationsGuest(user.getId());
+            default:
+                return false;
+        }
+    }
 }

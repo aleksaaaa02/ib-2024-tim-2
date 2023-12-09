@@ -3,6 +3,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import java.io.Serializable;
 import java.util.Collection;
 
 
@@ -13,7 +17,9 @@ import java.util.Collection;
 @Table(name="users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
-public abstract class User {
+@SQLDelete(sql = "UPDATE users SET deleted = true WHERE id=?")
+@Where(clause = "deleted = false")
+public abstract class User implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +42,9 @@ public abstract class User {
 
 	@Column(nullable = false)
 	private String phone;
+
+	@Column
+	private boolean deleted = Boolean.FALSE;
 
 	@OneToMany
 	private Collection<Notification> notifications;

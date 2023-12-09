@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.Bookify.dto.*;
+import rs.ac.uns.ftn.Bookify.model.User;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
 import java.util.Date;
@@ -39,14 +40,15 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Collection<UserDTO>> getAllUsers() {
-        Collection<UserDTO> response = userService.getAll();
-        return new ResponseEntity<>(response, HttpStatus.FOUND);
+        Collection<User> response = userService.getAll();
+        return null;
+//        return new ResponseEntity<>(response, HttpStatus.FOUND);
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDetailDTO> getUserById(@PathVariable Long userId) {
-        Optional<UserDetailDTO> user = Optional.ofNullable(userService.find(userId));
-        return user.map(userDetailDTO -> new ResponseEntity<>(userDetailDTO, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+        Optional<User> user = Optional.ofNullable(userService.get(userId));
+        return user.map(userDetailDTO -> new ResponseEntity<>(new UserDetailDTO(user.get()), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
@@ -60,8 +62,8 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<UserDetailDTO> updateUser(@RequestBody UserDetailDTO updatedUser) {
-        Optional<UserDetailDTO> user = Optional.ofNullable(userService.update(updatedUser));
-        return user.map(userDetailDTO -> new ResponseEntity<>(userDetailDTO, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.BAD_REQUEST));
+        Optional<User> user = Optional.ofNullable(userService.update(updatedUser));
+        return user.map(userDetailDTO -> new ResponseEntity<>(new UserDetailDTO(user.get()), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.BAD_REQUEST));
     }
 
     @PostMapping("/{userId}/change-password")
@@ -98,8 +100,9 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
-
-        return new ResponseEntity<>("Account deleted successfully!", HttpStatus.OK);
+        boolean success = userService.delete(userId);
+        if(success) return new ResponseEntity<>("Account deleted successfully!", HttpStatus.OK);
+        return new ResponseEntity<>("Account has not been deleted", HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/{userId}/block-user")
