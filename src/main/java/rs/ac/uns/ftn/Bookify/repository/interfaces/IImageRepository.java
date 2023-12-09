@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface IImageRepository extends JpaRepository<Image, Long> {
     @Query("SELECT a.images FROM Accommodation a WHERE a.id = :accommodationId")
-    List<Image> findImagePathsByAccommodationId(Long accommodationId);
+    List<Image> findImagesByAccommodationId(Long accommodationId);
 }

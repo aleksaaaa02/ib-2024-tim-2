@@ -80,7 +80,6 @@ public class AccommodationController {
         LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, beginL, endL);
-        System.out.println(filter.getTypes());
         accommodations = accommodationService.getForFilter((List<Accommodation>) accommodations, filter);
 
         List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
@@ -268,9 +267,8 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/images/{accommodationId}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public ResponseEntity<FileSystemResource[]> getAccommodationImages(@PathVariable Long accommodationId) {
-        FileSystemResource[] fileSystemResources = imageService.findAll(accommodationId);
-        return new ResponseEntity<>(fileSystemResources, HttpStatus.OK);
+    public ResponseEntity<Collection<FileSystemResource>> getAccommodationImages(@PathVariable Long accommodationId) {
+        return new ResponseEntity<>(imageService.findAll(accommodationId), HttpStatus.OK);
     }
 
     @PostMapping("/images/{accommodationId}")

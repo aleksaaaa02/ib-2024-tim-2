@@ -13,4 +13,5 @@ public class OwnerDTO {
     private String lastName;
     private String phone;
     private float avgRating;
+    private Long imageId;
 }

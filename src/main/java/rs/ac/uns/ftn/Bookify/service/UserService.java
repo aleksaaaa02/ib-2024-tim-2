@@ -153,7 +153,10 @@ public class UserService implements IUserService {
     public OwnerDTO findbyAccommodationId(Long id) {
         Owner o = userRepository.findByAccommodations_Id(id);
         float avgRating = 0;
-        return new OwnerDTO(o.getId(), o.getFirstName(), o.getLastName(), o.getPhone(), avgRating);
+        Long imageId = 0L;
+        if (o.getProfileImage() != null)
+            imageId = o.getProfileImage().getId();
+        return new OwnerDTO(o.getId(), o.getFirstName(), o.getLastName(), o.getPhone(), avgRating, imageId);
     }
 
     private void updateUserData(UserDetailDTO updatedUser, User u) {

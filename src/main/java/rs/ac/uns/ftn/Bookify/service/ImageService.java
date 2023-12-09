@@ -11,6 +11,9 @@ import rs.ac.uns.ftn.Bookify.repository.FileSystemRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IImageRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -41,8 +44,12 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public FileSystemResource[] findAll(Long accommodationId) {
-        System.out.println(imageRepository.findImagePathsByAccommodationId(accommodationId));
-        return null;
+    public Collection<FileSystemResource> findAll(Long accommodationId) {
+        List<Image> images = imageRepository.findImagesByAccommodationId(accommodationId);
+        Collection<FileSystemResource> returns = new ArrayList<>();
+        for (Image i : images){
+            returns.add(fileSystemRepository.findInFileSystem(i.getImagePath()));
+        }
+        return returns;
     }
 }
