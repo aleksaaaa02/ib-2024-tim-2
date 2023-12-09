@@ -6,7 +6,7 @@
     <p class="subtitle">{{basicAccommodation.type.toLocaleUpperCase()}}</p>
     <div class="inline">
       <p class="title">{{basicAccommodation.name}}</p>
-      <meter class="average-rating" min="0" max="5" style="--percent: calc{{basicAccommodation.avgRating}}/5*100%);"></meter>
+      <meter class="average-rating" min="0" max="5" style="--percent: calc({{basicAccommodation.avgRating}}/5*100%);"></meter>
     </div>
     <p class="subtitle">{{basicAccommodation.address.address}}, {{basicAccommodation.address.city}}, {{basicAccommodation.address.country}}</p>
     <p class="description">{{basicAccommodation.description}}</p>

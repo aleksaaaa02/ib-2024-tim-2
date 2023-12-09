@@ -16,6 +16,7 @@ import { AccommodationGuestsComponent } from './feature-modules/accommodation/up
 import { AccommodationAvailabilityComponent } from './feature-modules/accommodation/update/accommodation-availability/accommodation-availability.component';
 import { AccommodationDatesComponent } from './feature-modules/accommodation/update/accommodation-dates/accommodation-dates.component';
 import { AccommodationPriceListItemsComponent } from './feature-modules/accommodation/update/accommodation-price-list-items/accommodation-price-list-items.component';
+import { CalendarComponent } from './feature-modules/accommodation/calendar/calendar.component';
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: "results",component: ResultsPageComponent },
   { path: "accommodation", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
+  { path: 'calendar/:accommodationId', component: CalendarComponent },
   { path: "account", component: AccountComponent },
   { path: "accommodation/create/basic-info", component: AccommodationCreateComponent },
   { path: "accommodation/create/location", component: AccommodationLocationComponent },

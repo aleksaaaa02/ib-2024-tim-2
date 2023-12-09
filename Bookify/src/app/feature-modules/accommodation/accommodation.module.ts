@@ -18,6 +18,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatPaginatorIntl } from '@angular/material/paginator';
+import { CalendarComponent } from './calendar/calendar.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
     AccommodationAvailabilityComponent,
     AccommodationCreateComponent,
     AccommodationDatesComponent,
-    AccommodationPriceListItemsComponent
+    AccommodationPriceListItemsComponent,
+    CalendarComponent
   ],
   imports: [
     CommonModule,
@@ -49,7 +51,8 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
     AccommodationPhotosComponent,
     AccommodationGuestsComponent,
     AccommodationAvailabilityComponent,
-    AccommodationCreateComponent
+    AccommodationCreateComponent,
+    CalendarComponent
   ]
 })
 export class AccommodationModule { }
