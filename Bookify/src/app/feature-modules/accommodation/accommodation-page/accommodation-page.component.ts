@@ -1,10 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {AccommodationService} from "../accommodation.service";
 import {AccommodationDTO} from "../model/accommodation.dto.model";
 import {AccommodationDetailsDTO} from "../model/accommodation-details.dto.model";
 import {AccountService} from "../../account/account.service";
 import contains from "@popperjs/core/lib/dom-utils/contains";
+import {FilterComponent} from "../../../layout/filter/filter.component";
+import {MapComponent} from "../../../shared/map/map.component";
 
 @Component({
   selector: 'app-accommodation-page',
@@ -12,24 +14,6 @@ import contains from "@popperjs/core/lib/dom-utils/contains";
   styleUrl: './accommodation-page.component.css'
 })
 export class AccommodationPageComponent implements OnInit{
-  // name = 'Angular';
-  // imageObject = [{
-  //   image: 'assets/images/image1.jpg',
-  //   thumbImage: 'assets/images/image1.jpg',
-  // }, {
-  //   image: 'assets/images/image2.jpg',
-  //   thumbImage: 'assets/images/image2.jpg'
-  // }, {
-  //   image: 'assets/images/image3.jpg',
-  //   thumbImage: 'assets/images/image3.jpg',
-  // },{
-  //   image: 'assets/images/image4.jpg',
-  //   thumbImage: 'assets/images/image4.jpg',
-  // }, {
-  //   image: 'assets/images/image5.jpg',
-  //   thumbImage: 'assets/images/image5.jpg',
-  // }];
-
   amenitiesMap: Map<string, string> = new Map([
     ['Free wifi', 'wifi'],
     ['Free parking', 'local_parking'],
@@ -59,6 +43,7 @@ export class AccommodationPageComponent implements OnInit{
   ownerImage: string | ArrayBuffer | null = null;
   accommodationImages: string[] | ArrayBuffer[] | null = null;
   amenitiesList: [string, string][] = [];
+  @ViewChild(MapComponent) mapComponent: MapComponent;
 
   constructor(private route: ActivatedRoute, private accommodationService: AccommodationService, private accountService: AccountService) {
   }
@@ -75,8 +60,13 @@ export class AccommodationPageComponent implements OnInit{
           this.accommodation = data;
           this.changeDisplay();
           this.setAmenities();
-          this.getOwnerPhoto(this.accommodation.owner.id ?? 0);
-          this.getAccommodationPhotos(id);
+          if (this.accommodation.owner.imageId != 0)
+            this.getOwnerPhoto(this.accommodation.owner.imageId);
+          else
+            this.ownerImage = "../../assets/images/user.jpg"; 
+          // this.getAccommodationPhotos(id);
+          const address = this.accommodation.address.address + ", " + this.accommodation.address.city + ", " + this.accommodation.address.zipCode + ", " + this.accommodation.address.country;
+          this.mapComponent.search(address);
         }
       })
     });
@@ -85,18 +75,19 @@ export class AccommodationPageComponent implements OnInit{
   getAccommodationPhotos(id: number){
     this.accommodationService.getAccommodationImages(id).subscribe( {
       next: (data): void => {
-        const reader= new FileReader();
-        reader.onloadend = () => {
-          console.log(reader.result);
+        console.log(data);
+        // const reader= new FileReader();
+        // reader.onloadend = () => {
+        //   console.log(reader.result);
           // this.accommodationImages = reader.result;
-        }
+        // }
         // reader.readAsDataURL(data);
       }
     });
   }
 
   getOwnerPhoto(id: number){
-    this.accountService.getAccountImage(id).subscribe({
+    this.accountService.getAccountImage(this.accommodation.owner.imageId).subscribe({
       next: (data: Blob): void => {
         const reader = new FileReader();
         reader.onloadend = () => {

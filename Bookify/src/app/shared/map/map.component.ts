@@ -8,6 +8,7 @@ import {MapService} from "./map.service";
 })
 export class MapComponent implements AfterViewInit {
   private map: any;
+  L: any;
 
   constructor(private mapService: MapService) {}
 
@@ -27,11 +28,16 @@ export class MapComponent implements AfterViewInit {
       }
     );
     tiles.addTo(this.map);
-    this.registerOnClick(L);
     this.search(L);
   }
 
-  registerOnClick(L: any): void {
+  setCenter(coordinates: any){
+    if (this.map) {
+      this.map.setView(coordinates, this.map.getZoom());
+    }
+  }
+
+  registerOnClick(): void {
     this.map.on('click', (e: any) => {
       const coord = e.latlng;
       const lat = coord.lat;
@@ -42,17 +48,17 @@ export class MapComponent implements AfterViewInit {
       console.log(
         'You clicked the map at latitude: ' + lat + ' and longitude: ' + lng
       );
-      new L.Marker([lat, lng]).addTo(this.map);
+      new this.L.Marker([lat, lng]).addTo(this.map);
     });
   }
 
-  search(L: any): void {
-    this.mapService.search('Strazilovska 19, Novi Sad').subscribe({
+  search(location: string): void {
+    this.mapService.search(location).subscribe({
       next: (result) => {
-        // console.log(result);
-        L.marker([result[0].lat, result[0].lon])
+        this.L.marker([result[0].lat, result[0].lon])
           .addTo(this.map)
           .openPopup();
+        this.setCenter([result[0].lat, result[0].lon]);
       },
       error: () => {},
     });
@@ -61,6 +67,7 @@ export class MapComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     if (typeof window !== 'undefined' && typeof document !== 'undefined') {
       import('leaflet').then((L) => {
+        this.L = L;
         L.Marker.prototype.options.icon = L.icon({
           iconUrl: 'https://unpkg.com/leaflet@1.6.0/dist/images/marker-icon.png'
         });
