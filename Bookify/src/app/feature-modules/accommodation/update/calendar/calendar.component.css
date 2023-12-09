@@ -131,6 +131,14 @@
   max-width: 100%;
 }
 
+.calendar-days div:last-child {
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+  max-width: 100%;
+}
+
 .calendar-days div:hover {
     transition: width 0.2s ease-in-out, height 0.2s ease-in-out;
     background-color: #326268;

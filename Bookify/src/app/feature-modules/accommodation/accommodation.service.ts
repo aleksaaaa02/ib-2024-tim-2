@@ -85,9 +85,4 @@ export class AccommodationService {
   addPriceList(accommodationId: number, priceList: PriceListDTO) {
     return this.httpClient.post<PriceListDTO>(environment.apiAccommodation + "/" + accommodationId + "/addPrice", priceList);
   }
-
-  updatePriceList(accommodationId: number, priceListItemId: number, priceList: PriceListDTO) {
-    return this.httpClient.put<PriceListDTO>(environment.apiAccommodation + "/price/" + accommodationId + "/" + priceListItemId, priceList);
-  }
-
 }
