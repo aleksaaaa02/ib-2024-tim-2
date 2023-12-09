@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.Bookify.dto.UserDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.model.*;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 
@@ -36,11 +37,39 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     Collection<Accommodation> findByLocationAndGuestRange(
             @Param("location") String location,
             @Param("persons") int persons,
-            @Param("begin") Date begin,
-            @Param("end") Date end);
+            @Param("begin") LocalDate begin,
+            @Param("end") LocalDate end);
 
-    @Query("select a.priceList from Accommodation a  join a.priceList where a.id=?1")
+    @Query("select a.priceList from Accommodation a join a.priceList where a.id=?1")
     public Collection<PricelistItem> getPriceListItems(Long accommodationId);
+
+    @Query("select pl from Accommodation a " +
+            "join a.priceList pl " +
+            "where a.id = :accommodationId " +
+            "and ((pl.startDate <= :startDate " +
+            "and pl.endDate >= :startDate) " +
+            "or (pl.startDate <= :endDate " +
+            "and pl.endDate >= :endDate) " +
+            "or (pl.startDate >= :startDate " +
+            "and pl.endDate <= :endDate))")
+    public Collection<PricelistItem> getPriceListItemsOverlapsWith(
+            @Param("accommodationId") Long accommodationId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
+
+    @Query("select av from Accommodation a " +
+            "join a.availability av " +
+            "where a.id = :accommodationId " +
+            "and ((av.startDate <= :startDate " +
+            "and av.endDate >= :startDate) " +
+            "or (av.startDate <= :endDate " +
+            "and av.endDate >= :endDate) " +
+            "or (av.startDate >= :startDate " +
+            "and av.endDate <= :endDate))")
+    public Collection<Availability> getAvailabilityItemsOverlapsWith(
+            @Param("accommodationId") Long accommodationId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
 
     @Query("select a.availability from Accommodation a  join a.availability where a.id=?1")
     public Collection<Availability> getAvailabilities(Long accommodationId);
@@ -61,8 +90,8 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     long countByLocationAndGuestRange(
             @Param("location") String location,
             @Param("persons") int persons,
-            @Param("begin") Date begin,
-            @Param("end") Date end);
+            @Param("begin") LocalDate begin,
+            @Param("end") LocalDate end);
 
     @Query("SELECT p.price " +
             "FROM Accommodation a " +
@@ -70,6 +99,6 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "WHERE p.startDate <= :date AND p.endDate >= :date " +
             "AND a.id = :accommodationId")
     Optional<Double> findPriceForDay(
-            @Param("date") Date date,
+            @Param("date") LocalDate date,
             @Param("accommodationId") Long accommodationId);
 }

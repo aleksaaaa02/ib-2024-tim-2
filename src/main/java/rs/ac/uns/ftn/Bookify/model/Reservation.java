@@ -31,7 +31,7 @@ public class Reservation {
 	@Column(nullable = false)
 	private int guestNumber;
 
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
 	private Guest guest;
 
 	@ManyToOne
