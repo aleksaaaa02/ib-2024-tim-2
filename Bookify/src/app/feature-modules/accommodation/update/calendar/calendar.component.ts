@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AccommodationService } from '../accommodation.service';
+import { AccommodationService } from '../../accommodation.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PriceList } from '../model/priceList.model';
-import { PriceListDTO } from '../model/priceList.dto.model';
+import { PriceList } from '../../model/priceList.model';
+import { PriceListDTO } from '../../model/priceList.dto.model';
 
 @Component({
   selector: 'app-calendar',
@@ -128,40 +128,46 @@ export class CalendarComponent implements OnInit {
   }
 
   selectStartDate() {
-    const days = document.querySelectorAll('.calendar-days div');
-    days.forEach((dayElement) => {
-      if (dayElement.firstElementChild?.textContent && this.selectedStartDate) {
-        const day = +dayElement.firstElementChild?.textContent;
-        const currentDate = new Date(this.currentYear, this.currentMonth, day);
-        if (currentDate >= this.selectedStartDate && currentDate <= this.selectedStartDate) {
-          dayElement.classList.add('selected-range');
+    if(document){
+      const days = document.querySelectorAll('.calendar-days div');
+      days.forEach((dayElement) => {
+        if (dayElement.firstElementChild?.textContent && this.selectedStartDate) {
+          const day = +dayElement.firstElementChild?.textContent;
+          const currentDate = new Date(this.currentYear, this.currentMonth, day);
+          if (currentDate >= this.selectedStartDate && currentDate <= this.selectedStartDate) {
+            dayElement.classList.add('selected-range');
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   processSelectedRange(): void {
-    this.resetColors();
-    const days = document.querySelectorAll('.calendar-days div');
-    days.forEach((dayElement) => {
-      if (dayElement.firstElementChild?.textContent && this.selectedEndDate && this.selectedStartDate) {
-        const day = +dayElement.firstElementChild?.textContent;
-        const currentDate = new Date(this.currentYear, this.currentMonth, day);
-        if (currentDate >= this.selectedStartDate && currentDate <= this.selectedEndDate) {
-          dayElement.classList.add('selected-range');
+    if(document){
+      this.resetColors();
+      const days = document.querySelectorAll('.calendar-days div');
+      days.forEach((dayElement) => {
+        if (dayElement.firstElementChild?.textContent && this.selectedEndDate && this.selectedStartDate) {
+          const day = +dayElement.firstElementChild?.textContent;
+          const currentDate = new Date(this.currentYear, this.currentMonth, day);
+          if (currentDate >= this.selectedStartDate && currentDate <= this.selectedEndDate) {
+            dayElement.classList.add('selected-range');
+          }
+          if (currentDate <= new Date()) {
+            dayElement.classList.add('past-days');
+          }
         }
-        if (currentDate <= new Date()) {
-          dayElement.classList.add('past-days');
-        }
-      }
-    });
+      });
+    }
   }
 
   resetColors(): void {
-    const selectedDays = document.querySelectorAll('.calendar-days div.selected-range');
-    selectedDays.forEach((dayElement) => {
-      dayElement.classList.remove('selected-range');
-    });
+    if(document){
+      const selectedDays = document.querySelectorAll('.calendar-days div.selected-range');
+      selectedDays.forEach((dayElement) => {
+        dayElement.classList.remove('selected-range');
+      });
+    }
   }
 
   clearSelectedDates(): void {
@@ -224,14 +230,13 @@ export class CalendarComponent implements OnInit {
   }
 
   private dodajCenu(start: Date, end: Date, price: number) {
-    const days = document.querySelectorAll('.calendar-days div');
-    let currentDate = new Date(start);
-    while (currentDate <= end) {
-      this.dateTextMap[currentDate.getFullYear() + "-" + currentDate.getMonth() + "-" + currentDate.getDate()] = price + "€";
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-    this.resetColors();
-    this.clearSelectedDates();
+      let currentDate = new Date(start);
+      while (currentDate <= end) {
+        this.dateTextMap[currentDate.getFullYear() + "-" + currentDate.getMonth() + "-" + currentDate.getDate()] = price + "€";
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      this.resetColors();
+      this.clearSelectedDates();
   }
 
   brisi() {
@@ -267,18 +272,20 @@ export class CalendarComponent implements OnInit {
   }
 
   private brisiCenu(start: Date, end: Date) {
-    const days = document.querySelectorAll('.calendar-days div');
-    days.forEach((dayElement) => {
-      if (dayElement.firstElementChild?.textContent && start && end) {
-        const day = +dayElement.firstElementChild?.textContent;
-        const currentDate = new Date(this.currentYear, this.currentMonth, day);
-        if (currentDate >= start && currentDate <= end) {
-          const priceControl = this.priceForm.get('price');
-          this.dateTextMap[this.currentYear + "-" + this.currentMonth + "-" + day] = "";
+    if(document){
+      const days = document.querySelectorAll('.calendar-days div');
+      days.forEach((dayElement) => {
+        if (dayElement.firstElementChild?.textContent && start && end) {
+          const day = +dayElement.firstElementChild?.textContent;
+          const currentDate = new Date(this.currentYear, this.currentMonth, day);
+          if (currentDate >= start && currentDate <= end) {
+            const priceControl = this.priceForm.get('price');
+            this.dateTextMap[this.currentYear + "-" + this.currentMonth + "-" + day] = "";
+          }
         }
-      }
-    });
-    this.resetColors();
-    this.clearSelectedDates();
+      });
+      this.resetColors();
+      this.clearSelectedDates();
+    }
   }
 }

@@ -12,13 +12,11 @@ import { AccommodationGuestsComponent } from './update/accommodation-guests/acco
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AccommodationAvailabilityComponent } from './update/accommodation-availability/accommodation-availability.component';
 import { AccommodationCreateComponent } from './update/accommodation-create/accommodation-create.component';
-import { AccommodationDatesComponent } from './update/accommodation-dates/accommodation-dates.component';
-import { AccommodationPriceListItemsComponent } from './update/accommodation-price-list-items/accommodation-price-list-items.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatPaginatorIntl } from '@angular/material/paginator';
-import { CalendarComponent } from './calendar/calendar.component';
+import { CalendarComponent } from './update/calendar/calendar.component';
 
 @NgModule({
   declarations: [
@@ -29,8 +27,6 @@ import { CalendarComponent } from './calendar/calendar.component';
     AccommodationGuestsComponent,
     AccommodationAvailabilityComponent,
     AccommodationCreateComponent,
-    AccommodationDatesComponent,
-    AccommodationPriceListItemsComponent,
     CalendarComponent
   ],
   imports: [

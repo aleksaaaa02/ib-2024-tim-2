@@ -104,7 +104,7 @@ export class AccommodationCreateComponent {
           next: (data: Accommodation) => {
             this.accommodationService.addImages(data.id, this.images).subscribe({
               next: () => {
-                this.router.navigate(['/accommodation/create/price', data.id]);
+                this.router.navigate(['/accommodation/calendar/', data.id]);
               }
             });
           },
