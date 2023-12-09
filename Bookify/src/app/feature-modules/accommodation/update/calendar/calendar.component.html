@@ -1,19 +1,19 @@
 <div class="container">
     <div class="calendar">
         <div class="calendar-header">
-            <span class="year-change" id="pre-year" (click)="changeMonth(-1)">
+            <span class="year-change" (click)="changeMonth(-1)">
                 <pre>&lt;</pre>
             </span>
             <span class="month-picker" id="month-picker">{{ currentMonthName }}</span>
-            <span class="year-change" id="next-year" (click)="changeMonth(1)">
+            <span class="year-change" (click)="changeMonth(1)">
                 <pre>&gt;</pre>
             </span>
             <div class="year-picker" id="year-picker">
-                <span class="year-change" id="pre-year" (click)="changeYear(-1)">
+                <span class="year-change" (click)="changeYear(-1)">
                     <pre>&lt;</pre>
                 </span>
                 <span id="year">{{ currentYear }}</span>
-                <span class="year-change" id="next-year" (click)="changeYear(1)">
+                <span class="year-change" (click)="changeYear(1)">
                     <pre>&gt;</pre>
                 </span>
             </div>
@@ -27,7 +27,7 @@
                 <div *ngFor="let emptyDay of emptyDays"></div>
                 <div *ngFor="let day of daysInMonth" (click)="onDateClick(day)">
                     <span>{{ day }}</span>
-                    <span>{{dateTextMap[currentYear+"-"+currentMonth+"-"+day]}}</span>
+                    <span class="price">{{dateTextMap[currentYear+"-"+currentMonth+"-"+day]}}</span>
                 </div>
             </div>
         </div>

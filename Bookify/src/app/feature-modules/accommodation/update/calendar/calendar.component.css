@@ -124,11 +124,11 @@
 }
 
 .calendar-days div span {
-    position: relative;
-    overflow: hidden;
-    white-space: nowrap;
-    display: inline-block;
-    max-width: 100%;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+  max-width: 100%;
 }
 
 .calendar-days div:hover {
@@ -188,6 +188,10 @@
     top: 50px;
     justify-content: center;
     align-items: start;
+}
+
+.price {
+  font-size: 0.8rem;
 }
 
 @keyframes to-top {
