@@ -1,11 +1,6 @@
 package rs.ac.uns.ftn.Bookify.controller;
-
-import ch.qos.logback.core.net.SyslogOutputStream;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +19,9 @@ import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,14 +40,17 @@ public class AccommodationController {
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons")
     int persons, @RequestParam("page") int page, @RequestParam("size") int size) {
         //return all basic info of accommodations for search
-        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, begin, end);
+        LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, beginL, endL);
 
         List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
                 .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
                 .collect(Collectors.toList());
 
-        accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, begin, end, persons);
-        long totalResults = accommodationService.countByLocationAndGuestRange(persons, location, begin ,end);
+        accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, beginL, endL, persons);
+        long totalResults = accommodationService.countByLocationAndGuestRange(persons, location, beginL ,endL);
         float minPrice, maxPrice;
         try {
             minPrice = accommodationBasicDTO.stream().min(Comparator.comparingDouble(AccommodationBasicDTO::getTotalPrice)).orElse(null).getTotalPrice();
@@ -72,7 +73,10 @@ public class AccommodationController {
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("persons")
     int persons, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam("sort") String sort, @RequestBody FilterDTO filter) {
         //return all basic info of accommodations for search
-        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, begin, end);
+        LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, beginL, endL);
         System.out.println(filter.getTypes());
         accommodations = accommodationService.getForFilter((List<Accommodation>) accommodations, filter);
 
@@ -80,7 +84,7 @@ public class AccommodationController {
                     .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
                     .collect(Collectors.toList());
 
-        accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, begin, end, persons);
+        accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, beginL, endL, persons);
         accommodationBasicDTO = accommodationService.getForPriceRange(accommodationBasicDTO, filter);
         accommodationBasicDTO = accommodationService.sortAccommodationBasicDTO(accommodationBasicDTO, sort);
         int totalResults = accommodationBasicDTO.size();
@@ -279,45 +283,22 @@ public class AccommodationController {
     public ResponseEntity<Long> addPriceListItem(@PathVariable Long accommodationId, @RequestBody PriceListItemDTO dto) {
         PricelistItem item = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
         Availability availability = PriceListItemDTOMapper.fromDTOtoAvailability(dto);
-        if (accommodationService.addPriceList(accommodationId, item) == null) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-        if (accommodationService.addAvailability(accommodationId, availability) == null) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+        accommodationService.addPriceList(accommodationId, item);
+        accommodationService.addAvailability(accommodationId, availability);
         return new ResponseEntity<>(accommodationId, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{accommodationId}/getPrice", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<PricelistItem>> getAccommodationPriceListItems(@PathVariable Long accommodationId) {
+    public ResponseEntity<Collection<PriceListItemDTO>> getAccommodationPriceListItems(@PathVariable Long accommodationId) {
         Collection<PricelistItem> priceListItems = accommodationService.getAccommodationPriceListItems(accommodationId);
-//        Collection<PriceListItemDTO> priceListItemDTOS = PriceListItemDTOMapper.fromPriceListItemtoDTO(pricelistItems);
-        return new ResponseEntity<>(priceListItems, HttpStatus.OK);
+        Collection<PriceListItemDTO> priceListItemDTOS = PriceListItemDTOMapper.fromPriceListItemtoDTO(priceListItems);
+        return new ResponseEntity<>(priceListItemDTOS, HttpStatus.OK);
     }
 
-    @DeleteMapping("/price/{accommodationId}/{priceListItemId}")
-    public ResponseEntity<ReservationDTO> deletePriceList(@PathVariable Long accommodationId, @PathVariable Long priceListItemId) {
-        accommodationService.deletePriceListItem(accommodationId, priceListItemId);
-        accommodationService.deleteAvailabilityItem(accommodationId, priceListItemId);
-        return new ResponseEntity<ReservationDTO>(HttpStatus.NO_CONTENT);
-    }
-
-    @PutMapping(value = "/price/{accommodationId}/{priceListItemId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PricelistItem> updatePriceListItem(@PathVariable Long accommodationId, @PathVariable Long priceListItemId, @RequestBody PriceListItemDTO dto) {
-        PricelistItem item = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
-        item.setId(priceListItemId);
-
-        if (accommodationService.updatePriceListItem(accommodationId, item) == null) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-
-        Availability availability = PriceListItemDTOMapper.fromDTOtoAvailability(dto);
-        availability.setId(priceListItemId);
-
-        if (accommodationService.updateAvailabilityItem(accommodationId, availability) == null) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<PricelistItem>(item, HttpStatus.OK);
+    @DeleteMapping("/price/{accommodationId}")
+    public ResponseEntity<PriceListItemDTO> deletePriceList(@PathVariable Long accommodationId, @RequestBody PriceListItemDTO dto) {
+        PricelistItem pricelistItem = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
+        accommodationService.deletePriceListItem(accommodationId, pricelistItem);
+        return new ResponseEntity<PriceListItemDTO>(dto, HttpStatus.OK);
     }
 }

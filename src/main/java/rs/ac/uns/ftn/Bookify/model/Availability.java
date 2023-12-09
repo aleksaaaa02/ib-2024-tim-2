@@ -18,9 +18,9 @@ public class Availability {
 	private Long id;
 
 	@Column(nullable = false)
-	private Date startDate;
+	private LocalDate startDate;
 
 	@Column(nullable = false)
-	private Date endDate;
+	private LocalDate endDate;
 
 }
