@@ -24,7 +24,7 @@ const routes: Routes = [
   { path: "results",component: ResultsPageComponent },
   { path: "accommodation", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
-  { path: 'calendar/:accommodationId', component: CalendarComponent },
+  { path: 'accommodation/calendar/:accommodationId', component: CalendarComponent },
   { path: "account", component: AccountComponent },
   { path: "accommodation/create/basic-info", component: AccommodationCreateComponent },
   { path: "accommodation/create/location", component: AccommodationLocationComponent },
