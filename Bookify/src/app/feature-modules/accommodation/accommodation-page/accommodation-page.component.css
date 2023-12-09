@@ -122,13 +122,14 @@ img {
 }
 
 #owner-profile {
-  margin: 0.5rem 0 0 0;
+  margin: 0.7rem 0 0 0;
   display: flex;
 }
 
 #owner-info {
   margin: auto 0 auto 1rem;
   justify-content: center;
+  vertical-align: center;
 }
 
 #owner-name {
@@ -138,7 +139,7 @@ img {
 
 #owner-number {
   font-size: small;
-  margin: 0 0 0 0.2rem;
+  margin: 0;
 }
 
 .material-symbols-outlined {
@@ -199,4 +200,25 @@ img {
   height: 12rem;
   display: flex;
   margin: 0.5rem auto 0 auto;
+  z-index: 1;
+}
+
+#owner-image {
+  width: 10rem;
+  height: 10rem;
+}
+
+#account-pic {
+  border-radius: 100%;
+  border: 3px solid grey;
+  margin: 0;
+  width: 4rem;
+  height: 4rem;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  border-radius: 100%;
+  object-fit: cover;
 }

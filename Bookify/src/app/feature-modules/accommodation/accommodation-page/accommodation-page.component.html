@@ -2,7 +2,7 @@
   <div class="inline title-main">
     <span class="material-symbols-outlined favorite">favorite</span>
     <p id="hotel-name">{{ accommodation?.name }}</p>
-    <meter id="accRating" class="average-rating" min="0" max="5" style="--percent: calc{{accommodation?.avgRating}}/5*100%);"></meter>
+    <meter id="accRating" class="average-rating" min="0" max="5" style="--percent: calc({{accommodation?.avgRating}}/5*100%);"></meter>
   </div>
 
   <div id="carousel">
@@ -14,12 +14,12 @@
       <p class="subcategory white">Amenities</p>
       <hr class="white-back"/>
       <div id="amenities-list">
-<!--        @for (amenities of amenitiesList; track amenities) {-->
-<!--        <div class="amenities-wrapper">-->
-<!--          <span class="material-symbols-outlined amenities-icon">{{ amenities[1] }}</span>-->
-<!--          <p class="amenities-name">{{ amenities[0] }}</p>-->
-<!--        </div>-->
-<!--        }-->
+        @for (amenities of amenitiesList; track amenities) {
+        <div class="amenities-wrapper">
+          <span class="material-symbols-outlined amenities-icon">{{ amenities[1] }}</span>
+          <p class="amenities-name">{{ amenities[0] }}</p>
+        </div>
+        }
       </div>
     </div>
     <div id="location">
@@ -41,11 +41,13 @@
       <p class="subcategory">Owner</p>
       <hr/>
       <div id="owner-profile">
-        <span class="material-symbols-outlined">account_circle</span>
+        <div id="account-pic">
+          <img alt="" class="image" [src]="ownerImage"/>
+        </div>
         <div id="owner-info">
           <div class="inline no-margin">
             <p id="owner-name">{{accommodation?.owner?.firstName}} {{accommodation?.owner?.lastName}}</p>
-            <meter class="average-rating small" min="0" max="5" style="--percent: calc{{accommodation?.owner?.avgRating}}/5*100%);"></meter>
+            <meter id="ownerRating" class="average-rating small" min="0" max="5" style="--percent: calc({{accommodation?.owner?.avgRating}}/5*100%);"></meter>
           </div>
           <p id="owner-number">{{accommodation?.owner?.phone}}</p>
         </div>

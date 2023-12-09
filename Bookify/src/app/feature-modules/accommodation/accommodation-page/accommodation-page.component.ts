@@ -38,7 +38,7 @@ export class AccommodationPageComponent implements OnInit{
     ['Deposit box', 'local_atm'],
     ['Jacuzzi', 'hot_tub'],
     ['Wheelchair', 'accessible'],
-    ['Non-smoking', 'smoke_free'],
+    ['Non smoking', 'smoke_free'],
     ['Air conditioning', 'ac_unit'],
     ['Swimming pool', 'pool'],
     ['Bar', 'local_bar'],
@@ -58,11 +58,16 @@ export class AccommodationPageComponent implements OnInit{
   accommodation: AccommodationDetailsDTO;
   ownerImage: string | ArrayBuffer | null = null;
   accommodationImages: string[] | ArrayBuffer[] | null = null;
+  amenitiesList: [string, string][] = [];
 
   constructor(private route: ActivatedRoute, private accommodationService: AccommodationService, private accountService: AccountService) {
   }
 
   ngOnInit(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    });
     this.route.params.subscribe((params) => {
       const id = +params['accommodationId'];
       this.accommodationService.getAccommodationDetails(id).subscribe({
@@ -70,39 +75,46 @@ export class AccommodationPageComponent implements OnInit{
           this.accommodation = data;
           this.changeDisplay();
           this.setAmenities();
+          this.getOwnerPhoto(this.accommodation.owner.id ?? 0);
+          this.getAccommodationPhotos(id);
         }
       })
     });
-    // this.accountService.getAccountImage(this.accommodation.owner.imageId).subscribe({
-    //   next: (data: Blob): void => {
-    //     const reader = new FileReader();
-    //     reader.onloadend = () => {
-    //       this.ownerImage = reader.result;
-    //       console.log(this.ownerImage);
-    //     }
-    //     reader.readAsDataURL(data);
-    //   },
-    //   error: err => {
-    //     console.error(err);
-    //   }
-    // });
-    // this.accommodationService.getAccommodationImages(this.accommodation.id).subscribe( {
-    //   next: (data): void => {
-    //     const reader= new FileReader();
-    //     reader.onloadend = () => {
-    //       console.log(reader.result);
-    //       // this.accommodationImages = reader.result;
-    //     }
-    //     // reader.readAsDataURL(data);
-    //   }
-    // });
+  }
 
+  getAccommodationPhotos(id: number){
+    this.accommodationService.getAccommodationImages(id).subscribe( {
+      next: (data): void => {
+        const reader= new FileReader();
+        reader.onloadend = () => {
+          console.log(reader.result);
+          // this.accommodationImages = reader.result;
+        }
+        // reader.readAsDataURL(data);
+      }
+    });
+  }
+
+  getOwnerPhoto(id: number){
+    this.accountService.getAccountImage(id).subscribe({
+      next: (data: Blob): void => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          this.ownerImage = reader.result;
+        }
+        reader.readAsDataURL(data);
+      },
+      error: err => {
+        console.error(err);
+      }
+    });
   }
 
   setAmenities(){
     if (this.accommodation.filters != null) {
       for (const filter of this.accommodation.filters) {
-        console.log(this.transformLabel(filter));
+        let label = this.transformLabel(filter);
+        this.amenitiesList.push([label, this.amenitiesMap.get(label) ?? '']);
       }
     }
   }
@@ -117,6 +129,11 @@ export class AccommodationPageComponent implements OnInit{
       const el = document.getElementById("accRating");
       if (el != null)
         el.style.display = 'none';
+    }
+    if (this.accommodation.owner?.avgRating == 0){
+      const el1 = document.getElementById("ownerRating");
+      if (el1 != null)
+        el1.style.display = 'none';
     }
   }
 }
