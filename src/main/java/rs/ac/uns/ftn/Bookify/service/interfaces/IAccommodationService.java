@@ -25,7 +25,7 @@ public interface IAccommodationService {
     public List<AccommodationBasicDTO> getForPriceRange(List<AccommodationBasicDTO> accommodations, FilterDTO filter);
     public double getTotalPrice(Long id, LocalDate begin, LocalDate end);
     public double getOnePrice(Long id, LocalDate begin, LocalDate end);
-    public FileSystemResource getImages(Long id);
+    public FileSystemResource getImage(Long id);
     public Accommodation save(Accommodation accommodation);
     public Long addPriceList(Long accommodationId, PricelistItem item);
     public Long addAvailability(Long accommodationId, Availability availability);
@@ -36,4 +36,5 @@ public interface IAccommodationService {
     public Boolean deletePriceListItem(Long accommodationId, PricelistItem item);
     public Long updatePriceListItem(Long accommodationId, PricelistItem item);
     public Long updateAvailabilityItem(Long accommodationId, Availability availability);
+    public List<FileSystemResource> getAllImages(Long accommodationId);
 }

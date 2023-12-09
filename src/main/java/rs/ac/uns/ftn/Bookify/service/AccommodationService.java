@@ -11,6 +11,7 @@ import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Availability;
+import rs.ac.uns.ftn.Bookify.model.Image;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAvailabilityRepository;
@@ -374,7 +375,17 @@ public class AccommodationService implements IAccommodationService {
         return accommodationId;
     }
 
-    public FileSystemResource getImages(Long id) {
+    @Override
+    public List<FileSystemResource> getAllImages(Long accommodationId) {
+        Accommodation a = accommodationRepository.findById(accommodationId).get();
+        List<FileSystemResource> returns = new ArrayList<>();
+        for (Image image : a.getImages()){
+            returns.add(imageService.find(image.getId()));
+        }
+        return returns;
+    }
+
+    public FileSystemResource getImage(Long id) {
         return imageService.find(id);
     }
 }

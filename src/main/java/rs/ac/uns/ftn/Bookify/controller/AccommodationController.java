@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.Bookify.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -268,7 +269,11 @@ public class AccommodationController {
 
     @GetMapping(value = "/images/{accommodationId}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     public ResponseEntity<Collection<FileSystemResource>> getAccommodationImages(@PathVariable Long accommodationId) {
-        return new ResponseEntity<>(imageService.findAll(accommodationId), HttpStatus.OK);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG); // or MediaType.IMAGE_PNG based on your image format
+
+        return new ResponseEntity<>(accommodationService.getAllImages(accommodationId), headers, HttpStatus.OK);
     }
 
     @PostMapping("/images/{accommodationId}")

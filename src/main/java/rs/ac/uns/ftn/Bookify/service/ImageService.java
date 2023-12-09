@@ -42,14 +42,4 @@ public class ImageService implements IImageService {
         Image image = imageRepository.findById(imageId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return fileSystemRepository.findInFileSystem(image.getImagePath());
     }
-
-    @Override
-    public Collection<FileSystemResource> findAll(Long accommodationId) {
-        List<Image> images = imageRepository.findImagesByAccommodationId(accommodationId);
-        Collection<FileSystemResource> returns = new ArrayList<>();
-        for (Image i : images){
-            returns.add(fileSystemRepository.findInFileSystem(i.getImagePath()));
-        }
-        return returns;
-    }
 }

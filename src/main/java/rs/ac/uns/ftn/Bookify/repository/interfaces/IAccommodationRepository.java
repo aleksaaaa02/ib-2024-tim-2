@@ -1,23 +1,10 @@
 package rs.ac.uns.ftn.Bookify.repository.interfaces;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import rs.ac.uns.ftn.Bookify.dto.AccommodationDetailDTO;
-import rs.ac.uns.ftn.Bookify.dto.UserDTO;
-import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.model.*;
-
 import java.time.LocalDate;
 import java.util.Collection;
-
-
 import org.springframework.data.repository.query.Param;
-
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 public interface IAccommodationRepository extends JpaRepository<Accommodation, Long> {
