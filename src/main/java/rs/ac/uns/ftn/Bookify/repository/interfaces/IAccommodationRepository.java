@@ -9,6 +9,7 @@ import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 
@@ -36,8 +37,36 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             @Param("begin") Date begin,
             @Param("end") Date end);
 
-    @Query("select a.priceList from Accommodation a  join a.priceList where a.id=?1")
+    @Query("select a.priceList from Accommodation a join a.priceList where a.id=?1")
     public Collection<PricelistItem> getPriceListItems(Long accommodationId);
+
+    @Query("select pl from Accommodation a " +
+            "join a.priceList pl " +
+            "where a.id = :accommodationId " +
+            "and ((pl.startDate <= :startDate " +
+            "and pl.endDate >= :startDate) " +
+            "or (pl.startDate <= :endDate " +
+            "and pl.endDate >= :endDate) " +
+            "or (pl.startDate >= :startDate " +
+            "and pl.endDate <= :endDate))")
+    public Collection<PricelistItem> getPriceListItemsOverlapsWith(
+            @Param("accommodationId") Long accommodationId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
+
+    @Query("select av from Accommodation a " +
+            "join a.availability av " +
+            "where a.id = :accommodationId " +
+            "and ((av.startDate <= :startDate " +
+            "and av.endDate >= :startDate) " +
+            "or (av.startDate <= :endDate " +
+            "and av.endDate >= :endDate) " +
+            "or (av.startDate >= :startDate " +
+            "and av.endDate <= :endDate))")
+    public Collection<Availability> getAvailabilityItemsOverlapsWith(
+            @Param("accommodationId") Long accommodationId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
 
     @Query("select a.availability from Accommodation a  join a.availability where a.id=?1")
     public Collection<Availability> getAvailabilities(Long accommodationId);

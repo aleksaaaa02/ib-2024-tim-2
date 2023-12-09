@@ -9,6 +9,7 @@ import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 import java.util.Collection;
@@ -30,8 +31,10 @@ public interface IAccommodationService {
     public Long addPriceList(Long accommodationId, PricelistItem item);
     public Long addAvailability(Long accommodationId, Availability availability);
     public Collection<PricelistItem> getAccommodationPriceListItems(Long accommodationId);
-    public Boolean deletePriceListItem(Long accommodationId, Long priceListItemId);
-    public Boolean deleteAvailabilityItem(Long accommodationId, Long priceListItemId);
+    public Collection<PricelistItem> savePriceListItem(Long accommodationId, PricelistItem item);
+    public void mergePricelistIntervals(Long accommodationId);
+    public void mergeAvailabilityIntervals(Long accommodationId);
+    public Boolean deletePriceListItem(Long accommodationId, PricelistItem item);
     public Long updatePriceListItem(Long accommodationId, PricelistItem item);
     public Long updateAvailabilityItem(Long accommodationId, Availability availability);
 }
