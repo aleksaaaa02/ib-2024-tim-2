@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.AccommodationBasicDTO;
+import rs.ac.uns.ftn.Bookify.dto.AccommodationDetailDTO;
 import rs.ac.uns.ftn.Bookify.dto.FilterDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
 import rs.ac.uns.ftn.Bookify.enumerations.Filter;
@@ -73,6 +74,12 @@ public class AccommodationService implements IAccommodationService {
                 accommodationFilter.add(accommodation);
         }
         return accommodationFilter;
+    }
+
+    @Override
+    public AccommodationDetailDTO getAccommodationDetails(Long id) {
+        Accommodation a = this.accommodationRepository.findById(id).get();
+        return new AccommodationDetailDTO(a.getId(), a.getName(), a.getDescription(), 0, a.getReviews(), a.getFilters(), a.getAddress(), null);
     }
 
     @Override

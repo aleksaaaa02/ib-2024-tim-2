@@ -3,11 +3,9 @@ package rs.ac.uns.ftn.Bookify.dto;
 import lombok.*;
 import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.model.Address;
-import rs.ac.uns.ftn.Bookify.model.Availability;
-import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 import rs.ac.uns.ftn.Bookify.model.Review;
 
-import java.util.List;
+import java.util.Collection;
 
 @Data
 @AllArgsConstructor
@@ -16,17 +14,9 @@ public class AccommodationDetailDTO {
     private Long id;
     private String name;
     private String description;
-    private List<PricelistItem> priceList;
-    private List<Availability> availability;
-    private List<Review> reviews;
-    private List<Filter> filters;
-    private Address address;
-    //picture
-
-    private Long idOwner;
-    private String firstName;
-    private String lastName;
-    private String phone;
     private float avgRating;
-    private List<Long> imageId;
+    private Collection<Review> reviews;
+    private Collection<Filter> filters;
+    private Address address;
+    private OwnerDTO owner;
 }

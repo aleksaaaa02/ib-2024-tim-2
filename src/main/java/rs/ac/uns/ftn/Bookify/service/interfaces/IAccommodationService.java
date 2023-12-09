@@ -4,6 +4,7 @@ package rs.ac.uns.ftn.Bookify.service.interfaces;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.AccommodationBasicDTO;
+import rs.ac.uns.ftn.Bookify.dto.AccommodationDetailDTO;
 import rs.ac.uns.ftn.Bookify.dto.FilterDTO;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Availability;
@@ -22,6 +23,7 @@ public interface IAccommodationService {
     public List<AccommodationBasicDTO> sortAccommodationBasicDTO(List<AccommodationBasicDTO> accommodations, String sort);
     public List<AccommodationBasicDTO> setPrices(List<AccommodationBasicDTO> accommodationBasicDTO, Date begin, Date end, int persons);
     public List<Accommodation> getForFilter(List<Accommodation> accommodations, FilterDTO filter);
+    public AccommodationDetailDTO getAccommodationDetails(Long id);
     public List<AccommodationBasicDTO> getForPriceRange(List<AccommodationBasicDTO> accommodations, FilterDTO filter);
     public double getTotalPrice(Long id, Date begin, Date end);
     public double getOnePrice(Long id, Date begin, Date end);

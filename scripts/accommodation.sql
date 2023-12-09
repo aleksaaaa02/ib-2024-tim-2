@@ -105,7 +105,6 @@ VALUES
     (29, 57), (29, 58), (30, 59), (30, 60), (31, 61), (31, 62), (32, 63), (32, 64),
     (33, 65), (33, 66), (34, 67), (34, 68), (35, 69), (35, 70), (36, 71), (36, 72);
 
-
 INSERT INTO users (type, is_active, time, address, city, country, zip_code, blocked, email, first_name, last_name, password, phone, profile_image_id)
 VALUES 
 ('ADMIN', false,'2023-11-30 12:30:00', 'Trg Dositeja Obradovica 6', 'Novi Sad', 'Serbia', '21000', false, 'test.example@uns.ac.rs', 'pera', 'peric', 'nekalozinka', '+3816213421', null),
@@ -114,7 +113,7 @@ VALUES
 ('GUEST', false,'2023-11-30 12:30:00', 'Test Street 42', 'Test City', 'Test Country', '54321', true, 'admin@example.com', 'Admin', 'User', 'adminpass', '+1122334455', null),
 ('GUEST', true, '2023-11-28 08:00:00', 'Guest Lane 87', 'Guestville', 'Countryland', '98765', false, 'guest2@example.com', 'Jane', 'Doe', 'guestpass2', '+9988776655', null),
 ('OWNER', false,'2023-11-30 12:30:00', 'Owner Avenue 567', 'Ownertown', 'Countryland', '45678', false, 'owner2@example.com', 'Bob', 'Johnson', 'ownerpass2', '+6655443322', null),
-('OWNER', true, '2023-11-29 15:45:00', 'Admin Road 321', 'Admin City', 'Adminland', '13579', true, 'admin2@example.com', 'Admin', 'Tester', 'adminpass2', '+2233445566', null),
+('OWNER', true, '2023-11-29 15:45:00', 'Admin Road 321', 'Admin City', 'Adminland', '13579', true, 'admin2@example.com', 'Owner', 'Tester', 'adminpass2', '+2233445566', null),
 ('GUEST', false,'2023-11-30 12:30:00', 'Another Guest Street 99', 'Guestropolis', 'Countryland', '11223', true, 'guest3@example.com', 'Sam', 'White', 'guestpass3', '+7788990011', null),
 ('OWNER', true, '2023-11-27 20:20:00', 'Owner Street 876', 'Owner City', 'Countryland', '554433', false, 'owner3@example.com', 'Eva', 'Brown', 'ownerpass3', '+9988776655', null),
 ('GUEST', false,'2023-11-30 12:30:00', 'Admin Lane 765', 'Adminville', 'Adminland', '332211', false, 'admin3@example.com', 'Chris', 'Miller', 'adminpass3', '+1122334455', null);
@@ -244,3 +243,11 @@ VALUES
     (21, 25), (21, 26), (22, 27), (22, 28), (23, 29), (24, 30), (25, 31), (26, 32),
     (27, 33), (28, 34), (29, 35), (30, 36), (31, 37), (32, 38), (33, 39), (34, 40),
     (35, 41), (36, 42), (23, 43), (24, 44), (25, 45), (27, 46), (28, 47), (29, 48);
+
+INSERT INTO users_accommodations (owner_id, accommodations_id)
+VALUES
+    (3, 1), (6, 2), (7, 3), (9, 4), (3, 5), (6, 6), (7, 7), (9, 8),
+    (3, 9), (3, 10), (6, 11), (3, 12), (7, 13), (9, 14), (3, 15), (7, 16),
+    (3, 17), (6, 18), (9, 19), (3, 20), (9, 21), (7, 22), (6, 23), (6, 24),
+    (6, 25), (6, 26), (7, 27), (3, 28), (9, 29), (7, 30), (6, 31), (6, 32),
+    (7, 33), (7, 34), (6, 35), (3, 36);

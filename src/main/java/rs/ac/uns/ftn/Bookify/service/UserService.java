@@ -8,6 +8,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.model.Address;
 import rs.ac.uns.ftn.Bookify.model.Image;
+import rs.ac.uns.ftn.Bookify.model.Owner;
 import rs.ac.uns.ftn.Bookify.model.User;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IUserRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
@@ -125,6 +126,13 @@ public class UserService implements IUserService {
     @Override
     public FileSystemResource getImage(Long imageId) {
         return imageService.find(imageId);
+    }
+
+    @Override
+    public OwnerDTO findbyAccommodationId(Long id) {
+        Owner o = userRepository.findByAccommodations_Id(id);
+        float avgRating = 0;
+        return new OwnerDTO(o.getId(), o.getFirstName(), o.getLastName(), o.getPhone(), avgRating);
     }
 
     private void updateUserData(UserDetailDTO updatedUser, User u) {

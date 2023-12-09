@@ -40,4 +40,9 @@ public class ImageService implements IImageService {
         return fileSystemRepository.findInFileSystem(image.getImagePath());
     }
 
+    @Override
+    public FileSystemResource[] findAll(Long accommodationId) {
+        System.out.println(imageRepository.findImagePathsByAccommodationId(accommodationId));
+        return null;
+    }
 }

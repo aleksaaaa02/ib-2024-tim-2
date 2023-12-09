@@ -24,6 +24,8 @@ import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,6 +35,9 @@ import java.util.stream.Collectors;
 public class AccommodationController {
     @Autowired
     private IAccommodationService accommodationService;
+
+    @Autowired
+    private IUserService userService;
 
     @Autowired
     private IImageService imageService;
@@ -97,11 +102,8 @@ public class AccommodationController {
     @GetMapping(value = "/details/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccommodationDetailDTO> getAccommodationDetails(@PathVariable Long accommodationId) {
         //returns details about one accommodation
-        List<PricelistItem> pricelistItemList = new ArrayList<>();
-        pricelistItemList.add(new PricelistItem());
-        List<Availability> availabilities = new ArrayList<>();
-        availabilities.add(new Availability());
-        AccommodationDetailDTO accommodationDetailDTO = new AccommodationDetailDTO(1L, "Hotel", "Disc", pricelistItemList, availabilities, null, null, new Address(), 2L, "First", "Last", "06338472394", 4.23f, null);
+        AccommodationDetailDTO accommodationDetailDTO = accommodationService.getAccommodationDetails(accommodationId);
+        accommodationDetailDTO.setOwner(userService.findbyAccommodationId(accommodationId));
         return new ResponseEntity<>(accommodationDetailDTO, HttpStatus.OK);
     }
 
@@ -263,10 +265,11 @@ public class AccommodationController {
         return new ResponseEntity<>(imageService.find(imageId), HttpStatus.OK);
     }
 
-//    @GetMapping(value = "/images/{accommodationId}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-//    public ResponseEntity<FileSystemResource[]> getAccommodationImages(@PathVariable Long accommodationId) {
-//        return new ResponseEntity<>(imageService.findAll(accommodationId), HttpStatus.OK);
-//    }
+    @GetMapping(value = "/images/{accommodationId}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    public ResponseEntity<FileSystemResource[]> getAccommodationImages(@PathVariable Long accommodationId) {
+        FileSystemResource[] fileSystemResources = imageService.findAll(accommodationId);
+        return new ResponseEntity<>(fileSystemResources, HttpStatus.OK);
+    }
 
     @PostMapping("/images/{accommodationId}")
     public ResponseEntity<Long> uploadAccommodationImage(@PathVariable Long accommodationId, @RequestParam MultipartFile image) throws Exception {

@@ -14,4 +14,5 @@ public interface IImageService {
     public Image save(byte[] bytes, String subFolderName,String imageName) throws Exception;
 
     public FileSystemResource find(Long imageId);
+    public FileSystemResource[] findAll(Long accommodationId);
 }
