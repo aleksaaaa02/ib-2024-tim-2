@@ -1,5 +1,6 @@
 .inline {
   margin-top: 2rem;
+  width: 100%;
   justify-content: center;
   display: flex;
 }
@@ -11,14 +12,14 @@
 
 .average-rating {
   position: relative;
-  margin: 0.5vh 0 0 2vw;
+  width: 10vw;
+  margin: 0.8vh 0 0 2vw;
   appearance: none;
   color: transparent;
   display: inline-block;
 }
 
 .average-rating::before {
-  --percent: calc(4.3/5*100%);
   content: '★★★★★';
   font-size: 1.6rem;
   background:
@@ -84,6 +85,10 @@ hr {
   font-size: 1rem;
   opacity: 1;
   justify-content: left;
+}
+
+#desc {
+  margin-top: 0.7rem;
 }
 
 .subcategory {
@@ -186,6 +191,7 @@ img {
 
 .title-main {
   margin-top: 10vh;
+  width: 100%;
 }
 
 #map {

@@ -37,7 +37,7 @@ export class MapComponent implements AfterViewInit {
       const lat = coord.lat;
       const lng = coord.lng;
       this.mapService.reverseSearch(lat, lng).subscribe((res) => {
-        console.log(res.display_name);
+        // console.log(res.display_name);
       });
       console.log(
         'You clicked the map at latitude: ' + lat + ' and longitude: ' + lng
@@ -49,7 +49,7 @@ export class MapComponent implements AfterViewInit {
   search(L: any): void {
     this.mapService.search('Strazilovska 19, Novi Sad').subscribe({
       next: (result) => {
-        console.log(result);
+        // console.log(result);
         L.marker([result[0].lat, result[0].lon])
           .addTo(this.map)
           .openPopup();
