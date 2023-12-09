@@ -34,8 +34,8 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     Collection<Accommodation> findByLocationAndGuestRange(
             @Param("location") String location,
             @Param("persons") int persons,
-            @Param("begin") Date begin,
-            @Param("end") Date end);
+            @Param("begin") LocalDate begin,
+            @Param("end") LocalDate end);
 
     @Query("select a.priceList from Accommodation a join a.priceList where a.id=?1")
     public Collection<PricelistItem> getPriceListItems(Long accommodationId);
@@ -87,8 +87,8 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     long countByLocationAndGuestRange(
             @Param("location") String location,
             @Param("persons") int persons,
-            @Param("begin") Date begin,
-            @Param("end") Date end);
+            @Param("begin") LocalDate begin,
+            @Param("end") LocalDate end);
 
     @Query("SELECT p.price " +
             "FROM Accommodation a " +
@@ -96,6 +96,6 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "WHERE p.startDate <= :date AND p.endDate >= :date " +
             "AND a.id = :accommodationId")
     Optional<Double> findPriceForDay(
-            @Param("date") Date date,
+            @Param("date") LocalDate date,
             @Param("accommodationId") Long accommodationId);
 }

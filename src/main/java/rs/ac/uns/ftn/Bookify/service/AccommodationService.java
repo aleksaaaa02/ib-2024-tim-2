@@ -34,12 +34,12 @@ public class AccommodationService implements IAccommodationService {
     IImageService imageService;
 
     @Override
-    public Collection<Accommodation> getAccommodationsForSearch(Integer persons, String location, Date begin, Date end) {
+    public Collection<Accommodation> getAccommodationsForSearch(Integer persons, String location, LocalDate begin, LocalDate end) {
         return accommodationRepository.findByLocationAndGuestRange(location, persons, begin, end);
     }
 
     @Override
-    public long countByLocationAndGuestRange(Integer persons, String location, Date begin, Date end) {
+    public long countByLocationAndGuestRange(Integer persons, String location, LocalDate begin, LocalDate end) {
         return accommodationRepository.countByLocationAndGuestRange(location, persons, begin, end);
     }
 
@@ -60,7 +60,7 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public List<AccommodationBasicDTO> setPrices(List<AccommodationBasicDTO> accommodationBasicDTO, Date begin, Date end, int persons) {
+    public List<AccommodationBasicDTO> setPrices(List<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons) {
         for (AccommodationBasicDTO accommodation : accommodationBasicDTO) {
             if (accommodation.getPricePer() == PricePer.PERSON)
                 accommodation.setTotalPrice((float) this.getTotalPrice(accommodation.getId(), begin, end) * persons);
@@ -104,13 +104,11 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public double getTotalPrice(Long id, Date begin, Date end) {
-        LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    public double getTotalPrice(Long id, LocalDate begin, LocalDate end) {
         double price = 0;
-        while (!beginL.isEqual(endL)) {
-            price += accommodationRepository.findPriceForDay(Date.from(beginL.atStartOfDay(ZoneId.systemDefault()).toInstant()), id).get();
-            beginL = beginL.plusDays(1);
+        while (!begin.isEqual(end)) {
+            price += accommodationRepository.findPriceForDay(begin, id).get();
+            begin = begin.plusDays(1);
         }
         BigDecimal originalBigDecimal = BigDecimal.valueOf(price);
         BigDecimal roundedValue = originalBigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -118,15 +116,13 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public double getOnePrice(Long id, Date begin, Date end) {
-        LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    public double getOnePrice(Long id, LocalDate begin, LocalDate end) {
         double price = 0;
         int days = 0;
-        while (!beginL.isEqual(endL)) {
-            price += accommodationRepository.findPriceForDay(Date.from(beginL.atStartOfDay(ZoneId.systemDefault()).toInstant()), id).get();
+        while (!begin.isEqual(end)) {
+            price += accommodationRepository.findPriceForDay(begin, id).get();
             days += 1;
-            beginL = beginL.plusDays(1);
+            begin = begin.plusDays(1);
         }
         BigDecimal originalBigDecimal = BigDecimal.valueOf(price / days);
         BigDecimal roundedValue = originalBigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP);
