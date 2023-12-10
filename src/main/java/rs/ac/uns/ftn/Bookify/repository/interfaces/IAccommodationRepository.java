@@ -5,6 +5,8 @@ import rs.ac.uns.ftn.Bookify.model.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 import java.util.Optional;
 
 public interface IAccommodationRepository extends JpaRepository<Accommodation, Long> {
@@ -91,4 +93,8 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
 
     @Query("SELECT AVG(r.rate) FROM Accommodation a JOIN a.reviews r WHERE a.id = :accommodationId")
     Float getAverageReviewByAccommodationId(@Param("accommodationId") Long accommodationId);
+
+    @Query("SELECT o.accommodations FROM Owner o WHERE o.id =:ownerId ")
+    List<Accommodation> getOwnerAccommodation(Long ownerId);
+
 }

@@ -147,23 +147,11 @@ public class AccommodationController {
 
     @GetMapping(value = "/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationBasicDTO>> getOwnersAccommodations(@PathVariable Long ownerId) {
-        //returns all accommodations for owner
-        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
-                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet.");
-        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
-                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet.");
-        Collection<AccommodationBasicDTO> basicAccommodations = new HashSet<>();
-        basicAccommodations.add(basicDTO1);
-        basicAccommodations.add(basicDTO2);
-        return new ResponseEntity<>(basicAccommodations, HttpStatus.OK);
+        List<AccommodationBasicDTO> response = new ArrayList<>();
+        for(Accommodation accommodation : this.accommodationService.getOwnerAccommodation(ownerId)){
+            response.add(AccommodationBasicDTOMapper.fromAccommodationToBasicDTO(accommodation));
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/favorites/{guestId}")

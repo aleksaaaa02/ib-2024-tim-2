@@ -403,7 +403,14 @@ public class AccommodationService implements IAccommodationService {
         return accommodations;
     }
 
+    @Override
+    public List<Accommodation> getOwnerAccommodation(Long ownerId) {
+        return accommodationRepository.getOwnerAccommodation(ownerId);
+    }
+
     public FileSystemResource getImage(Long id) {
         return imageService.find(id);
     }
+
+
 }
