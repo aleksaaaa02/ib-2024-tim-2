@@ -1,7 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AccommodationBasicModel} from "../model/accommodation-basic.model";
 import {AccommodationService} from "../accommodation.service";
 import {blob} from "stream/consumers";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-accommodation-basic',
@@ -9,12 +10,10 @@ import {blob} from "stream/consumers";
   styleUrl: './accommodation-basic.component.css'
 })
 export class AccommodationBasicComponent implements OnInit{
-  @Input()
-  basicAccommodation: AccommodationBasicModel
-
+  @Input() basicAccommodation: AccommodationBasicModel
   image: string | ArrayBuffer | null
 
-  constructor(private accommodationService: AccommodationService) {
+  constructor(private accommodationService: AccommodationService, private router: Router) {
   }
 
   calculatePercent(): string {

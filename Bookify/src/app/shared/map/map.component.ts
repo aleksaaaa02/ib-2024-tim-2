@@ -1,6 +1,5 @@
 import {AfterViewInit, Component} from '@angular/core';
-import * as L from 'leaflet';
-import { MapService } from '../map.service';
+import {MapService} from "./map.service";
 
 @Component({
   selector: 'app-map',
@@ -9,10 +8,11 @@ import { MapService } from '../map.service';
 })
 export class MapComponent implements AfterViewInit {
   private map: any;
+  L: any;
 
   constructor(private mapService: MapService) {}
 
-  private initMap(): void {
+  private initMap(L: any): void {
     this.map = L.map('map', {
       center: [45.2396, 19.8227],
       zoom: 13,
@@ -28,8 +28,13 @@ export class MapComponent implements AfterViewInit {
       }
     );
     tiles.addTo(this.map);
-    this.registerOnClick()
-    this.search()
+    this.search(L);
+  }
+
+  setCenter(coordinates: any){
+    if (this.map) {
+      this.map.setView(coordinates, this.map.getZoom());
+    }
   }
 
   registerOnClick(): void {
@@ -38,32 +43,36 @@ export class MapComponent implements AfterViewInit {
       const lat = coord.lat;
       const lng = coord.lng;
       this.mapService.reverseSearch(lat, lng).subscribe((res) => {
-        console.log(res.display_name);
+        // console.log(res.display_name);
       });
       console.log(
         'You clicked the map at latitude: ' + lat + ' and longitude: ' + lng
       );
-      new L.Marker([lat, lng]).addTo(this.map);
+      new this.L.Marker([lat, lng]).addTo(this.map);
     });
   }
 
-  search(): void {
-    this.mapService.search('Strazilovska 19, Novi Sad').subscribe({
+  search(location: string): void {
+    this.mapService.search(location).subscribe({
       next: (result) => {
-        console.log(result);
-        L.marker([result[0].lat, result[0].lon])
+        this.L.marker([result[0].lat, result[0].lon])
           .addTo(this.map)
-          .bindPopup('Pozdrav iz Strazilovske 19.')
           .openPopup();
+        this.setCenter([result[0].lat, result[0].lon]);
       },
       error: () => {},
     });
   }
 
   ngAfterViewInit(): void {
-    L.Marker.prototype.options.icon = L.icon({
-      iconUrl: 'https://unpkg.com/leaflet@1.6.0/dist/images/marker-icon.png',
-    });
-    this.initMap();
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      import('leaflet').then((L) => {
+        this.L = L;
+        L.Marker.prototype.options.icon = L.icon({
+          iconUrl: 'https://unpkg.com/leaflet@1.6.0/dist/images/marker-icon.png'
+        });
+        this.initMap(L);
+      })
+    }
   }
 }

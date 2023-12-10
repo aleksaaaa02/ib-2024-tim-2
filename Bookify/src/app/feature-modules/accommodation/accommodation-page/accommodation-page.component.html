@@ -1,8 +1,8 @@
 <div>
   <div class="inline title-main">
     <span class="material-symbols-outlined favorite">favorite</span>
-    <p id="hotel-name">Scandinavic Havet Hotel</p>
-    <meter class="average-rating" min="0" max="5" value="4.3"></meter>
+    <p id="hotel-name">{{ accommodation?.name }}</p>
+    <meter id="accRating" class="average-rating" min="0" max="5" style="--percent: calc({{accommodation?.avgRating}}/5*100%);"></meter>
   </div>
 
   <div id="carousel">
@@ -25,33 +25,31 @@
     <div id="location">
       <p class="subcategory white">Location</p>
       <hr class="white-back"/>
-      <img id="map" src="../../../../assets/images/map.webp"/>
-      <p id="address">Bulevar Slobodana Jovanovica 46, Novi Sad, Srbija</p>
+      <div id="map">
+        <app-map></app-map>
+      </div>
+      <p id="address">{{accommodation?.address?.address}}, {{accommodation?.address?.city}}, {{accommodation?.address?.country}}</p>
     </div>
   </div>
   <div class="two-part">
     <div id="description">
       <p class="subcategory">Description</p>
       <hr/>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Quisque porttitor convallis rhoncus.
-        Nunc semper, justo a bibendum luctus, lorem arcu accumsan massa,
-        sed scelerisque lorem felis nec quam. Curabitur at magna metus.
-        Pellentesque habitant morbi tristique sene.
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Quisque porttitor convallis rhoncus.</p>
+      <p id="desc">{{accommodation?.description}}</p>
     </div>
     <div id="owner">
       <p class="subcategory">Owner</p>
       <hr/>
       <div id="owner-profile">
-        <span class="material-symbols-outlined">account_circle</span>
+        <div id="account-pic">
+          <img alt="" class="image" [src]="ownerImage"/>
+        </div>
         <div id="owner-info">
           <div class="inline no-margin">
-            <p id="owner-name">Petar Petrovic</p>
-            <meter class="average-rating small" min="0" max="5" value="4.3"></meter>
+            <p id="owner-name">{{accommodation?.owner?.firstName}} {{accommodation?.owner?.lastName}}</p>
+            <meter id="ownerRating" class="average-rating small" min="0" max="5" style="--percent: calc({{accommodation?.owner?.avgRating}}/5*100%);"></meter>
           </div>
-          <p id="owner-number">060 188347245</p>
+          <p id="owner-number">{{accommodation?.owner?.phone}}</p>
         </div>
       </div>
     </div>
@@ -59,5 +57,4 @@
   <div class="two-part">
     <app-reserve></app-reserve>
   </div>
-
 </div>

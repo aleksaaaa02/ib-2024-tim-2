@@ -10,6 +10,7 @@ import { PriceListDTO } from './model/priceList.dto.model';
 import { PriceList } from './model/priceList.model';
 import { FilterDTO } from "./model/filter.dto.model";
 import { SearchResponseDTO } from "./model/search-response.dto.model";
+import {AccommodationDetailsDTO} from "./model/accommodation-details.dto.model";
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,10 @@ export class AccommodationService {
       "&size=" + size);
   }
 
+  getAccommodationDetails(id: number): Observable<AccommodationDetailsDTO> {
+    return this.httpClient.get<AccommodationDetailsDTO>(environment.apiHost + 'accommodations/details/' + id);
+  }
+
   getForFilterAndSort(location: string, dateBegin: Date, dateEnd: Date, persons: number, page: number, size: number, sort: string, filter: FilterDTO): Observable<SearchResponseDTO> {
     return this.httpClient.post<SearchResponseDTO>(environment.apiHost + 'accommodations/' +
       "filter?location=" + location +
@@ -43,7 +48,11 @@ export class AccommodationService {
   }
 
   getImage(imageId: number): Observable<Blob> {
-    return this.httpClient.get(environment.apiHost + "accommodations/images/" + imageId, { responseType: 'blob' });
+    return this.httpClient.get(environment.apiHost + "accommodations/image/" + imageId, { responseType: 'blob' });
+  }
+
+  getAccommodationImages(accommodationId: number): Observable<string[]> {
+    return this.httpClient.get<string[]>(environment.apiHost + "accommodations/images/" + accommodationId, {responseType:"json"});
   }
 
   async getCountries(): Promise<string[]> {

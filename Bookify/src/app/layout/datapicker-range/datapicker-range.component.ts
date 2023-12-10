@@ -1,5 +1,10 @@
 import {Component, EventEmitter, inject, Output} from '@angular/core';
-import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbCalendar,
+  NgbDate,
+  NgbDateParserFormatter,
+  NgbDatepickerModule
+} from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 import { DatePipe } from '@angular/common';
@@ -16,6 +21,7 @@ import { DatePipe } from '@angular/common';
 export class DatapickerRangeComponent {
   calendar = inject(NgbCalendar);
   formatter = inject(NgbDateParserFormatter);
+  private ngbDateParserFormatter: any;
 
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null = this.calendar.getToday();
@@ -23,6 +29,19 @@ export class DatapickerRangeComponent {
 
   dateBegin: string = this.calendar.getToday().day + "." + this.calendar.getToday().month + "." + this.calendar.getToday().year;
   dateEnd: string = this.calendar.getNext(this.calendar.getToday(), 'd', 5).day + "." + this.calendar.getNext(this.calendar.getToday(), 'd', 5).month + "." + this.calendar.getNext(this.calendar.getToday(), 'd', 5).year;
+
+  public setDate(begin: string, end: string){
+    this.dateBegin = begin;
+    this.dateEnd = end;
+    this.fromDate = this.parseDateString(begin);
+    this.toDate = this.parseDateString(end);
+  }
+
+  private parseDateString(dateString: string): NgbDate {
+    const dateStruct: string[] = dateString.split(".")
+    return new NgbDate(Number(dateStruct[2]), Number(dateStruct[1]), Number(dateStruct[0]));
+  }
+
 
   constructor(private datePipe: DatePipe) {}
 

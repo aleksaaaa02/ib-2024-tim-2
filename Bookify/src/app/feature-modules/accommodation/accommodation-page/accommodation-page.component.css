@@ -1,5 +1,6 @@
 .inline {
   margin-top: 2rem;
+  width: 100%;
   justify-content: center;
   display: flex;
 }
@@ -11,14 +12,14 @@
 
 .average-rating {
   position: relative;
-  margin: 0.5vh 0 0 2vw;
+  width: 10vw;
+  margin: 0.8vh 0 0 2vw;
   appearance: none;
   color: transparent;
   display: inline-block;
 }
 
 .average-rating::before {
-  --percent: calc(4.3/5*100%);
   content: '★★★★★';
   font-size: 1.6rem;
   background:
@@ -29,7 +30,7 @@
 
 .two-part {
   display: flex;
-  width: 80%;
+  width: 60%;
   margin: 2rem auto 0 auto;
   justify-content: center;
 }
@@ -86,6 +87,10 @@ hr {
   justify-content: left;
 }
 
+#desc {
+  margin-top: 0.7rem;
+}
+
 .subcategory {
   font-size: large;
   margin: 0.2rem;
@@ -109,13 +114,6 @@ img {
   object-fit: contain;
 }
 
-#map {
-  width: 22rem;
-  height: 11rem;
-  display: flex;
-  margin: 1rem auto 0 auto;
-}
-
 #address {
   margin-top: 1.3vh;
   font-size: small;
@@ -124,13 +122,14 @@ img {
 }
 
 #owner-profile {
-  margin: 0.5rem 0 0 0;
+  margin: 0.7rem 0 0 0;
   display: flex;
 }
 
 #owner-info {
   margin: auto 0 auto 1rem;
   justify-content: center;
+  vertical-align: center;
 }
 
 #owner-name {
@@ -140,7 +139,7 @@ img {
 
 #owner-number {
   font-size: small;
-  margin: 0 0 0 0.2rem;
+  margin: 0;
 }
 
 .material-symbols-outlined {
@@ -193,4 +192,33 @@ img {
 
 .title-main {
   margin-top: 10vh;
+  width: 100%;
+}
+
+#map {
+  width: 21rem;
+  height: 12rem;
+  display: flex;
+  margin: 0.5rem auto 0 auto;
+  z-index: 1;
+}
+
+#owner-image {
+  width: 10rem;
+  height: 10rem;
+}
+
+#account-pic {
+  border-radius: 100%;
+  border: 3px solid #5d5d5d;
+  margin: 0;
+  width: 4rem;
+  height: 4rem;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  border-radius: 100%;
+  object-fit: cover;
 }
