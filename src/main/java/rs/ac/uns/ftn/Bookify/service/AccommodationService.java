@@ -19,6 +19,7 @@ import rs.ac.uns.ftn.Bookify.repository.interfaces.IPriceListItemRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -376,13 +377,30 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public List<FileSystemResource> getAllImages(Long accommodationId) {
+    public List<FileSystemResource> getAllImages(Long accommodationId){
         Accommodation a = accommodationRepository.findById(accommodationId).get();
         List<FileSystemResource> returns = new ArrayList<>();
         for (Image image : a.getImages()){
             returns.add(imageService.find(image.getId()));
         }
         return returns;
+    }
+
+    @Override
+    public float getAvgRating(Long id) {
+        Float avg = accommodationRepository.getAverageReviewByAccommodationId(id);
+        if (avg == null)
+            return 0f;
+        else
+            return avg.floatValue();
+    }
+
+    @Override
+    public List<AccommodationBasicDTO> getAvgRatings(List<AccommodationBasicDTO> accommodations) {
+        for (AccommodationBasicDTO a : accommodations){
+            a.setAvgRating(this.getAvgRating(a.getId()));
+        }
+        return accommodations;
     }
 
     public FileSystemResource getImage(Long id) {

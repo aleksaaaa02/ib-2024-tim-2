@@ -159,6 +159,15 @@ public class UserService implements IUserService {
         return new OwnerDTO(o.getId(), o.getFirstName(), o.getLastName(), o.getPhone(), avgRating, imageId);
     }
 
+    @Override
+    public Float getAvgRating(Long id) {
+        Float f = this.userRepository.getAverageReviewByOwnerId(id);
+        if (f == null)
+            return 0f;
+        else
+            return f.floatValue();
+    }
+
     private void updateUserData(UserDetailDTO updatedUser, User u) {
         u.getAddress().setAddress(updatedUser.getAddress().getAddress());
         u.getAddress().setCity(updatedUser.getAddress().getCity());

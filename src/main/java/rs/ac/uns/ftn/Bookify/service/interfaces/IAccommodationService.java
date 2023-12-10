@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -37,4 +38,6 @@ public interface IAccommodationService {
     public Long updatePriceListItem(Long accommodationId, PricelistItem item);
     public Long updateAvailabilityItem(Long accommodationId, Availability availability);
     public List<FileSystemResource> getAllImages(Long accommodationId);
+    public float getAvgRating(Long id);
+    public List<AccommodationBasicDTO> getAvgRatings(List<AccommodationBasicDTO> accommodations);
 }

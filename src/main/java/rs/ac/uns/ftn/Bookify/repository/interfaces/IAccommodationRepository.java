@@ -88,4 +88,7 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     Optional<Double> findPriceForDay(
             @Param("date") LocalDate date,
             @Param("accommodationId") Long accommodationId);
+
+    @Query("SELECT AVG(r.rate) FROM Accommodation a JOIN a.reviews r WHERE a.id = :accommodationId")
+    Float getAverageReviewByAccommodationId(@Param("accommodationId") Long accommodationId);
 }

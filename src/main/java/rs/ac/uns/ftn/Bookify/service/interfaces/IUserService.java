@@ -21,4 +21,5 @@ public interface IUserService {
     public Long updateImage(byte[] bytes, String imageName, Long userId) throws Exception;
     public FileSystemResource getImage(Long imageId);
     public OwnerDTO findbyAccommodationId(Long id);
+    public Float getAvgRating(Long id);
 }

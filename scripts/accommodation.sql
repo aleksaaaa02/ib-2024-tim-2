@@ -159,12 +159,19 @@ VALUES
     (true, 'Spacious rooms.', '2024-03-13 09:30:00', 2, false, 'ACCOMMODATION', 4),
     (true, 'Beautiful view.', '2024-03-15 22:00:00', 5, false, 'ACCOMMODATION', 10),
     (true, 'Homey feel.', '2024-03-17 11:30:00', 4, false, 'ACCOMMODATION', 2),
-    (true, 'Good amenities.', '2024-03-19 06:15:00', 3, false, 'ACCOMMODATION', 5);
+    (true, 'Good amenities.', '2024-03-19 06:15:00', 3, false, 'ACCOMMODATION', 5),
+    (true, 'Beautiful view.', '2024-03-16 22:00:00', 5, false, 'OWNER', 10),
+    (true, 'Homey feel.', '2024-03-18 11:30:00', 4, false, 'OWNER', 2),
+    (true, 'Good amenities.', '2024-03-20 06:15:00', 3, false, 'OWNER', 5);
 
 INSERT INTO accommodations_reviews (accommodation_id, reviews_id)
 VALUES
     (1, 1), (3, 2), (5, 3), (10, 4), (3, 5), (3, 6), (5, 7), (20, 8),
     (8, 9), (14, 10), (30, 11), (31, 12), (27, 13), (27, 14), (22, 15), (24, 16);
+
+INSERT INTO users_reviews (owner_id, reviews_id)
+VALUES
+    (3, 17), (3, 18), (7,19);
 
 
 INSERT INTO accommodation_filters (accommodation_id, filters)
