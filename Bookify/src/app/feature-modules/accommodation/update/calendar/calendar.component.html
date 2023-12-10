@@ -39,10 +39,11 @@
                     <input matInput type="number" name="price" formControlName="price" min="0" />
                 </mat-form-field>
                 <div class="button-wrapper">
-                    <button (click)="dodaj()" class="button">Add</button>
-                    <button (click)="brisi()" class="button">Delete</button>
+                    <button (click)="add()" class="button">Add</button>
+                    <button type="button" (click)="delete()" class="button">Delete</button>
                 </div>
             </form>
         </div>
     </div>
+    <button class="button" (click)="finish()">Finish</button>
 </div>

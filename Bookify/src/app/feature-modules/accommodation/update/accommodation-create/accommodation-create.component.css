@@ -11,6 +11,7 @@ hr {
     border-color: #2e4057;
     margin-top: 10px;
     margin-bottom: 10px;
+    opacity: 1;
 }
 
 .submit-button {

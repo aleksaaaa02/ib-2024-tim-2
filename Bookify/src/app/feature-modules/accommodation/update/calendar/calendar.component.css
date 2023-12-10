@@ -1,10 +1,15 @@
 .container {
     display: flex;
+    flex-direction: column;
     width: 100%;
     justify-content: center;
     align-items: center;
     place-items: center;
     overflow: hidden;
+}
+
+.container > button{
+    margin-bottom: 5rem;
 }
 
 .calendar {
@@ -127,7 +132,7 @@
   position: relative;
   overflow: hidden;
   white-space: nowrap;
-  display: inline-block;
+  display: flex;
   max-width: 100%;
 }
 
@@ -135,7 +140,7 @@
   position: relative;
   overflow: hidden;
   white-space: nowrap;
-  display: inline-block;
+  display: flex;
   max-width: 100%;
 }
 

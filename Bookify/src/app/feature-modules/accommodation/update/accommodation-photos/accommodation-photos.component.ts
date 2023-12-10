@@ -31,7 +31,6 @@ export class AccommodationPhotosComponent {
   }
   
   removeImage(image: string): void {
-    // Remove the clicked image from the selectedImages array
     this.selectedImages = this.selectedImages.filter(img => img !== image);
     this.photosChanged.emit(this.selectedImages);
   }

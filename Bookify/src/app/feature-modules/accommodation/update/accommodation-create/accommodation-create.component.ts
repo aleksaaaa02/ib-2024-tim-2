@@ -6,6 +6,8 @@ import { AccommodationDTO } from '../../model/accommodation.dto.model';
 import { Accommodation } from '../../model/accommodation.model';
 import { AccommodationBasicInformationComponent } from '../accommodation-basic-information/accommodation-basic-information.component';
 import { MatSnackBar } from '@angular/material/snack-bar'
+import { AccommodationBasicFormModel } from '../../model/accommodation-basic.form.model';
+import { AccommodationGuestsFormModel } from '../../model/accommodation-guests.form.model';
 
 @Component({
   selector: 'app-accommodation-create',
@@ -29,24 +31,25 @@ export class AccommodationCreateComponent {
   reservationAcceptance: string = '';
   cancellationDeadline: number = 0;
   pricePer: string = '';
+  submitted: boolean = false;
 
   constructor(private accommodationService: AccommodationService, private router: Router, private _snackBar: MatSnackBar) { }
 
-  openSnackBar(message: string, action: string){
+  openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action, {
       duration: 2000,
     });
   }
 
-  handleBasicInfoChange(data: any) {
+  handleBasicInfoChange(data: AccommodationBasicFormModel) {
     this.basicInfoPropertyName = data.propertyName;
     this.basicInfoDescription = data.description;
   }
 
-  handleLocationChange(data: any) {
+  handleLocationChange(data: Address) {
     this.locationCountry = data.country;
     this.locationCity = data.city;
-    this.locationStreetAddress = data.streetAddress;
+    this.locationStreetAddress = data.address;
     this.locationZipCode = data.zipCode;
   }
 
@@ -66,7 +69,7 @@ export class AccommodationCreateComponent {
 
   }
 
-  handleGuestsChange(data: any) {
+  handleGuestsChange(data: AccommodationGuestsFormModel) {
     this.type = data.type;
     this.minGuests = data.minGuests;
     this.maxGuests = data.maxGuests;
@@ -79,7 +82,7 @@ export class AccommodationCreateComponent {
   }
 
   onSubmit() {
-
+    this.submitted = true;
     if (this.isValid()) {
       const addressDTO: Address = {
         country: this.locationCountry,

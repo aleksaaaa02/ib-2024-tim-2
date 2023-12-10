@@ -50,7 +50,7 @@ export class CalendarComponent implements OnInit {
     this.service.getAllPriceListItems(this.accommodationId).subscribe({
       next: (data: PriceList[]) => {
         data.forEach((element) => {
-          this.dodajCenu(new Date(element.startDate), new Date(element.endDate), element.price);
+          this.addPrice(new Date(element.startDate), new Date(element.endDate), element.price);
         })
       }
     })
@@ -66,6 +66,7 @@ export class CalendarComponent implements OnInit {
     this.currentTime = currentDate;
     this.dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     this.emptyDays = Array.from({ length: this.currentDate.getDay() }, (_, index) => null);
+    this.updateCalendar();
   }
 
   selectedStartDate: Date | null = null;
@@ -94,7 +95,6 @@ export class CalendarComponent implements OnInit {
 
   private generateDaysInMonth(month: number, year: number): number[] {
     const daysInMonth = [];
-    // const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0).getDate();
     for (let i = 1; i <= lastDay; i++) {
       daysInMonth.push(i);
@@ -128,7 +128,7 @@ export class CalendarComponent implements OnInit {
   }
 
   selectStartDate() {
-    if(document){
+    if (document) {
       const days = document.querySelectorAll('.calendar-days div');
       days.forEach((dayElement) => {
         if (dayElement.firstElementChild?.textContent && this.selectedStartDate) {
@@ -143,7 +143,7 @@ export class CalendarComponent implements OnInit {
   }
 
   processSelectedRange(): void {
-    if(document){
+    if (document) {
       this.resetColors();
       const days = document.querySelectorAll('.calendar-days div');
       days.forEach((dayElement) => {
@@ -162,7 +162,7 @@ export class CalendarComponent implements OnInit {
   }
 
   resetColors(): void {
-    if(document){
+    if (document) {
       const selectedDays = document.querySelectorAll('.calendar-days div.selected-range');
       selectedDays.forEach((dayElement) => {
         dayElement.classList.remove('selected-range');
@@ -189,7 +189,7 @@ export class CalendarComponent implements OnInit {
     this.emptyDays = Array.from({ length: day.getDay() }, (_, index) => null);
   }
 
-  dodaj() {
+  add() {
     if (this.selectedStartDate) {
       const startDate = this.selectedStartDate;
       const priceControl = this.priceForm.get('price');
@@ -209,7 +209,6 @@ export class CalendarComponent implements OnInit {
             this.getPriceList();
           }
         });
-        // this.dodajCenu(startDate, endDate, priceControl?.value);
       } else {
         const endDate = this.selectedStartDate;
         const priceList: PriceListDTO = {
@@ -222,24 +221,23 @@ export class CalendarComponent implements OnInit {
             this.getPriceList();
           }
         });
-        // this.dodajCenu(startDate, startDate, priceControl?.value);
       }
     } else {
       this.openSnackBar("You must select a date(s)", "close");
     }
   }
 
-  private dodajCenu(start: Date, end: Date, price: number) {
-      let currentDate = new Date(start);
-      while (currentDate <= end) {
-        this.dateTextMap[currentDate.getFullYear() + "-" + currentDate.getMonth() + "-" + currentDate.getDate()] = price + "€";
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
-      this.resetColors();
-      this.clearSelectedDates();
+  private addPrice(start: Date, end: Date, price: number) {
+    let currentDate = new Date(start);
+    while (currentDate <= end) {
+      this.dateTextMap[currentDate.getFullYear() + "-" + currentDate.getMonth() + "-" + currentDate.getDate()] = price + "€";
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    this.resetColors();
+    this.clearSelectedDates();
   }
 
-  brisi() {
+  delete() {
     if (this.selectedStartDate) {
       if (this.selectedEndDate) {
         const priceList: PriceListDTO = {
@@ -247,7 +245,7 @@ export class CalendarComponent implements OnInit {
           endDate: new Date(this.selectedEndDate),
           price: 0
         };
-        this.brisiCenu(this.selectedStartDate, this.selectedEndDate);
+        this.deletePrice(this.selectedStartDate, this.selectedEndDate);
         this.service.deletePriceListItem(this.accommodationId, priceList).subscribe({
           next: (_) => {
             this.getPriceList();
@@ -259,7 +257,7 @@ export class CalendarComponent implements OnInit {
           endDate: new Date(this.selectedStartDate),
           price: 0
         };
-        this.brisiCenu(this.selectedStartDate, this.selectedStartDate);
+        this.deletePrice(this.selectedStartDate, this.selectedStartDate);
         this.service.deletePriceListItem(this.accommodationId, priceList).subscribe({
           next: (_) => {
             this.getPriceList();
@@ -271,8 +269,8 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-  private brisiCenu(start: Date, end: Date) {
-    if(document){
+  private deletePrice(start: Date, end: Date) {
+    if (document) {
       const days = document.querySelectorAll('.calendar-days div');
       days.forEach((dayElement) => {
         if (dayElement.firstElementChild?.textContent && start && end) {
@@ -287,5 +285,9 @@ export class CalendarComponent implements OnInit {
       this.resetColors();
       this.clearSelectedDates();
     }
+  }
+
+  finish() {
+    this.router.navigate(['/']);
   }
 }

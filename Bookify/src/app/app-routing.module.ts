@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: "forgot-password", component: ForgotPasswordComponent },
   { path: "confirmation", component: ConfirmationComponent },
   { path: "results",component: ResultsPageComponent },
-  { path: "accommodation/:accommodationId", component: AccommodationPageComponent },
+  { path: "accommodationd/:accommodationId", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
   { path: 'accommodation/calendar/:accommodationId', component: CalendarComponent },
   { path: "account", component: AccountComponent },
