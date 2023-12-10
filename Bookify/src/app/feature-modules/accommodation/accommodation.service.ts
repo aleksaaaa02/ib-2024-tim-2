@@ -81,11 +81,9 @@ export class AccommodationService {
     return this.httpClient.delete<PriceList>(environment.apiAccommodation + "/price/" + accommodationId, {"body": priceListItem});
   }
 
-  addImages(accommodationId: number, images: string[]) {
+  addImages(accommodationId: number, images: File[]) {
     const data: FormData = new FormData();
-    images.forEach((element: string) => {
-      let blob: Blob = new Blob([element], { type: "text/plain" });
-      let file: File = new File([blob], "test");
+    images.forEach((file: File) => {
       data.append("images", file);
     })
     return this.httpClient.post<string[]>(environment.apiAccommodation + "/" + accommodationId, data);

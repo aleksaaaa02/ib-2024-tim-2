@@ -22,6 +22,11 @@ hr {
 
 
 .inline > hr{
+    background-color: #A29D92;
+    border: none;
+    height: 4px;
+    border-radius: 2px;
+    opacity: 1;
     width: auto;
 }
 

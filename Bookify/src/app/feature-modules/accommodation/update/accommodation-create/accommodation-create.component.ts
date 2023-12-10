@@ -8,6 +8,7 @@ import { AccommodationBasicInformationComponent } from '../accommodation-basic-i
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { AccommodationBasicFormModel } from '../../model/accommodation-basic.form.model';
 import { AccommodationGuestsFormModel } from '../../model/accommodation-guests.form.model';
+import { ImagesDTO } from '../../model/images';
 
 @Component({
   selector: 'app-accommodation-create',
@@ -24,7 +25,8 @@ export class AccommodationCreateComponent {
   locationStreetAddress: string = '';
   locationZipCode: string = '';
   amenitiesFilter: string[] = [];
-  images: string[] = [];
+  images: ImagesDTO[] = [];
+  f: File[] = [];
   type: string = '';
   minGuests: number = 0;
   maxGuests: number = 0;
@@ -64,9 +66,8 @@ export class AccommodationCreateComponent {
     return label.toUpperCase().replace(/[^A-Z]/g, '_');
   }
 
-  handlePhotosChange(data: string[]) {
+  handlePhotosChange(data: ImagesDTO[]) {
     this.images = data;
-
   }
 
   handleGuestsChange(data: AccommodationGuestsFormModel) {
@@ -82,6 +83,7 @@ export class AccommodationCreateComponent {
   }
 
   onSubmit() {
+    console.log(this.images);
     this.submitted = true;
     if (this.isValid()) {
       const addressDTO: Address = {
@@ -106,7 +108,10 @@ export class AccommodationCreateComponent {
       this.accommodationService.add(3, dto).subscribe(
         {
           next: (data: Accommodation) => {
-            this.accommodationService.addImages(data.id, this.images).subscribe({
+            this.images.forEach((elem) => {
+              this.f.push(elem.file);
+            })
+            this.accommodationService.addImages(data.id, this.f).subscribe({
               next: () => {
                 this.router.navigate(['/accommodation/calendar/', data.id]);
               }
