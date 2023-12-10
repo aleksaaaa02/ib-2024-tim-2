@@ -19,6 +19,7 @@ import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -272,10 +273,11 @@ public class AccommodationController {
         return new ResponseEntity<>(imageService.find(imageId), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/images/{accommodationId}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Collection<FileSystemResource>> getAccommodationImages(@PathVariable Long accommodationId) {
-        List<FileSystemResource> f = accommodationService.getAllImages(accommodationId);
-        return new ResponseEntity<>(f, HttpStatus.OK);
+    @GetMapping(value = "/images/{accommodationId}")
+    public ResponseEntity<Collection<byte[]>> getAccommodationImages(@PathVariable Long accommodationId) throws IOException {
+        Collection<byte[]> data = new ArrayList<>();
+        for(FileSystemResource f : accommodationService.getAllImages(accommodationId)) data.add(f.getContentAsByteArray());
+        return new ResponseEntity<>(data,  HttpStatus.OK);
     }
 
     @PostMapping("/images/{accommodationId}")
