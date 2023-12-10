@@ -1,0 +1,32 @@
+<h1>Reservations</h1>
+<hr/>
+<div class="search-card">
+    <div class="inline">
+        <!-- <mat-form-field appearance="fill"> -->
+        <mat-select required placeholder="Choose your accommodation">
+            <mat-option value="a">AAAA</mat-option>
+            <mat-option value="b">AAAA</mat-option>
+            <mat-option value="c">AAAA</mat-option>
+        </mat-select>
+        <!-- </mat-form-field> -->
+    </div>
+    <app-datapicker-range></app-datapicker-range>
+    <div class="filters">
+        <div class="checkbox-wrapper-42">
+            <input id="cbx-pending" type="checkbox" />
+            <label class="cbx" for="cbx-pending"></label>
+            <label class="lbl" for="cbx-pending">Pending</label>
+        </div>
+        <div class="checkbox-wrapper-42">
+            <input id="cbx-accepted" type="checkbox" />
+            <label class="cbx" for="cbx-accepted"></label>
+            <label class="lbl" for="cbx-accepted">Accepted</label>
+        </div>
+        <div class="checkbox-wrapper-42">
+            <input id="cbx-rejected" type="checkbox" />
+            <label class="cbx" for="cbx-rejected"></label>
+            <label class="lbl" for="cbx-rejected">Rejected</label>
+        </div>
+    </div>
+    <button class="button-right">Filter</button>
+</div>
