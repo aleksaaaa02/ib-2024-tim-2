@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { GuestReservationCardComponent } from './guest-reservation-card/guest-reservation-card.component';
 import { GuestReservationsComponent } from './guest-reservations/guest-reservations.component';
+import { GuestRequestCardComponent } from './guest-request-card/guest-request-card.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { GuestReservationsComponent } from './guest-reservations/guest-reservati
     OwnerReservationsComponent,
     FilterReservationsComponent,
     GuestReservationCardComponent,
-    GuestReservationsComponent
+    GuestReservationsComponent,
+    GuestRequestCardComponent
   ],
   imports: [
     CommonModule,
