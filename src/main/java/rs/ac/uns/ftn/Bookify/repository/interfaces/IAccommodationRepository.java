@@ -1,20 +1,10 @@
 package rs.ac.uns.ftn.Bookify.repository.interfaces;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import rs.ac.uns.ftn.Bookify.model.Accommodation;
-import rs.ac.uns.ftn.Bookify.model.Availability;
-import rs.ac.uns.ftn.Bookify.model.PricelistItem;
-
+import rs.ac.uns.ftn.Bookify.model.*;
 import java.time.LocalDate;
 import java.util.Collection;
-
-
 import org.springframework.data.repository.query.Param;
-import java.util.Date;
 import java.util.Optional;
 
 public interface IAccommodationRepository extends JpaRepository<Accommodation, Long> {
@@ -98,4 +88,7 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     Optional<Double> findPriceForDay(
             @Param("date") LocalDate date,
             @Param("accommodationId") Long accommodationId);
+
+    @Query("SELECT AVG(r.rate) FROM Accommodation a JOIN a.reviews r WHERE a.id = :accommodationId")
+    Float getAverageReviewByAccommodationId(@Param("accommodationId") Long accommodationId);
 }

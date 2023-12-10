@@ -11,6 +11,9 @@ import rs.ac.uns.ftn.Bookify.repository.FileSystemRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IImageRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -39,5 +42,4 @@ public class ImageService implements IImageService {
         Image image = imageRepository.findById(imageId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return fileSystemRepository.findInFileSystem(image.getImagePath());
     }
-
 }

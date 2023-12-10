@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.Bookify.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,14 +13,13 @@ import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
 import rs.ac.uns.ftn.Bookify.mapper.AccommodationBasicDTOMapper;
 import rs.ac.uns.ftn.Bookify.mapper.AccommodationInesertDTOMapper;
 import rs.ac.uns.ftn.Bookify.mapper.PriceListItemDTOMapper;
-import rs.ac.uns.ftn.Bookify.model.Accommodation;
+import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
-import rs.ac.uns.ftn.Bookify.model.Address;
-import rs.ac.uns.ftn.Bookify.model.Availability;
-import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -31,6 +31,9 @@ import java.util.stream.Collectors;
 public class AccommodationController {
     @Autowired
     private IAccommodationService accommodationService;
+
+    @Autowired
+    private IUserService userService;
 
     @Autowired
     private IImageService imageService;
@@ -63,6 +66,8 @@ public class AccommodationController {
             accommodationBasicDTO = accommodationBasicDTO.subList(page*size, accommodationBasicDTO.size());
         else
             accommodationBasicDTO = accommodationBasicDTO.subList(page*size, (page+1)*size);
+
+        accommodationBasicDTO = accommodationService.getAvgRatings(accommodationBasicDTO);
         SearchResponseDTO searchResponseDTO = new SearchResponseDTO(accommodationBasicDTO, (int) totalResults, minPrice, maxPrice);
 
         return new ResponseEntity<>(searchResponseDTO, HttpStatus.OK);
@@ -77,7 +82,6 @@ public class AccommodationController {
         LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, beginL, endL);
-        System.out.println(filter.getTypes());
         accommodations = accommodationService.getForFilter((List<Accommodation>) accommodations, filter);
 
         List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
@@ -93,6 +97,8 @@ public class AccommodationController {
             accommodationBasicDTO = accommodationBasicDTO.subList(page*size, accommodationBasicDTO.size());
         else
             accommodationBasicDTO = accommodationBasicDTO.subList(page*size, (page+1)*size);
+
+        accommodationBasicDTO = accommodationService.getAvgRatings(accommodationBasicDTO);
         SearchResponseDTO searchResponseDTO = new SearchResponseDTO(accommodationBasicDTO, totalResults, 0, 0);
 
         return new ResponseEntity<>(searchResponseDTO, HttpStatus.OK);
@@ -101,11 +107,11 @@ public class AccommodationController {
     @GetMapping(value = "/details/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AccommodationDetailDTO> getAccommodationDetails(@PathVariable Long accommodationId) {
         //returns details about one accommodation
-        List<PricelistItem> pricelistItemList = new ArrayList<>();
-        pricelistItemList.add(new PricelistItem());
-        List<Availability> availabilities = new ArrayList<>();
-        availabilities.add(new Availability());
-        AccommodationDetailDTO accommodationDetailDTO = new AccommodationDetailDTO(1L, "Hotel", "Disc", pricelistItemList, availabilities, null, null, new Address(), 2L, "First", "Last", "06338472394", 4.23f, null);
+        AccommodationDetailDTO accommodationDetailDTO = accommodationService.getAccommodationDetails(accommodationId);
+        accommodationDetailDTO.setAvgRating(accommodationService.getAvgRating(accommodationId));
+        OwnerDTO o = userService.findbyAccommodationId(accommodationId);
+        o.setAvgRating(userService.getAvgRating(o.getId()));
+        accommodationDetailDTO.setOwner(o);
         return new ResponseEntity<>(accommodationDetailDTO, HttpStatus.OK);
     }
 
@@ -262,9 +268,16 @@ public class AccommodationController {
         return new ResponseEntity<>("Accommodation removed", HttpStatus.OK);
     }
 
-    @GetMapping(value = "/images/{imageId}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    @GetMapping(value = "/image/{imageId}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     public ResponseEntity<FileSystemResource> getAccommodationImage(@PathVariable Long imageId) {
         return new ResponseEntity<>(imageService.find(imageId), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/images/{accommodationId}")
+    public ResponseEntity<Collection<byte[]>> getAccommodationImages(@PathVariable Long accommodationId) throws IOException {
+        Collection<byte[]> data = new ArrayList<>();
+        for(FileSystemResource f : accommodationService.getAllImages(accommodationId)) data.add(f.getContentAsByteArray());
+        return new ResponseEntity<>(data,  HttpStatus.OK);
     }
 
     @PostMapping("/images/{accommodationId}")
