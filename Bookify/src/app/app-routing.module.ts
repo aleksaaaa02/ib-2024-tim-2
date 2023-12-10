@@ -15,6 +15,9 @@ import { AccommodationPhotosComponent } from './feature-modules/accommodation/up
 import { AccommodationGuestsComponent } from './feature-modules/accommodation/update/accommodation-guests/accommodation-guests.component';
 import { AccommodationAvailabilityComponent } from './feature-modules/accommodation/update/accommodation-availability/accommodation-availability.component';
 import { CalendarComponent } from './feature-modules/accommodation/update/calendar/calendar.component';
+import {
+  OwnerAccommodationsComponent
+} from "./feature-modules/accommodation/owner-accommodations/owner-accommodations.component";
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -32,7 +35,8 @@ const routes: Routes = [
   { path: "accommodation/create/photos", component: AccommodationPhotosComponent },
   { path: "accommodation/create/guests", component: AccommodationGuestsComponent },
   { path: "accommodation/create/availability", component: AccommodationAvailabilityComponent },
-  { path: "accommodation/create", component: AccommodationCreateComponent }
+  { path: "accommodation/create", component: AccommodationCreateComponent },
+  { path: "accommodations", component: OwnerAccommodationsComponent}
 ];
 
 @NgModule({

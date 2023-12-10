@@ -1,0 +1,18 @@
+<div class="accommodation-card">
+  <div class="column-left">
+    <img class="accommodation-image" [src]="image" alt="Please wait while loading the image">
+  </div>
+  <div class="column-center">
+    <p class="subtitle">{{accommodation.type}}</p>
+    <div class="inline">
+      <p class="title" [routerLink]="['/accommodation/details', accommodation.id]">{{accommodation.name}}</p>
+      <meter class="average-rating" min="0" max="5" value="{{accommodation.avgRating}}"></meter>
+    </div>
+    <p class="subtitle">{{accommodation.address.address}}, {{accommodation.address.city}}, {{accommodation.address.country}}</p>
+    <div class="button-holder">
+      <button class="button">Remove</button>
+      <button class="button">Price</button>
+      <button class="button">Edit</button>
+    </div>
+  </div>
+</div>

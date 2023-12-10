@@ -21,6 +21,10 @@ export class AccommodationService {
 
   constructor(private httpClient: HttpClient, @Inject(LOCALE_ID) private locale: string) { }
 
+  getOwnerAccommodations(ownerId : number | undefined) : Observable<AccommodationBasicModel[]> {
+    return this.httpClient.get<AccommodationBasicModel[]>(environment.apiAccommodation + '/'  + ownerId);
+  }
+
   getForSearch(location: string, dateBegin: Date, dateEnd: Date, persons: number, page: number, size: number): Observable<SearchResponseDTO> {
     return this.httpClient.get<SearchResponseDTO>(environment.apiHost + 'accommodations/' +
       "search?location=" + location +

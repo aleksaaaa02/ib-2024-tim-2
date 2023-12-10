@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { File } from 'buffer';
 
 @Component({
   selector: 'app-accommodation-photos',
@@ -13,7 +12,7 @@ export class AccommodationPhotosComponent {
 
   onFilesSelected(event: any): void {
     const files: FileList | null = event.target.files;
-  
+
     if (files) {
       for (let i = 0; i < files.length; i++) {
         const reader = new FileReader();
@@ -29,7 +28,7 @@ export class AccommodationPhotosComponent {
 
     this.photosChanged.emit(this.selectedImages);
   }
-  
+
   removeImage(image: string): void {
     // Remove the clicked image from the selectedImages array
     this.selectedImages = this.selectedImages.filter(img => img !== image);
