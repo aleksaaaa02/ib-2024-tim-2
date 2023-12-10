@@ -9,13 +9,11 @@ import rs.ac.uns.ftn.Bookify.dto.FilterDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
 import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
-import rs.ac.uns.ftn.Bookify.model.Accommodation;
-import rs.ac.uns.ftn.Bookify.model.Availability;
-import rs.ac.uns.ftn.Bookify.model.Image;
-import rs.ac.uns.ftn.Bookify.model.PricelistItem;
+import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAvailabilityRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IPriceListItemRepository;
+import rs.ac.uns.ftn.Bookify.repository.interfaces.IUserRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 
@@ -35,6 +33,9 @@ public class AccommodationService implements IAccommodationService {
 
     @Autowired
     IImageService imageService;
+
+    @Autowired
+    IUserRepository userRepository;
 
     @Override
     public Collection<Accommodation> getAccommodationsForSearch(Integer persons, String location, LocalDate begin, LocalDate end) {
@@ -145,8 +146,12 @@ public class AccommodationService implements IAccommodationService {
     private IPriceListItemRepository priceListItemRepository;
 
     @Override
-    public Accommodation save(Accommodation accommodation) {
-        return accommodationRepository.save(accommodation);
+    public Accommodation save(Accommodation accommodation, Long ownerId) {
+        Owner owner = userRepository.findOwnerById(ownerId);
+        owner.getAccommodations().add(accommodation);
+        Accommodation a = accommodationRepository.save(accommodation);
+        userRepository.save(owner);
+        return a;
     }
 
     @Override
@@ -377,10 +382,10 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public List<FileSystemResource> getAllImages(Long accommodationId){
+    public List<FileSystemResource> getAllImages(Long accommodationId) {
         Accommodation a = accommodationRepository.findById(accommodationId).get();
         List<FileSystemResource> returns = new ArrayList<>();
-        for (Image image : a.getImages()){
+        for (Image image : a.getImages()) {
             returns.add(imageService.find(image.getId()));
         }
         return returns;
@@ -397,7 +402,7 @@ public class AccommodationService implements IAccommodationService {
 
     @Override
     public List<AccommodationBasicDTO> getAvgRatings(List<AccommodationBasicDTO> accommodations) {
-        for (AccommodationBasicDTO a : accommodations){
+        for (AccommodationBasicDTO a : accommodations) {
             a.setAvgRating(this.getAvgRating(a.getId()));
         }
         return accommodations;

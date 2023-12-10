@@ -222,11 +222,11 @@ public class AccommodationController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Accommodation> insert(@RequestBody AccommodationInsertDTO accommodationDTO) {
+    public ResponseEntity<Accommodation> insert(@RequestParam Long ownerId, @RequestBody AccommodationInsertDTO accommodationDTO) {
         //insert new accommodation
         Accommodation accommodation = AccommodationInesertDTOMapper.fromDTOtoAccommodation(accommodationDTO);
 
-        Accommodation a = accommodationService.save(accommodation);
+        Accommodation a = accommodationService.save(accommodation, ownerId);
         return new ResponseEntity<Accommodation>(a, HttpStatus.CREATED);
     }
 
