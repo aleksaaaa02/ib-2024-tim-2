@@ -11,6 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { GuestReservationCardComponent } from './guest-reservation-card/guest-reservation-card.component';
 import { GuestReservationsComponent } from './guest-reservations/guest-reservations.component';
 import { GuestRequestCardComponent } from './guest-request-card/guest-request-card.component';
+import { GuestRequestsComponent } from './guest-requests/guest-requests.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { GuestRequestCardComponent } from './guest-request-card/guest-request-ca
     FilterReservationsComponent,
     GuestReservationCardComponent,
     GuestReservationsComponent,
-    GuestRequestCardComponent
+    GuestRequestCardComponent,
+    GuestRequestsComponent
   ],
   imports: [
     CommonModule,

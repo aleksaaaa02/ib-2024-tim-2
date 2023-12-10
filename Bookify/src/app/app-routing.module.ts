@@ -17,6 +17,7 @@ import { AccommodationAvailabilityComponent } from './feature-modules/accommodat
 import { CalendarComponent } from './feature-modules/accommodation/update/calendar/calendar.component';
 import { OwnerReservationsComponent } from './feature-modules/reservation/owner-reservations/owner-reservations.component';
 import { GuestReservationsComponent } from './feature-modules/reservation/guest-reservations/guest-reservations.component';
+import { GuestRequestsComponent } from './feature-modules/reservation/guest-requests/guest-requests.component';
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -35,7 +36,8 @@ const routes: Routes = [
   { path: "accommodation/create/guests", component: AccommodationGuestsComponent },
   { path: "accommodation/create/availability", component: AccommodationAvailabilityComponent },
   { path: "reservation", component: OwnerReservationsComponent },
-  { path: "guest/reservation", component: GuestReservationsComponent },
+  { path: "guest/reservations", component: GuestReservationsComponent },
+  { path: "guest/requests", component: GuestRequestsComponent },
   { path: "accommodation/create", component: AccommodationCreateComponent }
 ];
 
