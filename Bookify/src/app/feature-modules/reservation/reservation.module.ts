@@ -8,13 +8,17 @@ import { LayoutModule } from '../../layout/layout.module';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
+import { GuestReservationCardComponent } from './guest-reservation-card/guest-reservation-card.component';
+import { GuestReservationsComponent } from './guest-reservations/guest-reservations.component';
 
 @NgModule({
   declarations: [
     ReservationCardComponent,
     RequestCardComponent,
     OwnerReservationsComponent,
-    FilterReservationsComponent
+    FilterReservationsComponent,
+    GuestReservationCardComponent,
+    GuestReservationsComponent
   ],
   imports: [
     CommonModule,
