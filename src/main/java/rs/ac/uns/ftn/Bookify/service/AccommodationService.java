@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.AccommodationBasicDTO;
+import rs.ac.uns.ftn.Bookify.dto.AccommodationDetailDTO;
 import rs.ac.uns.ftn.Bookify.dto.FilterDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
 import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Availability;
+import rs.ac.uns.ftn.Bookify.model.Image;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAvailabilityRepository;
@@ -17,6 +19,7 @@ import rs.ac.uns.ftn.Bookify.repository.interfaces.IPriceListItemRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -79,6 +82,12 @@ public class AccommodationService implements IAccommodationService {
                 accommodationFilter.add(accommodation);
         }
         return accommodationFilter;
+    }
+
+    @Override
+    public AccommodationDetailDTO getAccommodationDetails(Long id) {
+        Accommodation a = this.accommodationRepository.findById(id).get();
+        return new AccommodationDetailDTO(a.getId(), a.getName(), a.getDescription(), 0, a.getReviews(), a.getFilters(), a.getAddress(), null);
     }
 
     @Override
@@ -367,7 +376,34 @@ public class AccommodationService implements IAccommodationService {
         return accommodationId;
     }
 
-    public FileSystemResource getImages(Long id) {
+    @Override
+    public List<FileSystemResource> getAllImages(Long accommodationId){
+        Accommodation a = accommodationRepository.findById(accommodationId).get();
+        List<FileSystemResource> returns = new ArrayList<>();
+        for (Image image : a.getImages()){
+            returns.add(imageService.find(image.getId()));
+        }
+        return returns;
+    }
+
+    @Override
+    public float getAvgRating(Long id) {
+        Float avg = accommodationRepository.getAverageReviewByAccommodationId(id);
+        if (avg == null)
+            return 0f;
+        else
+            return avg.floatValue();
+    }
+
+    @Override
+    public List<AccommodationBasicDTO> getAvgRatings(List<AccommodationBasicDTO> accommodations) {
+        for (AccommodationBasicDTO a : accommodations){
+            a.setAvgRating(this.getAvgRating(a.getId()));
+        }
+        return accommodations;
+    }
+
+    public FileSystemResource getImage(Long id) {
         return imageService.find(id);
     }
 }
