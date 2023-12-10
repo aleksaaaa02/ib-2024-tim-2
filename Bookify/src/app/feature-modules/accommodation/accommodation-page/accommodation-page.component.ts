@@ -66,7 +66,7 @@ export class AccommodationPageComponent implements OnInit{
             this.getOwnerPhoto(this.accommodation.owner.imageId);
           else
             this.ownerImage = "../../assets/images/user.jpg";
-          // this.getAccommodationPhotos(id);
+          this.getAccommodationPhotos(id);
           const address = this.accommodation.address.address + ", " + this.accommodation.address.city + ", " + this.accommodation.address.zipCode + ", " + this.accommodation.address.country;
           this.mapComponent.search(address);
         }
@@ -77,16 +77,8 @@ export class AccommodationPageComponent implements OnInit{
   getAccommodationPhotos(id: number){
     this.accommodationService.getAccommodationImages(id).subscribe( {
       next: (data): void => {
-        console.log(data);
         for (const b of data){
-          const reader= new FileReader();
-          reader.onloadend = () => {
-            console.log(reader.result);
-            const help: string | ArrayBuffer | null = reader.result;
-            if (typeof help === "string")
-              this.accommodationImages.push(help);
-          }
-          reader.readAsDataURL(b);
+          this.accommodationImages.push("data:image/*;base64,"+b);
         }
         this.carouselComponent.images = this.accommodationImages;
       }

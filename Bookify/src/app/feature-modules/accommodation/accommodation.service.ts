@@ -51,8 +51,8 @@ export class AccommodationService {
     return this.httpClient.get(environment.apiHost + "accommodations/image/" + imageId, { responseType: 'blob' });
   }
 
-  getAccommodationImages(accommodationId: number): Observable<Blob[]> {
-    return this.httpClient.get<Blob[]>(environment.apiHost + "accommodations/images/" + accommodationId);
+  getAccommodationImages(accommodationId: number): Observable<string[]> {
+    return this.httpClient.get<string[]>(environment.apiHost + "accommodations/images/" + accommodationId, {responseType:"json"});
   }
 
   async getCountries(): Promise<string[]> {
