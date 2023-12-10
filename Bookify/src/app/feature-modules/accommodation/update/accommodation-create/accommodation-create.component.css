@@ -1,6 +1,12 @@
 .wrapper {
     width: 70%;
-    margin: 30vh auto 0 auto;
+    margin: 7rem auto 0 auto;
+}
+
+
+.inline{
+    width: fit-content !important;
+    margin-bottom: 40px;
 }
 
 .wrapper>* {
@@ -12,6 +18,11 @@ hr {
     margin-top: 10px;
     margin-bottom: 10px;
     opacity: 1;
+}
+
+
+.inline > hr{
+    width: auto;
 }
 
 .submit-button {

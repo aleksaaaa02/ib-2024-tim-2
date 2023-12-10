@@ -1,16 +1,22 @@
 <div class="wrapper">
-    <app-accommodation-basic-information
-        (basicInfoChanged)="handleBasicInfoChange($event)" [submitted]="submitted"></app-accommodation-basic-information>
+    <div class="inline">
+        <h1 id="title">Create accommodation</h1>
+        <hr>
+    </div>
+    <app-accommodation-basic-information (basicInfoChanged)="handleBasicInfoChange($event)"
+        [submitted]="submitted"></app-accommodation-basic-information>
     <hr>
-    <app-accommodation-location (locationChanged)="handleLocationChange($event)" [submitted]="submitted"></app-accommodation-location>
+    <app-accommodation-location (locationChanged)="handleLocationChange($event)"
+        [submitted]="submitted"></app-accommodation-location>
     <hr>
     <app-accommodation-amenities (amenitiesChange)="handleAmenitiesChange($event)"></app-accommodation-amenities>
     <hr>
     <app-accommodation-photos (photosChanged)="handlePhotosChange($event)"></app-accommodation-photos>
     <hr>
-    <app-accommodation-guests (guestsChanged)="handleGuestsChange($event)" [submitted]="submitted"></app-accommodation-guests>
+    <app-accommodation-guests (guestsChanged)="handleGuestsChange($event)"
+        [submitted]="submitted"></app-accommodation-guests>
     <hr>
-    <app-accommodation-availability
-        (availibilityChanged)="handleAvailabilityChange($event)" [submitted]="submitted"></app-accommodation-availability>
+    <app-accommodation-availability (availibilityChanged)="handleAvailabilityChange($event)"
+        [submitted]="submitted"></app-accommodation-availability>
     <button mat-raised-button type="submit" class="submit-button button" (click)="onSubmit()">Submit</button>
 </div>
