@@ -15,6 +15,9 @@ import { AccommodationPhotosComponent } from './feature-modules/accommodation/up
 import { AccommodationGuestsComponent } from './feature-modules/accommodation/update/accommodation-guests/accommodation-guests.component';
 import { AccommodationAvailabilityComponent } from './feature-modules/accommodation/update/accommodation-availability/accommodation-availability.component';
 import { CalendarComponent } from './feature-modules/accommodation/update/calendar/calendar.component';
+import { OwnerReservationsComponent } from './feature-modules/reservation/owner-reservations/owner-reservations.component';
+import { ReservationCardComponent } from './feature-modules/reservation/reservation-card/reservation-card.component';
+import { RequestCardComponent } from './feature-modules/reservation/request-card/request-card.component';
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -32,6 +35,9 @@ const routes: Routes = [
   { path: "accommodation/create/photos", component: AccommodationPhotosComponent },
   { path: "accommodation/create/guests", component: AccommodationGuestsComponent },
   { path: "accommodation/create/availability", component: AccommodationAvailabilityComponent },
+  { path: "reservation", component: OwnerReservationsComponent },
+  { path: "reservation/res-card", component: ReservationCardComponent },
+  { path: "reservation/req-card", component: RequestCardComponent },
   { path: "accommodation/create", component: AccommodationCreateComponent }
 ];
 

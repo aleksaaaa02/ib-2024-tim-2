@@ -32,6 +32,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import {DatapickerRangeComponent} from "./layout/datapicker-range/datapicker-range.component";
 import {FormsModule} from "@angular/forms";
+import { ReservationModule } from './feature-modules/reservation/reservation.module';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import {FormsModule} from "@angular/forms";
       DatapickerRangeComponent,
       FormsModule,
       AccommodationModule,
+      ReservationModule,
   ],
   providers: [
     provideClientHydration(withNoHttpTransferCache())

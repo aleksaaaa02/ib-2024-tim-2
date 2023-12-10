@@ -7,6 +7,7 @@ import {RouterModule} from "@angular/router";
 import { NavigationGuestComponent } from './navigation-guest/navigation-guest.component';
 import { NavigationAdminComponent } from './navigation-admin/navigation-admin.component';
 import { NavigationOwnerComponent } from './navigation-owner/navigation-owner.component';
+import { DatapickerRangeComponent } from './datapicker-range/datapicker-range.component';
 
 
 @NgModule({
@@ -21,10 +22,12 @@ import { NavigationOwnerComponent } from './navigation-owner/navigation-owner.co
     MaterialModule,
     NgOptimizedImage,
     AccountModule,
-    RouterModule
+    RouterModule,
+    DatapickerRangeComponent
   ],
   exports: [
-    NavigationBarComponent
+    NavigationBarComponent,
+    DatapickerRangeComponent
   ]
 })
 export class LayoutModule { }
