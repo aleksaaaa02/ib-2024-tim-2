@@ -9,8 +9,8 @@ import {NgbDate} from "@ng-bootstrap/ng-bootstrap";
 })
 export class SearchComponent implements AfterViewInit {
   @ViewChild(DatapickerRangeComponent) dateComponent: DatapickerRangeComponent;
-  search: string = "";
-  persons: number = 2;
+  public search: string = "";
+  public persons: number = 2;
 
   @Output() buttonPressed= new EventEmitter<{ search: string; persons: number, dateBegin: string, dateEnd: string}>();
 

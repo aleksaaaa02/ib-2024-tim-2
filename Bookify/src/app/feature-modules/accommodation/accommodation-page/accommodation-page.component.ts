@@ -7,6 +7,7 @@ import {AccountService} from "../../account/account.service";
 import contains from "@popperjs/core/lib/dom-utils/contains";
 import {FilterComponent} from "../../../layout/filter/filter.component";
 import {MapComponent} from "../../../shared/map/map.component";
+import {CarouselComponent} from "../carousel/carousel.component";
 
 @Component({
   selector: 'app-accommodation-page',
@@ -41,9 +42,10 @@ export class AccommodationPageComponent implements OnInit{
 
   accommodation: AccommodationDetailsDTO;
   ownerImage: string | ArrayBuffer | null = null;
-  accommodationImages: string[] | ArrayBuffer[] | null = null;
+  accommodationImages: string[] = [];
   amenitiesList: [string, string][] = [];
   @ViewChild(MapComponent) mapComponent: MapComponent;
+  @ViewChild(CarouselComponent) carouselComponent: CarouselComponent;
 
   constructor(private route: ActivatedRoute, private accommodationService: AccommodationService, private accountService: AccountService) {
   }
@@ -63,8 +65,8 @@ export class AccommodationPageComponent implements OnInit{
           if (this.accommodation.owner.imageId != 0)
             this.getOwnerPhoto(this.accommodation.owner.imageId);
           else
-            this.ownerImage = "../../assets/images/user.jpg"; 
-          // this.getAccommodationPhotos(id);
+            this.ownerImage = "../../assets/images/user.jpg";
+          this.getAccommodationPhotos(id);
           const address = this.accommodation.address.address + ", " + this.accommodation.address.city + ", " + this.accommodation.address.zipCode + ", " + this.accommodation.address.country;
           this.mapComponent.search(address);
         }
@@ -75,13 +77,10 @@ export class AccommodationPageComponent implements OnInit{
   getAccommodationPhotos(id: number){
     this.accommodationService.getAccommodationImages(id).subscribe( {
       next: (data): void => {
-        console.log(data);
-        // const reader= new FileReader();
-        // reader.onloadend = () => {
-        //   console.log(reader.result);
-          // this.accommodationImages = reader.result;
-        // }
-        // reader.readAsDataURL(data);
+        for (const b of data){
+          this.accommodationImages.push("data:image/*;base64,"+b);
+        }
+        this.carouselComponent.images = this.accommodationImages;
       }
     });
   }

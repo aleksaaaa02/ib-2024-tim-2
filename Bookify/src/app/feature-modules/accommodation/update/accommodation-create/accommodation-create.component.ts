@@ -102,7 +102,8 @@ export class AccommodationCreateComponent {
         pricePer: this.pricePer === '' ? null : this.pricePer,
         address: addressDTO
       };
-      this.accommodationService.add(dto).subscribe(
+      //owner id
+      this.accommodationService.add(3, dto).subscribe(
         {
           next: (data: Accommodation) => {
             this.accommodationService.addImages(data.id, this.images).subscribe({

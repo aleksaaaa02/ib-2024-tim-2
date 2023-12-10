@@ -40,7 +40,7 @@
         [(ngModel)]="dateBegin"
         [value]="formatter.format(fromDate)"
         (input)="fromDate = validateInput(fromDate, dpFromDate.value)"
-      />
+        disabled/>
     </div>
   </div>
   <div class="col-12 size">
@@ -55,7 +55,7 @@
         [(ngModel)]="dateEnd"
         [value]="formatter.format(toDate)"
         (input)="toDate = validateInput(toDate, dpToDate.value)"
-      />
+      disabled/>
     </div>
   </div>
 </form>

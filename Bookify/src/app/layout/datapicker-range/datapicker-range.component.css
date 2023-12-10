@@ -38,6 +38,12 @@ input {
   color: whitesmoke;
 }
 
+input:disabled {
+  background-color: transparent;
+  border-color: transparent;
+  color: whitesmoke;
+}
+
 input:focus {
   background-color: transparent;
   border-color: transparent;

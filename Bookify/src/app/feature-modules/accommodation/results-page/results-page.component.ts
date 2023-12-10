@@ -1,10 +1,11 @@
-import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {AccommodationBasicModel} from "../model/accommodation-basic.model";
 import {AccommodationService} from "../accommodation.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {FilterDTO} from "../model/filter.dto.model";
 import {FilterComponent} from "../../../layout/filter/filter.component";
+import {SearchComponent} from "../../../layout/search/search.component";
 
 @Component({
   selector: 'app-results-page',
@@ -12,21 +13,24 @@ import {FilterComponent} from "../../../layout/filter/filter.component";
   styleUrl: './results-page.component.css',
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class ResultsPageComponent implements OnInit{
+export class ResultsPageComponent implements OnInit, AfterViewInit{
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(FilterComponent) filterComponent: FilterComponent;
+  @ViewChild(SearchComponent) searchComponent: SearchComponent;
   accommodationModels: AccommodationBasicModel[]
   search: string;
   persons: number;
   dateBegin: Date;
   dateEnd: Date;
+  dateBeginS: string;
+  dateEndS: string;
   currentPage = 1;
   pageSize = 5;
   allResults: number;
   sort: string = "";
   filter: FilterDTO = {maxPrice: -1, minPrice: -1, filters: [], types: ["HOTEL", "APARTMENT", "ROOM"]}
 
-  constructor(private accommodationService: AccommodationService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private accommodationService: AccommodationService, private route: ActivatedRoute, private router: Router, private cdr: ChangeDetectorRef) {}
 
   onSortChange() {
     this.currentPage = 1;
@@ -85,10 +89,22 @@ export class ResultsPageComponent implements OnInit{
   ngOnInit(): void {
     this.search = <string>this.route.snapshot.params['search'];
     this.persons = Number(this.route.snapshot.params['persons']);
-    this.dateBegin = new Date(Date.parse(<string>this.route.snapshot.params['begin']));
-    this.dateEnd = new Date(Date.parse(<string>this.route.snapshot.params['end']));
+    this.dateBeginS = <string>this.route.snapshot.params['begin'];
+    this.dateEndS = <string>this.route.snapshot.params['end'];
+    this.dateBegin = new Date(Date.parse(this.dateBeginS));
+    this.dateEnd = new Date(Date.parse(this.dateEndS));
 
     this.getResults();
+  }
+
+  ngAfterViewInit() {
+    this.searchComponent.persons = this.persons;
+    this.searchComponent.search = this.search;
+    this.searchComponent.dateComponent.setDate(this.dateBeginS.split("-")[1] + "." + this.dateBeginS.split("-")[0] + "." + this.dateBeginS.split("-")[2],
+                                               this.dateEndS.split("-")[1] + "." + this.dateEndS.split("-")[0] + "." + this.dateEndS.split("-")[2])
+
+
+    this.cdr.detectChanges();
   }
 
   filterPress(filter: FilterDTO){
