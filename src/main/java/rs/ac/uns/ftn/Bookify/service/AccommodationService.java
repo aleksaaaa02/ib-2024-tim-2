@@ -183,9 +183,6 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public Long addAvailability(Long accommodationId, Availability availability) {
         Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
-//        if (!checkDatesAvailability(accommodation, availability)) {
-//            return null;
-//        }
         accommodation.getAvailability().add(availability);
         availabilityRepository.save(availability);
         accommodationRepository.save(accommodation);
@@ -295,7 +292,6 @@ public class AccommodationService implements IAccommodationService {
             current = availabilityItems.get(j);
             for (int i = j + 1; i < availabilityItems.size(); i++) {
                 next = availabilityItems.get(i);
-//                if (current.getEndDate().isEqual(next.getStartDate().minusDays(1))) {
                 if (dateCheck(current.getStartDate(), next.getStartDate().minusDays(1), next.getEndDate().plusDays(1)) ||
                         dateCheck(current.getEndDate(), next.getStartDate().minusDays(1), next.getEndDate().plusDays(1)) ||
                         dateRangeContains(current.getStartDate(), current.getEndDate(), next.getStartDate(), next.getEndDate())) {
@@ -360,9 +356,6 @@ public class AccommodationService implements IAccommodationService {
         Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
         PricelistItem pricelistItem = priceListItemRepository.getReferenceById(item.getId());
         accommodation.getPriceList().remove(pricelistItem);
-//        if(!checkDatesPriceItem(accommodation, item)){
-//            return null;
-//        }
         accommodation.getPriceList().add(pricelistItem);
         priceListItemRepository.save(item);
         return accommodationId;
