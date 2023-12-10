@@ -105,18 +105,18 @@ VALUES
     (29, 57), (29, 58), (30, 59), (30, 60), (31, 61), (31, 62), (32, 63), (32, 64),
     (33, 65), (33, 66), (34, 67), (34, 68), (35, 69), (35, 70), (36, 71), (36, 72);
 
-INSERT INTO users (type, is_active, time, address, city, country, zip_code, blocked, email, first_name, last_name, password, phone, profile_image_id)
+INSERT INTO users (type, is_active, time, address, city, country, zip_code, blocked, email, first_name, last_name, password, phone, profile_image_id, deleted)
 VALUES 
-('ADMIN', false,'2023-11-30 12:30:00', 'Trg Dositeja Obradovica 6', 'Novi Sad', 'Serbia', '21000', false, 'test.example@uns.ac.rs', 'pera', 'peric', 'nekalozinka', '+3816213421', null),
-('GUEST', true, '2023-11-30 12:30:00', 'Some Street 123', 'Cityville', 'Countryland', '12345', false, 'guest@example.com', 'John', 'Doe', 'guestpass', '+1234567890', null),
-('OWNER', false,'2023-11-30 12:30:00', 'Another Road 789', 'Townsville', 'Countryland', '67890', true, 'owner@example.com', 'Alice', 'Smith', 'ownerpass', '+9876543210', null),
-('GUEST', false,'2023-11-30 12:30:00', 'Test Street 42', 'Test City', 'Test Country', '54321', true, 'admin@example.com', 'Admin', 'User', 'adminpass', '+1122334455', null),
-('GUEST', true, '2023-11-28 08:00:00', 'Guest Lane 87', 'Guestville', 'Countryland', '98765', false, 'guest2@example.com', 'Jane', 'Doe', 'guestpass2', '+9988776655', null),
-('OWNER', false,'2023-11-30 12:30:00', 'Owner Avenue 567', 'Ownertown', 'Countryland', '45678', false, 'owner2@example.com', 'Bob', 'Johnson', 'ownerpass2', '+6655443322', null),
-('OWNER', true, '2023-11-29 15:45:00', 'Admin Road 321', 'Admin City', 'Adminland', '13579', true, 'admin2@example.com', 'Owner', 'Tester', 'adminpass2', '+2233445566', null),
-('GUEST', false,'2023-11-30 12:30:00', 'Another Guest Street 99', 'Guestropolis', 'Countryland', '11223', true, 'guest3@example.com', 'Sam', 'White', 'guestpass3', '+7788990011', null),
-('OWNER', true, '2023-11-27 20:20:00', 'Owner Street 876', 'Owner City', 'Countryland', '554433', false, 'owner3@example.com', 'Eva', 'Brown', 'ownerpass3', '+9988776655', null),
-('GUEST', false,'2023-11-30 12:30:00', 'Admin Lane 765', 'Adminville', 'Adminland', '332211', false, 'admin3@example.com', 'Chris', 'Miller', 'adminpass3', '+1122334455', null);
+('ADMIN', false,'2023-11-30 12:30:00', 'Trg Dositeja Obradovica 6', 'Novi Sad', 'Serbia', '21000', false, 'test.example@uns.ac.rs', 'pera', 'peric', 'nekalozinka', '+3816213421', null, false),
+('GUEST', true, '2023-11-30 12:30:00', 'Some Street 123', 'Cityville', 'Countryland', '12345', false, 'guest@example.com', 'John', 'Doe', 'guestpass', '+1234567890', null, false),
+('OWNER', false,'2023-11-30 12:30:00', 'Another Road 789', 'Townsville', 'Countryland', '67890', true, 'owner@example.com', 'Alice', 'Smith', 'ownerpass', '+9876543210', null, false),
+('GUEST', false,'2023-11-30 12:30:00', 'Test Street 42', 'Test City', 'Test Country', '54321', true, 'admin@example.com', 'Admin', 'User', 'adminpass', '+1122334455', null, false),
+('GUEST', true, '2023-11-28 08:00:00', 'Guest Lane 87', 'Guestville', 'Countryland', '98765', false, 'guest2@example.com', 'Jane', 'Doe', 'guestpass2', '+9988776655', null, false),
+('OWNER', false,'2023-11-30 12:30:00', 'Owner Avenue 567', 'Ownertown', 'Countryland', '45678', false, 'owner2@example.com', 'Bob', 'Johnson', 'ownerpass2', '+6655443322', null, false),
+('OWNER', true, '2023-11-29 15:45:00', 'Admin Road 321', 'Admin City', 'Adminland', '13579', true, 'admin2@example.com', 'Owner', 'Tester', 'adminpass2', '+2233445566', null, false),
+('GUEST', false,'2023-11-30 12:30:00', 'Another Guest Street 99', 'Guestropolis', 'Countryland', '11223', true, 'guest3@example.com', 'Sam', 'White', 'guestpass3', '+7788990011', null, false),
+('OWNER', true, '2023-11-27 20:20:00', 'Owner Street 876', 'Owner City', 'Countryland', '554433', false, 'owner3@example.com', 'Eva', 'Brown', 'ownerpass3', '+9988776655', null, false),
+('GUEST', false,'2023-11-30 12:30:00', 'Admin Lane 765', 'Adminville', 'Adminland', '332211', false, 'admin3@example.com', 'Chris', 'Miller', 'adminpass3', '+1122334455', null, false);
 
 INSERT INTO reservations (created, end, guest_number, start, status, accommodation_id, guest_id)
 VALUES
