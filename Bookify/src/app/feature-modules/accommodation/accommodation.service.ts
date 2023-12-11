@@ -1,6 +1,6 @@
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { AccommodationBasicModel } from "./model/accommodation-basic.model";
-import { HttpClient, HttpResponse } from "@angular/common/http";
+import { HttpClient, HttpParams, HttpResponse } from "@angular/common/http";
 import { map, Observable } from "rxjs";
 import { environment } from "../../../env/env";
 import moment from 'moment';
@@ -10,6 +10,7 @@ import { PriceListDTO } from './model/priceList.dto.model';
 import { PriceList } from './model/priceList.model';
 import { FilterDTO } from "./model/filter.dto.model";
 import { SearchResponseDTO } from "./model/search-response.dto.model";
+import {AccommodationDetailsDTO} from "./model/accommodation-details.dto.model";
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,10 @@ export class AccommodationService {
       "&size=" + size);
   }
 
+  getAccommodationDetails(id: number): Observable<AccommodationDetailsDTO> {
+    return this.httpClient.get<AccommodationDetailsDTO>(environment.apiHost + 'accommodations/details/' + id);
+  }
+
   getForFilterAndSort(location: string, dateBegin: Date, dateEnd: Date, persons: number, page: number, size: number, sort: string, filter: FilterDTO): Observable<SearchResponseDTO> {
     return this.httpClient.post<SearchResponseDTO>(environment.apiHost + 'accommodations/' +
       "filter?location=" + location +
@@ -43,7 +48,11 @@ export class AccommodationService {
   }
 
   getImage(imageId: number): Observable<Blob> {
-    return this.httpClient.get(environment.apiHost + "accommodations/images/" + imageId, { responseType: 'blob' });
+    return this.httpClient.get(environment.apiHost + "accommodations/image/" + imageId, { responseType: 'blob' });
+  }
+
+  getAccommodationImages(accommodationId: number): Observable<string[]> {
+    return this.httpClient.get<string[]>(environment.apiHost + "accommodations/images/" + accommodationId, {responseType:"json"});
   }
 
   async getCountries(): Promise<string[]> {
@@ -63,22 +72,20 @@ export class AccommodationService {
     return this.httpClient.get<PriceList[]>(environment.apiAccommodation + '/' + accommodationId + "/getPrice");
   }
 
-  add(accommodation: AccommodationDTO): Observable<Accommodation> {
-    return this.httpClient.post<Accommodation>(environment.apiAccommodation, accommodation)
+  add(ownerId: number, accommodation: AccommodationDTO): Observable<Accommodation> {
+    const params = new HttpParams().set('ownerId', ownerId);
+    return this.httpClient.post<Accommodation>(environment.apiAccommodation, accommodation, {params});
   }
 
   deletePriceListItem(accommodationId: number, priceListItem: PriceListDTO): Observable<PriceList> {
     return this.httpClient.delete<PriceList>(environment.apiAccommodation + "/price/" + accommodationId, {"body": priceListItem});
   }
 
-  addImages(accommodationId: number, images: string[]) {
+  addImages(accommodationId: number, images: File[]) {
     const data: FormData = new FormData();
-    images.forEach((element: string) => {
-      let blob: Blob = new Blob([element], { type: "text/plain" });
-      let file: File = new File([blob], "test");
+    images.forEach((file: File) => {
       data.append("images", file);
     })
-    console.log(images);
     return this.httpClient.post<string[]>(environment.apiAccommodation + "/" + accommodationId, data);
   }
 

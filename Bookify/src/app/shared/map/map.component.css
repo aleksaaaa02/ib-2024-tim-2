@@ -1,9 +1,5 @@
-.map-frame {
-    border: 2px solid black;
-    margin: 50px;
-  }
-  
-  #map {
-    height: 600px;
-  }
-  
+#map {
+  z-index: 1;
+  width: inherit;
+  height: inherit;
+}

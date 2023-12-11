@@ -15,7 +15,7 @@ import { AccommodationCreateComponent } from './update/accommodation-create/acco
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatPaginatorIntl } from '@angular/material/paginator';
+import { SharedModule } from "../../shared/shared.module";
 import { CalendarComponent } from './update/calendar/calendar.component';
 
 @NgModule({
@@ -38,7 +38,8 @@ import { CalendarComponent } from './update/calendar/calendar.component';
     ReactiveFormsModule,
     MatTableModule,
     MatSortModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    SharedModule
   ],
   exports:[
     AccommodationBasicInformationComponent,

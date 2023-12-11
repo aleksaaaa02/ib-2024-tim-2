@@ -4,7 +4,6 @@ import { AccommodationModule } from './feature-modules/accommodation/accommodati
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutModule } from "./layout/layout.module";
-import { AccountModule } from "./account/account.module";
 import { AccommodationBasicComponent } from './feature-modules/accommodation/accommodation-basic/accommodation-basic.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -27,12 +26,14 @@ import { TopAccommodationComponent } from './layout/top-accommodation/top-accomm
 import { FooterComponent } from './layout/footer/footer.component';
 import { AuthenticationModule } from './feature-modules/authentication/authentication.module';
 import { MatFormFieldModule } from '@angular/material/form-field'
-import {CarouselComponent} from "./feature-modules/accommodation/carousel/carousel.component";
+import { CarouselComponent } from "./feature-modules/accommodation/carousel/carousel.component";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
-import {DatapickerRangeComponent} from "./layout/datapicker-range/datapicker-range.component";
-import {FormsModule} from "@angular/forms";
+import { DatapickerRangeComponent } from "./layout/datapicker-range/datapicker-range.component";
+import { FormsModule } from "@angular/forms";
 import { ReservationModule } from './feature-modules/reservation/reservation.module';
+import { SharedModule } from "./shared/shared.module";
+import { AccountModule } from "./feature-modules/account/account.module";
 
 @NgModule({
   declarations: [
@@ -49,29 +50,30 @@ import { ReservationModule } from './feature-modules/reservation/reservation.mod
     FooterComponent
   ],
   imports: [
-      BrowserModule,
-      AppRoutingModule,
-      LayoutModule,
-      AccountModule,
-      BrowserAnimationsModule,
-      MatButtonToggleModule,
-      MatCardModule,
-      MatButtonModule,
-      MatCheckboxModule,
-      MatSliderModule,
-      MatInputModule,
-      MatSelectModule,
-      MatPaginatorModule,
-      MatDatepickerModule,
-      AuthenticationModule,
-      MatFormFieldModule,
-      CarouselComponent,
-      NgbModule,
-      HttpClientModule,
-      DatapickerRangeComponent,
-      FormsModule,
-      AccommodationModule,
-      ReservationModule,
+    BrowserModule,
+    AppRoutingModule,
+    LayoutModule,
+    AccountModule,
+    BrowserAnimationsModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatSliderModule,
+    MatInputModule,
+    MatSelectModule,
+    MatPaginatorModule,
+    MatDatepickerModule,
+    AuthenticationModule,
+    MatFormFieldModule,
+    CarouselComponent,
+    NgbModule,
+    HttpClientModule,
+    DatapickerRangeComponent,
+    FormsModule,
+    AccommodationModule,
+    ReservationModule,
+    SharedModule
   ],
   providers: [
     provideClientHydration(withNoHttpTransferCache())

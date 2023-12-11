@@ -6,6 +6,9 @@ import { AccommodationDTO } from '../../model/accommodation.dto.model';
 import { Accommodation } from '../../model/accommodation.model';
 import { AccommodationBasicInformationComponent } from '../accommodation-basic-information/accommodation-basic-information.component';
 import { MatSnackBar } from '@angular/material/snack-bar'
+import { AccommodationBasicFormModel } from '../../model/accommodation-basic.form.model';
+import { AccommodationGuestsFormModel } from '../../model/accommodation-guests.form.model';
+import { ImagesDTO } from '../../model/images';
 
 @Component({
   selector: 'app-accommodation-create',
@@ -22,31 +25,33 @@ export class AccommodationCreateComponent {
   locationStreetAddress: string = '';
   locationZipCode: string = '';
   amenitiesFilter: string[] = [];
-  images: string[] = [];
+  images: ImagesDTO[] = [];
+  f: File[] = [];
   type: string = '';
   minGuests: number = 0;
   maxGuests: number = 0;
   reservationAcceptance: string = '';
   cancellationDeadline: number = 0;
   pricePer: string = '';
+  submitted: boolean = false;
 
   constructor(private accommodationService: AccommodationService, private router: Router, private _snackBar: MatSnackBar) { }
 
-  openSnackBar(message: string, action: string){
+  openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action, {
       duration: 2000,
     });
   }
 
-  handleBasicInfoChange(data: any) {
+  handleBasicInfoChange(data: AccommodationBasicFormModel) {
     this.basicInfoPropertyName = data.propertyName;
     this.basicInfoDescription = data.description;
   }
 
-  handleLocationChange(data: any) {
+  handleLocationChange(data: Address) {
     this.locationCountry = data.country;
     this.locationCity = data.city;
-    this.locationStreetAddress = data.streetAddress;
+    this.locationStreetAddress = data.address;
     this.locationZipCode = data.zipCode;
   }
 
@@ -61,12 +66,11 @@ export class AccommodationCreateComponent {
     return label.toUpperCase().replace(/[^A-Z]/g, '_');
   }
 
-  handlePhotosChange(data: string[]) {
+  handlePhotosChange(data: ImagesDTO[]) {
     this.images = data;
-
   }
 
-  handleGuestsChange(data: any) {
+  handleGuestsChange(data: AccommodationGuestsFormModel) {
     this.type = data.type;
     this.minGuests = data.minGuests;
     this.maxGuests = data.maxGuests;
@@ -79,7 +83,8 @@ export class AccommodationCreateComponent {
   }
 
   onSubmit() {
-
+    console.log(this.images);
+    this.submitted = true;
     if (this.isValid()) {
       const addressDTO: Address = {
         country: this.locationCountry,
@@ -99,10 +104,14 @@ export class AccommodationCreateComponent {
         pricePer: this.pricePer === '' ? null : this.pricePer,
         address: addressDTO
       };
-      this.accommodationService.add(dto).subscribe(
+      //owner id
+      this.accommodationService.add(3, dto).subscribe(
         {
           next: (data: Accommodation) => {
-            this.accommodationService.addImages(data.id, this.images).subscribe({
+            this.images.forEach((elem) => {
+              this.f.push(elem.file);
+            })
+            this.accommodationService.addImages(data.id, this.f).subscribe({
               next: () => {
                 this.router.navigate(['/accommodation/calendar/', data.id]);
               }

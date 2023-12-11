@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthenticationService} from "../../feature-modules/authentication/authentication.service";
+import {AuthenticationService} from "../../authentication/authentication.service";
 import {AccountService} from "../account.service";
 import {Account} from "../model/account";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
@@ -7,8 +7,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {PasswordChangeDialogComponent} from "../password-change-dialog/password-change-dialog.component";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {DefaultSnackbarComponent} from "../../layout/default-snackbar/default-snackbar.component";
-import {AccountDeleteDialogComponent} from "../account-delete-dialog/account-delete-dialog.component";
+import {DefaultSnackbarComponent} from "../../../layout/default-snackbar/default-snackbar.component";
+import { AccountDeleteDialogComponent } from '../account-delete-dialog/account-delete-dialog.component';
 
 @Component({
   selector: 'app-user-information',

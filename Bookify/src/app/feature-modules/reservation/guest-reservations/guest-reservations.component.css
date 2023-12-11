@@ -1,5 +1,5 @@
 .wrapper-reservations {
-    margin-top: 5rem;
+    margin-top: 7rem;
     padding-bottom: 5rem;
 }
 
@@ -8,6 +8,7 @@ h1 {
     display: block;
     width: 70%;
     margin: auto;
+    font-size: 1.8rem;
 }
 
 hr {
@@ -18,7 +19,7 @@ hr {
     border-radius: 2px;
     height: 4px;
     background-color: #A29D92;
-    width: 100%;
+    width: 18rem;
 }
 
 .wrapper-title{
