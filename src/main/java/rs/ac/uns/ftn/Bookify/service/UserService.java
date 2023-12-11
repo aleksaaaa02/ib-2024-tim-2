@@ -168,6 +168,13 @@ public class UserService implements IUserService {
             return f.floatValue();
     }
 
+    @Override
+    public void saveOwnerAccommodation(Accommodation accommodation, Long ownerId) {
+        Owner owner = userRepository.findOwnerById(ownerId);
+        owner.getAccommodations().add(accommodation);
+        userRepository.save(owner);
+    }
+
     private void updateUserData(UserDetailDTO updatedUser, User u) {
         u.getAddress().setAddress(updatedUser.getAddress().getAddress());
         u.getAddress().setCity(updatedUser.getAddress().getCity());

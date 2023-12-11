@@ -6,8 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Image;
 import rs.ac.uns.ftn.Bookify.repository.FileSystemRepository;
+import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IImageRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 
@@ -22,6 +24,8 @@ public class ImageService implements IImageService {
     FileSystemRepository fileSystemRepository;
     @Autowired
     IImageRepository imageRepository;
+    @Autowired
+    IAccommodationRepository accommodationRepository;
 
     @Override
     public Image save(byte[] bytes, String subFolderName, String imageName) throws Exception {
@@ -30,10 +34,14 @@ public class ImageService implements IImageService {
     }
 
     public Long save(Long accommodationId, List<MultipartFile> images) throws Exception {
+        Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
         for (MultipartFile image: images) {
             String location = fileSystemRepository.save(image.getBytes(), accommodationId.toString(), image.getName());
-            imageRepository.save(new Image(location, image.getName()));
+            Image newImage = new Image(location, image.getName());
+            accommodation.getImages().add(newImage);
+            imageRepository.save(newImage);
         }
+        accommodationRepository.save(accommodation);
         return 1L;
     }
 

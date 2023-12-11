@@ -14,6 +14,9 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
     Owner findByAccommodations_Id(Long accommodationId);
 
+    @Query("SELECT o FROM Owner o WHERE o.id=:ownerId")
+    Owner findOwnerById(@Param("ownerId") Long ownerId);
+
     @Query("SELECT AVG(r.rate) FROM Owner o JOIN o.reviews r WHERE o.id = :ownerId")
     Float getAverageReviewByOwnerId(@Param("ownerId") Long ownerId);
 }

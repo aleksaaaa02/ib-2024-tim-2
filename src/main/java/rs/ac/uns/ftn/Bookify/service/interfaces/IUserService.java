@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.Bookify.service.interfaces;
 
 import org.springframework.core.io.FileSystemResource;
 import rs.ac.uns.ftn.Bookify.dto.*;
+import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.User;
 
 import java.util.Collection;
@@ -22,4 +23,5 @@ public interface IUserService {
     public FileSystemResource getImage(Long imageId);
     public OwnerDTO findbyAccommodationId(Long id);
     public Float getAvgRating(Long id);
+    public void saveOwnerAccommodation(Accommodation accommodation, Long ownerId);
 }
