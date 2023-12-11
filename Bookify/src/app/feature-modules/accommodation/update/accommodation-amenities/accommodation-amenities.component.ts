@@ -17,16 +17,14 @@ export class AccommodationAmenitiesComponent {
 
   onCheckboxChange(label: string) {
     if (this.checkedCheckboxes.includes(label)) {
-      // Remove the label if it's already in the array (unchecked)
       this.checkedCheckboxes = this.checkedCheckboxes.filter(item => item !== label);
     } else {
-      // Add the label if it's not in the array (checked)
       this.checkedCheckboxes.push(label);
     }
     this.amenitiesChange.emit(this.checkedCheckboxes);
   }
 
   trackByFn(index: number, item: string): number {
-    return index; // or return the unique identifier of your items if available
+    return index;
   }
 }

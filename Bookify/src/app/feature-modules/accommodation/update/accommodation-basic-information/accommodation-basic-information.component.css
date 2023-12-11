@@ -16,4 +16,5 @@ mat-label {
     display: flex;
     width: 100%;
     align-items: center;
+    margin: 10px 0;
 }
