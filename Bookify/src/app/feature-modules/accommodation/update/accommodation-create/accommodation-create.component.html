@@ -1,7 +1,10 @@
 <div class="wrapper">
     <div class="inline">
-        <h1 id="title">Create accommodation</h1>
-        <hr>
+        <div>
+            <span class="material-symbols-outlined apartment">apartment</span>
+            <h1 id="title">Create accommodation</h1>
+        </div>
+        <hr/>
     </div>
     <app-accommodation-basic-information (basicInfoChanged)="handleBasicInfoChange($event)"
         [submitted]="submitted"></app-accommodation-basic-information>
