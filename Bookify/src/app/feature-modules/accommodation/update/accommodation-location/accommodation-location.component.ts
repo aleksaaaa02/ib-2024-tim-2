@@ -12,7 +12,7 @@ export class AccommodationLocationComponent {
   @Output() validationStatus: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   form: FormGroup;
-  country: string = 'Serbia';
+  country: string = '';
   city: string = '';
   streetAddress: string = '';
   zipCode: string = '';
@@ -22,7 +22,7 @@ export class AccommodationLocationComponent {
 
   constructor(private accommodationService: AccommodationService, private fb: FormBuilder) {
     this.form = this.fb.group({
-      // country: ['Serbia', Validators.required],
+      country: ['', Validators.required],
       city: ['', Validators.required],
       streetAddress: ['', Validators.required],
       zipCode: ['', Validators.required],
