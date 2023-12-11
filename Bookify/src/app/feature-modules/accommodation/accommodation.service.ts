@@ -1,6 +1,6 @@
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { AccommodationBasicModel } from "./model/accommodation-basic.model";
-import { HttpClient, HttpResponse } from "@angular/common/http";
+import { HttpClient, HttpParams, HttpResponse } from "@angular/common/http";
 import { map, Observable } from "rxjs";
 import { environment } from "../../../env/env";
 import moment from 'moment';
@@ -76,22 +76,20 @@ export class AccommodationService {
     return this.httpClient.get<PriceList[]>(environment.apiAccommodation + '/' + accommodationId + "/getPrice");
   }
 
-  add(accommodation: AccommodationDTO): Observable<Accommodation> {
-    return this.httpClient.post<Accommodation>(environment.apiAccommodation, accommodation)
+  add(ownerId: number, accommodation: AccommodationDTO): Observable<Accommodation> {
+    const params = new HttpParams().set('ownerId', ownerId);
+    return this.httpClient.post<Accommodation>(environment.apiAccommodation, accommodation, {params});
   }
 
   deletePriceListItem(accommodationId: number, priceListItem: PriceListDTO): Observable<PriceList> {
     return this.httpClient.delete<PriceList>(environment.apiAccommodation + "/price/" + accommodationId, {"body": priceListItem});
   }
 
-  addImages(accommodationId: number, images: string[]) {
+  addImages(accommodationId: number, images: File[]) {
     const data: FormData = new FormData();
-    images.forEach((element: string) => {
-      let blob: Blob = new Blob([element], { type: "text/plain" });
-      let file: File = new File([blob], "test");
+    images.forEach((file: File) => {
       data.append("images", file);
     })
-    console.log(images);
     return this.httpClient.post<string[]>(environment.apiAccommodation + "/" + accommodationId, data);
   }
 
