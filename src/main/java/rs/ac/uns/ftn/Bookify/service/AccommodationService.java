@@ -34,7 +34,7 @@ public class AccommodationService implements IAccommodationService {
 
     @Autowired
     IImageService imageService;
-    
+
     @Override
     public Collection<Accommodation> getAccommodationsForSearch(Integer persons, String location, LocalDate begin, LocalDate end) {
         return accommodationRepository.findByLocationAndGuestRange(location, persons, begin, end);
@@ -404,6 +404,4 @@ public class AccommodationService implements IAccommodationService {
     public FileSystemResource getImage(Long id) {
         return imageService.find(id);
     }
-
-
 }

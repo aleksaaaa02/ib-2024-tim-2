@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.Bookify.controller;
 
 
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.model.User;
+import rs.ac.uns.ftn.Bookify.service.EmailService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
 import java.util.Date;
@@ -29,7 +31,10 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
+    @Autowired
+    private EmailService emailService;
+
+    @GetMapping(value = "/reported", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReportedUserDTO>> getReportedUsers() {
         //return all reported users
         Collection<ReportedUserDTO> reportedUsers = new HashSet<>();
@@ -52,12 +57,14 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerUser(@RequestBody UserRegisteredDTO newUser) {
-        Long userId = userService.create(newUser);
-        if (userId != null) {
-            return new ResponseEntity<>("New user created", HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>("Failed to create new user", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> registerUser(@RequestBody UserRegisteredDTO newUser) throws MessagingException {
+//        Long userId = userService.create(newUser);
+//        if (userId != null) {
+
+        emailService.sendActivationEmail("","http://localhost:4200/confirmation");
+        return new ResponseEntity<>("New user created", HttpStatus.CREATED);
+//        }
+//        return new ResponseEntity<>("Failed to create new user", HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping
@@ -101,7 +108,7 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         boolean success = userService.delete(userId);
-        if(success) return new ResponseEntity<>("Account deleted successfully!", HttpStatus.OK);
+        if (success) return new ResponseEntity<>("Account deleted successfully!", HttpStatus.OK);
         return new ResponseEntity<>("Account has not been deleted", HttpStatus.BAD_REQUEST);
     }
 
@@ -126,7 +133,7 @@ public class UserController {
     @PostMapping("/change-image/{userId}")
     public ResponseEntity<Long> changeAccountImage(@RequestParam("image") MultipartFile image, @PathVariable Long userId) throws Exception {
         Long id = userService.updateImage(image.getBytes(), image.getName(), userId);
-        if(id < 0){
+        if (id < 0) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(id, HttpStatus.OK);
