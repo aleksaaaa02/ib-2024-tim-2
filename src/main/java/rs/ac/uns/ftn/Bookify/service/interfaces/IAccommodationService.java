@@ -40,4 +40,5 @@ public interface IAccommodationService {
     public List<FileSystemResource> getAllImages(Long accommodationId);
     public float getAvgRating(Long id);
     public List<AccommodationBasicDTO> getAvgRatings(List<AccommodationBasicDTO> accommodations);
+    public List<Accommodation> getOwnerAccommodation(Long ownerId);
 }
