@@ -16,6 +16,7 @@ import rs.ac.uns.ftn.Bookify.repository.interfaces.IPriceListItemRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IUserRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -33,10 +34,7 @@ public class AccommodationService implements IAccommodationService {
 
     @Autowired
     IImageService imageService;
-
-    @Autowired
-    IUserRepository userRepository;
-
+    
     @Override
     public Collection<Accommodation> getAccommodationsForSearch(Integer persons, String location, LocalDate begin, LocalDate end) {
         return accommodationRepository.findByLocationAndGuestRange(location, persons, begin, end);
@@ -146,11 +144,8 @@ public class AccommodationService implements IAccommodationService {
     private IPriceListItemRepository priceListItemRepository;
 
     @Override
-    public Accommodation save(Accommodation accommodation, Long ownerId) {
-        Owner owner = userRepository.findOwnerById(ownerId);
-        owner.getAccommodations().add(accommodation);
+    public Accommodation save(Accommodation accommodation) {
         Accommodation a = accommodationRepository.save(accommodation);
-        userRepository.save(owner);
         return a;
     }
 

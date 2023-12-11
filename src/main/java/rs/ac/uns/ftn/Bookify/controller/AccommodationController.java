@@ -226,7 +226,9 @@ public class AccommodationController {
         //insert new accommodation
         Accommodation accommodation = AccommodationInesertDTOMapper.fromDTOtoAccommodation(accommodationDTO);
 
-        Accommodation a = accommodationService.save(accommodation, ownerId);
+        Accommodation a = accommodationService.save(accommodation);
+        userService.saveOwnerAccommodation(accommodation, ownerId);
+
         return new ResponseEntity<Accommodation>(a, HttpStatus.CREATED);
     }
 
