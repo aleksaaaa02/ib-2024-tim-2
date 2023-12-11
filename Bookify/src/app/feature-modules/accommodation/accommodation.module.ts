@@ -17,6 +17,9 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { SharedModule } from "../../shared/shared.module";
 import { CalendarComponent } from './update/calendar/calendar.component';
+import { OwnerAccommodationsComponent } from './owner-accommodations/owner-accommodations.component';
+import { OwnerAccommodationsCardComponent } from './owner-accommodations-card/owner-accommodations-card.component';
+import {RouterLink} from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -27,20 +30,23 @@ import { CalendarComponent } from './update/calendar/calendar.component';
     AccommodationGuestsComponent,
     AccommodationAvailabilityComponent,
     AccommodationCreateComponent,
-    CalendarComponent
+    CalendarComponent,
+    OwnerAccommodationsComponent,
+    OwnerAccommodationsCardComponent
   ],
-  imports: [
-    CommonModule,
-    MatInputModule,
-    FormsModule,
-    MatSelectModule,
-    MatButtonToggleModule,
-    ReactiveFormsModule,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
-    SharedModule
-  ],
+    imports: [
+        CommonModule,
+        MatInputModule,
+        FormsModule,
+        MatSelectModule,
+        MatButtonToggleModule,
+        ReactiveFormsModule,
+        MatTableModule,
+        MatSortModule,
+        MatPaginatorModule,
+        SharedModule,
+        RouterLink
+    ],
   exports:[
     AccommodationBasicInformationComponent,
     AccommodationLocationComponent,
@@ -49,7 +55,9 @@ import { CalendarComponent } from './update/calendar/calendar.component';
     AccommodationGuestsComponent,
     AccommodationAvailabilityComponent,
     AccommodationCreateComponent,
-    CalendarComponent
+    CalendarComponent,
+    OwnerAccommodationsComponent,
+    OwnerAccommodationsCardComponent
   ]
 })
 export class AccommodationModule { }
