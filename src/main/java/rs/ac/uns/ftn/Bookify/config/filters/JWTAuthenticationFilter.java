@@ -32,21 +32,27 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         String username;
         String authToken = jwtUtils.getToken(request);
         try {
-
-            if (authToken == null) return;
-            username = jwtUtils.getUsernameFromToken(authToken);
-            if (username == null) return;
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if (userDetails == null) return;
-
-            if (jwtUtils.validateToken(authToken, userDetails)) {
-                JWTBasedAuthentication authentication = new JWTBasedAuthentication(userDetails);
-                authentication.setToken(authToken);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+            ValidateToken(authToken);
         } catch (ExpiredJwtException ex) {
             LOGGER.debug("Token expired!");
         }
         filterChain.doFilter(request, response);
+    }
+
+    private void ValidateToken(String authToken) {
+        String username;
+        if (authToken != null) {
+            username = jwtUtils.getUsernameFromToken(authToken);
+            if (username != null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                if (userDetails != null) {
+                    if (jwtUtils.validateToken(authToken, userDetails)) {
+                        JWTBasedAuthentication authentication = new JWTBasedAuthentication(userDetails);
+                        authentication.setToken(authToken);
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
+                }
+            }
+        }
     }
 }
