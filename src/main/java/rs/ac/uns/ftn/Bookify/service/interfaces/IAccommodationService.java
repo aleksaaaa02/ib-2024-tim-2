@@ -41,4 +41,5 @@ public interface IAccommodationService {
     public float getAvgRating(Long id);
     public List<AccommodationBasicDTO> getAvgRatings(List<AccommodationBasicDTO> accommodations);
     public List<Accommodation> getOwnerAccommodation(Long ownerId);
+    public Accommodation getAccommodation(Long accommodationId);
 }

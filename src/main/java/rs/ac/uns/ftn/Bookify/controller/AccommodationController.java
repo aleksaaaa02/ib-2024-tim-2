@@ -304,4 +304,11 @@ public class AccommodationController {
         accommodationService.deletePriceListItem(accommodationId, pricelistItem);
         return new ResponseEntity<PriceListItemDTO>(dto, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/edit/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AccommodationInsertDTO> getAccommodation(@PathVariable Long accommodationId) {
+        Accommodation accommodation = accommodationService.getAccommodation(accommodationId);
+        AccommodationInsertDTO accommodationInsertDTO = AccommodationInesertDTOMapper.fromAccommodationtoDTO(accommodation);
+        return new ResponseEntity<>(accommodationInsertDTO, HttpStatus.OK);
+    }
 }
