@@ -10,23 +10,22 @@ import { ForgotPasswordComponent } from './feature-modules/authentication/forgot
 import { ConfirmationComponent } from './feature-modules/authentication/confirmation/confirmation.component';
 import { AccommodationCreateComponent } from './feature-modules/accommodation/update/accommodation-create/accommodation-create.component';
 import { CalendarComponent } from './feature-modules/accommodation/update/calendar/calendar.component';
-import {
-  OwnerAccommodationsComponent
-} from "./feature-modules/accommodation/owner-accommodations/owner-accommodations.component";
+import { OwnerAccommodationsComponent } from './feature-modules/accommodation/owner-accommodations/owner-accommodations.component';
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
   { path: "registration", component: RegistrationComponent },
   { path: "forgot-password", component: ForgotPasswordComponent },
   { path: "confirmation", component: ConfirmationComponent },
-  { path: "results",component: ResultsPageComponent },
+  { path: "results", component: ResultsPageComponent },
   { path: "accommodation/details/:accommodationId", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
   { path: 'accommodation/calendar/:accommodationId', component: CalendarComponent },
   { path: "account", component: AccountComponent },
   { path: "accommodation/create/basic-info", component: AccommodationCreateComponent },
   { path: "accommodation/create", component: AccommodationCreateComponent },
-  { path: "accommodations", component: OwnerAccommodationsComponent}
+  { path: "accommodation/modify/:accommodationId", component: AccommodationCreateComponent },
+  { path: "accommodations", component: OwnerAccommodationsComponent }
 ];
 
 @NgModule({

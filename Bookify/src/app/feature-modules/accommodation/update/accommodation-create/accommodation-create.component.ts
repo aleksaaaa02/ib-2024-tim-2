@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { AccommodationService } from '../../accommodation.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Address } from '../../model/address.dto.model';
 import { AccommodationDTO } from '../../model/accommodation.dto.model';
 import { Accommodation } from '../../model/accommodation.model';
@@ -9,13 +9,14 @@ import { MatSnackBar } from '@angular/material/snack-bar'
 import { AccommodationBasicFormModel } from '../../model/accommodation-basic.form.model';
 import { AccommodationGuestsFormModel } from '../../model/accommodation-guests.form.model';
 import { ImagesDTO } from '../../model/images';
+import { AccommodationAvailability } from '../../model/accommodation-availability.form.model';
 
 @Component({
   selector: 'app-accommodation-create',
   templateUrl: './accommodation-create.component.html',
   styleUrl: './accommodation-create.component.css'
 })
-export class AccommodationCreateComponent {
+export class AccommodationCreateComponent implements OnInit {
   @ViewChild(AccommodationBasicInformationComponent) basicInfo!: AccommodationBasicInformationComponent;
 
   basicInfoPropertyName: string = '';
@@ -34,8 +35,48 @@ export class AccommodationCreateComponent {
   cancellationDeadline: number = 0;
   pricePer: string = '';
   submitted: boolean = false;
+  accommodationId: number;
 
-  constructor(private accommodationService: AccommodationService, private router: Router, private _snackBar: MatSnackBar) { }
+  basicInfoForm: AccommodationBasicFormModel;
+  address: Address;
+  gusetsInfo: AccommodationGuestsFormModel;
+  availabilityInfo: AccommodationAvailability;
+
+  constructor(private accommodationService: AccommodationService, private router: Router, private _snackBar: MatSnackBar, private route: ActivatedRoute) { }
+
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      const accommodationId = +params['accommodationId'];
+      this.accommodationId = accommodationId;
+    });
+    if (!Number.isNaN(this.accommodationId)) {
+      this.accommodationService.getAccommodation(this.accommodationId).subscribe({
+        next: (accommodation: Accommodation) => {
+          this.basicInfoForm = {
+            propertyName: accommodation.name,
+            description: accommodation.description
+          }
+          this.address = {
+            country: accommodation.address.country,
+            city: accommodation.address.city,
+            address: accommodation.address.address,
+            zipCode: accommodation.address.zipCode
+          }
+          this.amenitiesFilter = accommodation.filters;
+          this.gusetsInfo = {
+            type: accommodation.accommodationType,
+            minGuests: accommodation.minGuest,
+            maxGuests: accommodation.maxGuest,
+            reservationAcceptance: accommodation.manual? 'manual': 'automatic'
+          }
+          this.availabilityInfo = {
+            cancellationDeadline: accommodation.cancellationDeadline,
+            pricePer: accommodation.pricePer
+          }
+        }
+      })
+    }
+  }
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action, {
@@ -77,13 +118,13 @@ export class AccommodationCreateComponent {
     this.reservationAcceptance = data.reservationAcceptance;
   }
 
-  handleAvailabilityChange(data: any) {
+  handleAvailabilityChange(data: AccommodationAvailability) {
     this.cancellationDeadline = data.cancellationDeadline;
     this.pricePer = data.pricePer;
   }
 
   onSubmit() {
-    console.log(this.images);
+    console.log(this.amenitiesFilter);
     this.submitted = true;
     if (this.isValid()) {
       const addressDTO: Address = {

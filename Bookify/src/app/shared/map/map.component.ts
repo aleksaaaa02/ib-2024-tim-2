@@ -89,10 +89,12 @@ export class MapComponent implements AfterViewInit, OnChanges {
           this.map.removeLayer(this.marker);
         }
         if(result.length>0){
-          this.marker = this.L.marker([result[0].lat, result[0].lon])
-            .addTo(this.map)
-            .openPopup();
-          this.setCenter([result[0].lat, result[0].lon]);
+          if(this.L){
+            this.marker = this.L.marker([result[0].lat, result[0].lon])
+              .addTo(this.map)
+              .openPopup();
+            this.setCenter([result[0].lat, result[0].lon]);
+          }
         }else{
           console.log("GRESKA");
         }

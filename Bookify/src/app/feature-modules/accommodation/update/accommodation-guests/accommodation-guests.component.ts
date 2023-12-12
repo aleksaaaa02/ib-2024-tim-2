@@ -10,6 +10,7 @@ import { AccommodationGuestsFormModel } from '../../model/accommodation-guests.f
 export class AccommodationGuestsComponent implements OnChanges, OnInit {
   @Output() guestsChanged = new EventEmitter<AccommodationGuestsFormModel>();
   @Input() submitted: boolean = false;
+  @Input() guestsInfo: AccommodationGuestsFormModel | null = null;
 
   form: FormGroup;
 
@@ -27,7 +28,7 @@ export class AccommodationGuestsComponent implements OnChanges, OnInit {
 
   get maxValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      if(!this.form){
+      if (!this.form) {
         return null;
       }
       const min = this.form.get('minGuests')?.value;
@@ -35,11 +36,9 @@ export class AccommodationGuestsComponent implements OnChanges, OnInit {
       if (max < min) {
         return { lessThen: true, message: 'Max cannot be less then min' };
       }
-
       return null;
     };
   }
-
 
   ngOnInit(): void {
     this.form.get('reservationAcceptance')?.setValue("manual");
@@ -48,6 +47,12 @@ export class AccommodationGuestsComponent implements OnChanges, OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     if (this.submitted) {
       this.form.markAllAsTouched();
+    }
+    if (this.guestsInfo){
+      this.form.get('type')?.setValue(this.guestsInfo.type),
+      this.form.get('minGuests')?.setValue(this.guestsInfo.minGuests),
+      this.form.get('maxGuests')?.setValue(this.guestsInfo.maxGuests),
+      this.form.get('reservationAcceptance')?.setValue(this.guestsInfo.reservationAcceptance)
     }
   }
 

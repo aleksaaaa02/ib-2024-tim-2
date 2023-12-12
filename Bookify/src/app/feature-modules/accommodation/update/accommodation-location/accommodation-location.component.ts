@@ -12,6 +12,7 @@ export class AccommodationLocationComponent implements OnChanges {
   @Output() locationChanged = new EventEmitter<Address>();
   @Output() validationStatus: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() submitted: boolean = false;
+  @Input() address: Address | null = null;
 
   form: FormGroup;
 
@@ -37,6 +38,12 @@ export class AccommodationLocationComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (this.submitted) {
       this.form.markAllAsTouched();
+    }
+    if(this.address){
+      this.form.get('country')?.setValue(this.address.country);
+      this.form.get('city')?.setValue(this.address.city);
+      this.form.get('streetAddress')?.setValue(this.address.address);
+      this.form.get('zipCode')?.setValue(this.address.zipCode);
     }
   }
 
