@@ -211,7 +211,7 @@ public class AccommodationController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Accommodation> insert(@RequestParam Long ownerId, @RequestBody AccommodationInsertDTO accommodationDTO) throws Exception {
+    public ResponseEntity<Accommodation> insert(@RequestParam Long ownerId, @RequestBody AccommodationInsertDTO accommodationDTO) {
         //insert new accommodation
         Accommodation accommodation = AccommodationInesertDTOMapper.fromDTOtoAccommodation(accommodationDTO);
 
