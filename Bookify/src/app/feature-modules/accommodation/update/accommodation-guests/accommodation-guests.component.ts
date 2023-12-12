@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AccommodationGuestsFormModel } from '../../model/accommodation-guests.form.model';
 
@@ -7,7 +7,7 @@ import { AccommodationGuestsFormModel } from '../../model/accommodation-guests.f
   templateUrl: './accommodation-guests.component.html',
   styleUrl: './accommodation-guests.component.css'
 })
-export class AccommodationGuestsComponent implements OnChanges, OnInit {
+export class AccommodationGuestsComponent implements OnChanges {
   @Output() guestsChanged = new EventEmitter<AccommodationGuestsFormModel>();
   @Input() submitted: boolean = false;
   @Input() guestsInfo: AccommodationGuestsFormModel | null = null;
@@ -40,19 +40,17 @@ export class AccommodationGuestsComponent implements OnChanges, OnInit {
     };
   }
 
-  ngOnInit(): void {
-    this.form.get('reservationAcceptance')?.setValue("manual");
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
     if (this.submitted) {
       this.form.markAllAsTouched();
     }
-    if (this.guestsInfo){
+    if (this.guestsInfo) {
       this.form.get('type')?.setValue(this.guestsInfo.type),
-      this.form.get('minGuests')?.setValue(this.guestsInfo.minGuests),
-      this.form.get('maxGuests')?.setValue(this.guestsInfo.maxGuests),
-      this.form.get('reservationAcceptance')?.setValue(this.guestsInfo.reservationAcceptance)
+        this.form.get('minGuests')?.setValue(this.guestsInfo.minGuests),
+        this.form.get('maxGuests')?.setValue(this.guestsInfo.maxGuests),
+        this.form.get('reservationAcceptance')?.setValue(this.guestsInfo.reservationAcceptance)
+    } else {
+      this.form.get('reservationAcceptance')?.setValue('manual')
     }
   }
 

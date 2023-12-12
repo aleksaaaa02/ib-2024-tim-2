@@ -19,28 +19,21 @@ import { AccommodationAvailability } from '../../model/accommodation-availabilit
 export class AccommodationCreateComponent implements OnInit {
   @ViewChild(AccommodationBasicInformationComponent) basicInfo!: AccommodationBasicInformationComponent;
 
-  basicInfoPropertyName: string = '';
-  basicInfoDescription: string = '';
-  locationCountry: string = '';
-  locationCity: string = '';
-  locationStreetAddress: string = '';
-  locationZipCode: string = '';
   amenitiesFilter: string[] = [];
   images: ImagesDTO[] = [];
   f: File[] = [];
-  type: string = '';
-  minGuests: number = 0;
-  maxGuests: number = 0;
-  reservationAcceptance: string = '';
-  cancellationDeadline: number = 0;
-  pricePer: string = '';
+
   submitted: boolean = false;
   accommodationId: number;
 
   basicInfoForm: AccommodationBasicFormModel;
+  basicInfoFormUpdate: AccommodationBasicFormModel;
   address: Address;
+  addressUpdate: Address;
   gusetsInfo: AccommodationGuestsFormModel;
+  gusetsInfoUpdate: AccommodationGuestsFormModel;
   availabilityInfo: AccommodationAvailability;
+  availabilityInfoUpdate: AccommodationAvailability;
 
   constructor(private accommodationService: AccommodationService, private router: Router, private _snackBar: MatSnackBar, private route: ActivatedRoute) { }
 
@@ -52,27 +45,42 @@ export class AccommodationCreateComponent implements OnInit {
     if (!Number.isNaN(this.accommodationId)) {
       this.accommodationService.getAccommodation(this.accommodationId).subscribe({
         next: (accommodation: Accommodation) => {
-          this.basicInfoForm = {
+          this.basicInfoFormUpdate = {
             propertyName: accommodation.name,
             description: accommodation.description
           }
-          this.address = {
+          this.addressUpdate = {
             country: accommodation.address.country,
             city: accommodation.address.city,
             address: accommodation.address.address,
             zipCode: accommodation.address.zipCode
           }
           this.amenitiesFilter = accommodation.filters;
-          this.gusetsInfo = {
+          this.gusetsInfoUpdate = {
             type: accommodation.accommodationType,
             minGuests: accommodation.minGuest,
             maxGuests: accommodation.maxGuest,
-            reservationAcceptance: accommodation.manual? 'manual': 'automatic'
+            reservationAcceptance: accommodation.manual ? 'manual' : 'automatic'
           }
-          this.availabilityInfo = {
+          this.availabilityInfoUpdate = {
             cancellationDeadline: accommodation.cancellationDeadline,
             pricePer: accommodation.pricePer
           }
+          this.accommodationService.getImages(this.accommodationId).subscribe({
+            next: (images: Uint8Array[]) => {
+              images.forEach((image) => {
+                const blob = new Blob([image], { type: 'application/octet-stream' });
+                fetchImageAsBlob("data:image/*;base64," + image).then(blob => {
+                  const file = createFileFromBlob(blob, "test");
+                  const imageDTO = {
+                    url: "data:image/*;base64," + image,
+                    file: file
+                  }
+                  this.images.push(imageDTO);
+                });
+              });
+            }
+          })
         }
       })
     }
@@ -85,15 +93,11 @@ export class AccommodationCreateComponent implements OnInit {
   }
 
   handleBasicInfoChange(data: AccommodationBasicFormModel) {
-    this.basicInfoPropertyName = data.propertyName;
-    this.basicInfoDescription = data.description;
+    this.basicInfoForm = data;
   }
 
   handleLocationChange(data: Address) {
-    this.locationCountry = data.country;
-    this.locationCity = data.city;
-    this.locationStreetAddress = data.address;
-    this.locationZipCode = data.zipCode;
+    this.address = data;
   }
 
   handleAmenitiesChange(data: string[]) {
@@ -112,64 +116,104 @@ export class AccommodationCreateComponent implements OnInit {
   }
 
   handleGuestsChange(data: AccommodationGuestsFormModel) {
-    this.type = data.type;
-    this.minGuests = data.minGuests;
-    this.maxGuests = data.maxGuests;
-    this.reservationAcceptance = data.reservationAcceptance;
+    this.gusetsInfo = data;
   }
 
   handleAvailabilityChange(data: AccommodationAvailability) {
-    this.cancellationDeadline = data.cancellationDeadline;
-    this.pricePer = data.pricePer;
+    this.availabilityInfo = data;
   }
 
   onSubmit() {
-    console.log(this.amenitiesFilter);
     this.submitted = true;
+    console.log(this.gusetsInfo);
     if (this.isValid()) {
       const addressDTO: Address = {
-        country: this.locationCountry,
-        city: this.locationCity,
-        address: this.locationStreetAddress,
-        zipCode: this.locationZipCode
+        country: this.address.country,
+        city: this.address.city,
+        address: this.address.address,
+        zipCode: this.address.zipCode
       }
       const dto: AccommodationDTO = {
-        name: this.basicInfoPropertyName,
-        description: this.basicInfoDescription,
-        filters: this.amenitiesFilter,
-        accommodationType: this.type === '' ? null : this.type,
-        minGuest: this.minGuests,
-        maxGuest: this.maxGuests,
-        manual: this.reservationAcceptance === 'manual',
-        cancellationDeadline: this.cancellationDeadline,
-        pricePer: this.pricePer === '' ? null : this.pricePer,
+        name: this.basicInfoForm.propertyName,
+        description: this.basicInfoForm.description,
+        filters: [...new Set(this.amenitiesFilter)],
+        accommodationType: this.gusetsInfo.type,
+        minGuest: this.gusetsInfo.minGuests,
+        maxGuest: this.gusetsInfo.maxGuests,
+        manual: this.gusetsInfo.reservationAcceptance === 'manual',
+        cancellationDeadline: this.availabilityInfo.cancellationDeadline,
+        pricePer: this.availabilityInfo.pricePer,
         address: addressDTO
       };
+      console.log(dto);
       //owner id
-      this.accommodationService.add(3, dto).subscribe(
-        {
-          next: (data: Accommodation) => {
+      if (isNaN(this.accommodationId)) {
+        console.log(this.accommodationId);
+        this.accommodationService.add(3, dto).subscribe(
+          {
+            next: (data: Accommodation) => {
+              this.images.forEach((elem) => {
+                this.f.push(elem.file);
+              })
+              this.accommodationService.addImages(data.id, this.f).subscribe({
+                next: () => {
+                  this.router.navigate(['/accommodation/calendar/', data.id]);
+                }
+              });
+            },
+            error: (_) => { }
+          });
+      } else {
+        const accommodation: Accommodation = {
+          id: this.accommodationId,
+          name: this.basicInfoForm.propertyName,
+          description: this.basicInfoForm.description,
+          filters: [...new Set(this.amenitiesFilter)],
+          accommodationType: this.gusetsInfo.type,
+          minGuest: this.gusetsInfo.minGuests,
+          maxGuest: this.gusetsInfo.maxGuests,
+          manual: this.gusetsInfo.reservationAcceptance === 'manual',
+          cancellationDeadline: this.availabilityInfo.cancellationDeadline,
+          pricePer: this.availabilityInfo.pricePer,
+          address: addressDTO
+        };
+        this.accommodationService.modify(accommodation).subscribe({
+          next: (id: number) => {
+            console.log(this.images);
             this.images.forEach((elem) => {
               this.f.push(elem.file);
             })
-            this.accommodationService.addImages(data.id, this.f).subscribe({
+            this.accommodationService.addImages(id, this.f).subscribe({
               next: () => {
-                this.router.navigate(['/accommodation/calendar/', data.id]);
+                this.router.navigate(['/accommodation/calendar/', id]);
               }
             });
           },
-          error: (_) => { }
-        });
+          error: (e) => {
+            console.log(e); 
+          }
+        })
+      }
     } else {
       this.openSnackBar('All field must be filled', 'Close');
     }
   }
 
   isValid(): boolean {
-    return this.locationCountry !== '' && this.locationCity !== '' && this.locationStreetAddress !== ''
-      && this.locationZipCode !== '' && this.basicInfoPropertyName !== '' && this.basicInfoDescription !== '' &&
-      this.type !== '' && this.reservationAcceptance !== '' && this.pricePer !== '' && this.images.length > 0 &&
-      this.minGuests >= 0 && this.minGuests !== null && this.maxGuests >= 0 && this.maxGuests !== null &&
-      this.cancellationDeadline >= 0 && this.cancellationDeadline !== null && this.minGuests <= this.maxGuests;
+    return this.basicInfoForm && this.gusetsInfo && this.address && this.availabilityInfo && this.address.country !== '' && this.address.city !== '' && this.address.address !== ''
+      && this.address.zipCode !== '' && this.basicInfoForm.propertyName !== '' && this.basicInfoForm.description !== '' &&
+      this.gusetsInfo.type !== '' && this.gusetsInfo.reservationAcceptance !== '' && this.availabilityInfo.pricePer !== '' && this.images.length > 0 &&
+      this.gusetsInfo.minGuests >= 0 && this.gusetsInfo.minGuests !== null && this.gusetsInfo.maxGuests >= 0 && this.gusetsInfo.maxGuests !== null &&
+      this.availabilityInfo.cancellationDeadline >= 0 && this.availabilityInfo.cancellationDeadline !== null && this.gusetsInfo.minGuests <= this.gusetsInfo.maxGuests;
   }
+}
+
+async function fetchImageAsBlob(imageUrl: string): Promise<Blob> {
+  const response = await fetch(imageUrl);
+  const blob = await response.blob();
+  return blob;
+}
+
+function createFileFromBlob(blob: Blob, fileName: string): File {
+  return new File([blob], fileName, { type: blob.type });
 }

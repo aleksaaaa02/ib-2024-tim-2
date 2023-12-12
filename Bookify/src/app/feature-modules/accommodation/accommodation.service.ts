@@ -81,6 +81,10 @@ export class AccommodationService {
     return this.httpClient.post<Accommodation>(environment.apiAccommodation, accommodation, { params });
   }
 
+  modify(accommodation: Accommodation): Observable<number> {
+    return this.httpClient.put<number>(environment.apiAccommodation, accommodation);
+  }
+
   getAccommodation(accommodationId: number): Observable<Accommodation> {
     return this.httpClient.get<Accommodation>(environment.apiAccommodation + "/edit/" + accommodationId);
   }
@@ -95,6 +99,10 @@ export class AccommodationService {
       data.append("images", file);
     })
     return this.httpClient.post<string[]>(environment.apiAccommodation + "/" + accommodationId, data);
+  }
+
+  getImages(accommodationId: number): Observable<Uint8Array[]> {
+    return this.httpClient.get<Uint8Array[]>(environment.apiAccommodation + "/images/" + accommodationId, { responseType: "json" });
   }
 
   addPriceList(accommodationId: number, priceList: PriceListDTO) {
