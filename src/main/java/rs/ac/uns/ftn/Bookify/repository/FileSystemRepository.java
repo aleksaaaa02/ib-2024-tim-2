@@ -30,4 +30,11 @@ public class FileSystemRepository {
         }
     }
 
+    public void delete(String imagePath) throws IOException {
+        Path path = Paths.get(imagePath);
+        if(Files.exists(path)){
+            Files.delete(path);
+        }
+    }
+
 }

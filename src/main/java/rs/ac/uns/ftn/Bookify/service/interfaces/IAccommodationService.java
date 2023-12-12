@@ -27,7 +27,8 @@ public interface IAccommodationService {
     public double getTotalPrice(Long id, LocalDate begin, LocalDate end);
     public double getOnePrice(Long id, LocalDate begin, LocalDate end);
     public FileSystemResource getImage(Long id);
-    public Accommodation save(Accommodation accommodation);
+    public Accommodation save(Accommodation accommodation) throws Exception;
+    public Long update(Accommodation accommodation);
     public Long addPriceList(Long accommodationId, PricelistItem item);
     public Long addAvailability(Long accommodationId, Availability availability);
     public Collection<PricelistItem> getAccommodationPriceListItems(Long accommodationId);
@@ -35,8 +36,6 @@ public interface IAccommodationService {
     public void mergePricelistIntervals(Long accommodationId);
     public void mergeAvailabilityIntervals(Long accommodationId);
     public Boolean deletePriceListItem(Long accommodationId, PricelistItem item);
-    public Long updatePriceListItem(Long accommodationId, PricelistItem item);
-    public Long updateAvailabilityItem(Long accommodationId, Availability availability);
     public List<FileSystemResource> getAllImages(Long accommodationId);
     public float getAvgRating(Long id);
     public List<AccommodationBasicDTO> getAvgRatings(List<AccommodationBasicDTO> accommodations);

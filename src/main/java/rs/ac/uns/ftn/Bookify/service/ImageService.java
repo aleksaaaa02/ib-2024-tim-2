@@ -13,6 +13,7 @@ import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IImageRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -33,16 +34,25 @@ public class ImageService implements IImageService {
         return imageRepository.save(new Image(location, imageName));
     }
 
-    public Long save(Long accommodationId, List<MultipartFile> images) throws Exception {
+    @Override
+    public void delete() throws Exception {
+        List<Image> images = imageRepository.findImageByIdNotInAccommodation();
+        for (Image image : images) {
+            fileSystemRepository.delete(image.getImagePath());
+            imageRepository.delete(image);
+        }
+    }
+
+    public void save(Long accommodationId, List<MultipartFile> images) throws Exception {
         Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
-        for (MultipartFile image: images) {
+        delete();
+        for (MultipartFile image : images) {
             String location = fileSystemRepository.save(image.getBytes(), accommodationId.toString(), image.getName());
             Image newImage = new Image(location, image.getName());
             accommodation.getImages().add(newImage);
             imageRepository.save(newImage);
         }
         accommodationRepository.save(accommodation);
-        return 1L;
     }
 
     @Override
