@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 public class JWTUtils {
     // mogu se eksternalizovati ovi podaci u application.properties
@@ -31,8 +34,12 @@ public class JWTUtils {
 
     private final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 
-    public String generateToken(String username) {
+    public String generateToken(String username, Long id, String role) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role);
+        claims.put("id", id);
         return Jwts.builder()
+                .setClaims(claims)
                 .setIssuer(APP_NAME)
                 .setSubject(username)
                 .setIssuedAt(new Date())
@@ -43,7 +50,6 @@ public class JWTUtils {
 
     private String generateAudience() {
         // TO-DO implement for mobile devices
-
         return AUDIENCE_WEB;
     }
 

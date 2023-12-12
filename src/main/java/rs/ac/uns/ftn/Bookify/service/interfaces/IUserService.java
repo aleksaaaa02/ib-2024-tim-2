@@ -9,7 +9,9 @@ import java.util.Collection;
 
 public interface IUserService {
     public Collection<User> getAll();
+    public User get(String email);
     public User get(Long userId);
+    public String getRole(User user);
     public Long create(UserRegisteredDTO newUser);
     public User update(UserDetailDTO updatedUser);
     public boolean changePassword(Long userId, String newPassword);

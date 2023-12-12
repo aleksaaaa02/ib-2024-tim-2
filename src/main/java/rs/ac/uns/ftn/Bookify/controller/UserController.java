@@ -1,13 +1,21 @@
 package rs.ac.uns.ftn.Bookify.controller;
 
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import rs.ac.uns.ftn.Bookify.config.utils.JWTUtils;
+import rs.ac.uns.ftn.Bookify.config.utils.UserJWT;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.model.User;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
@@ -23,11 +31,16 @@ import rs.ac.uns.ftn.Bookify.model.Owner;
 import java.util.HashSet;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/v1/users")
 public class UserController {
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JWTUtils jwtUtils;
 
     @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReportedUserDTO>> getReportedUsers() {
@@ -90,12 +103,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserCredentialsDTO userCredentials) {
-        boolean success = userService.login(userCredentials);
-        if (success) {
-            return new ResponseEntity<>("Login successful!", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Login failed", HttpStatus.NOT_FOUND);
+    public ResponseEntity<UserJWT> login(@RequestBody UserCredentialsDTO userCredentials) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(userCredentials.getEmail(), userCredentials.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetails user = (UserDetails) authentication.getPrincipal();
+        User u = userService.get(user.getUsername());
+        String jwt = jwtUtils.generateToken(user.getUsername(), u.getId(), userService.getRole(u));
+        int expiresIn = jwtUtils.getExpiredIn();
+        return new ResponseEntity<>(new UserJWT(jwt, (long) expiresIn), HttpStatus.OK);
     }
 
     @DeleteMapping("/{userId}")

@@ -34,6 +34,11 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public User get(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
     public User get(Long userId) {
         Optional<User> u = userRepository.findById(userId);
         return u.orElse(null);
@@ -105,7 +110,8 @@ public class UserService implements IUserService {
         return false;
     }
 
-    private String getRole(User user) {
+    @Override
+    public String getRole(User user) {
         String role;
         if (user instanceof Owner) {
             role = "OWNER";
