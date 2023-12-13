@@ -1,16 +1,15 @@
 package rs.ac.uns.ftn.Bookify.service.interfaces;
 
-
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.AccommodationBasicDTO;
 import rs.ac.uns.ftn.Bookify.dto.AccommodationDetailDTO;
 import rs.ac.uns.ftn.Bookify.dto.FilterDTO;
+import rs.ac.uns.ftn.Bookify.dto.SearchResponseDTO;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -19,11 +18,11 @@ import java.util.List;
 public interface IAccommodationService {
     public Collection<Accommodation> getAccommodationsForSearch(Integer persons, String location, LocalDate begin, LocalDate end);
     public long countByLocationAndGuestRange(Integer persons, String location, LocalDate begin, LocalDate end);
-    public List<AccommodationBasicDTO> sortAccommodationBasicDTO(List<AccommodationBasicDTO> accommodations, String sort);
-    public List<AccommodationBasicDTO> setPrices(List<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons);
+    public Collection<AccommodationBasicDTO> sortAccommodationBasicDTO(List<AccommodationBasicDTO> accommodations, String sort);
+    public Collection<AccommodationBasicDTO> setPrices(Collection<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons);
     public List<Accommodation> getForFilter(List<Accommodation> accommodations, FilterDTO filter);
     public AccommodationDetailDTO getAccommodationDetails(Long id);
-    public List<AccommodationBasicDTO> getForPriceRange(List<AccommodationBasicDTO> accommodations, FilterDTO filter);
+    public Collection<AccommodationBasicDTO> getForPriceRange(Collection<AccommodationBasicDTO> accommodations, FilterDTO filter);
     public double getTotalPrice(Long id, LocalDate begin, LocalDate end);
     public double getOnePrice(Long id, LocalDate begin, LocalDate end);
     public FileSystemResource getImage(Long id);
@@ -39,6 +38,12 @@ public interface IAccommodationService {
     public Long updateAvailabilityItem(Long accommodationId, Availability availability);
     public List<FileSystemResource> getAllImages(Long accommodationId);
     public float getAvgRating(Long id);
-    public List<AccommodationBasicDTO> getAvgRatings(List<AccommodationBasicDTO> accommodations);
+    public Collection<AccommodationBasicDTO> getAvgRatings(Collection<AccommodationBasicDTO> accommodations);
     public List<Accommodation> getOwnerAccommodation(Long ownerId);
+    public SearchResponseDTO getSearchResponseForSearch(Collection<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons, String location, int page, int size);
+    public SearchResponseDTO getSearchReposnseForFilter(Collection<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons, String location, int page, int size, String sort, FilterDTO filter);
+    public float getMinPrice(Collection<AccommodationBasicDTO> accommodationBasicDTO);
+    public float getMaxPrice(Collection<AccommodationBasicDTO> accommodationBasicDTO);
+    public Collection<AccommodationBasicDTO> paging(Collection<AccommodationBasicDTO> accommodationBasicDTO, int page, int size);
+    public Collection<Accommodation> filterAccommodations(int persons, String location, LocalDate bein, LocalDate end, FilterDTO filter);
 }

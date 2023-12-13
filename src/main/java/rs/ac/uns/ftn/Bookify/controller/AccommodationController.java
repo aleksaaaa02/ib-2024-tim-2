@@ -2,7 +2,6 @@ package rs.ac.uns.ftn.Bookify.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -47,29 +46,11 @@ public class AccommodationController {
         LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, beginL, endL);
-
-        List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
+        Collection<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
                 .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
                 .collect(Collectors.toList());
 
-        accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, beginL, endL, persons);
-        long totalResults = accommodationService.countByLocationAndGuestRange(persons, location, beginL ,endL);
-        float minPrice, maxPrice;
-        try {
-            minPrice = accommodationBasicDTO.stream().min(Comparator.comparingDouble(AccommodationBasicDTO::getTotalPrice)).orElse(null).getTotalPrice();
-            maxPrice = accommodationBasicDTO.stream().max(Comparator.comparingDouble(AccommodationBasicDTO::getTotalPrice)).orElse(null).getTotalPrice();
-        } catch (NullPointerException e){
-            minPrice = 0;
-            maxPrice = 0;
-        }
-        if ((page+1)*size > accommodationBasicDTO.size())
-            accommodationBasicDTO = accommodationBasicDTO.subList(page*size, accommodationBasicDTO.size());
-        else
-            accommodationBasicDTO = accommodationBasicDTO.subList(page*size, (page+1)*size);
-
-        accommodationBasicDTO = accommodationService.getAvgRatings(accommodationBasicDTO);
-        SearchResponseDTO searchResponseDTO = new SearchResponseDTO(accommodationBasicDTO, (int) totalResults, minPrice, maxPrice);
-
+        SearchResponseDTO searchResponseDTO = accommodationService.getSearchResponseForSearch(accommodationBasicDTO, beginL, endL, persons, location, page, size);
         return new ResponseEntity<>(searchResponseDTO, HttpStatus.OK);
     }
 
@@ -81,26 +62,12 @@ public class AccommodationController {
         LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, beginL, endL);
-        accommodations = accommodationService.getForFilter((List<Accommodation>) accommodations, filter);
-
+        Collection<Accommodation> accommodations = accommodationService.filterAccommodations(persons, location, beginL, endL, filter);
         List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
                     .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
                     .collect(Collectors.toList());
 
-        accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, beginL, endL, persons);
-        accommodationBasicDTO = accommodationService.getForPriceRange(accommodationBasicDTO, filter);
-        accommodationBasicDTO = accommodationService.sortAccommodationBasicDTO(accommodationBasicDTO, sort);
-        int totalResults = accommodationBasicDTO.size();
-
-        if ((page+1)*size > accommodationBasicDTO.size())
-            accommodationBasicDTO = accommodationBasicDTO.subList(page*size, accommodationBasicDTO.size());
-        else
-            accommodationBasicDTO = accommodationBasicDTO.subList(page*size, (page+1)*size);
-
-        accommodationBasicDTO = accommodationService.getAvgRatings(accommodationBasicDTO);
-        SearchResponseDTO searchResponseDTO = new SearchResponseDTO(accommodationBasicDTO, totalResults, 0, 0);
-
+        SearchResponseDTO searchResponseDTO = accommodationService.getSearchReposnseForFilter(accommodationBasicDTO, beginL, endL, persons, location, page, size, sort, filter);
         return new ResponseEntity<>(searchResponseDTO, HttpStatus.OK);
     }
 
@@ -108,10 +75,6 @@ public class AccommodationController {
     public ResponseEntity<AccommodationDetailDTO> getAccommodationDetails(@PathVariable Long accommodationId) {
         //returns details about one accommodation
         AccommodationDetailDTO accommodationDetailDTO = accommodationService.getAccommodationDetails(accommodationId);
-        accommodationDetailDTO.setAvgRating(accommodationService.getAvgRating(accommodationId));
-        OwnerDTO o = userService.findbyAccommodationId(accommodationId);
-        o.setAvgRating(userService.getAvgRating(o.getId()));
-        accommodationDetailDTO.setOwner(o);
         return new ResponseEntity<>(accommodationDetailDTO, HttpStatus.OK);
     }
 
