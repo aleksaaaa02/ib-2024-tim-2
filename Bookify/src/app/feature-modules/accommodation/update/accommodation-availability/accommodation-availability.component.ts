@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AccommodationAvailability } from '../../model/accommodation-availability.form.model';
 
 @Component({
   selector: 'app-accommodation-availability',
@@ -7,8 +8,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrl: './accommodation-availability.component.css'
 })
 export class AccommodationAvailabilityComponent implements OnChanges {
-  @Output() availibilityChanged = new EventEmitter<any>();
+  @Output() availibilityChanged = new EventEmitter<AccommodationAvailability>();
   @Input() submitted: boolean = false;
+  @Input() availabilityInfo: AccommodationAvailability | null = null;
 
   form: FormGroup;
 
@@ -25,6 +27,10 @@ export class AccommodationAvailabilityComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (this.submitted) {
       this.form.markAllAsTouched();
+    }
+    if(this.availabilityInfo) {
+      this.form.get('cancellationDeadline')?.setValue(this.availabilityInfo.cancellationDeadline);
+      this.form.get('pricePer')?.setValue(this.availabilityInfo.pricePer);
     }
   }
 

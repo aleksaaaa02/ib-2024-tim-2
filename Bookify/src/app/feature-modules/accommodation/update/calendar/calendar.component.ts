@@ -288,6 +288,6 @@ export class CalendarComponent implements OnInit {
   }
 
   finish() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/accommodations']);
   }
 }

@@ -15,7 +15,7 @@ export class OwnerAccommodationsComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.accommodationService.getOwnerAccommodations(7).subscribe({
+    this.accommodationService.getOwnerAccommodations(3).subscribe({
       next: (data: AccommodationBasicModel[]) => {
         this.accommodations = data;
       },
