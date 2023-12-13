@@ -175,6 +175,13 @@ public class UserService implements IUserService {
         userRepository.save(owner);
     }
 
+    @Override
+    public OwnerDTO setOwnerForAccommodation(Long id) {
+        OwnerDTO o = findbyAccommodationId(id);
+        o.setAvgRating(getAvgRating(o.getId()));
+        return o;
+    }
+
     private void updateUserData(UserDetailDTO updatedUser, User u) {
         u.getAddress().setAddress(updatedUser.getAddress().getAddress());
         u.getAddress().setCity(updatedUser.getAddress().getCity());
