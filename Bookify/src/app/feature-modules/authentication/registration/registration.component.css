@@ -20,7 +20,7 @@ mat-button-toggle-group {
 }
 
 .registration-registration {
-    gap: 10px;
+    /* gap: 10px; */
     width: 100%;
     display: flex;
     overflow: hidden;
@@ -62,7 +62,7 @@ mat-button-toggle-group {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 2rem;
 }
 
 .registration-form> :last-child {
@@ -122,6 +122,7 @@ mat-button-toggle-group {
     height: 6.9vh;
     border-width: 0px;
     border-radius: 40px;
+    margin-top: 1rem;
     background-color: rgb(46, 64, 87);
     cursor: pointer;
 }
@@ -140,6 +141,10 @@ mat-button-toggle-group {
             rgba(46, 64, 87, 0.49) 38.87%,
             #2e4057,
             #2e4057);
+}
+
+mat-error{
+    font-size: 0.8rem;
 }
 
 @media(max-width: 991px) {

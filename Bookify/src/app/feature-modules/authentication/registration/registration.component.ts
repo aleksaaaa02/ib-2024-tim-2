@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AuthenticationService } from '../authentication.service';
 
 @Component({
@@ -8,22 +8,51 @@ import { AuthenticationService } from '../authentication.service';
   styleUrl: './registration.component.css'
 })
 export class RegistrationComponent implements OnInit {
-  email = new FormControl('', [Validators.required, Validators.email]);
   hide1 = true;
   hide2 = true;
   countries: Promise<string[]> = Promise.resolve([]);
-
-  constructor(private authenticationService: AuthenticationService) {}
   
+  form: FormGroup;
+  submitted: boolean = false;
+
+  constructor(private authenticationService: AuthenticationService, private fb: FormBuilder) {
+    this.form = this.fb.group({
+      email: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')]],
+      password: ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]],
+      confirmPassword: ['', [Validators.required, this.passwordValidator]],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      country: ['', Validators.required],
+      city: ['', Validators.required],
+      streetAddress: ['', Validators.required],
+      zipCode: ['', Validators.required],
+      phone: ['', Validators.required],
+      role: ['', Validators.required],
+    });
+  }
+
   ngOnInit(): void {
     this.countries = this.authenticationService.getCountries();
   }
   
-  getErrorMessage() {
-    if (this.email.hasError('required')) {
-      return 'You must enter a value';
+  get passwordValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!this.form) {
+        return null;
+      }
+      const password = this.form.get('password')?.value;
+      const confirmPassword = control.value;
+      if (password !== confirmPassword) {
+        return {different: true, message: 'Repeated password should be same as password'}
+      }
+      return null;
     }
+  }
 
-    return this.email.hasError('email') ? 'Not a valid email' : '';
+  onSubmit() {
+    if(this.form.valid){
+      console.log("validno");
+    }
+    this.submitted = true;
   }
 }
