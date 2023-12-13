@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ExceptionResolver {
 
-    @ExceptionHandler(value = {BadRequestException.class, UserIsBlockedException.class, UserNotActivatedException.class})
+    @ExceptionHandler(value = {BadRequestException.class, UserIsBlockedException.class,
+            UserNotActivatedException.class, UserDeletionException.class})
     public ResponseEntity<String> badRequestException(RuntimeException exception){
         return new ResponseEntity<String>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }

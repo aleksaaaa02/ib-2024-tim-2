@@ -5,6 +5,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.*;
+import rs.ac.uns.ftn.Bookify.exception.UserDeletionException;
 import rs.ac.uns.ftn.Bookify.exception.UserIsBlockedException;
 import rs.ac.uns.ftn.Bookify.exception.UserNotActivatedException;
 import rs.ac.uns.ftn.Bookify.model.*;
@@ -209,13 +210,14 @@ public class UserService implements IUserService {
         switch (getRole(user)) {
             case "OWNER":
                 for(Accommodation acc :((Owner)user).getAccommodations()){
-                    if(reservationService.hasFutureReservationsAccommodation(acc)) return false;
+                    if(reservationService.hasFutureReservationsAccommodation(acc)) throw new UserDeletionException("Some of your accommodations have active future reservations.");
                 }
                 return true;
             case "GUEST":
-                return !reservationService.hasFutureReservationsGuest(user.getId());
+                if(reservationService.hasFutureReservationsGuest(user.getId())) throw new UserDeletionException("You have active future reservations.");
+                return true;
             default:
-                return false;
+                throw new UserDeletionException("Administrator account can't be deleted");
         }
     }
 }

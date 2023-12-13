@@ -46,7 +46,7 @@ public class UserController {
     private JWTUtils jwtUtils;
 
 
-    @GetMapping(value = "/reported", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Collection<ReportedUserDTO>> getReportedUsers() {
         //return all reported users
@@ -118,11 +118,11 @@ public class UserController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails user = (UserDetails) authentication.getPrincipal();
         User u = userService.get(user.getUsername());
-        if (userService.isLoginAvailable(u.getId())) {
-            String jwt = jwtUtils.generateToken(user.getUsername(), u.getId(), userService.getRole(u));
-            int expiresIn = jwtUtils.getExpiredIn();
-            return new ResponseEntity<>(new UserJWT(jwt, (long) expiresIn), HttpStatus.OK);
-        }
+            if (userService.isLoginAvailable(u.getId())) {
+                String jwt = jwtUtils.generateToken(user.getUsername(), u.getId(), userService.getRole(u));
+                int expiresIn = jwtUtils.getExpiredIn();
+                return new ResponseEntity<>(new UserJWT(jwt, (long) expiresIn), HttpStatus.OK);
+            }
 
         return null;
     }
@@ -131,7 +131,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         boolean success = userService.delete(userId);
-        if (success) return new ResponseEntity<>("Account deleted successfully!", HttpStatus.OK);
+        if(success) return new ResponseEntity<>("Account deleted successfully!", HttpStatus.OK);
         return new ResponseEntity<>("Account has not been deleted", HttpStatus.BAD_REQUEST);
     }
 
@@ -160,7 +160,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<Long> changeAccountImage(@RequestParam("image") MultipartFile image, @PathVariable Long userId) throws Exception {
         Long id = userService.updateImage(image.getBytes(), image.getName(), userId);
-        if (id < 0) {
+        if(id < 0){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(id, HttpStatus.OK);
@@ -177,20 +177,20 @@ public class UserController {
     public ResponseEntity<Long> getAccountImageId(@PathVariable Long userId) throws Exception {
         User u = userService.get(userId);
         Long imageId = -1L;
-        if (u.getProfileImage() != null) {
-            imageId = u.getProfileImage().getId();
+        if(u.getProfileImage() != null){
+            imageId =u.getProfileImage().getId();
         }
         return new ResponseEntity<>(imageId, HttpStatus.OK);
     }
 
     @GetMapping(value = "/logout")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
-    public ResponseEntity<?> logout() {
+    public ResponseEntity<?> logout(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!(auth instanceof AnonymousAuthenticationToken)) {
+        if(!(auth instanceof AnonymousAuthenticationToken)){
             SecurityContextHolder.clearContext();
             return new ResponseEntity<String>("Goodbye", HttpStatus.OK);
-        } else {
+        } else{
             throw new BadRequestException("User is not authenticated");
         }
     }
