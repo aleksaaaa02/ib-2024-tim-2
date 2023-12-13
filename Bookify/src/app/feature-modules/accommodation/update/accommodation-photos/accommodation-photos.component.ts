@@ -9,11 +9,11 @@ import { ImagesDTO } from '../../model/images';
 export class AccommodationPhotosComponent implements OnChanges {
   @Output() photosChanged = new EventEmitter<ImagesDTO[]>();
   @Input() images: ImagesDTO[];
-  
+
   selectedImagesObject: ImagesDTO[] = [];
-  
+
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.images){
+    if (this.images) {
       this.selectedImagesObject = this.images;
     }
   }

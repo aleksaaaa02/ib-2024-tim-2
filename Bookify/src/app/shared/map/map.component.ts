@@ -20,7 +20,6 @@ export class MapComponent implements AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.locationAddress !== "" && !this.clickedMap) {
-      console.log(this.locationAddress);
       this.search(this.locationAddress);
     }
     this.clickedMap = false;

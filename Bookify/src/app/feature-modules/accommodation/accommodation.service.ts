@@ -102,7 +102,7 @@ export class AccommodationService {
   }
 
   getImages(accommodationId: number): Observable<Uint8Array[]> {
-    return this.httpClient.get<Uint8Array[]>(environment.apiAccommodation + "/images/" + accommodationId, { responseType: "json" });
+    return this.httpClient.get<Uint8Array[]>(environment.apiAccommodation + "/images/" + accommodationId);
   }
 
   addPriceList(accommodationId: number, priceList: PriceListDTO) {
