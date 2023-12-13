@@ -51,15 +51,19 @@ export class NavigationBarComponent implements OnInit {
       this.role = result;
       this.setAccountImageIcon();
     });
-    this.setAccountImageIcon();
-    if (this.role === '')
+    if (this.role === '') {
       this.role = this.authenticationService.getRole();
+      this.setAccountImageIcon();
+    }
   }
 
-  private setAccountImageIcon() {
-    this.accountService.getAccountImageId(this.authenticationService.getUserId()).subscribe({
+  private setAccountImageIcon(): void {
+    this.userImage = "assets/images/user.jpg";
+    const id: number = this.authenticationService.getUserId();
+    if(id === -1) return;
+    this.accountService.getAccountImageId(id).subscribe({
       next: (id: number) => {
-        if (id) {
+        if (id !== -1) {
           this.accountService.getAccountImage(id).subscribe({
             next: (image: Blob) => {
               const reader: FileReader = new FileReader();
@@ -69,7 +73,7 @@ export class NavigationBarComponent implements OnInit {
               reader.readAsDataURL(image);
             },
             error: err => {
-              if(err.status===404){
+              if (err.status === 404) {
 
               }
             }

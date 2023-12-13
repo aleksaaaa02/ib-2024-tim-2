@@ -8,7 +8,8 @@ import {PasswordChangeDialogComponent} from "../password-change-dialog/password-
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {DefaultSnackbarComponent} from "../../../layout/default-snackbar/default-snackbar.component";
-import { AccountDeleteDialogComponent } from '../account-delete-dialog/account-delete-dialog.component';
+import {AccountDeleteDialogComponent} from '../account-delete-dialog/account-delete-dialog.component';
+import {MessageDialogComponent} from "../../../layout/message-dialog/message-dialog.component";
 
 @Component({
   selector: 'app-user-information',
@@ -56,8 +57,7 @@ export class UserInformationComponent implements OnInit {
   constructor(private authenticationService: AuthenticationService,
               private accountService: AccountService,
               public dialog: MatDialog,
-              private router: Router,
-              private snackbar: MatSnackBar) {
+              private router: Router) {
 
   }
 
@@ -67,6 +67,7 @@ export class UserInformationComponent implements OnInit {
         this.account = data;
         this.setFormData();
         this.userInfoForm.updateValueAndValidity();
+        this.image = "assets/images/user.jpg"
         this.accountService.getAccountImage(this.account.imageId).subscribe({
           next: (data: Blob): void => {
             const reader = new FileReader();
@@ -77,13 +78,12 @@ export class UserInformationComponent implements OnInit {
             reader.readAsDataURL(data);
           },
           error: err => {
-            console.error(err);
+
           }
         })
       },
       error: (err) => {
-        console.error(err);
-        this.openSnackBar('Ops something went wrong!', "account");
+
       }
     });
     this.countries = this.authenticationService.getCountries();
@@ -104,11 +104,10 @@ export class UserInformationComponent implements OnInit {
         next: () => {
           this.isDisabled = true;
           this.toggleFormState();
-          this.openSnackBar('User information changed successfully!', "account");
+          this.openDialog('User information changed successfully!', "account");
         },
         error: err => {
-          this.openSnackBar('Ops something went wrong!', "account");
-          console.error(err);
+
         }
       })
     }
@@ -125,15 +124,15 @@ export class UserInformationComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       const password = result.password;
+      if (password === '' || !password) return;
       this.accountService.updatePassword(this.account.id, password).subscribe({
         next: (value: string) => {
           this.isDisabled = true;
           this.toggleFormState();
-          this.openSnackBar('Password changed successfully!', "account");
+          this.openDialog(value);
         },
         error: err => {
-          console.error(err);
-          this.openSnackBar('Ops something went wrong!', "account");
+          this.openDialog(err);
         }
       });
     });
@@ -145,11 +144,12 @@ export class UserInformationComponent implements OnInit {
         if (value) {
           this.accountService.deleteAccount(this.account.id).subscribe({
             next: (value: string) => {
-              this.openSnackBar(value, "");
+              this.authenticationService.logout();
+              this.openDialog("Account deleted successfully!", '');
             },
             error: (err) => {
               console.log(err);
-              this.openSnackBar(err.error, "account");
+              this.openDialog(err.error);
             }
           });
         }
@@ -182,11 +182,11 @@ export class UserInformationComponent implements OnInit {
     if (selectedFile && ['image/jpeg', 'image/png'].includes(selectedFile.type)) {
       this.accountService.updateAccountImage(this.authenticationService.getUserId(), selectedFile).subscribe({
         next: () => {
-          this.openSnackBar('Account image changed successfully!', "account");
+          this.openDialog('Account image changed successfully!', "account");
         },
         error: err => {
           console.error(err);
-          this.openSnackBar('Ops something went wrong!', "account");
+          this.openDialog('Ops something went wrong!', "account");
         }
       })
     }
@@ -201,11 +201,14 @@ export class UserInformationComponent implements OnInit {
     }
   }
 
-
-  openSnackBar(message: string, route: string): void {
-    this.snackbar.openFromComponent(DefaultSnackbarComponent, {
-      data: {action: this.refreshPage(route)},
-      announcementMessage: message
+  openDialog(message: string, route?: string): void {
+    this.dialog.open(MessageDialogComponent, {data: {message:message}}).afterClosed().subscribe({
+      next: () => {
+        if(!route) return;
+        this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+        this.router.navigate([route]);
+      });
+      }
     })
   }
 

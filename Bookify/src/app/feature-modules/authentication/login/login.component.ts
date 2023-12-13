@@ -4,6 +4,8 @@ import {AuthenticationService} from "../authentication.service";
 import {Credentials} from "../model/credentials";
 import {UserJWT} from "../model/UserJWT";
 import {Router} from "@angular/router";
+import {MatDialog} from "@angular/material/dialog";
+import {MessageDialogComponent} from "../../../layout/message-dialog/message-dialog.component";
 
 @Component({
   selector: 'app-login',
@@ -21,7 +23,8 @@ export class LoginComponent {
   hide = true;
 
   constructor(private authenticationService: AuthenticationService,
-              private router: Router) {
+              private router: Router,
+              private dialog: MatDialog) {
   }
 
   getErrorMessage() {
@@ -43,6 +46,14 @@ export class LoginComponent {
          localStorage.setItem('user', response.accessToken);
          this.authenticationService.setUser();
          this.router.navigate(['']);
+        },
+        error: err => {
+          console.log(err);
+          if(err.status === 400 ){
+            this.dialog.open(MessageDialogComponent, { data: {message:err.error}} )
+          } else if(err.status === 401){
+            this.dialog.open(MessageDialogComponent, { data: {message:err.error.message}} )
+          }
         }
       });
     }

@@ -70,5 +70,6 @@ export class AuthenticationService {
   logout(): void {
     this.user$.next('');
     localStorage.removeItem('user');
+    this.httpClient.get(environment.apiHost + "users/logout");
   }
 }
