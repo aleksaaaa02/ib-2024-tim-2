@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.*;
+import rs.ac.uns.ftn.Bookify.exception.UserIsBlockedException;
+import rs.ac.uns.ftn.Bookify.exception.UserNotActivatedException;
 import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IUserRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
@@ -89,7 +91,14 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean login(UserCredentialsDTO userCredentials) {
+    public boolean isLoginAvailable(Long userId) throws RuntimeException{
+        User user = get(userId);
+        if(user.isBlocked()) {
+            throw new UserIsBlockedException("Account is currently blocked");
+        }
+        if(!user.getActive().isActive()) {
+            throw new UserNotActivatedException("Account is not activated");
+        }
         return true;
     }
 
