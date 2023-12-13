@@ -17,7 +17,7 @@ public interface IUserService {
     public boolean changePassword(Long userId, String newPassword);
     public boolean resetPassword();
     public boolean activateUser(Long userId);
-    public boolean isLoginAvailable(Long userId) throws Exception;
+    public boolean isLoginAvailable(Long userId);
     public boolean delete(Long userId);
     public boolean block(Long userId);
     public Collection<User> searchUsers(String searchParam);

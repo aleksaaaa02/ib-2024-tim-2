@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.Bookify.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.exception.UserIsBlockedException;
@@ -22,11 +23,15 @@ public class UserService implements IUserService {
     private final IUserRepository userRepository;
     private final IReservationService reservationService;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserService(IImageService imageService, IUserRepository userRepository, IReservationService reservationService) {
+    public UserService(IImageService imageService, IUserRepository userRepository, IReservationService reservationService,
+                       PasswordEncoder passwordEncoder) {
         this.imageService = imageService;
         this.userRepository = userRepository;
         this.reservationService = reservationService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -74,7 +79,7 @@ public class UserService implements IUserService {
             return false;
         }
         User user = u.get();
-        user.setPassword(newPassword); // TO-DO hash the password before storing it in database
+        user.setPassword(passwordEncoder.encode(newPassword)); // TO-DO hash the password before storing it in database
         userRepository.save(user);
         return true;
     }
@@ -91,13 +96,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean isLoginAvailable(Long userId) throws RuntimeException{
+    public boolean isLoginAvailable(Long userId) {
         User user = get(userId);
         if(user.isBlocked()) {
-            throw new UserIsBlockedException("Account is currently blocked");
+            throw new UserIsBlockedException();
         }
         if(!user.getActive().isActive()) {
-            throw new UserNotActivatedException("Account is not activated");
+            throw new UserNotActivatedException();
         }
         return true;
     }
