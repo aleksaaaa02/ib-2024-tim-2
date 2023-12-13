@@ -10,8 +10,7 @@
     </div>
     <p class="subtitle">{{accommodation.address.address}}, {{accommodation.address.city}}, {{accommodation.address.country}}</p>
     <div class="button-holder">
-      <button class="button">Remove</button>
-      <button class="button">Price</button>
+      <button class="button" (click)="editPrice()">Price</button>
       <button class="button" (click)="editAccommodation()">Edit</button>
     </div>
   </div>

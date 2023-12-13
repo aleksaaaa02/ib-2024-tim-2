@@ -33,5 +33,8 @@ export class OwnerAccommodationsCardComponent implements OnInit {
   editAccommodation() {
     this.router.navigate(['/accommodation/modify/', this.accommodation.id]);
   }
-
+  
+  editPrice() {
+    this.router.navigate(['/accommodation/calendar/', this.accommodation.id]);
+  }
 }
