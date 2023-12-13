@@ -16,8 +16,8 @@ export class AuthenticationService {
               private httpClient: HttpClient) {
   }
 
-  user$ = new BehaviorSubject("");
-  userState = this.user$.asObservable();
+  user$ :BehaviorSubject<string> = new BehaviorSubject("");
+  userState:Observable<string> = this.user$.asObservable();
 
   private headers = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -46,16 +46,29 @@ export class AuthenticationService {
     return localStorage.getItem('user') != null;
   }
 
-  getRole(): any {
+  getRole(): string {
     if (this.isLoggedIn()) {
       const accessToken: any = localStorage.getItem('user');
       const helper: JwtHelperService = new JwtHelperService();
       return helper.decodeToken(accessToken).role;
     }
-    return null;
+    return '';
+  }
+  getUserId(): number {
+    if(this.isLoggedIn()) {
+      const accessToken: any = localStorage.getItem('user');
+      const helper: JwtHelperService = new JwtHelperService();
+      return helper.decodeToken(accessToken).id
+    }
+    return -1;
   }
 
   setUser(): void {
     this.user$.next(this.getRole());
+  }
+
+  logout(): void {
+    this.user$.next('');
+    localStorage.removeItem('user');
   }
 }

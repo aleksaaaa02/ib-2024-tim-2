@@ -62,7 +62,7 @@ export class UserInformationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.accountService.getUser(1).subscribe({
+    this.accountService.getUser(this.authenticationService.getUserId()).subscribe({
       next: (data: Account) => {
         this.account = data;
         this.setFormData();
@@ -180,7 +180,7 @@ export class UserInformationComponent implements OnInit {
   onFileSelected(event: Event): void {
     const selectedFile = (event.target as HTMLInputElement).files?.item(0);
     if (selectedFile && ['image/jpeg', 'image/png'].includes(selectedFile.type)) {
-      this.accountService.updateAccountImage(1, selectedFile).subscribe({
+      this.accountService.updateAccountImage(this.authenticationService.getUserId(), selectedFile).subscribe({
         next: () => {
           this.openSnackBar('Account image changed successfully!', "account");
         },
@@ -213,5 +213,10 @@ export class UserInformationComponent implements OnInit {
     this.isDisabled = true;
     this.toggleFormState();
     this.setFormData();
+  }
+
+  OnLogoutClick(): void {
+    this.authenticationService.logout();
+    this.router.navigate(['']);
   }
 }
