@@ -2,15 +2,16 @@ package rs.ac.uns.ftn.Bookify.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
 import rs.ac.uns.ftn.Bookify.mapper.AccommodationBasicDTOMapper;
+import rs.ac.uns.ftn.Bookify.mapper.AccommodationDTOMapper;
 import rs.ac.uns.ftn.Bookify.mapper.AccommodationInesertDTOMapper;
 import rs.ac.uns.ftn.Bookify.mapper.PriceListItemDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.*;
@@ -26,7 +27,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/v1/accommodations")
 public class AccommodationController {
     @Autowired
@@ -47,29 +47,11 @@ public class AccommodationController {
         LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, beginL, endL);
-
-        List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
+        Collection<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
                 .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
                 .collect(Collectors.toList());
 
-        accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, beginL, endL, persons);
-        long totalResults = accommodationService.countByLocationAndGuestRange(persons, location, beginL ,endL);
-        float minPrice, maxPrice;
-        try {
-            minPrice = accommodationBasicDTO.stream().min(Comparator.comparingDouble(AccommodationBasicDTO::getTotalPrice)).orElse(null).getTotalPrice();
-            maxPrice = accommodationBasicDTO.stream().max(Comparator.comparingDouble(AccommodationBasicDTO::getTotalPrice)).orElse(null).getTotalPrice();
-        } catch (NullPointerException e){
-            minPrice = 0;
-            maxPrice = 0;
-        }
-        if ((page+1)*size > accommodationBasicDTO.size())
-            accommodationBasicDTO = accommodationBasicDTO.subList(page*size, accommodationBasicDTO.size());
-        else
-            accommodationBasicDTO = accommodationBasicDTO.subList(page*size, (page+1)*size);
-
-        accommodationBasicDTO = accommodationService.getAvgRatings(accommodationBasicDTO);
-        SearchResponseDTO searchResponseDTO = new SearchResponseDTO(accommodationBasicDTO, (int) totalResults, minPrice, maxPrice);
-
+        SearchResponseDTO searchResponseDTO = accommodationService.getSearchResponseForSearch(accommodationBasicDTO, beginL, endL, persons, location, page, size);
         return new ResponseEntity<>(searchResponseDTO, HttpStatus.OK);
     }
 
@@ -81,26 +63,12 @@ public class AccommodationController {
         LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-        Collection<Accommodation> accommodations = accommodationService.getAccommodationsForSearch(persons, location, beginL, endL);
-        accommodations = accommodationService.getForFilter((List<Accommodation>) accommodations, filter);
-
+        Collection<Accommodation> accommodations = accommodationService.filterAccommodations(persons, location, beginL, endL, filter);
         List<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
                     .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
                     .collect(Collectors.toList());
 
-        accommodationBasicDTO = accommodationService.setPrices(accommodationBasicDTO, beginL, endL, persons);
-        accommodationBasicDTO = accommodationService.getForPriceRange(accommodationBasicDTO, filter);
-        accommodationBasicDTO = accommodationService.sortAccommodationBasicDTO(accommodationBasicDTO, sort);
-        int totalResults = accommodationBasicDTO.size();
-
-        if ((page+1)*size > accommodationBasicDTO.size())
-            accommodationBasicDTO = accommodationBasicDTO.subList(page*size, accommodationBasicDTO.size());
-        else
-            accommodationBasicDTO = accommodationBasicDTO.subList(page*size, (page+1)*size);
-
-        accommodationBasicDTO = accommodationService.getAvgRatings(accommodationBasicDTO);
-        SearchResponseDTO searchResponseDTO = new SearchResponseDTO(accommodationBasicDTO, totalResults, 0, 0);
-
+        SearchResponseDTO searchResponseDTO = accommodationService.getSearchReposnseForFilter(accommodationBasicDTO, beginL, endL, persons, location, page, size, sort, filter);
         return new ResponseEntity<>(searchResponseDTO, HttpStatus.OK);
     }
 
@@ -108,10 +76,6 @@ public class AccommodationController {
     public ResponseEntity<AccommodationDetailDTO> getAccommodationDetails(@PathVariable Long accommodationId) {
         //returns details about one accommodation
         AccommodationDetailDTO accommodationDetailDTO = accommodationService.getAccommodationDetails(accommodationId);
-        accommodationDetailDTO.setAvgRating(accommodationService.getAvgRating(accommodationId));
-        OwnerDTO o = userService.findbyAccommodationId(accommodationId);
-        o.setAvgRating(userService.getAvgRating(o.getId()));
-        accommodationDetailDTO.setOwner(o);
         return new ResponseEntity<>(accommodationDetailDTO, HttpStatus.OK);
     }
 
@@ -146,6 +110,7 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Collection<AccommodationBasicDTO>> getOwnersAccommodations(@PathVariable Long ownerId) {
         List<AccommodationBasicDTO> response = new ArrayList<>();
         for(Accommodation accommodation : this.accommodationService.getOwnerAccommodation(ownerId)){
@@ -155,6 +120,7 @@ public class AccommodationController {
     }
 
     @GetMapping("/favorites/{guestId}")
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<Collection<AccommodationBasicDTO>> getFavoritesAccommodations(@PathVariable Long guestId) {
         //returns all favorites accommodation of user
         AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
@@ -176,6 +142,7 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/charts", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Collection<AccommodationsChartDTO>> getChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end) {
         //return all charts for period
@@ -187,6 +154,7 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/charts-download", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<String> downloadChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end) {
         //download pdf report for period
@@ -194,6 +162,7 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/charts/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@PathVariable Long accommodationId, @PathVariable int year) {
         //return all charts for accommodation
         Collection<ChartDTO> charts = new HashSet<>();
@@ -204,12 +173,14 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/charts-download/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<String> downloadChartsByAccommodation(@PathVariable Long accommodationId, @PathVariable int year) {
         //download pdf report for accommodation in one year
         return new ResponseEntity<>("PDF", HttpStatus.OK);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Accommodation> insert(@RequestParam Long ownerId, @RequestBody AccommodationInsertDTO accommodationDTO) {
         //insert new accommodation
         Accommodation accommodation = AccommodationInesertDTOMapper.fromDTOtoAccommodation(accommodationDTO);
@@ -221,18 +192,23 @@ public class AccommodationController {
     }
 
     @PostMapping("/add-to-favorites/{guestId}/{accommodationId}")
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<String> addAccommodationToFavorites(@PathVariable Long guestId, @PathVariable Long accommodationId) {
         //inserts accommodation to favorites
         return new ResponseEntity<>("Accommodation added to favorites", HttpStatus.OK);
     }
 
-    @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationDTO> updateAccommodation(@RequestBody AccommodationDTO accommodation) {
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
+    public ResponseEntity<Long> updateAccommodation(@RequestBody AccommodationDTO dto) throws Exception {
         //update accommodation
-        return new ResponseEntity<>(accommodation, HttpStatus.OK);
+        Accommodation accommodation = AccommodationDTOMapper.fromDTOtoAccommodation(dto);
+        accommodationService.update(accommodation);
+        return new ResponseEntity<Long>(accommodation.getId(), HttpStatus.OK);
     }
 
     @PutMapping(value = "/approve/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<AccommodationDTO> approveAccommodation(@PathVariable Long accommodationId) {
         //change to accepted
         AccommodationDTO approveAccommodation = new AccommodationDTO();
@@ -240,6 +216,7 @@ public class AccommodationController {
     }
 
     @PutMapping(value = "/reject/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<AccommodationDTO> rejectAccommodation(@PathVariable Long accommodationId) {
         //change to reject
         AccommodationDTO rejectAccommodation = new AccommodationDTO();
@@ -247,12 +224,14 @@ public class AccommodationController {
     }
 
     @DeleteMapping("/remove-from-favorites/{guestId}/{accommodationId}")
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<String> removeAccommodationFromFavorites(@PathVariable Long guestId, @PathVariable Long accommodationId) {
         //delete accommodation from favorites
         return new ResponseEntity<>("Accommodation removed from favorites", HttpStatus.OK);
     }
 
     @DeleteMapping("/{accommodationId}")
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<String> delete(@PathVariable Long accommodationId) {
         //delete accommodation
         return new ResponseEntity<>("Accommodation removed", HttpStatus.OK);
@@ -271,18 +250,21 @@ public class AccommodationController {
     }
 
     @PostMapping("/images/{accommodationId}")
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Long> uploadAccommodationImage(@PathVariable Long accommodationId, @RequestParam MultipartFile image) throws Exception {
         imageService.save(image.getBytes(), accommodationId.toString(), image.getName());
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @PostMapping("/{accommodationId}")
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Long> uploadAccommodationImages(@PathVariable Long accommodationId, @RequestParam("images") List<MultipartFile> images) throws Exception {
         imageService.save(accommodationId, images);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @PostMapping("/{accommodationId}/addPrice")
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Long> addPriceListItem(@PathVariable Long accommodationId, @RequestBody PriceListItemDTO dto) {
         PricelistItem item = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
         Availability availability = PriceListItemDTOMapper.fromDTOtoAvailability(dto);
@@ -292,6 +274,7 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/{accommodationId}/getPrice", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Collection<PriceListItemDTO>> getAccommodationPriceListItems(@PathVariable Long accommodationId) {
         Collection<PricelistItem> priceListItems = accommodationService.getAccommodationPriceListItems(accommodationId);
         Collection<PriceListItemDTO> priceListItemDTOS = PriceListItemDTOMapper.fromPriceListItemtoDTO(priceListItems);
@@ -299,9 +282,18 @@ public class AccommodationController {
     }
 
     @DeleteMapping("/price/{accommodationId}")
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<PriceListItemDTO> deletePriceList(@PathVariable Long accommodationId, @RequestBody PriceListItemDTO dto) {
         PricelistItem pricelistItem = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
         accommodationService.deletePriceListItem(accommodationId, pricelistItem);
         return new ResponseEntity<PriceListItemDTO>(dto, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/edit/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
+    public ResponseEntity<AccommodationInsertDTO> getAccommodation(@PathVariable Long accommodationId) {
+        Accommodation accommodation = accommodationService.getAccommodation(accommodationId);
+        AccommodationInsertDTO accommodationInsertDTO = AccommodationInesertDTOMapper.fromAccommodationtoDTO(accommodation);
+        return new ResponseEntity<>(accommodationInsertDTO, HttpStatus.OK);
     }
 }

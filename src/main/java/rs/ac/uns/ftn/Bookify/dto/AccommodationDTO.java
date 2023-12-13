@@ -21,12 +21,8 @@ public class AccommodationDTO {
     private int maxGuest;
     private int cancellationDeadline;
     private boolean manual = true;
-    private List<PricelistItem> priceList;
-    private List<Availability> availability;
     private List<Filter> filters;
     private AccommodationType accommodationType;
     private PricePer pricePer;
     private Address address;
-    private Owner owner;
-    private Long imageId;
 }

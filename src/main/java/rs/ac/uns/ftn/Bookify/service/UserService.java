@@ -2,8 +2,12 @@ package rs.ac.uns.ftn.Bookify.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.*;
+import rs.ac.uns.ftn.Bookify.exception.UserDeletionException;
+import rs.ac.uns.ftn.Bookify.exception.UserIsBlockedException;
+import rs.ac.uns.ftn.Bookify.exception.UserNotActivatedException;
 import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IUserRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
@@ -20,17 +24,26 @@ public class UserService implements IUserService {
     private final IUserRepository userRepository;
     private final IReservationService reservationService;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserService(IImageService imageService, IUserRepository userRepository, IReservationService reservationService) {
+    public UserService(IImageService imageService, IUserRepository userRepository, IReservationService reservationService,
+                       PasswordEncoder passwordEncoder) {
         this.imageService = imageService;
         this.userRepository = userRepository;
         this.reservationService = reservationService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
     @Override
     public Collection<User> getAll() {
         return null;
+    }
+
+    @Override
+    public User get(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Override
@@ -67,7 +80,7 @@ public class UserService implements IUserService {
             return false;
         }
         User user = u.get();
-        user.setPassword(newPassword); // TO-DO hash the password before storing it in database
+        user.setPassword(passwordEncoder.encode(newPassword)); // TO-DO hash the password before storing it in database
         userRepository.save(user);
         return true;
     }
@@ -84,7 +97,14 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean login(UserCredentialsDTO userCredentials) {
+    public boolean isLoginAvailable(Long userId) {
+        User user = get(userId);
+        if(user.isBlocked()) {
+            throw new UserIsBlockedException();
+        }
+        if(!user.getActive().isActive()) {
+            throw new UserNotActivatedException();
+        }
         return true;
     }
 
@@ -105,7 +125,8 @@ public class UserService implements IUserService {
         return false;
     }
 
-    private String getRole(User user) {
+    @Override
+    public String getRole(User user) {
         String role;
         if (user instanceof Owner) {
             role = "OWNER";
@@ -175,6 +196,13 @@ public class UserService implements IUserService {
         userRepository.save(owner);
     }
 
+    @Override
+    public OwnerDTO setOwnerForAccommodation(Long id) {
+        OwnerDTO o = findbyAccommodationId(id);
+        o.setAvgRating(getAvgRating(o.getId()));
+        return o;
+    }
+
     private void updateUserData(UserDetailDTO updatedUser, User u) {
         u.getAddress().setAddress(updatedUser.getAddress().getAddress());
         u.getAddress().setCity(updatedUser.getAddress().getCity());
@@ -189,13 +217,14 @@ public class UserService implements IUserService {
         switch (getRole(user)) {
             case "OWNER":
                 for(Accommodation acc :((Owner)user).getAccommodations()){
-                    if(reservationService.hasFutureReservationsAccommodation(acc)) return false;
+                    if(reservationService.hasFutureReservationsAccommodation(acc)) throw new UserDeletionException("Some of your accommodations have active future reservations.");
                 }
                 return true;
             case "GUEST":
-                return !reservationService.hasFutureReservationsGuest(user.getId());
+                if(reservationService.hasFutureReservationsGuest(user.getId())) throw new UserDeletionException("You have active future reservations.");
+                return true;
             default:
-                return false;
+                throw new UserDeletionException("Administrator account can't be deleted");
         }
     }
 }

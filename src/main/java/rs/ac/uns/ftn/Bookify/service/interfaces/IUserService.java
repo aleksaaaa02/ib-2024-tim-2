@@ -9,13 +9,15 @@ import java.util.Collection;
 
 public interface IUserService {
     public Collection<User> getAll();
+    public User get(String email);
     public User get(Long userId);
+    public String getRole(User user);
     public Long create(UserRegisteredDTO newUser);
     public User update(UserDetailDTO updatedUser);
     public boolean changePassword(Long userId, String newPassword);
     public boolean resetPassword();
     public boolean activateUser(Long userId);
-    public boolean login(UserCredentialsDTO userCredentials);
+    public boolean isLoginAvailable(Long userId);
     public boolean delete(Long userId);
     public boolean block(Long userId);
     public Collection<User> searchUsers(String searchParam);
@@ -24,4 +26,5 @@ public interface IUserService {
     public OwnerDTO findbyAccommodationId(Long id);
     public Float getAvgRating(Long id);
     public void saveOwnerAccommodation(Accommodation accommodation, Long ownerId);
+    public OwnerDTO setOwnerForAccommodation(Long id);
 }
