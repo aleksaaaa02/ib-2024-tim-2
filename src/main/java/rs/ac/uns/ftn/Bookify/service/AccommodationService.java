@@ -142,9 +142,22 @@ public class AccommodationService implements IAccommodationService {
     private IPriceListItemRepository priceListItemRepository;
 
     @Override
-    public Accommodation save(Accommodation accommodation) {
-        Accommodation a = accommodationRepository.save(accommodation);
-        return a;
+    public Accommodation save(Accommodation accommodation){
+        return accommodationRepository.save(accommodation);
+    }
+
+    @Override
+    public Long update(Accommodation accommodation) {
+        Accommodation a = accommodationRepository.getReferenceById(accommodation.getId());
+        List<Filter> filters = (List<Filter>) accommodation.getFilters();
+        accommodation.setFilters(new HashSet<>());
+//        accommodation.setReviews(); //dodati
+        accommodation.setAvailability(a.getAvailability());
+        accommodation.setPriceList(a.getPriceList());
+        accommodationRepository.save(accommodation);
+        accommodation.setFilters(filters);
+        accommodationRepository.save(accommodation);
+        return 1L;
     }
 
     @Override
@@ -345,29 +358,6 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public Long updatePriceListItem(Long accommodationId, PricelistItem item) {
-        Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
-        PricelistItem pricelistItem = priceListItemRepository.getReferenceById(item.getId());
-        accommodation.getPriceList().remove(pricelistItem);
-        accommodation.getPriceList().add(pricelistItem);
-        priceListItemRepository.save(item);
-        return accommodationId;
-    }
-
-    @Override
-    public Long updateAvailabilityItem(Long accommodationId, Availability availability) {
-        Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
-        Availability availabilityTemp = availabilityRepository.getReferenceById(availability.getId());
-        accommodation.getAvailability().remove(availabilityTemp);
-        if (!checkDatesAvailability(accommodation, availability)) {
-            return null;
-        }
-        accommodation.getAvailability().add(availabilityTemp);
-        availabilityRepository.save(availability);
-        return accommodationId;
-    }
-
-    @Override
     public List<FileSystemResource> getAllImages(Long accommodationId) {
         Accommodation a = accommodationRepository.findById(accommodationId).get();
         List<FileSystemResource> returns = new ArrayList<>();
@@ -400,6 +390,9 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
+    public Accommodation getAccommodation(Long accommodationId) {
+        return accommodationRepository.getReferenceById(accommodationId);
+    }
     public SearchResponseDTO getSearchResponseForSearch(Collection<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons, String location, int page, int size) {
         accommodationBasicDTO = setPrices(accommodationBasicDTO, begin, end, persons);
         long totalResults = countByLocationAndGuestRange(persons, location, begin, end);

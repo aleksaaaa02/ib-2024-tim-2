@@ -27,6 +27,7 @@ public interface IAccommodationService {
     public double getOnePrice(Long id, LocalDate begin, LocalDate end);
     public FileSystemResource getImage(Long id);
     public Accommodation save(Accommodation accommodation);
+    public Long update(Accommodation accommodation);
     public Long addPriceList(Long accommodationId, PricelistItem item);
     public Long addAvailability(Long accommodationId, Availability availability);
     public Collection<PricelistItem> getAccommodationPriceListItems(Long accommodationId);
@@ -34,16 +35,16 @@ public interface IAccommodationService {
     public void mergePricelistIntervals(Long accommodationId);
     public void mergeAvailabilityIntervals(Long accommodationId);
     public Boolean deletePriceListItem(Long accommodationId, PricelistItem item);
-    public Long updatePriceListItem(Long accommodationId, PricelistItem item);
-    public Long updateAvailabilityItem(Long accommodationId, Availability availability);
     public List<FileSystemResource> getAllImages(Long accommodationId);
     public float getAvgRating(Long id);
     public Collection<AccommodationBasicDTO> getAvgRatings(Collection<AccommodationBasicDTO> accommodations);
     public List<Accommodation> getOwnerAccommodation(Long ownerId);
+    public Accommodation getAccommodation(Long accommodationId);
     public SearchResponseDTO getSearchResponseForSearch(Collection<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons, String location, int page, int size);
     public SearchResponseDTO getSearchReposnseForFilter(Collection<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons, String location, int page, int size, String sort, FilterDTO filter);
     public float getMinPrice(Collection<AccommodationBasicDTO> accommodationBasicDTO);
     public float getMaxPrice(Collection<AccommodationBasicDTO> accommodationBasicDTO);
     public Collection<AccommodationBasicDTO> paging(Collection<AccommodationBasicDTO> accommodationBasicDTO, int page, int size);
     public Collection<Accommodation> filterAccommodations(int persons, String location, LocalDate bein, LocalDate end, FilterDTO filter);
+
 }

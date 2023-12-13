@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
 import rs.ac.uns.ftn.Bookify.mapper.AccommodationBasicDTOMapper;
+import rs.ac.uns.ftn.Bookify.mapper.AccommodationDTOMapper;
 import rs.ac.uns.ftn.Bookify.mapper.AccommodationInesertDTOMapper;
 import rs.ac.uns.ftn.Bookify.mapper.PriceListItemDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.*;
@@ -189,10 +190,12 @@ public class AccommodationController {
         return new ResponseEntity<>("Accommodation added to favorites", HttpStatus.OK);
     }
 
-    @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccommodationDTO> updateAccommodation(@RequestBody AccommodationDTO accommodation) {
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Long> updateAccommodation(@RequestBody AccommodationDTO dto) throws Exception {
         //update accommodation
-        return new ResponseEntity<>(accommodation, HttpStatus.OK);
+        Accommodation accommodation = AccommodationDTOMapper.fromDTOtoAccommodation(dto);
+        accommodationService.update(accommodation);
+        return new ResponseEntity<Long>(accommodation.getId(), HttpStatus.OK);
     }
 
     @PutMapping(value = "/approve/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -266,5 +269,12 @@ public class AccommodationController {
         PricelistItem pricelistItem = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
         accommodationService.deletePriceListItem(accommodationId, pricelistItem);
         return new ResponseEntity<PriceListItemDTO>(dto, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/edit/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AccommodationInsertDTO> getAccommodation(@PathVariable Long accommodationId) {
+        Accommodation accommodation = accommodationService.getAccommodation(accommodationId);
+        AccommodationInsertDTO accommodationInsertDTO = AccommodationInesertDTOMapper.fromAccommodationtoDTO(accommodation);
+        return new ResponseEntity<>(accommodationInsertDTO, HttpStatus.OK);
     }
 }
