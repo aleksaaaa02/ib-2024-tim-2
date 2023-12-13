@@ -1,4 +1,4 @@
-import {CanActivateFn, Router} from '@angular/router';
+import {CanActivateFn, Router, UrlSegment} from '@angular/router';
 import {AuthenticationService} from "../authentication.service";
 import {inject} from "@angular/core";
 import {AdminPaths} from "./adminpaths";
@@ -8,18 +8,31 @@ import {OwnerPaths} from "./ownerpaths";
 export const authGuard: CanActivateFn = (route, state) => {
   const authenticationService: AuthenticationService = inject(AuthenticationService);
   const router: Router = inject(Router);
-  const path: string = route.url[0].path;
+  const path: string = getFullPath(route.url);
   const userRole = authenticationService.getRole();
-  console.log(userRole);
-  console.log(path);
-  if(userRole === 'ADMIN' && AdminPaths.includes(path)){
+  if (userRole === 'ADMIN' && checkForPaths(path, AdminPaths)) {
     return true;
-  } else if(userRole === 'GUEST' && GuestPaths.includes(path)) {
+  } else if (userRole === 'GUEST' && checkForPaths(path, GuestPaths)) {
     return true;
-  } else if(userRole === 'OWNER' && OwnerPaths.includes(path)){
+  } else if (userRole === 'OWNER' && checkForPaths(path, OwnerPaths)) {
     return true;
   } else {
     router.navigate(['']);
     return false;
   }
 };
+
+function getFullPath(urlSegments: UrlSegment[]): string {
+  let path = '';
+  for (const urlSegment of urlSegments) {
+    path += urlSegment.path + '/';
+  }
+  return path;
+}
+
+function checkForPaths(accessedPath: string, paths: string[]): boolean {
+  for (const path of paths) {
+    if (accessedPath.includes(path)) return true;
+  }
+  return false;
+}

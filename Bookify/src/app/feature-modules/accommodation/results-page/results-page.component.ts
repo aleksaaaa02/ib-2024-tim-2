@@ -80,7 +80,7 @@ export class ResultsPageComponent implements OnInit, AfterViewInit{
       });
     }
     const array: Array<string> = ['Name', 'Lowest', 'Highest'];
-    if (array.indexOf(this.sort) != -1 || this.filter.maxPrice != -1 || this.filter.filters.length != 0 || this.filter.types.length != 0)
+    if (array.indexOf(this.sort) != -1 || this.filter.maxPrice != -1 || this.filter.filters.length != 0 || this.filter.types.length != 3)
       this.getSortAndFilterResults();
     else
       this.getResults();

@@ -24,11 +24,11 @@ export class DatapickerRangeComponent {
   private ngbDateParserFormatter: any;
 
   hoveredDate: NgbDate | null = null;
-  fromDate: NgbDate | null = this.calendar.getToday();
-  toDate: NgbDate | null = this.calendar.getNext(this.calendar.getToday(), 'd', 5);
+  fromDate: NgbDate | null = this.calendar.getNext(this.calendar.getToday(), 'd', 1);
+  toDate: NgbDate | null = this.calendar.getNext(this.calendar.getToday(), 'd', 6);
 
-  dateBegin: string = this.calendar.getToday().day + "." + this.calendar.getToday().month + "." + this.calendar.getToday().year;
-  dateEnd: string = this.calendar.getNext(this.calendar.getToday(), 'd', 5).day + "." + this.calendar.getNext(this.calendar.getToday(), 'd', 5).month + "." + this.calendar.getNext(this.calendar.getToday(), 'd', 5).year;
+  dateBegin: string = this.calendar.getNext(this.calendar.getToday(), 'd', 1).day + "." + this.calendar.getNext(this.calendar.getToday(), 'd', 1).month + "." + this.calendar.getNext(this.calendar.getToday(), 'd', 1).year;
+  dateEnd: string = this.calendar.getNext(this.calendar.getToday(), 'd', 6).day + "." + this.calendar.getNext(this.calendar.getToday(), 'd', 6).month + "." + this.calendar.getNext(this.calendar.getToday(), 'd', 6).year;
 
   public setDate(begin: string, end: string){
     this.dateBegin = begin;
