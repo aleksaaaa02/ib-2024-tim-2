@@ -166,5 +166,16 @@ public class UserController {
         return new ResponseEntity<>(image, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/account-pic/{userId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
+    public ResponseEntity<Long> getAccountImageId(@PathVariable Long userId) throws Exception {
+        User u = userService.get(userId);
+        Long imageId = -1L;
+        if(u.getProfileImage() != null){
+            imageId =u.getProfileImage().getId();
+        }
+        return new ResponseEntity<>(imageId, HttpStatus.OK);
+    }
+
 }
 
