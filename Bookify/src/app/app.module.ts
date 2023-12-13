@@ -28,11 +28,12 @@ import { AuthenticationModule } from './feature-modules/authentication/authentic
 import { MatFormFieldModule } from '@angular/material/form-field'
 import {CarouselComponent} from "./feature-modules/accommodation/carousel/carousel.component";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {DatapickerRangeComponent} from "./layout/datapicker-range/datapicker-range.component";
 import {FormsModule} from "@angular/forms";
 import {SharedModule} from "./shared/shared.module";
 import {AccountModule} from "./feature-modules/account/account.module";
+import {Interceptor} from "./feature-modules/authentication/interceptor/interceptor";
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import {AccountModule} from "./feature-modules/account/account.module";
     SharedModule,
   ],
   providers: [
-    provideClientHydration(withNoHttpTransferCache())
+    { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true},
+    provideClientHydration(withNoHttpTransferCache()),
   ],
   bootstrap: [AppComponent]
 })

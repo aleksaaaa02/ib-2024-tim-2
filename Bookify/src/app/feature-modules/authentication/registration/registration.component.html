@@ -93,8 +93,7 @@
                 <mat-button-toggle value="owner">Owner</mat-button-toggle>
                 <mat-button-toggle value="guest">Guest</mat-button-toggle>
             </mat-button-toggle-group>
-            <mat-error *ngIf="submitted && form.get('role')!.hasError('required')">Role acceptance is
-                required</mat-error>
+            <mat-error *ngIf="submitted && form.get('role')!.hasError('required')">Role is required</mat-error>
 
             <button mat-raised-button type="submit" class="registration-button button" (click)="onSubmit()">SIGN
                 UP</button>

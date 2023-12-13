@@ -43,7 +43,7 @@ export class RegistrationComponent implements OnInit {
       const password = this.form.get('password')?.value;
       const confirmPassword = control.value;
       if (password !== confirmPassword) {
-        return {different: true, message: 'Repeated password should be same as password'}
+        return {different: true, message: 'Confirm password should be same as password'}
       }
       return null;
     }

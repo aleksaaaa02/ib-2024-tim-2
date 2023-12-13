@@ -29,19 +29,19 @@ const routes: Routes = [
     ConfirmationComponent,
     ForgotPasswordComponent
   ],
-  imports: [
-    CommonModule,
-    MatFormFieldModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatInputModule,
-    MatIconModule,
-    MatSelectModule,
-    RouterModule.forChild(routes),
-    MatButtonModule,
-    MatButtonToggleModule,
-    ReactiveFormsModule
-  ],
+    imports: [
+        CommonModule,
+        MatFormFieldModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatInputModule,
+        MatIconModule,
+        MatSelectModule,
+        RouterModule.forChild(routes),
+        MatButtonModule,
+        MatButtonToggleModule,
+        ReactiveFormsModule
+    ],
   exports: [
     LoginComponent,
     RegistrationComponent,
