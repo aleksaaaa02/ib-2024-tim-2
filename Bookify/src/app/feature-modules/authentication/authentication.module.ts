@@ -13,6 +13,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { RouterModule, Routes } from '@angular/router';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatButtonModule } from '@angular/material/button';
+import {ReactiveFormsModule} from "@angular/forms";
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -28,18 +29,19 @@ const routes: Routes = [
     ConfirmationComponent,
     ForgotPasswordComponent
   ],
-  imports: [
-    CommonModule,
-    MatFormFieldModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatInputModule,
-    MatIconModule,
-    MatSelectModule,
-    RouterModule.forChild(routes),
-    MatButtonModule,
-    MatButtonToggleModule
-  ],
+    imports: [
+        CommonModule,
+        MatFormFieldModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatInputModule,
+        MatIconModule,
+        MatSelectModule,
+        RouterModule.forChild(routes),
+        MatButtonModule,
+        MatButtonToggleModule,
+        ReactiveFormsModule
+    ],
   exports: [
     LoginComponent,
     RegistrationComponent,

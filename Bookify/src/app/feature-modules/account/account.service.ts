@@ -37,4 +37,7 @@ export class AccountService {
   deleteAccount(userId: number | undefined): Observable<string>{
     return this.httpClient.delete(environment.apiHost + "users/" + userId, {responseType: "text"});
   }
+  getAccountImageId(userId: number | undefined): Observable<number>{
+    return this.httpClient.get<number>(environment.apiHost + "users/account-pic/" + userId);
+  }
 }
