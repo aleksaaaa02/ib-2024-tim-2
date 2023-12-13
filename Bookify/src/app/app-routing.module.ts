@@ -13,6 +13,7 @@ import { CalendarComponent } from './feature-modules/accommodation/update/calend
 import {
   OwnerAccommodationsComponent
 } from "./feature-modules/accommodation/owner-accommodations/owner-accommodations.component";
+import {authGuard} from "./feature-modules/authentication/guard/auth.guard";
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -22,11 +23,11 @@ const routes: Routes = [
   { path: "results",component: ResultsPageComponent },
   { path: "accommodation/details/:accommodationId", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
-  { path: 'accommodation/calendar/:accommodationId', component: CalendarComponent },
-  { path: "account", component: AccountComponent },
-  { path: "accommodation/create/basic-info", component: AccommodationCreateComponent },
-  { path: "accommodation/create", component: AccommodationCreateComponent },
-  { path: "accommodations", component: OwnerAccommodationsComponent}
+  { path: 'accommodation/calendar/:accommodationId', component: CalendarComponent, canActivate: [authGuard] },
+  { path: "account", component: AccountComponent, canActivate: [authGuard] },
+  { path: "accommodation/create/basic-info", component: AccommodationCreateComponent, canActivate: [authGuard] },
+  { path: "accommodation/create", component: AccommodationCreateComponent, canActivate: [authGuard] },
+  { path: "accommodations", component: OwnerAccommodationsComponent, canActivate: [authGuard]}
 ];
 
 @NgModule({
