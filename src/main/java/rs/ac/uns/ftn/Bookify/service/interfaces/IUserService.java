@@ -24,4 +24,5 @@ public interface IUserService {
     public OwnerDTO findbyAccommodationId(Long id);
     public Float getAvgRating(Long id);
     public void saveOwnerAccommodation(Accommodation accommodation, Long ownerId);
+    public OwnerDTO setOwnerForAccommodation(Long id);
 }

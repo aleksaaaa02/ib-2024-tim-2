@@ -3,9 +3,7 @@ package rs.ac.uns.ftn.Bookify.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.Bookify.dto.AccommodationBasicDTO;
-import rs.ac.uns.ftn.Bookify.dto.AccommodationDetailDTO;
-import rs.ac.uns.ftn.Bookify.dto.FilterDTO;
+import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
 import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
@@ -13,24 +11,21 @@ import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAvailabilityRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IPriceListItemRepository;
-import rs.ac.uns.ftn.Bookify.repository.interfaces.IUserRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
-
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
-
 import java.util.Collection;
-import java.util.Date;
 
 @Service
 public class AccommodationService implements IAccommodationService {
     @Autowired
     IAccommodationRepository accommodationRepository;
+
+    @Autowired
+    IUserService userService;
 
     @Autowired
     IImageService imageService;
@@ -46,7 +41,7 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public List<AccommodationBasicDTO> sortAccommodationBasicDTO(List<AccommodationBasicDTO> accommodations, String sort) {
+    public Collection<AccommodationBasicDTO> sortAccommodationBasicDTO(List<AccommodationBasicDTO> accommodations, String sort) {
         switch (sort) {
             case "Name":
                 Collections.sort(accommodations, Comparator.comparing(AccommodationBasicDTO::getName));
@@ -62,7 +57,7 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public List<AccommodationBasicDTO> setPrices(List<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons) {
+    public Collection<AccommodationBasicDTO> setPrices(Collection<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons) {
         for (AccommodationBasicDTO accommodation : accommodationBasicDTO) {
             if (accommodation.getPricePer() == PricePer.PERSON)
                 accommodation.setTotalPrice((float) this.getTotalPrice(accommodation.getId(), begin, end) * persons);
@@ -86,12 +81,15 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public AccommodationDetailDTO getAccommodationDetails(Long id) {
         Accommodation a = this.accommodationRepository.findById(id).get();
-        return new AccommodationDetailDTO(a.getId(), a.getName(), a.getDescription(), 0, a.getReviews(), a.getFilters(), a.getAddress(), null);
+        AccommodationDetailDTO accommodationDetailDTO = new AccommodationDetailDTO(a.getId(), a.getName(), a.getDescription(), 0, a.getReviews(), a.getFilters(), a.getAddress(), null);
+        accommodationDetailDTO.setAvgRating(getAvgRating(id));
+        accommodationDetailDTO.setOwner(userService.setOwnerForAccommodation(id));
+        return accommodationDetailDTO;
     }
 
     @Override
-    public List<AccommodationBasicDTO> getForPriceRange(List<AccommodationBasicDTO> accommodations, FilterDTO filter) {
-        List<AccommodationBasicDTO> accommodationFilter = new ArrayList<>();
+    public Collection<AccommodationBasicDTO> getForPriceRange(Collection<AccommodationBasicDTO> accommodations, FilterDTO filter) {
+        Collection<AccommodationBasicDTO> accommodationFilter = new ArrayList<>();
         for (AccommodationBasicDTO accommodation : accommodations) {
             if (fitsPriceRange(accommodation, filter.getMinPrice(), filter.getMaxPrice()))
                 accommodationFilter.add(accommodation);
@@ -379,7 +377,7 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public List<AccommodationBasicDTO> getAvgRatings(List<AccommodationBasicDTO> accommodations) {
+    public Collection<AccommodationBasicDTO> getAvgRatings(Collection<AccommodationBasicDTO> accommodations) {
         for (AccommodationBasicDTO a : accommodations) {
             a.setAvgRating(this.getAvgRating(a.getId()));
         }
@@ -394,6 +392,57 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public Accommodation getAccommodation(Long accommodationId) {
         return accommodationRepository.getReferenceById(accommodationId);
+    }
+    public SearchResponseDTO getSearchResponseForSearch(Collection<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons, String location, int page, int size) {
+        accommodationBasicDTO = setPrices(accommodationBasicDTO, begin, end, persons);
+        long totalResults = countByLocationAndGuestRange(persons, location, begin, end);
+        float minPrice = getMinPrice(accommodationBasicDTO);
+        float maxPrice = getMaxPrice(accommodationBasicDTO);
+        accommodationBasicDTO = paging(accommodationBasicDTO, page, size);
+        accommodationBasicDTO = getAvgRatings(accommodationBasicDTO);
+        return new SearchResponseDTO(accommodationBasicDTO, (int) totalResults, minPrice, maxPrice);
+    }
+
+    @Override
+    public SearchResponseDTO getSearchReposnseForFilter(Collection<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons, String location, int page, int size, String sort, FilterDTO filter) {
+        accommodationBasicDTO = setPrices(accommodationBasicDTO, begin, end, persons);
+        accommodationBasicDTO = getForPriceRange(accommodationBasicDTO, filter);
+        accommodationBasicDTO = sortAccommodationBasicDTO(new ArrayList<>(accommodationBasicDTO), sort);
+        int totalResults = accommodationBasicDTO.size();
+        accommodationBasicDTO = paging(accommodationBasicDTO, page, size);
+        accommodationBasicDTO = getAvgRatings(accommodationBasicDTO);
+        return new SearchResponseDTO(accommodationBasicDTO, totalResults, 0, 0);
+    }
+
+    @Override
+    public float getMinPrice(Collection<AccommodationBasicDTO> accommodationBasicDTO) {
+        try {
+            return accommodationBasicDTO.stream().min(Comparator.comparingDouble(AccommodationBasicDTO::getTotalPrice)).orElse(null).getTotalPrice();
+        } catch (NullPointerException e){
+            return 0;
+        }
+    }
+
+    @Override
+    public float getMaxPrice(Collection<AccommodationBasicDTO> accommodationBasicDTO) {
+        try {
+            return accommodationBasicDTO.stream().max(Comparator.comparingDouble(AccommodationBasicDTO::getTotalPrice)).orElse(null).getTotalPrice();
+        } catch (NullPointerException e){
+            return 0;
+        }
+    }
+
+    @Override
+    public Collection<AccommodationBasicDTO> paging(Collection<AccommodationBasicDTO> accommodationBasicDTO, int page, int size) {
+        if ((page+1)*size > accommodationBasicDTO.size())
+            return new ArrayList<>(accommodationBasicDTO).subList(page*size, accommodationBasicDTO.size());
+        else
+            return new ArrayList<>(accommodationBasicDTO).subList(page*size, (page+1)*size);
+    }
+
+    @Override
+    public Collection<Accommodation> filterAccommodations(int persons, String location, LocalDate begin, LocalDate end, FilterDTO filter) {
+        return getForFilter((List<Accommodation>) getAccommodationsForSearch(persons, location, begin, end), filter);
     }
 
     public FileSystemResource getImage(Long id) {
