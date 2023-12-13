@@ -4,6 +4,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.Bookify.dto.ReservationDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.Status;
@@ -15,13 +16,13 @@ import java.util.*;
 import java.time.LocalDate;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/v1/reservations")
 public class ReservationController {
 //    @Autowired
 //    private IReservationService reservationService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST','ADMIN_ROLE')")
     public ResponseEntity<Collection<ReservationDTO>> getReservations() {
         //return all reservations
         Collection<ReservationDTO> reservations = new HashSet<>();
@@ -33,6 +34,7 @@ public class ReservationController {
     }
 
     @GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
     public ResponseEntity<Collection<ReservationDTO>> findReservationsByUserId(@PathVariable Long userId) {
         //return all reservations of one user
         Collection<ReservationDTO> reservations = new HashSet<>();
@@ -44,6 +46,7 @@ public class ReservationController {
     }
 
     @GetMapping(value = "/{userId}/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
     public ResponseEntity<Collection<ReservationDTO>> findReservationsByUserIdAndStatus(@PathVariable Long userId, @PathVariable Status status) {
         // return all reservations of one user where reservation status == status (g, tabs)
         Collection<ReservationDTO> reservations = new HashSet<>();
@@ -55,6 +58,7 @@ public class ReservationController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
     public ResponseEntity<ReservationDTO> insert(@RequestBody ReservationDTO reservation) {
         //insert new reservation request (g)
         ReservationDTO savedReservation = new ReservationDTO(1L, new Date(), new Date(),
@@ -63,6 +67,7 @@ public class ReservationController {
     }
 
     @PutMapping(value = "/cancel/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable Long reservationId) {
         //change status into canceled
         ReservationDTO canceledReservation = new ReservationDTO(1L, new Date(), new Date(),
@@ -71,6 +76,7 @@ public class ReservationController {
     }
 
     @PutMapping(value = "/accept/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<ReservationDTO> acceptReservation(@PathVariable Long reservationId) {
         //change status into accepted
         ReservationDTO acceptedReservation = new ReservationDTO(1L, new Date(), new Date(),
@@ -79,6 +85,7 @@ public class ReservationController {
     }
 
     @PutMapping(value = "/reject/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<ReservationDTO> rejectReservation(@PathVariable Long reservationId) {
         //change status into rejected
         ReservationDTO rejectedReservation = new ReservationDTO(1L, new Date(), new Date(),
@@ -93,6 +100,7 @@ public class ReservationController {
     }
 
     @GetMapping(value = "/filter/owner", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Collection<ReservationDTO>> filterOwnersRequests(@RequestParam("accommodationId") Long accommodationId, @RequestParam("begin")
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end,
                                                                            @RequestParam("statuses") Set<Status> statuses) {
@@ -106,6 +114,7 @@ public class ReservationController {
     }
 
     @GetMapping(value = "/filter/guest", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<Collection<ReservationDTO>> filterGuestsRequests(@RequestParam("guestId") Long guestId, @RequestParam("accommodationId") Long accommodationId, @RequestParam("begin")
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end,
                                                                            @RequestParam("statuses") Set<Status> statuses) {

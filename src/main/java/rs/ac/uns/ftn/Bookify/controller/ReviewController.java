@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.Bookify.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.Bookify.dto.ReviewDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.ReviewType;
@@ -12,13 +13,13 @@ import java.util.Collection;
 import java.util.HashSet;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/v1/reviews")
 public class ReviewController {
 //    @Autowired
 //    private IReviewService reviewService;
 
     @GetMapping(value = "/created", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Collection<ReviewDTO>> getAllCreatedReviews(){
         //returns all created reviews
         ReviewDTO review1 = new ReviewDTO(1L, 4, "Nice", new Date(), false, false, 1L, ReviewType.ACCOMMODATION);
@@ -30,6 +31,7 @@ public class ReviewController {
     }
 
     @GetMapping(value = "/reported", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Collection<ReviewDTO>> getAllReportedReviews(){
         //returns all reported reviews
         ReviewDTO review1 = new ReviewDTO(1L, 4, "Nice", new Date(), false, true, 1L, ReviewType.ACCOMMODATION);
@@ -63,6 +65,7 @@ public class ReviewController {
     }
 
     @PostMapping(value = "/new-accommodation/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ReviewDTO> newReviewAccommodation(@PathVariable Long accommodationId, @RequestBody ReviewDTO review) {
         //insert new review for accommodation
         ReviewDTO savedReview = new ReviewDTO(1L, 4, "Nice", new Date(), true, false, 2L, ReviewType.ACCOMMODATION);
@@ -70,6 +73,7 @@ public class ReviewController {
     }
 
     @PostMapping(value = "/new-owner/{ownerId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ReviewDTO> newReviewOwner(@PathVariable Long ownerId, @RequestBody ReviewDTO review) {
         //insert new review for owner
         ReviewDTO savedReview = new ReviewDTO(1L, 4, "Nice", new Date(), true, false, 2L, ReviewType.OWNER);
@@ -77,6 +81,7 @@ public class ReviewController {
     }
 
     @PutMapping(value="/reject/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ReviewDTO> rejectReview(@PathVariable Long reviewId) {
         //change to rejected
         ReviewDTO rejectReview = new ReviewDTO(1L, 4, "Nice", new Date(), false, true, 2L, ReviewType.ACCOMMODATION);
@@ -84,6 +89,7 @@ public class ReviewController {
     }
 
     @PutMapping(value="/accept/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ReviewDTO> acceptReview(@PathVariable Long reviewId) {
         //change to accepted
         ReviewDTO acceptReview = new ReviewDTO(1L, 4, "Nice", new Date(), true, false, 2L, ReviewType.ACCOMMODATION);
@@ -91,6 +97,7 @@ public class ReviewController {
     }
 
     @PutMapping(value="/report/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_GUEST','ROLE_OWNER')")
     public ResponseEntity<ReviewDTO> reportReview(@PathVariable Long reviewId) {
         //change to report
         ReviewDTO reportReview = new ReviewDTO(1L, 4, "Nice", new Date(), true, true, 2L, ReviewType.OWNER);
@@ -98,12 +105,14 @@ public class ReviewController {
     }
 
     @DeleteMapping("/accommodation-delete/{accommodationId}/{reviewId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ReviewDTO> deleteAccommodationReview(@PathVariable Long reviewId, @PathVariable Long accommodationId) {
         //delete review for accommodation
         return new ResponseEntity<ReviewDTO>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/owner-delete/{ownerId}/{reviewId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ReviewDTO> deleteOwnerReview(@PathVariable Long reviewId, @PathVariable Long ownerId) {
         //delete review for owner
         return new ResponseEntity<ReviewDTO>(HttpStatus.NO_CONTENT);
