@@ -125,7 +125,6 @@ export class AccommodationCreateComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    console.log(this.gusetsInfo);
     if (this.isValid()) {
       const addressDTO: Address = {
         country: this.address.country,
@@ -145,10 +144,8 @@ export class AccommodationCreateComponent implements OnInit {
         pricePer: this.availabilityInfo.pricePer,
         address: addressDTO
       };
-      console.log(dto);
       //owner id
       if (isNaN(this.accommodationId)) {
-        console.log(this.accommodationId);
         this.accommodationService.add(3, dto).subscribe(
           {
             next: (data: Accommodation) => {
@@ -179,7 +176,6 @@ export class AccommodationCreateComponent implements OnInit {
         };
         this.accommodationService.modify(accommodation).subscribe({
           next: (id: number) => {
-            console.log(this.images);
             this.images.forEach((elem) => {
               this.f.push(elem.file);
             })
