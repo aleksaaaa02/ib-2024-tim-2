@@ -7,6 +7,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -42,7 +43,9 @@ public class UserController {
     @Autowired
     private JWTUtils jwtUtils;
 
+
     @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Collection<ReportedUserDTO>> getReportedUsers() {
         //return all reported users
         Collection<ReportedUserDTO> reportedUsers = new HashSet<>();
@@ -52,6 +55,7 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Collection<UserDTO>> getAllUsers() {
         Collection<User> response = userService.getAll();
         return null;
@@ -59,6 +63,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<UserDetailDTO> getUserById(@PathVariable Long userId) {
         Optional<User> user = Optional.ofNullable(userService.get(userId));
         return user.map(userDetailDTO -> new ResponseEntity<>(new UserDetailDTO(user.get()), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
@@ -74,12 +79,14 @@ public class UserController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<UserDetailDTO> updateUser(@RequestBody UserDetailDTO updatedUser) {
         Optional<User> user = Optional.ofNullable(userService.update(updatedUser));
         return user.map(userDetailDTO -> new ResponseEntity<>(new UserDetailDTO(user.get()), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.BAD_REQUEST));
     }
 
     @PostMapping("/{userId}/change-password")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<String> changePassword(@PathVariable Long userId, @RequestBody String newPassword) {
         boolean success = userService.changePassword(userId, newPassword);
         if (success) {
@@ -102,7 +109,7 @@ public class UserController {
         return new ResponseEntity<>("Failed to activate account", HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/login")
+    @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserJWT> login(@RequestBody UserCredentialsDTO userCredentials) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userCredentials.getEmail(), userCredentials.getPassword()));
@@ -115,6 +122,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         boolean success = userService.delete(userId);
         if(success) return new ResponseEntity<>("Account deleted successfully!", HttpStatus.OK);
@@ -122,12 +130,14 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/block-user")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> blockUser(@PathVariable Long userId) {
 
         return new ResponseEntity<>("User blocked successfully", HttpStatus.OK);
     }
 
     @PostMapping(value = "/report")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<ReportedUserDTO> insertReport(@RequestBody ReportedUserDTO reservation) {
         //insert new report
         ReportedUserDTO reportedUserDTO = new ReportedUserDTO("Reason", new Date(), new Owner(), new Guest());
@@ -135,11 +145,13 @@ public class UserController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<Collection<UserDTO>> searchUsers(@RequestParam String searchParameter) {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @PostMapping("/change-image/{userId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<Long> changeAccountImage(@RequestParam("image") MultipartFile image, @PathVariable Long userId) throws Exception {
         Long id = userService.updateImage(image.getBytes(), image.getName(), userId);
         if(id < 0){
