@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors,
 import { AuthenticationService } from '../authentication.service';
 import { UserRegistrationDTO } from '../model/user.registration.dto.model';
 import { Address } from '../../accommodation/model/address.dto.model';
+import { Message } from '../model/message.dto.model';
 
 @Component({
   selector: 'app-registration',
@@ -70,7 +71,7 @@ export class RegistrationComponent implements OnInit {
         role: this.form.get('role')?.value
       }
       this.authenticationService.register(user).subscribe({
-        next: (hashToken: string) => {
+        next: (hashToken: Message) => {
           console.log(hashToken);
         }
       })

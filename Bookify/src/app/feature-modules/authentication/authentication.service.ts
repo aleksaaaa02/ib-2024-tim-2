@@ -6,6 +6,7 @@ import {UserJWT} from "./model/UserJWT";
 import {environment} from "../../../env/env";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import { UserRegistrationDTO } from "./model/user.registration.dto.model";
+import { Message } from "./model/message.dto.model";
 
 @Injectable({
   providedIn: 'root',
@@ -74,7 +75,12 @@ export class AuthenticationService {
     this.httpClient.get(environment.apiHost + "users/logout");
   }
 
-  register(user: UserRegistrationDTO): Observable<string> {
-    return this.httpClient.post<string>(environment.apiUser, user);
+  register(user: UserRegistrationDTO): Observable<Message> {
+    return this.httpClient.post<Message>(environment.apiUser, user);
   }
+
+  activateAccount(token: string): Observable<Message> {
+    return this.httpClient.put<Message>(environment.apiUser + "/activate-account", token);
+  }
+
 }
