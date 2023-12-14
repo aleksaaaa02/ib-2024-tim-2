@@ -12,4 +12,6 @@ public interface IReservationService {
     public boolean hasFutureReservationsAccommodation(Accommodation accommodation);
 
     Reservation save(Reservation reservation);
+    public void setAccommodation(Long accommodationId, Reservation reservation);
+    public void setGuest(Long guestId, Reservation reservation);
 }
