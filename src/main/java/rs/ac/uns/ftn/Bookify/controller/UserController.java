@@ -43,6 +43,7 @@ public class UserController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
@@ -109,9 +110,9 @@ public class UserController {
         return new ResponseEntity<>("Email sent", HttpStatus.OK);
     }
 
-    @PutMapping("/activate-account")
-    public ResponseEntity<MessageDTO> activateAccount(@RequestBody String uuid) {
-        boolean activated = userService.activateUser(uuid);
+    @PutMapping(value = "/activate-account", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MessageDTO> activateAccount(@RequestBody MessageDTO uuid) {
+        boolean activated = userService.activateUser(uuid.getToken());
         MessageDTO message = new MessageDTO();
         if (activated) {
             message.setToken("Account activated, Congratulations.");

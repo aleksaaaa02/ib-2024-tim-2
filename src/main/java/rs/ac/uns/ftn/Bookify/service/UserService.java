@@ -67,6 +67,7 @@ public class UserService implements IUserService {
         } else {
             user = UserRegisteredDTOMapper.fromDTOtoGuest(newUser);
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         Active active = new Active(false, new Date(), UUID.randomUUID().toString());
         user.setActive(active);
         userRepository.save(user);
@@ -95,7 +96,7 @@ public class UserService implements IUserService {
             return false;
         }
         User user = u.get();
-        user.setPassword(passwordEncoder.encode(newPassword)); // TO-DO hash the password before storing it in database
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         return true;
     }
