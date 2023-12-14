@@ -19,4 +19,7 @@ public class Active {
 
 	@Column(nullable = false)
 	private Date time;
+
+	@Column(nullable = false)
+	private String hashToken;
 }

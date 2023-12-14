@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.Bookify.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,14 +15,20 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRegisteredDTO {
-    private Long id;
+    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String email;
+    @NotNull
     private String password;
+    @NotNull
+    private String confirmPassword;
+    @NotNull
     private String firstName;
+    @NotNull
     private String lastName;
-    private boolean blocked;
+    @NotNull
     private String phone;
-    private List<Notification> notifications;
-    private Active active;
+    @NotNull
     private Address address;
+    @NotNull
+    private String role;
 }

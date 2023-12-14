@@ -5,9 +5,11 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.*;
+import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
 import rs.ac.uns.ftn.Bookify.exception.UserDeletionException;
 import rs.ac.uns.ftn.Bookify.exception.UserIsBlockedException;
 import rs.ac.uns.ftn.Bookify.exception.UserNotActivatedException;
+import rs.ac.uns.ftn.Bookify.mapper.UserRegisteredDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IUserRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
@@ -15,7 +17,9 @@ import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService implements IUserService {
@@ -53,9 +57,20 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Long create(UserRegisteredDTO newUser) {
-        newUser.setId(123L);
-        return 123L;
+    public User create(UserRegisteredDTO newUser) {
+        User user = userRepository.findByEmail(newUser.getEmail());
+        if (user != null) {
+            throw new BadRequestException("Already exists.");
+        }
+        if (newUser.getRole().equals("owner")) {
+            user = UserRegisteredDTOMapper.fromDTOtoOwner(newUser);
+        } else {
+            user = UserRegisteredDTOMapper.fromDTOtoGuest(newUser);
+        }
+        Active active = new Active(false, new Date(), UUID.randomUUID().toString());
+        user.setActive(active);
+        userRepository.save(user);
+        return user;
     }
 
     @Override
@@ -99,10 +114,10 @@ public class UserService implements IUserService {
     @Override
     public boolean isLoginAvailable(Long userId) {
         User user = get(userId);
-        if(user.isBlocked()) {
+        if (user.isBlocked()) {
             throw new UserIsBlockedException();
         }
-        if(!user.getActive().isActive()) {
+        if (!user.getActive().isActive()) {
             throw new UserNotActivatedException();
         }
         return true;
@@ -118,7 +133,7 @@ public class UserService implements IUserService {
     }
 
     private boolean deleteUser(User user) {
-        if(deletionIsPossibility(user)) {
+        if (deletionIsPossibility(user)) {
             userRepository.deleteById(user.getId());
             return true;
         }
@@ -216,12 +231,14 @@ public class UserService implements IUserService {
     private boolean deletionIsPossibility(User user) {
         switch (getRole(user)) {
             case "OWNER":
-                for(Accommodation acc :((Owner)user).getAccommodations()){
-                    if(reservationService.hasFutureReservationsAccommodation(acc)) throw new UserDeletionException("Some of your accommodations have active future reservations.");
+                for (Accommodation acc : ((Owner) user).getAccommodations()) {
+                    if (reservationService.hasFutureReservationsAccommodation(acc))
+                        throw new UserDeletionException("Some of your accommodations have active future reservations.");
                 }
                 return true;
             case "GUEST":
-                if(reservationService.hasFutureReservationsGuest(user.getId())) throw new UserDeletionException("You have active future reservations.");
+                if (reservationService.hasFutureReservationsGuest(user.getId()))
+                    throw new UserDeletionException("You have active future reservations.");
                 return true;
             default:
                 throw new UserDeletionException("Administrator account can't be deleted");

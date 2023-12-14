@@ -8,6 +8,7 @@ import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Objects;
 
 
 @Data
@@ -57,5 +58,4 @@ public abstract class User implements Serializable {
 
 	@Embedded
 	private Address address;
-
 }
