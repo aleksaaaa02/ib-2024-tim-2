@@ -5,6 +5,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {UserJWT} from "./model/UserJWT";
 import {environment} from "../../../env/env";
 import {JwtHelperService} from "@auth0/angular-jwt";
+import { UserRegistrationDTO } from "./model/user.registration.dto.model";
 
 @Injectable({
   providedIn: 'root',
@@ -71,5 +72,9 @@ export class AuthenticationService {
     this.user$.next('');
     localStorage.removeItem('user');
     this.httpClient.get(environment.apiHost + "users/logout");
+  }
+
+  register(user: UserRegistrationDTO): Observable<string> {
+    return this.httpClient.post<string>(environment.apiUser, user);
   }
 }

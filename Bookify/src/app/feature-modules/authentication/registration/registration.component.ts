@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { AuthenticationService } from '../authentication.service';
+import { UserRegistrationDTO } from '../model/user.registration.dto.model';
+import { Address } from '../../accommodation/model/address.dto.model';
 
 @Component({
   selector: 'app-registration',
@@ -11,7 +13,7 @@ export class RegistrationComponent implements OnInit {
   hide1 = true;
   hide2 = true;
   countries: Promise<string[]> = Promise.resolve([]);
-  
+
   form: FormGroup;
   submitted: boolean = false;
 
@@ -34,7 +36,7 @@ export class RegistrationComponent implements OnInit {
   ngOnInit(): void {
     this.countries = this.authenticationService.getCountries();
   }
-  
+
   get passwordValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!this.form) {
@@ -43,15 +45,35 @@ export class RegistrationComponent implements OnInit {
       const password = this.form.get('password')?.value;
       const confirmPassword = control.value;
       if (password !== confirmPassword) {
-        return {different: true, message: 'Confirm password should be same as password'}
+        return { different: true, message: 'Confirm password should be same as password' }
       }
       return null;
     }
   }
 
   onSubmit() {
-    if(this.form.valid){
-      console.log("validno");
+    if (this.form.valid) {
+      const address: Address = {
+        country: this.form.get('country')?.value,
+        city: this.form.get('city')?.value,
+        address: this.form.get('streetAddress')?.value,
+        zipCode: this.form.get('zipCode')?.value
+      }
+      const user: UserRegistrationDTO = {
+        email: this.form.get('email')?.value,
+        password: this.form.get('password')?.value,
+        confirmPassword: this.form.get('confirmPassword')?.value,
+        firstName: this.form.get('firstName')?.value,
+        lastName: this.form.get('lastName')?.value,
+        address: address,
+        phone: this.form.get('phone')?.value,
+        role: this.form.get('role')?.value
+      }
+      this.authenticationService.register(user).subscribe({
+        next: (hashToken: string) => {
+          console.log(hashToken);
+        }
+      })
     }
     this.submitted = true;
   }
