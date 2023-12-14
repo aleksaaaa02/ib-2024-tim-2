@@ -15,10 +15,10 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "JOIN a.availability av " +
             "WHERE a.maxGuest >= :persons " +
             "AND a.minGuest <= :persons " +
-            "AND av.startDate <= :begin " +
+            "AND (av.startDate <= :begin " +
             "AND av.endDate >= :begin " +
             "AND av.startDate <= :end " +
-            "AND av.endDate >= :end " +
+            "AND av.endDate >= :end) " +
             "AND (LOWER(ad.city) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(ad.address) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(a.name) LIKE LOWER(CONCAT('%', :location, '%')) " +
