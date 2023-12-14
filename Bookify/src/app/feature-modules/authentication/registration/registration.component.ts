@@ -4,6 +4,8 @@ import { AuthenticationService } from '../authentication.service';
 import { UserRegistrationDTO } from '../model/user.registration.dto.model';
 import { Address } from '../../accommodation/model/address.dto.model';
 import { Message } from '../model/message.dto.model';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-registration',
@@ -18,7 +20,7 @@ export class RegistrationComponent implements OnInit {
   form: FormGroup;
   submitted: boolean = false;
 
-  constructor(private authenticationService: AuthenticationService, private fb: FormBuilder) {
+  constructor(private authenticationService: AuthenticationService, private fb: FormBuilder, private router: Router, private _snackBar: MatSnackBar) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')]],
       password: ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]],
@@ -36,6 +38,12 @@ export class RegistrationComponent implements OnInit {
 
   ngOnInit(): void {
     this.countries = this.authenticationService.getCountries();
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 2000,
+    });
   }
 
   get passwordValidator(): ValidatorFn {
@@ -72,7 +80,11 @@ export class RegistrationComponent implements OnInit {
       }
       this.authenticationService.register(user).subscribe({
         next: (hashToken: Message) => {
-          console.log(hashToken);
+          this.openSnackBar("Check mail for activating accoun", "close");
+          this.router.navigate(['/login']);
+        },
+        error: (_) => {
+          this.openSnackBar("Already have account with this email", "close");
         }
       })
     }

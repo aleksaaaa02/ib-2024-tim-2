@@ -145,7 +145,6 @@ export class AccommodationCreateComponent implements OnInit {
         pricePer: this.availabilityInfo.pricePer,
         address: addressDTO
       };
-      //owner id
       if (isNaN(this.accommodationId)) {
         const id: number = this.authenticationService.getUserId();
         this.accommodationService.add(id, dto).subscribe(
