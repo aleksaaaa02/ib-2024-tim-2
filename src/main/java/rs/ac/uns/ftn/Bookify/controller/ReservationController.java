@@ -1,15 +1,22 @@
 package rs.ac.uns.ftn.Bookify.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.Bookify.dto.AccommodationInsertDTO;
 import rs.ac.uns.ftn.Bookify.dto.ReservationDTO;
+import rs.ac.uns.ftn.Bookify.dto.ReservationRequestDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.Status;
+import rs.ac.uns.ftn.Bookify.mapper.AccommodationInesertDTOMapper;
+import rs.ac.uns.ftn.Bookify.mapper.ReservationRequestDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Guest;
+import rs.ac.uns.ftn.Bookify.model.Reservation;
+import rs.ac.uns.ftn.Bookify.repository.interfaces.IReservationService;
 
 import java.util.*;
 
@@ -18,20 +25,20 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/api/v1/reservations")
 public class ReservationController {
-//    @Autowired
-//    private IReservationService reservationService;
+    @Autowired
+    private IReservationService reservationService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST','ADMIN_ROLE')")
-    public ResponseEntity<Collection<ReservationDTO>> getReservations() {
-        //return all reservations
-        Collection<ReservationDTO> reservations = new HashSet<>();
-        reservations.add(new ReservationDTO(1L, new Date(), new Date(),
-                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING));
-        reservations.add(new ReservationDTO(2L, new Date(), new Date(),
-                new Date(), 1, new Guest(), new Accommodation(), Status.PENDING));
-        return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
-    }
+//    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+//    @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST','ADMIN_ROLE')")
+//    public ResponseEntity<Collection<ReservationDTO>> getReservations() {
+//        //return all reservations
+//        Collection<ReservationDTO> reservations = new HashSet<>();
+//        reservations.add(new ReservationDTO(1L, new Date(), new Date(),
+//                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING));
+//        reservations.add(new ReservationDTO(2L, new Date(), new Date(),
+//                new Date(), 1, new Guest(), new Accommodation(), Status.PENDING));
+//        return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
+//    }
 
     @GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
@@ -57,13 +64,17 @@ public class ReservationController {
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/create/{accommodationId}/{guestId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
-    public ResponseEntity<ReservationDTO> insert(@RequestBody ReservationDTO reservation) {
-        //insert new reservation request (g)
-        ReservationDTO savedReservation = new ReservationDTO(1L, new Date(), new Date(),
-                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING);
-        return new ResponseEntity<ReservationDTO>(savedReservation, HttpStatus.CREATED);
+    public ResponseEntity<Reservation> insert(@RequestBody ReservationRequestDTO reservationRequestDTO, @PathVariable Long accommodationId, @PathVariable Long guestId) {
+        //insert new reservation request
+//        userService.saveOwnerAccommodation(accommodation, ownerId);
+        System.out.println("Usao");
+        Reservation reservation = ReservationRequestDTOMapper.fromReservationRequestDTOToReservation(reservationRequestDTO);
+        Reservation ra = reservationService.save(reservation);
+        //potencijalno treba sacuvati i u accommodation nesto i u guest
+
+        return new ResponseEntity<>(ra, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/cancel/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)

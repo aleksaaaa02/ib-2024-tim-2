@@ -11,14 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
-import rs.ac.uns.ftn.Bookify.mapper.AccommodationBasicDTOMapper;
-import rs.ac.uns.ftn.Bookify.mapper.AccommodationDTOMapper;
-import rs.ac.uns.ftn.Bookify.mapper.AccommodationInesertDTOMapper;
-import rs.ac.uns.ftn.Bookify.mapper.PriceListItemDTOMapper;
+import rs.ac.uns.ftn.Bookify.mapper.*;
 import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
 import java.io.IOException;

@@ -40,4 +40,9 @@ public class ReservationService implements IReservationService {
         List<Reservation> futureReservations = this.reservationRepository.findByAccommodation_IdAndEndAfterAndStatusNotIn(accommodation.getId(), new Date(), EnumSet.of(Status.CANCELED, Status.REJECTED));
         return !futureReservations.isEmpty();
     }
+
+    @Override
+    public Reservation save(Reservation reservation) {
+        return reservationRepository.save(reservation);
+    }
 }
