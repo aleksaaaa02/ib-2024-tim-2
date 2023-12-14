@@ -6,9 +6,11 @@ import rs.ac.uns.ftn.Bookify.dto.AccommodationBasicDTO;
 import rs.ac.uns.ftn.Bookify.dto.AccommodationDetailDTO;
 import rs.ac.uns.ftn.Bookify.dto.FilterDTO;
 import rs.ac.uns.ftn.Bookify.dto.SearchResponseDTO;
+import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
+import rs.ac.uns.ftn.Bookify.model.Reservation;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -23,8 +25,8 @@ public interface IAccommodationService {
     public List<Accommodation> getForFilter(List<Accommodation> accommodations, FilterDTO filter);
     public AccommodationDetailDTO getAccommodationDetails(Long id);
     public Collection<AccommodationBasicDTO> getForPriceRange(Collection<AccommodationBasicDTO> accommodations, FilterDTO filter);
-    public double getTotalPrice(Long id, LocalDate begin, LocalDate end);
-    public double getOnePrice(Long id, LocalDate begin, LocalDate end);
+    public double getTotalPrice(Long id, LocalDate begin, LocalDate end, PricePer pricePer, int persons);
+    public double getOnePrice(Long id, LocalDate begin, LocalDate end, PricePer pricePer, int persons);
     public FileSystemResource getImage(Long id);
     public Accommodation save(Accommodation accommodation);
     public Long update(Accommodation accommodation);
@@ -46,5 +48,6 @@ public interface IAccommodationService {
     public float getMaxPrice(Collection<AccommodationBasicDTO> accommodationBasicDTO);
     public Collection<AccommodationBasicDTO> paging(Collection<AccommodationBasicDTO> accommodationBasicDTO, int page, int size);
     public Collection<Accommodation> filterAccommodations(int persons, String location, LocalDate bein, LocalDate end, FilterDTO filter);
-
+    public boolean isAvailable(Long id, LocalDate beginL, LocalDate endL);
+    public boolean checkPersons(Long id, int persons);
 }

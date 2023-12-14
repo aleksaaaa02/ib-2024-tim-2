@@ -59,11 +59,8 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public Collection<AccommodationBasicDTO> setPrices(Collection<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons) {
         for (AccommodationBasicDTO accommodation : accommodationBasicDTO) {
-            if (accommodation.getPricePer() == PricePer.PERSON)
-                accommodation.setTotalPrice((float) this.getTotalPrice(accommodation.getId(), begin, end) * persons);
-            else
-                accommodation.setTotalPrice((float) this.getTotalPrice(accommodation.getId(), begin, end));
-            accommodation.setPriceOne((float) this.getOnePrice(accommodation.getId(), begin, end));
+            accommodation.setTotalPrice((float) this.getTotalPrice(accommodation.getId(), begin, end, accommodation.getPricePer(), persons));
+            accommodation.setPriceOne((float) this.getOnePrice(accommodation.getId(), begin, end, accommodation.getPricePer(), persons));
         }
         return accommodationBasicDTO;
     }
@@ -81,7 +78,7 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public AccommodationDetailDTO getAccommodationDetails(Long id) {
         Accommodation a = this.accommodationRepository.findById(id).get();
-        AccommodationDetailDTO accommodationDetailDTO = new AccommodationDetailDTO(a.getId(), a.getName(), a.getDescription(), 0, a.getReviews(), a.getFilters(), a.getAddress(), null);
+        AccommodationDetailDTO accommodationDetailDTO = new AccommodationDetailDTO(a.getId(), a.getName(), a.getDescription(), 0, a.getReviews(), a.getFilters(), a.getAddress(), null, a.getPricePer());
         accommodationDetailDTO.setAvgRating(getAvgRating(id));
         accommodationDetailDTO.setOwner(userService.setOwnerForAccommodation(id));
         return accommodationDetailDTO;
@@ -110,7 +107,7 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public double getTotalPrice(Long id, LocalDate begin, LocalDate end) {
+    public double getTotalPrice(Long id, LocalDate begin, LocalDate end, PricePer pricePer, int persons) {
         double price = 0;
         while (!begin.isEqual(end)) {
             price += accommodationRepository.findPriceForDay(begin, id).get();
@@ -118,11 +115,14 @@ public class AccommodationService implements IAccommodationService {
         }
         BigDecimal originalBigDecimal = BigDecimal.valueOf(price);
         BigDecimal roundedValue = originalBigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP);
-        return roundedValue.floatValue();
+        if (pricePer == PricePer.ROOM)
+            return roundedValue.floatValue();
+        else
+            return roundedValue.floatValue()*persons;
     }
 
     @Override
-    public double getOnePrice(Long id, LocalDate begin, LocalDate end) {
+    public double getOnePrice(Long id, LocalDate begin, LocalDate end, PricePer pricePer, int persons) {
         double price = 0;
         int days = 0;
         while (!begin.isEqual(end)) {
@@ -132,7 +132,10 @@ public class AccommodationService implements IAccommodationService {
         }
         BigDecimal originalBigDecimal = BigDecimal.valueOf(price / days);
         BigDecimal roundedValue = originalBigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP);
-        return roundedValue.floatValue();
+        if (pricePer == PricePer.ROOM)
+            return roundedValue.floatValue();
+        else
+            return roundedValue.floatValue()*persons;
     }
 
     @Autowired
@@ -443,6 +446,16 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public Collection<Accommodation> filterAccommodations(int persons, String location, LocalDate begin, LocalDate end, FilterDTO filter) {
         return getForFilter((List<Accommodation>) getAccommodationsForSearch(persons, location, begin, end), filter);
+    }
+
+    @Override
+    public boolean isAvailable(Long id, LocalDate beginL, LocalDate endL) {
+        return accommodationRepository.checkIfAccommodationAvailable(id, beginL, endL) > 0;
+    }
+
+    @Override
+    public boolean checkPersons(Long id, int persons) {
+        return accommodationRepository.checkPersons(id, persons) == 1;
     }
 
     public FileSystemResource getImage(Long id) {
