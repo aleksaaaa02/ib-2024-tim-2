@@ -2,7 +2,6 @@ package rs.ac.uns.ftn.Bookify.controller;
 
 
 import jakarta.mail.MessagingException;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
@@ -76,13 +75,16 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerUser(@RequestBody UserRegisteredDTO newUser) throws MessagingException {
+    public ResponseEntity<MessageDTO> registerUser(@RequestBody UserRegisteredDTO newUser) throws MessagingException {
         User user = userService.create(newUser);
+        MessageDTO token = new MessageDTO();
         if (user != null) {
             emailService.sendActivationEmail(user.getEmail(), "http://localhost:4200/confirmation?uuid=" + user.getActive().getHashToken());
-            return new ResponseEntity<>(user.getActive().getHashToken(), HttpStatus.CREATED);
+            token.setToken(user.getActive().getHashToken());
+            return new ResponseEntity<>(token, HttpStatus.OK);
         }
-        return new ResponseEntity<>("Failed to create new user", HttpStatus.BAD_REQUEST);
+        token.setToken("Failed to create new user");
+        return new ResponseEntity<MessageDTO>(token, HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping
@@ -107,13 +109,16 @@ public class UserController {
         return new ResponseEntity<>("Email sent", HttpStatus.OK);
     }
 
-    @PostMapping("/activate-account/{userId}")
-    public ResponseEntity<String> activateAccount(@PathVariable Long userId) {
-        boolean activated = userService.activateUser(userId);
+    @PutMapping("/activate-account")
+    public ResponseEntity<MessageDTO> activateAccount(@RequestBody String uuid) {
+        boolean activated = userService.activateUser(uuid);
+        MessageDTO message = new MessageDTO();
         if (activated) {
-            return new ResponseEntity<>("Account activated", HttpStatus.OK);
+            message.setToken("Account activated, Congratulations.");
+            return new ResponseEntity<>(message, HttpStatus.OK);
         }
-        return new ResponseEntity<>("Failed to activate account", HttpStatus.BAD_REQUEST);
+        message.setToken("Your acctivation expired, register again");
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE})

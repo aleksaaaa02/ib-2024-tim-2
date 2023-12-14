@@ -21,4 +21,7 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     Float getAverageReviewByOwnerId(@Param("ownerId") Long ownerId);
 
     User findByEmail(String email);
+
+    @Query("select u from User u where u.active.hashToken = :uuid")
+    User findByHashToken(String uuid);
 }

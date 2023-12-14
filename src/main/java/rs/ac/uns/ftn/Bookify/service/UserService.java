@@ -107,7 +107,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean activateUser(Long userId) {
+    public boolean activateUser(String uuid) {
+        User u = userRepository.findByHashToken(uuid);
+        if (u == null) {
+            return false;
+        }
+        u.setActive(new Active(true, new Date(), ""));
+        userRepository.save(u);
         return true;
     }
 
