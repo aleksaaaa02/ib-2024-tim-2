@@ -79,10 +79,11 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests(request ->{
             request.dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/v1/accommodations/image/{imageId}","/api/v1/accommodations/search", "/api/v1/accommodations/details/{accommodationId}",
-                            "/api/v1/accommodations/top-accommodations", "/api/v1/accommodations/top-locations", "/api/v1/users/image/{imageId}", "/api/v1/users/{userId}/forgot-password",
+                            "/api/v1/accommodations/top-accommodations", "/api/v1/accommodations/top-locations", "/api/v1/users/image/{imageId}", "/api/v1/users/forgot-password/{email}",
                             "/api/v1/accommodations/images/{accommodationId}", "/api/v1/reviews/accommodation/{accommodationId}", "/api/v1/reviews/owner/{ownerId}").permitAll()
-                    .requestMatchers(HttpMethod.POST,"/api/v1/users/login", "/api/v1/users","/api/v1/users/activate-account/{userId}",
+                    .requestMatchers(HttpMethod.POST,"/api/v1/users/login", "/api/v1/users",
                             "/api/v1/accommodations/filter").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/api/v1/users/activate-account").permitAll()
                     .anyRequest().authenticated()
             ;
         });

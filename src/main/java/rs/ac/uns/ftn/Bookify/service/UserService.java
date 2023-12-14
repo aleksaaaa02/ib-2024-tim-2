@@ -2,20 +2,24 @@ package rs.ac.uns.ftn.Bookify.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.Bookify.dto.*;
+import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
 import rs.ac.uns.ftn.Bookify.exception.UserDeletionException;
 import rs.ac.uns.ftn.Bookify.exception.UserIsBlockedException;
 import rs.ac.uns.ftn.Bookify.exception.UserNotActivatedException;
+import rs.ac.uns.ftn.Bookify.mapper.UserRegisteredDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IUserRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.security.SecureRandom;
+import java.util.*;
 
 @Service
 public class UserService implements IUserService {
@@ -53,9 +57,21 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Long create(UserRegisteredDTO newUser) {
-        newUser.setId(123L);
-        return 123L;
+    public User create(UserRegisteredDTO newUser) {
+        User user = userRepository.findByEmail(newUser.getEmail());
+        if (user != null) {
+            throw new BadRequestException("Already exists.");
+        }
+        if (newUser.getRole().equals("owner")) {
+            user = UserRegisteredDTOMapper.fromDTOtoOwner(newUser);
+        } else {
+            user = UserRegisteredDTOMapper.fromDTOtoGuest(newUser);
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Active active = new Active(false, new Date(), UUID.randomUUID().toString());
+        user.setActive(active);
+        userRepository.save(user);
+        return user;
     }
 
     @Override
@@ -80,29 +96,66 @@ public class UserService implements IUserService {
             return false;
         }
         User user = u.get();
-        user.setPassword(passwordEncoder.encode(newPassword)); // TO-DO hash the password before storing it in database
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         return true;
     }
 
     @Override
-    public boolean resetPassword() {
-        // sends email to reset password
-        return false;
+    public String resetPassword(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new BadRequestException("Not found");
+        }
+        StringBuilder randomPassword = generaterandomPassword();
+        user.setPassword(passwordEncoder.encode(randomPassword.toString()));
+        userRepository.save(user);
+        return randomPassword.toString();
+    }
+
+    private static StringBuilder generaterandomPassword() {
+        String upperCaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowerCaseChars = "abcdefghijklmnopqrstuvwxyz";
+        String numberChars = "0123456789";
+        String specialChars = "!@#$%^&*()_-+=";
+        String allChars = upperCaseChars + lowerCaseChars + numberChars + specialChars;
+        SecureRandom random = new SecureRandom();
+        StringBuilder randomString = new StringBuilder();
+
+        randomString.append(getRandomChar(upperCaseChars, random));
+        randomString.append(getRandomChar(lowerCaseChars, random));
+        randomString.append(getRandomChar(numberChars, random));
+        randomString.append(getRandomChar(specialChars, random));
+
+        int remainingLength = 8;
+        while (remainingLength-- > 0) {
+            randomString.append(allChars.charAt(random.nextInt(allChars.length())));
+        }
+        return randomString;
+    }
+
+    private static char getRandomChar(String charSet, SecureRandom random) {
+        return charSet.charAt(random.nextInt(charSet.length()));
     }
 
     @Override
-    public boolean activateUser(Long userId) {
+    public boolean activateUser(String uuid) {
+        User u = userRepository.findByHashToken(uuid);
+        if (u == null) {
+            return false;
+        }
+        u.setActive(new Active(true, new Date(), ""));
+        userRepository.save(u);
         return true;
     }
 
     @Override
     public boolean isLoginAvailable(Long userId) {
         User user = get(userId);
-        if(user.isBlocked()) {
+        if (user.isBlocked()) {
             throw new UserIsBlockedException();
         }
-        if(!user.getActive().isActive()) {
+        if (!user.getActive().isActive()) {
             throw new UserNotActivatedException();
         }
         return true;
@@ -118,7 +171,7 @@ public class UserService implements IUserService {
     }
 
     private boolean deleteUser(User user) {
-        if(deletionIsPossibility(user)) {
+        if (deletionIsPossibility(user)) {
             userRepository.deleteById(user.getId());
             return true;
         }
@@ -203,6 +256,21 @@ public class UserService implements IUserService {
         return o;
     }
 
+    @Override
+    @Transactional
+    @Scheduled(cron = "${activation.cron}")
+    public void checkInactiveUsers() {
+        Calendar calendar = Calendar.getInstance();
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            calendar.setTime(user.getActive().getTime());
+            calendar.add(Calendar.MINUTE, 1);
+            if (!user.getActive().isActive() && calendar.getTime().compareTo(new Date()) < 0) {
+                userRepository.deleteUser(user.getId());
+            }
+        }
+    }
+
     private void updateUserData(UserDetailDTO updatedUser, User u) {
         u.getAddress().setAddress(updatedUser.getAddress().getAddress());
         u.getAddress().setCity(updatedUser.getAddress().getCity());
@@ -216,12 +284,14 @@ public class UserService implements IUserService {
     private boolean deletionIsPossibility(User user) {
         switch (getRole(user)) {
             case "OWNER":
-                for(Accommodation acc :((Owner)user).getAccommodations()){
-                    if(reservationService.hasFutureReservationsAccommodation(acc)) throw new UserDeletionException("Some of your accommodations have active future reservations.");
+                for (Accommodation acc : ((Owner) user).getAccommodations()) {
+                    if (reservationService.hasFutureReservationsAccommodation(acc))
+                        throw new UserDeletionException("Some of your accommodations have active future reservations.");
                 }
                 return true;
             case "GUEST":
-                if(reservationService.hasFutureReservationsGuest(user.getId())) throw new UserDeletionException("You have active future reservations.");
+                if (reservationService.hasFutureReservationsGuest(user.getId()))
+                    throw new UserDeletionException("You have active future reservations.");
                 return true;
             default:
                 throw new UserDeletionException("Administrator account can't be deleted");

@@ -1,7 +1,7 @@
 package rs.ac.uns.ftn.Bookify.controller;
 
 
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
@@ -21,6 +21,7 @@ import rs.ac.uns.ftn.Bookify.config.utils.UserJWT;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
 import rs.ac.uns.ftn.Bookify.model.User;
+import rs.ac.uns.ftn.Bookify.service.EmailService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
 import java.util.Date;
@@ -40,13 +41,16 @@ public class UserController {
     private IUserService userService;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
     private JWTUtils jwtUtils;
 
 
-    @GetMapping(value = "/reported",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/reported", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Collection<ReportedUserDTO>> getReportedUsers() {
         //return all reported users
@@ -72,12 +76,17 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerUser(@RequestBody UserRegisteredDTO newUser) {
-        Long userId = userService.create(newUser);
-        if (userId != null) {
-            return new ResponseEntity<>("New user created", HttpStatus.CREATED);
+    public ResponseEntity<MessageDTO> registerUser(@RequestBody UserRegisteredDTO newUser) throws MessagingException {
+        User user = userService.create(newUser);
+        MessageDTO token = new MessageDTO();
+        if (user != null) {
+            emailService.sendEmail("Account Activation", user.getEmail(), "Click the link to activate your account: ",
+                    "http://localhost:4200/confirmation?uuid=" + user.getActive().getHashToken());
+            token.setToken(user.getActive().getHashToken());
+            return new ResponseEntity<>(token, HttpStatus.OK);
         }
-        return new ResponseEntity<>("Failed to create new user", HttpStatus.BAD_REQUEST);
+        token.setToken("Failed to create new user");
+        return new ResponseEntity<MessageDTO>(token, HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping
@@ -97,18 +106,26 @@ public class UserController {
         return new ResponseEntity<>("Failed to change password", HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/{userId}/forgot-password")
-    public ResponseEntity<String> forgotPassword(@PathVariable Long userId) {
-        return new ResponseEntity<>("Email sent", HttpStatus.OK);
+    @GetMapping("/forgot-password/{email}")
+    public ResponseEntity<String> forgotPassword(@PathVariable String email) throws MessagingException {
+        String newPassword = userService.resetPassword(email);
+        if (newPassword != null) {
+            emailService.sendEmail("Reset Password", email, "Your new password is: ", newPassword);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/activate-account/{userId}")
-    public ResponseEntity<String> activateAccount(@PathVariable Long userId) {
-        boolean activated = userService.activateUser(userId);
+    @PutMapping(value = "/activate-account", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MessageDTO> activateAccount(@RequestBody MessageDTO uuid) {
+        boolean activated = userService.activateUser(uuid.getToken());
+        MessageDTO message = new MessageDTO();
         if (activated) {
-            return new ResponseEntity<>("Account activated", HttpStatus.OK);
+            message.setToken("Account activated, Congratulations.");
+            return new ResponseEntity<>(message, HttpStatus.OK);
         }
-        return new ResponseEntity<>("Failed to activate account", HttpStatus.BAD_REQUEST);
+        message.setToken("Your acctivation expired, register again");
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -118,11 +135,11 @@ public class UserController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails user = (UserDetails) authentication.getPrincipal();
         User u = userService.get(user.getUsername());
-            if (userService.isLoginAvailable(u.getId())) {
-                String jwt = jwtUtils.generateToken(user.getUsername(), u.getId(), userService.getRole(u));
-                int expiresIn = jwtUtils.getExpiredIn();
-                return new ResponseEntity<>(new UserJWT(jwt, (long) expiresIn), HttpStatus.OK);
-            }
+        if (userService.isLoginAvailable(u.getId())) {
+            String jwt = jwtUtils.generateToken(user.getUsername(), u.getId(), userService.getRole(u));
+            int expiresIn = jwtUtils.getExpiredIn();
+            return new ResponseEntity<>(new UserJWT(jwt, (long) expiresIn), HttpStatus.OK);
+        }
 
         return null;
     }
@@ -131,7 +148,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         boolean success = userService.delete(userId);
-        if(success) return new ResponseEntity<>("Account deleted successfully!", HttpStatus.OK);
+        if (success) return new ResponseEntity<>("Account deleted successfully!", HttpStatus.OK);
         return new ResponseEntity<>("Account has not been deleted", HttpStatus.BAD_REQUEST);
     }
 
@@ -160,7 +177,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<Long> changeAccountImage(@RequestParam("image") MultipartFile image, @PathVariable Long userId) throws Exception {
         Long id = userService.updateImage(image.getBytes(), image.getName(), userId);
-        if(id < 0){
+        if (id < 0) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(id, HttpStatus.OK);
@@ -177,20 +194,20 @@ public class UserController {
     public ResponseEntity<Long> getAccountImageId(@PathVariable Long userId) throws Exception {
         User u = userService.get(userId);
         Long imageId = -1L;
-        if(u.getProfileImage() != null){
-            imageId =u.getProfileImage().getId();
+        if (u.getProfileImage() != null) {
+            imageId = u.getProfileImage().getId();
         }
         return new ResponseEntity<>(imageId, HttpStatus.OK);
     }
 
     @GetMapping(value = "/logout")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
-    public ResponseEntity<?> logout(){
+    public ResponseEntity<?> logout() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(!(auth instanceof AnonymousAuthenticationToken)){
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
             SecurityContextHolder.clearContext();
             return new ResponseEntity<String>("Goodbye", HttpStatus.OK);
-        } else{
+        } else {
             throw new BadRequestException("User is not authenticated");
         }
     }
