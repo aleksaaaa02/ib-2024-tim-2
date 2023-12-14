@@ -49,4 +49,5 @@ public interface IAccommodationService {
     public Collection<AccommodationBasicDTO> paging(Collection<AccommodationBasicDTO> accommodationBasicDTO, int page, int size);
     public Collection<Accommodation> filterAccommodations(int persons, String location, LocalDate bein, LocalDate end, FilterDTO filter);
     public boolean isAvailable(Long id, LocalDate beginL, LocalDate endL);
+    public boolean checkPersons(Long id, int persons);
 }

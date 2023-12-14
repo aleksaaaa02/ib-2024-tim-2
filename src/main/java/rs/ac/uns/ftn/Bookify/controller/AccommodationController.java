@@ -84,7 +84,7 @@ public class AccommodationController {
         LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         double response = -1;
-        if (accommodationService.isAvailable(id, beginL, endL))
+        if (accommodationService.isAvailable(id, beginL, endL) && accommodationService.checkPersons(id, persons))
             response = accommodationService.getTotalPrice(id, beginL, endL, pricePer, persons);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

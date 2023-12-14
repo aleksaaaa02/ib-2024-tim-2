@@ -107,4 +107,11 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     long checkIfAccommodationAvailable(@Param("accommodationId") Long accommodationId,
                                           @Param("begin") LocalDate begin,
                                           @Param("end") LocalDate end);
+
+    @Query("SELECT COUNT(a) FROM Accommodation a " +
+            "WHERE a.id = :accommodationId " +
+            "AND a.minGuest <= :persons " +
+            "AND a.maxGuest >= :persons")
+    long checkPersons(@Param("accommodationId") Long accommodationId,
+                                       @Param("persons") int persons);
 }

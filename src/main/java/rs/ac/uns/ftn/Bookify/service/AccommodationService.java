@@ -453,6 +453,11 @@ public class AccommodationService implements IAccommodationService {
         return accommodationRepository.checkIfAccommodationAvailable(id, beginL, endL) > 0;
     }
 
+    @Override
+    public boolean checkPersons(Long id, int persons) {
+        return accommodationRepository.checkPersons(id, persons) == 1;
+    }
+
     public FileSystemResource getImage(Long id) {
         return imageService.find(id);
     }

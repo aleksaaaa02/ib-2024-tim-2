@@ -22,12 +22,6 @@ public class ReservationService implements IReservationService {
     IReservationRepository reservationRepository;
 
     @Autowired
-    IAccommodationService accommodationService;
-
-    @Autowired
-    IUserService userService;
-
-    @Autowired
     public ReservationService(IReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
@@ -55,16 +49,14 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public void setAccommodation(Long accommodationId, Reservation reservation) {
-        Accommodation accommodation = accommodationService.getAccommodation(accommodationId);
+    public void setAccommodation(Accommodation accommodation, Reservation reservation) {
         reservation.setAccommodation(accommodation);
         reservationRepository.save(reservation);
     }
 
     @Override
-    public void setGuest(Long guestId, Reservation reservation) {
-        User user = userService.get(guestId);
-        reservation.setGuest((Guest) user);
+    public void setGuest(Guest guest, Reservation reservation) {
+        reservation.setGuest(guest);
         reservationRepository.save(reservation);
     }
 }
