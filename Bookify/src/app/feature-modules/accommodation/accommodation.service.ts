@@ -11,6 +11,8 @@ import { PriceList } from './model/priceList.model';
 import { FilterDTO } from "./model/filter.dto.model";
 import { SearchResponseDTO } from "./model/search-response.dto.model";
 import { AccommodationDetailsDTO } from "./model/accommodation-details.dto.model";
+import {ReservationRequestDTO} from "./model/reservation-request.dto.model";
+import {Reservation} from "./model/reservation.model";
 
 @Injectable({
   providedIn: 'root'
@@ -116,5 +118,11 @@ export class AccommodationService {
 
   addPriceList(accommodationId: number, priceList: PriceListDTO) {
     return this.httpClient.post<PriceListDTO>(environment.apiAccommodation + "/" + accommodationId + "/addPrice", priceList);
+  }
+
+  createReservationRequest(reservation: ReservationRequestDTO, accommodationId: number, guestId: number): Observable<Reservation> {
+    const params = new HttpParams().set('accommodationId', accommodationId);
+    params.set('guestId', guestId);
+    return this.httpClient.post<Reservation>(environment.apiHost + "reservations/create", reservation, {params});
   }
 }
