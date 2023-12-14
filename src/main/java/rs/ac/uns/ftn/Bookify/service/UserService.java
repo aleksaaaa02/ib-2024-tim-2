@@ -2,8 +2,10 @@ package rs.ac.uns.ftn.Bookify.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
 import rs.ac.uns.ftn.Bookify.exception.UserDeletionException;
@@ -16,10 +18,7 @@ import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService implements IUserService {
@@ -223,6 +222,21 @@ public class UserService implements IUserService {
         OwnerDTO o = findbyAccommodationId(id);
         o.setAvgRating(getAvgRating(o.getId()));
         return o;
+    }
+
+    @Override
+    @Transactional
+    @Scheduled(cron = "${activation.cron}")
+    public void checkInactiveUsers() {
+        Calendar calendar = Calendar.getInstance();
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            calendar.setTime(user.getActive().getTime());
+            calendar.add(Calendar.MINUTE, 1);
+            if (!user.getActive().isActive() && calendar.getTime().compareTo(new Date()) < 0){
+                userRepository.deleteUser(user.getId());
+            }
+        }
     }
 
     private void updateUserData(UserDetailDTO updatedUser, User u) {
