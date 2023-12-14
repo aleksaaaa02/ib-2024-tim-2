@@ -110,7 +110,8 @@ mat-form-field {
 }
 
 .sign-up {
-    color: rgba(51, 51, 51, 1);
+    color: #326268;
+    text-decoration: underline;
     height: auto;
     font-size: 10px;
     text-align: center;

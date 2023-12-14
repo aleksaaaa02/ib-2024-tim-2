@@ -1,10 +1,12 @@
-import {Injectable, Inject, LOCALE_ID} from "@angular/core";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Credentials} from "./model/credentials";
-import {BehaviorSubject, Observable} from "rxjs";
-import {UserJWT} from "./model/UserJWT";
-import {environment} from "../../../env/env";
-import {JwtHelperService} from "@auth0/angular-jwt";
+import { Injectable, Inject, LOCALE_ID } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Credentials } from "./model/credentials";
+import { BehaviorSubject, Observable } from "rxjs";
+import { UserJWT } from "./model/UserJWT";
+import { environment } from "../../../env/env";
+import { JwtHelperService } from "@auth0/angular-jwt";
+import { UserRegistrationDTO } from "./model/user.registration.dto.model";
+import { Message } from "./model/message.dto.model";
 
 @Injectable({
   providedIn: 'root',
@@ -13,11 +15,11 @@ import {JwtHelperService} from "@auth0/angular-jwt";
 
 export class AuthenticationService {
   constructor(@Inject(LOCALE_ID) private locale: string,
-              private httpClient: HttpClient) {
+    private httpClient: HttpClient) {
   }
 
-  user$ :BehaviorSubject<string> = new BehaviorSubject("");
-  userState:Observable<string> = this.user$.asObservable();
+  user$: BehaviorSubject<string> = new BehaviorSubject("");
+  userState: Observable<string> = this.user$.asObservable();
 
   private headers = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -39,7 +41,7 @@ export class AuthenticationService {
 
   login(userCredentials: Credentials): Observable<UserJWT> {
     return this.httpClient.post<UserJWT>(environment.apiHost + "users/login", userCredentials,
-      {headers: this.headers});
+      { headers: this.headers });
   }
 
   isLoggedIn(): boolean {
@@ -54,8 +56,9 @@ export class AuthenticationService {
     }
     return '';
   }
+  
   getUserId(): number {
-    if(this.isLoggedIn()) {
+    if (this.isLoggedIn()) {
       const accessToken: any = localStorage.getItem('user');
       const helper: JwtHelperService = new JwtHelperService();
       return helper.decodeToken(accessToken).id
@@ -71,5 +74,17 @@ export class AuthenticationService {
     this.user$.next('');
     localStorage.removeItem('user');
     this.httpClient.get(environment.apiHost + "users/logout");
+  }
+
+  register(user: UserRegistrationDTO): Observable<Message> {
+    return this.httpClient.post<Message>(environment.apiUser, user);
+  }
+
+  activateAccount(token: Message): Observable<Message> {
+    return this.httpClient.put<Message>(environment.apiUser + "/activate-account", token);
+  }
+  
+  resetPassword(email: string): Observable<string> {
+    return this.httpClient.get<string>(environment.apiUser + "/forgot-password/" + email);
   }
 }
