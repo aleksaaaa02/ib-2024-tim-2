@@ -83,5 +83,8 @@ export class AuthenticationService {
   activateAccount(token: Message): Observable<Message> {
     return this.httpClient.put<Message>(environment.apiUser + "/activate-account", token);
   }
-
+  
+  resetPassword(email: string): Observable<string> {
+    return this.httpClient.get<string>(environment.apiUser + "/forgot-password/" + email);
+  }
 }
