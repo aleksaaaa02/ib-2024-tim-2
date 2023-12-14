@@ -121,8 +121,7 @@ export class AccommodationService {
   }
 
   createReservationRequest(reservation: ReservationRequestDTO, accommodationId: number, guestId: number): Observable<Reservation> {
-    const params = new HttpParams().set('accommodationId', accommodationId);
-    params.set('guestId', guestId);
+    const params = new HttpParams().set('accommodationId', accommodationId).set('guestId', guestId);
     return this.httpClient.post<Reservation>(environment.apiHost + "reservations/create", reservation, {params});
   }
 }
