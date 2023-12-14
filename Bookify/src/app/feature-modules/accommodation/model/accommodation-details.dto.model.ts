@@ -11,4 +11,5 @@ export interface AccommodationDetailsDTO {
   filters: string[];
   address: Address;
   owner: Owner;
+  pricePer: string
 }

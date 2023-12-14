@@ -1,4 +1,3 @@
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {AccommodationBasicModel} from "../model/accommodation-basic.model";
 import {AccommodationService} from "../accommodation.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -6,6 +5,7 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {FilterDTO} from "../model/filter.dto.model";
 import {FilterComponent} from "../../../layout/filter/filter.component";
 import {SearchComponent} from "../../../layout/search/search.component";
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild} from "@angular/core";
 
 @Component({
   selector: 'app-results-page',

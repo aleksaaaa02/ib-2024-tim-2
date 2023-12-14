@@ -8,6 +8,7 @@ import { NavigationGuestComponent } from './navigation-guest/navigation-guest.co
 import { NavigationAdminComponent } from './navigation-admin/navigation-admin.component';
 import { NavigationOwnerComponent } from './navigation-owner/navigation-owner.component';
 import { MessageDialogComponent } from './message-dialog/message-dialog.component';
+import { ReservationDialogComponent } from './reservation-dialog/reservation-dialog.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { MessageDialogComponent } from './message-dialog/message-dialog.componen
     NavigationGuestComponent,
     NavigationAdminComponent,
     NavigationOwnerComponent,
-    MessageDialogComponent
+    MessageDialogComponent,
+    ReservationDialogComponent
   ],
   imports: [
     CommonModule,
