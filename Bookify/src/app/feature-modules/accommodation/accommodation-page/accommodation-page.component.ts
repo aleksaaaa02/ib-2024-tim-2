@@ -9,6 +9,7 @@ import {AuthenticationService} from "../../authentication/authentication.service
 import {ReservationDialogComponent} from "../../../layout/reservation-dialog/reservation-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {ReserveComponent} from "../reserve/reserve.component";
+import {MessageDialogComponent} from "../../../layout/message-dialog/message-dialog.component";
 
 @Component({
   selector: 'app-accommodation-page',
@@ -144,15 +145,22 @@ export class AccommodationPageComponent implements OnInit{
   }
 
   reservePressed(values: { persons: number, dateBegin: string, dateEnd: string}): void {
-    this.openDialog(this.accommodation.id, new Date(Date.parse(values.dateBegin)), new Date(Date.parse(values.dateBegin)), values.persons, this.accommodation.pricePer);
+    this.openDialog(this.accommodation.id, new Date(Date.parse(values.dateBegin)), new Date(Date.parse(values.dateEnd)), values.persons, this.accommodation.pricePer);
   }
 
   openDialog(id: number, begin: Date, end: Date, persons: number, pricePer: string): void {
-    this.dialog.open(ReservationDialogComponent, {data: {message:"Total cost for this reservation is " + this.accommodationService.getTotalPrice(id, begin, end, pricePer, persons) + " EUR."}}).afterClosed().subscribe((result) => {
-      if (result) {
-        //pravimo zahtev da se doda na server novi request
-        //mora da dobavi cenu za uneti period
+    this.accommodationService.getTotalPrice(id, begin, end, pricePer, persons).subscribe( {
+      next: (data): void => {
+        if (data == -1)
+          this.dialog.open(MessageDialogComponent, {data: {message:"Accommodation it not available for this dates."}});
+        else {
+          this.dialog.open(ReservationDialogComponent, {data: {message: "Total cost for this reservation is " + Math.round(data * 100) / 100 + " EUR."}}).afterClosed().subscribe((result) => {
+            if (result) {
+              //pravimo zahtev da se doda na server novi request
+            }
+          })
+        }
       }
-    })
+    });
   }
 }

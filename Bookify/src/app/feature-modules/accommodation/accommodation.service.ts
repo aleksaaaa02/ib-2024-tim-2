@@ -52,7 +52,7 @@ export class AccommodationService {
   }
 
   getTotalPrice(accommodationId: number, begin: Date, end: Date, pricePer: string, persons: number){
-    return this.httpClient.get<number>(environment.apiHost + 'accommodation/' +
+    return this.httpClient.get<number>(environment.apiHost + 'accommodations/' +
       "price?id=" + accommodationId +
       "&begin=" + (moment(begin)).format('DD.MM.YYYY') +
       "&end=" + (moment(end)).format('DD.MM.YYYY') +
