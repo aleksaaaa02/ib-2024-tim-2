@@ -54,7 +54,7 @@
       </div>
     </div>
   </div>
-  <div class="two-part">
-    <app-reserve></app-reserve>
+  <div class="two-part" id="reserve">
+    <app-reserve (buttonPressed)="reservePressed($event)"></app-reserve>
   </div>
 </div>

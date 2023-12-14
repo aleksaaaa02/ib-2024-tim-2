@@ -1,13 +1,14 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {AccommodationService} from "../accommodation.service";
-import {AccommodationDTO} from "../model/accommodation.dto.model";
 import {AccommodationDetailsDTO} from "../model/accommodation-details.dto.model";
 import {AccountService} from "../../account/account.service";
-import contains from "@popperjs/core/lib/dom-utils/contains";
-import {FilterComponent} from "../../../layout/filter/filter.component";
 import {MapComponent} from "../../../shared/map/map.component";
 import {CarouselComponent} from "../carousel/carousel.component";
+import {AuthenticationService} from "../../authentication/authentication.service";
+import {ReservationDialogComponent} from "../../../layout/reservation-dialog/reservation-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
+import {ReserveComponent} from "../reserve/reserve.component";
 
 @Component({
   selector: 'app-accommodation-page',
@@ -46,8 +47,9 @@ export class AccommodationPageComponent implements OnInit{
   amenitiesList: [string, string][] = [];
   @ViewChild(MapComponent) mapComponent: MapComponent;
   @ViewChild(CarouselComponent) carouselComponent: CarouselComponent;
+  @ViewChild(ReserveComponent) reservationComponent: ReserveComponent;
 
-  constructor(private route: ActivatedRoute, private accommodationService: AccommodationService, private accountService: AccountService) {
+  constructor(public dialog: MatDialog, private authenticationService: AuthenticationService, private route: ActivatedRoute, private accommodationService: AccommodationService, private accountService: AccountService) {
   }
 
   ngOnInit(): void {
@@ -55,6 +57,20 @@ export class AccommodationPageComponent implements OnInit{
       top: 0,
       behavior: 'instant'
     });
+    this.getAccommodationData();
+    this.setIfUser();
+  }
+
+  private setIfUser(){
+    const reserve = document.getElementById("reserve");
+    console.log(this.authenticationService.getRole());
+    if (reserve != null) {
+      if (this.authenticationService.getRole() == "GUEST")
+        reserve.style.display = 'block';
+    }
+  }
+
+  private getAccommodationData(){
     this.route.params.subscribe((params) => {
       const id = +params['accommodationId'];
       this.accommodationService.getAccommodationDetails(id).subscribe({
@@ -125,5 +141,18 @@ export class AccommodationPageComponent implements OnInit{
       if (el1 != null)
         el1.style.display = 'none';
     }
+  }
+
+  reservePressed(values: { persons: number, dateBegin: string, dateEnd: string}): void {
+    this.openDialog(this.accommodation.id, new Date(Date.parse(values.dateBegin)), new Date(Date.parse(values.dateBegin)), values.persons, this.accommodation.pricePer);
+  }
+
+  openDialog(id: number, begin: Date, end: Date, persons: number, pricePer: string): void {
+    this.dialog.open(ReservationDialogComponent, {data: {message:"Total cost for this reservation is " + this.accommodationService.getTotalPrice(id, begin, end, pricePer, persons) + " EUR."}}).afterClosed().subscribe((result) => {
+      if (result) {
+        //pravimo zahtev da se doda na server novi request
+        //mora da dobavi cenu za uneti period
+      }
+    })
   }
 }
