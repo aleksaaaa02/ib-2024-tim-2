@@ -31,7 +31,7 @@ export class RegistrationComponent implements OnInit {
       city: ['', Validators.required],
       streetAddress: ['', Validators.required],
       zipCode: ['', Validators.required],
-      phone: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern('[\+]?[0-9]{3,12}')]],
       role: ['', Validators.required],
     });
   }

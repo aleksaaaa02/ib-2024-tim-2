@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-forgot-password',
@@ -9,11 +9,11 @@ import { FormControl, Validators } from '@angular/forms';
 export class ForgotPasswordComponent {
   email = new FormControl('', [Validators.required, Validators.email]);
   hide = true;
-  getErrorMessage() {
-    if (this.email.hasError('required')) {
-      return 'You must enter a value';
-    }
+  form: FormGroup;
 
-    return this.email.hasError('email') ? 'Not a valid email' : '';
+  constructor(private fb: FormBuilder) {
+    this.form = fb.group({
+      email: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')]]
+    })
   }
 }
