@@ -97,4 +97,14 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     @Query("SELECT o.accommodations FROM Owner o WHERE o.id =:ownerId ")
     List<Accommodation> getOwnerAccommodation(Long ownerId);
 
+    @Query("SELECT COUNT(a) FROM Accommodation a " +
+            "JOIN a.availability av " +
+            "WHERE av.startDate <= :begin " +
+            "AND av.endDate >= :begin " +
+            "AND av.startDate <= :end " +
+            "AND av.endDate >= :end " +
+            "AND a.id = :accommodationId")
+    long checkIfAccommodationAvailable(@Param("accommodationId") Long accommodationId,
+                                          @Param("begin") LocalDate begin,
+                                          @Param("end") LocalDate end);
 }

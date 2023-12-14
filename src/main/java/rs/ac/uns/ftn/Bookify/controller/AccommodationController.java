@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.Bookify.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -77,6 +78,17 @@ public class AccommodationController {
         //returns details about one accommodation
         AccommodationDetailDTO accommodationDetailDTO = accommodationService.getAccommodationDetails(accommodationId);
         return new ResponseEntity<>(accommodationDetailDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/price", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    public ResponseEntity<Double> getTotalPrice(@RequestParam("id") Long id, @RequestParam("begin") @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("pricePer") PricePer pricePer, @RequestParam("persons") int persons) {
+        LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        double response = -1;
+        if (accommodationService.isAvailable(id, beginL, endL))
+            response = accommodationService.getTotalPrice(id, beginL, endL, pricePer, persons);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/top-accommodations", produces = MediaType.APPLICATION_JSON_VALUE)
