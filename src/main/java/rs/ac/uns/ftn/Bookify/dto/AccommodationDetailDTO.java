@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.Bookify.dto;
 
 import lombok.*;
 import rs.ac.uns.ftn.Bookify.enumerations.Filter;
+import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.model.Address;
 import rs.ac.uns.ftn.Bookify.model.Review;
 
@@ -19,4 +20,5 @@ public class AccommodationDetailDTO {
     private Collection<Filter> filters;
     private Address address;
     private OwnerDTO owner;
+    private PricePer pricePer;
 }

@@ -15,10 +15,10 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "JOIN a.availability av " +
             "WHERE a.maxGuest >= :persons " +
             "AND a.minGuest <= :persons " +
-            "AND av.startDate <= :begin " +
+            "AND (av.startDate <= :begin " +
             "AND av.endDate >= :begin " +
             "AND av.startDate <= :end " +
-            "AND av.endDate >= :end " +
+            "AND av.endDate >= :end) " +
             "AND (LOWER(ad.city) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(ad.address) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(a.name) LIKE LOWER(CONCAT('%', :location, '%')) " +
@@ -97,4 +97,21 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     @Query("SELECT o.accommodations FROM Owner o WHERE o.id =:ownerId ")
     List<Accommodation> getOwnerAccommodation(Long ownerId);
 
+    @Query("SELECT COUNT(a) FROM Accommodation a " +
+            "JOIN a.availability av " +
+            "WHERE av.startDate <= :begin " +
+            "AND av.endDate >= :begin " +
+            "AND av.startDate <= :end " +
+            "AND av.endDate >= :end " +
+            "AND a.id = :accommodationId")
+    long checkIfAccommodationAvailable(@Param("accommodationId") Long accommodationId,
+                                          @Param("begin") LocalDate begin,
+                                          @Param("end") LocalDate end);
+
+    @Query("SELECT COUNT(a) FROM Accommodation a " +
+            "WHERE a.id = :accommodationId " +
+            "AND a.minGuest <= :persons " +
+            "AND a.maxGuest >= :persons")
+    long checkPersons(@Param("accommodationId") Long accommodationId,
+                                       @Param("persons") int persons);
 }

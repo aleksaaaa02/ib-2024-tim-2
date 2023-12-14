@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.Bookify.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,14 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
-import rs.ac.uns.ftn.Bookify.mapper.AccommodationBasicDTOMapper;
-import rs.ac.uns.ftn.Bookify.mapper.AccommodationDTOMapper;
-import rs.ac.uns.ftn.Bookify.mapper.AccommodationInesertDTOMapper;
-import rs.ac.uns.ftn.Bookify.mapper.PriceListItemDTOMapper;
+import rs.ac.uns.ftn.Bookify.mapper.*;
 import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
 import java.io.IOException;
@@ -77,6 +76,17 @@ public class AccommodationController {
         //returns details about one accommodation
         AccommodationDetailDTO accommodationDetailDTO = accommodationService.getAccommodationDetails(accommodationId);
         return new ResponseEntity<>(accommodationDetailDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/price", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    public ResponseEntity<Double> getTotalPrice(@RequestParam("id") Long id, @RequestParam("begin") @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("pricePer") PricePer pricePer, @RequestParam("persons") int persons) {
+        LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        double response = -1;
+        if (accommodationService.isAvailable(id, beginL, endL) && accommodationService.checkPersons(id, persons))
+            response = accommodationService.getTotalPrice(id, beginL, endL, pricePer, persons);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/top-accommodations", produces = MediaType.APPLICATION_JSON_VALUE)
