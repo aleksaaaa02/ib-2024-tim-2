@@ -10,6 +10,7 @@ import { AccommodationBasicFormModel } from '../../model/accommodation-basic.for
 import { AccommodationGuestsFormModel } from '../../model/accommodation-guests.form.model';
 import { ImagesDTO } from '../../model/images';
 import { AccommodationAvailability } from '../../model/accommodation-availability.form.model';
+import { AuthenticationService } from '../../../authentication/authentication.service';
 
 @Component({
   selector: 'app-accommodation-create',
@@ -35,7 +36,7 @@ export class AccommodationCreateComponent implements OnInit {
   availabilityInfo: AccommodationAvailability;
   availabilityInfoUpdate: AccommodationAvailability;
 
-  constructor(private accommodationService: AccommodationService, private router: Router, private _snackBar: MatSnackBar, private route: ActivatedRoute) { }
+  constructor(private accommodationService: AccommodationService, private router: Router, private _snackBar: MatSnackBar, private route: ActivatedRoute, private authenticationService: AuthenticationService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -146,7 +147,8 @@ export class AccommodationCreateComponent implements OnInit {
       };
       //owner id
       if (isNaN(this.accommodationId)) {
-        this.accommodationService.add(3, dto).subscribe(
+        const id: number = this.authenticationService.getUserId();
+        this.accommodationService.add(id, dto).subscribe(
           {
             next: (data: Accommodation) => {
               this.images.forEach((elem) => {
