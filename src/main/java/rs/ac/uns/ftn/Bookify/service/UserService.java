@@ -18,6 +18,7 @@ import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
+import java.security.SecureRandom;
 import java.util.*;
 
 @Service
@@ -101,9 +102,40 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean resetPassword() {
-        // sends email to reset password
-        return false;
+    public String resetPassword(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new BadRequestException("Not found");
+        }
+        StringBuilder randomPassword = generaterandomPassword();
+        user.setPassword(passwordEncoder.encode(randomPassword.toString()));
+        userRepository.save(user);
+        return randomPassword.toString();
+    }
+
+    private static StringBuilder generaterandomPassword() {
+        String upperCaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowerCaseChars = "abcdefghijklmnopqrstuvwxyz";
+        String numberChars = "0123456789";
+        String specialChars = "!@#$%^&*()_-+=";
+        String allChars = upperCaseChars + lowerCaseChars + numberChars + specialChars;
+        SecureRandom random = new SecureRandom();
+        StringBuilder randomString = new StringBuilder();
+
+        randomString.append(getRandomChar(upperCaseChars, random));
+        randomString.append(getRandomChar(lowerCaseChars, random));
+        randomString.append(getRandomChar(numberChars, random));
+        randomString.append(getRandomChar(specialChars, random));
+
+        int remainingLength = 8;
+        while (remainingLength-- > 0) {
+            randomString.append(allChars.charAt(random.nextInt(allChars.length())));
+        }
+        return randomString;
+    }
+
+    private static char getRandomChar(String charSet, SecureRandom random) {
+        return charSet.charAt(random.nextInt(charSet.length()));
     }
 
     @Override
@@ -233,7 +265,7 @@ public class UserService implements IUserService {
         for (User user : users) {
             calendar.setTime(user.getActive().getTime());
             calendar.add(Calendar.MINUTE, 1);
-            if (!user.getActive().isActive() && calendar.getTime().compareTo(new Date()) < 0){
+            if (!user.getActive().isActive() && calendar.getTime().compareTo(new Date()) < 0) {
                 userRepository.deleteUser(user.getId());
             }
         }

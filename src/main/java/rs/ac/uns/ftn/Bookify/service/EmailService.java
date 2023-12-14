@@ -14,13 +14,13 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public void sendActivationEmail(String to, String activationLink) throws MessagingException {
+    public void sendEmail(String subject, String to, String body, String addition) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         helper.setTo(to);
-        helper.setSubject("Account Activation");
-        helper.setText("Click the link to activate your account: " + activationLink, true);
+        helper.setSubject(subject);
+        helper.setText(body + addition, true);
 
         javaMailSender.send(message);
     }

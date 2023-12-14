@@ -80,7 +80,8 @@ public class UserController {
         User user = userService.create(newUser);
         MessageDTO token = new MessageDTO();
         if (user != null) {
-            emailService.sendActivationEmail(user.getEmail(), "http://localhost:4200/confirmation?uuid=" + user.getActive().getHashToken());
+            emailService.sendEmail("Account Activation", user.getEmail(), "Click the link to activate your account: ",
+                    "http://localhost:4200/confirmation?uuid=" + user.getActive().getHashToken());
             token.setToken(user.getActive().getHashToken());
             return new ResponseEntity<>(token, HttpStatus.OK);
         }
@@ -105,9 +106,14 @@ public class UserController {
         return new ResponseEntity<>("Failed to change password", HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/{userId}/forgot-password")
-    public ResponseEntity<String> forgotPassword(@PathVariable Long userId) {
-        return new ResponseEntity<>("Email sent", HttpStatus.OK);
+    @GetMapping("/forgot-password/{email}")
+    public ResponseEntity<String> forgotPassword(@PathVariable String email) throws MessagingException {
+        String newPassword = userService.resetPassword(email);
+        if (newPassword != null) {
+            emailService.sendEmail("Reset Password", email, "Your new password is: ", newPassword);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PutMapping(value = "/activate-account", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

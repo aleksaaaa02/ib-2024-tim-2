@@ -15,7 +15,7 @@ public interface IUserService {
     public User create(UserRegisteredDTO newUser);
     public User update(UserDetailDTO updatedUser);
     public boolean changePassword(Long userId, String newPassword);
-    public boolean resetPassword();
+    public String resetPassword(String email);
     public boolean activateUser(String uuid);
     public boolean isLoginAvailable(Long userId);
     public boolean delete(Long userId);
