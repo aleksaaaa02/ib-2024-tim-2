@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import rs.ac.uns.ftn.Bookify.enumerations.AccommodationStatusRequest;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
 import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
@@ -36,8 +37,9 @@ public class Accommodation {
     @Column(nullable = false)
     private int cancellationDeadline;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private boolean accepted;
+    private AccommodationStatusRequest status;
 
     @Column(nullable = false)
     private boolean manual = true;

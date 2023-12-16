@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.Bookify.dto.*;
+import rs.ac.uns.ftn.Bookify.enumerations.AccommodationStatusRequest;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
 import rs.ac.uns.ftn.Bookify.mapper.*;
 import rs.ac.uns.ftn.Bookify.model.*;
@@ -217,20 +218,19 @@ public class AccommodationController {
         return new ResponseEntity<Long>(accommodation.getId(), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/approve/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/approve/{accommodationId}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<AccommodationDTO> approveAccommodation(@PathVariable Long accommodationId) {
+    public ResponseEntity<String> approveAccommodation(@PathVariable Long accommodationId) {
         //change to accepted
-        AccommodationDTO approveAccommodation = new AccommodationDTO();
-        return new ResponseEntity<AccommodationDTO>(approveAccommodation, HttpStatus.OK);
+        this.accommodationService.setAccommodationStatus(accommodationId, AccommodationStatusRequest.APPROVED);
+        return new ResponseEntity<>(String.format("Accommodation %d approved", accommodationId), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/reject/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/reject/{accommodationId}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<AccommodationDTO> rejectAccommodation(@PathVariable Long accommodationId) {
-        //change to reject
-        AccommodationDTO rejectAccommodation = new AccommodationDTO();
-        return new ResponseEntity<AccommodationDTO>(rejectAccommodation, HttpStatus.OK);
+    public ResponseEntity<String> rejectAccommodation(@PathVariable Long accommodationId) {
+        this.accommodationService.setAccommodationStatus(accommodationId, AccommodationStatusRequest.REJECTED);
+        return new ResponseEntity<>(String.format("Accommodation %d rejected", accommodationId), HttpStatus.OK);
     }
 
     @DeleteMapping("/remove-from-favorites/{guestId}/{accommodationId}")
@@ -305,5 +305,10 @@ public class AccommodationController {
         Accommodation accommodation = accommodationService.getAccommodation(accommodationId);
         AccommodationInsertDTO accommodationInsertDTO = AccommodationInesertDTOMapper.fromAccommodationtoDTO(accommodation);
         return new ResponseEntity<>(accommodationInsertDTO, HttpStatus.OK);
+    }
+    @GetMapping(value = "/requests", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    public ResponseEntity<Collection<AccommodationRequestDTO>> getRequests() {
+        return new ResponseEntity<>(this.userService.findAccommodationRequests(), HttpStatus.OK);
     }
 }

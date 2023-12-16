@@ -6,11 +6,11 @@ import rs.ac.uns.ftn.Bookify.dto.AccommodationBasicDTO;
 import rs.ac.uns.ftn.Bookify.dto.AccommodationDetailDTO;
 import rs.ac.uns.ftn.Bookify.dto.FilterDTO;
 import rs.ac.uns.ftn.Bookify.dto.SearchResponseDTO;
+import rs.ac.uns.ftn.Bookify.enumerations.AccommodationStatusRequest;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
-import rs.ac.uns.ftn.Bookify.model.Reservation;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -50,4 +50,5 @@ public interface IAccommodationService {
     public Collection<Accommodation> filterAccommodations(int persons, String location, LocalDate bein, LocalDate end, FilterDTO filter);
     public boolean isAvailable(Long id, LocalDate beginL, LocalDate endL);
     public boolean checkPersons(Long id, int persons);
+    public void setAccommodationStatus(Long id, AccommodationStatusRequest newStatus);
 }

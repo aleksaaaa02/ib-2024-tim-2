@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.*;
+import rs.ac.uns.ftn.Bookify.enumerations.AccommodationStatusRequest;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
 import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
@@ -146,6 +147,7 @@ public class AccommodationService implements IAccommodationService {
 
     @Override
     public Accommodation save(Accommodation accommodation){
+        accommodation.setStatus(AccommodationStatusRequest.CREATED);
         return accommodationRepository.save(accommodation);
     }
 
@@ -155,11 +157,12 @@ public class AccommodationService implements IAccommodationService {
         List<Filter> filters = (List<Filter>) accommodation.getFilters();
         accommodation.setFilters(new HashSet<>());
 //        accommodation.setReviews(); //dodati
+        accommodation.setStatus(AccommodationStatusRequest.EDITED);
         accommodation.setAvailability(a.getAvailability());
         accommodation.setPriceList(a.getPriceList());
-        accommodationRepository.save(accommodation);
         accommodation.setFilters(filters);
         accommodationRepository.save(accommodation);
+
         return 1L;
     }
 
@@ -456,6 +459,17 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public boolean checkPersons(Long id, int persons) {
         return accommodationRepository.checkPersons(id, persons) == 1;
+    }
+
+    @Override
+    public void setAccommodationStatus(Long id, AccommodationStatusRequest newStatus) {
+        Optional<Accommodation> accommodation = accommodationRepository.findById(id);
+        if(accommodation.isEmpty()) {
+            return;
+        }
+        Accommodation a = accommodation.get();
+        a.setStatus(newStatus);
+        accommodationRepository.save(a);
     }
 
     public FileSystemResource getImage(Long id) {

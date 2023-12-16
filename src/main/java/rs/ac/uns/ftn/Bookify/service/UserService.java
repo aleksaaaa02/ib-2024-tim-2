@@ -24,10 +24,8 @@ import java.util.*;
 @Service
 public class UserService implements IUserService {
     private final IImageService imageService;
-
     private final IUserRepository userRepository;
     private final IReservationService reservationService;
-
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -266,9 +264,20 @@ public class UserService implements IUserService {
             calendar.setTime(user.getActive().getTime());
             calendar.add(Calendar.MINUTE, 1);
             if (!user.getActive().isActive() && calendar.getTime().compareTo(new Date()) < 0) {
-                userRepository.deleteUser(user.getId());
+                userRepository.deleteById(user.getId());
             }
         }
+    }
+
+    @Override
+    public List<AccommodationRequestDTO> findAccommodationRequests() {
+        List<AccommodationRequestDTO> response = new ArrayList<>();
+        for(Owner owner : userRepository.findAllOwners()){
+            for(Accommodation accommodation : owner.getAccommodations()){
+                if(!isRequestReactedOn(accommodation)) response.add(new AccommodationRequestDTO(owner, accommodation));
+            }
+        }
+        return response;
     }
 
     private void updateUserData(UserDetailDTO updatedUser, User u) {
@@ -296,5 +305,8 @@ public class UserService implements IUserService {
             default:
                 throw new UserDeletionException("Administrator account can't be deleted");
         }
+    }
+    private boolean isRequestReactedOn(Accommodation a){
+        return a.getStatus().toString().equals("APPROVED") || a.getStatus().toString().equals("REJECTED");
     }
 }

@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.Bookify.repository.interfaces;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import rs.ac.uns.ftn.Bookify.enumerations.AccommodationStatusRequest;
 import rs.ac.uns.ftn.Bookify.model.*;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -114,4 +115,5 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "AND a.maxGuest >= :persons")
     long checkPersons(@Param("accommodationId") Long accommodationId,
                                        @Param("persons") int persons);
+
 }
