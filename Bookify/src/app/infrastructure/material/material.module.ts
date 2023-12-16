@@ -7,6 +7,7 @@ import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatTabsModule} from '@angular/material/tabs';
 // import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 @NgModule({
@@ -31,6 +32,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     BrowserAnimationsModule,
     MatCheckboxModule,
     MatDialogModule,
+    MatTabsModule
     // MatSnackBarModule
   ]
 })
