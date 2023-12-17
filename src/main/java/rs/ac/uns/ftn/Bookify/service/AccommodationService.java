@@ -391,8 +391,12 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public List<Accommodation> getOwnerAccommodation(Long ownerId) {
-        return accommodationRepository.getOwnerAccommodation(ownerId);
+    public List<AccommodationOwnerDTO> getOwnerAccommodation(Long ownerId) {
+        List<AccommodationOwnerDTO> result = new ArrayList<>();
+        for(Accommodation accommodation : accommodationRepository.getOwnerAccommodation(ownerId)){
+            result.add(new AccommodationOwnerDTO(accommodation, getAvgRating(accommodation.getId())));
+        }
+        return result;
     }
 
     @Override

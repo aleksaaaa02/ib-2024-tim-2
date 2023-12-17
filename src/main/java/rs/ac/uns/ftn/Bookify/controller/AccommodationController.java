@@ -122,12 +122,8 @@ public class AccommodationController {
 
     @GetMapping(value = "/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<Collection<AccommodationBasicDTO>> getOwnersAccommodations(@PathVariable Long ownerId) {
-        List<AccommodationBasicDTO> response = new ArrayList<>();
-        for(Accommodation accommodation : this.accommodationService.getOwnerAccommodation(ownerId)){
-            response.add(AccommodationBasicDTOMapper.fromAccommodationToBasicDTO(accommodation));
-        }
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<Collection<AccommodationOwnerDTO>> getOwnersAccommodations(@PathVariable Long ownerId) {
+        return new ResponseEntity<>(this.accommodationService.getOwnerAccommodation(ownerId), HttpStatus.OK);
     }
 
     @GetMapping("/favorites/{guestId}")
