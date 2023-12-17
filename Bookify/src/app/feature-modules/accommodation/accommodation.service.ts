@@ -13,6 +13,7 @@ import { SearchResponseDTO } from "./model/search-response.dto.model";
 import { AccommodationDetailsDTO } from "./model/accommodation-details.dto.model";
 import {ReservationRequestDTO} from "./model/reservation-request.dto.model";
 import {Reservation} from "./model/reservation.model";
+import {AccommodationOwnerDtoModel} from "./model/accommodation.owner.dto.model";
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +24,8 @@ export class AccommodationService {
 
   constructor(private httpClient: HttpClient, @Inject(LOCALE_ID) private locale: string) { }
 
-  getOwnerAccommodations(ownerId: number | undefined): Observable<AccommodationBasicModel[]> {
-    return this.httpClient.get<AccommodationBasicModel[]>(environment.apiAccommodation + '/' + ownerId);
+  getOwnerAccommodations(ownerId: number | undefined): Observable<AccommodationOwnerDtoModel[]> {
+    return this.httpClient.get<AccommodationOwnerDtoModel[]>(environment.apiAccommodation + '/' + ownerId);
   }
 
   getForSearch(location: string, dateBegin: Date, dateEnd: Date, persons: number, page: number, size: number): Observable<SearchResponseDTO> {

@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AccommodationBasicModel} from "../model/accommodation-basic.model";
 import {AccommodationService} from "../accommodation.service";
 import {AuthenticationService} from "../../authentication/authentication.service";
+import {AccommodationOwnerDtoModel} from "../model/accommodation.owner.dto.model";
 
 @Component({
   selector: 'app-owner-accommodations',
@@ -9,7 +10,7 @@ import {AuthenticationService} from "../../authentication/authentication.service
   styleUrl: './owner-accommodations.component.css'
 })
 export class OwnerAccommodationsComponent implements OnInit{
-  accommodations: AccommodationBasicModel[];
+  accommodations: AccommodationOwnerDtoModel[];
 
   constructor(private accommodationService: AccommodationService,
               private authenticationService: AuthenticationService) {
@@ -18,7 +19,8 @@ export class OwnerAccommodationsComponent implements OnInit{
 
   ngOnInit(): void {
     this.accommodationService.getOwnerAccommodations(this.authenticationService.getUserId()).subscribe({
-      next: (data: AccommodationBasicModel[]) => {
+      next: (data: AccommodationOwnerDtoModel[]) => {
+        console.log(data);
         this.accommodations = data;
       },
       error: err => {}

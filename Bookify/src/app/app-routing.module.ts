@@ -29,7 +29,7 @@ const routes: Routes = [
   { path: "accommodation/create", component: AccommodationCreateComponent, canActivate: [authGuard] },
   { path: "accommodations", component: OwnerAccommodationsComponent, canActivate: [authGuard]},
   { path: "accommodation/modify/:accommodationId", component: AccommodationCreateComponent, canActivate: [authGuard] },
-  { path: "accommodation-requests", component: AccommodationRequestsComponent }
+  { path: "accommodation-requests", component: AccommodationRequestsComponent, canActivate: [authGuard] }
 ];
 
 @NgModule({
