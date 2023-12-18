@@ -23,18 +23,21 @@ public class JWTUtils {
     private String SECRET;
 
     @Value("1800000")
-    private int EXPIRES_IN;
+    private int EXPIRES_IN_WEB;
+
+    @Value("5000000")
+    private int EXPIRES_IN_MOBILE;
 
     @Value("Authorization")
     private String AUTH_HEADER;
 
-    //    private static final String AUDIENCE_MOBILE = "mobile";
 //    private static final String AUDIENCE_TABLET = "tablet";
+    private static final String AUDIENCE_MOBILE = "mobile";
     private static final String AUDIENCE_WEB = "web";
 
     private final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 
-    public String generateToken(String username, Long id, String role) {
+    public String generateToken(String username, Long id, String role, String userAgent) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
         claims.put("id", id);
@@ -43,18 +46,25 @@ public class JWTUtils {
                 .setIssuer(APP_NAME)
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(generateExpirationDate())
-                .setAudience(generateAudience())
+                .setExpiration(generateExpirationDate(userAgent))
+                .setAudience(generateAudience(userAgent))
                 .signWith(SIGNATURE_ALGORITHM, SECRET).compact();
     }
 
-    private String generateAudience() {
+    private String generateAudience(String userAgent) {
         // TO-DO implement for mobile devices
+        if(userAgent.contains("Mobile")){
+            return AUDIENCE_MOBILE;
+        }
         return AUDIENCE_WEB;
     }
 
-    private Date generateExpirationDate() {
-        return new Date(new Date().getTime() + EXPIRES_IN);
+    private Date generateExpirationDate(String userAgent) {
+        if(userAgent.contains("Mobile")){
+            return new Date(new Date().getTime() + EXPIRES_IN_MOBILE);
+        }
+
+        return new Date(new Date().getTime() + EXPIRES_IN_WEB);
     }
 
     public String getToken(HttpServletRequest request) {
@@ -140,8 +150,9 @@ public class JWTUtils {
                 && username.equals(userDetails.getUsername()));
     }
 
-    public int getExpiredIn() {
-        return EXPIRES_IN;
+    public int getExpiredIn(String userAgent) {
+
+        return userAgent.contains("Mobile") ? EXPIRES_IN_MOBILE : EXPIRES_IN_WEB;
     }
 
     public String getAuthHeaderFromHeader(HttpServletRequest request) {
