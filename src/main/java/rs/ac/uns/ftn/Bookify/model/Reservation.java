@@ -31,10 +31,10 @@ public class Reservation {
 	@Column(nullable = false)
 	private int guestNumber;
 
-	@ManyToOne(cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private Guest guest;
 
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private Accommodation accommodation;
 
 	@Enumerated(EnumType.STRING)

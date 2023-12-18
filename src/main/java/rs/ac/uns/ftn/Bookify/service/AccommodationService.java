@@ -476,6 +476,11 @@ public class AccommodationService implements IAccommodationService {
         accommodationRepository.save(a);
     }
 
+    @Override
+    public void deleteAccommodation(Long accommodationId) {
+        this.accommodationRepository.deleteById(accommodationId);
+    }
+
     public FileSystemResource getImage(Long id) {
         return imageService.find(id);
     }

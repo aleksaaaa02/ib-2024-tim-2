@@ -48,4 +48,5 @@ public interface IAccommodationService {
     public boolean isAvailable(Long id, LocalDate beginL, LocalDate endL);
     public boolean checkPersons(Long id, int persons);
     public void setAccommodationStatus(Long id, AccommodationStatusRequest newStatus);
+    public void deleteAccommodation(Long accommodationId);
 }

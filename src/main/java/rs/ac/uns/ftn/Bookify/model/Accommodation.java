@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationStatusRequest;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
 import rs.ac.uns.ftn.Bookify.enumerations.Filter;
@@ -16,6 +18,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@SQLDelete(sql = "UPDATE accommodations SET deleted = true WHERE id=?")
+@Where(clause = "deleted = false")
 @Table(name = "accommodations")
 public class Accommodation {
     @Id
@@ -37,6 +41,9 @@ public class Accommodation {
     @Column(nullable = false)
     private int cancellationDeadline;
 
+    @Column(nullable = false)
+    private boolean deleted = Boolean.FALSE;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AccommodationStatusRequest status;
@@ -48,7 +55,7 @@ public class Accommodation {
     private Collection<PricelistItem> priceList;
     @OneToMany(cascade = CascadeType.ALL)
     private Collection<Availability> availability;
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.ALL})
     private Collection<Review> reviews;
 
     @ElementCollection(targetClass = Filter.class)

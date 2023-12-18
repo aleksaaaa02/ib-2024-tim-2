@@ -9,14 +9,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @DiscriminatorValue("ADMIN")
 public class Admin extends User {
-
-    @OneToMany
-    private List<Accommodation> editedAccommodations;
 
 }
