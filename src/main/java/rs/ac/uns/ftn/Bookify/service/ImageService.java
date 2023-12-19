@@ -14,10 +14,7 @@ import rs.ac.uns.ftn.Bookify.repository.interfaces.IImageRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ImageService implements IImageService {
@@ -41,6 +38,14 @@ public class ImageService implements IImageService {
             fileSystemRepository.delete(image.getImagePath());
             imageRepository.delete(image);
         }
+    }
+
+    @Override
+    public void deleteById(Long imageId) {
+        Accommodation accommodation = accommodationRepository.getAccommodationByImageId(imageId);
+        accommodation.getImages().removeIf(image -> Objects.equals(image.getId(), imageId));
+        accommodationRepository.save(accommodation);
+        imageRepository.deleteById(imageId);
     }
 
     public void save(Long accommodationId, List<MultipartFile> images) throws Exception {

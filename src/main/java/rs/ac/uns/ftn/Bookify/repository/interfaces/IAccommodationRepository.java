@@ -114,4 +114,7 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "AND a.maxGuest >= :persons")
     long checkPersons(@Param("accommodationId") Long accommodationId,
                                        @Param("persons") int persons);
+
+    @Query("SELECT a from Accommodation a join a.images img WHERE img.id = :imageId")
+    Accommodation getAccommodationByImageId(Long imageId);
 }

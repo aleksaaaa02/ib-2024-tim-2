@@ -371,6 +371,16 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
+    public List<FileSystemResourcesDTO> getAllImagesDTO(Long accommodationId) {
+        Accommodation a = accommodationRepository.findById(accommodationId).get();
+        List<FileSystemResourcesDTO> returns = new ArrayList<>();
+        for (Image image : a.getImages()) {
+            returns.add( new FileSystemResourcesDTO(imageService.find(image.getId()), image.getId()));
+        }
+        return returns;
+    }
+
+    @Override
     public float getAvgRating(Long id) {
         Float avg = accommodationRepository.getAverageReviewByAccommodationId(id);
         if (avg == null)
