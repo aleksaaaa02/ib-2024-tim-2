@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.Bookify.repository.interfaces;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import rs.ac.uns.ftn.Bookify.enumerations.AccommodationStatusRequest;
 import rs.ac.uns.ftn.Bookify.model.*;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -15,6 +16,7 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "JOIN a.availability av " +
             "WHERE a.maxGuest >= :persons " +
             "AND a.minGuest <= :persons " +
+            "AND a.status = 'APPROVED'" +
             "AND (av.startDate <= :begin " +
             "AND av.endDate >= :begin " +
             "AND av.startDate <= :end " +
@@ -72,6 +74,7 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "AND av.endDate >= :begin " +
             "AND av.startDate <= :end " +
             "AND av.endDate >= :end " +
+            "AND a.status = 'APPROVED'" +
             "AND (LOWER(ad.city) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(ad.address) LIKE LOWER(CONCAT('%', :location, '%')) " +
             "OR LOWER(a.name) LIKE LOWER(CONCAT('%', :location, '%')) " +
@@ -103,6 +106,7 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "AND av.endDate >= :begin " +
             "AND av.startDate <= :end " +
             "AND av.endDate >= :end " +
+            "AND a.status = 'APPROVED'" +
             "AND a.id = :accommodationId")
     long checkIfAccommodationAvailable(@Param("accommodationId") Long accommodationId,
                                           @Param("begin") LocalDate begin,
@@ -114,4 +118,5 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "AND a.maxGuest >= :persons")
     long checkPersons(@Param("accommodationId") Long accommodationId,
                                        @Param("persons") int persons);
+
 }

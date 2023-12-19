@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.Bookify.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import rs.ac.uns.ftn.Bookify.model.User;
 
 @Data
 @NoArgsConstructor
@@ -13,4 +14,12 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private boolean blocked;
+
+    public UserDTO(User u){
+        this.id = u.getId();
+        this.email = u.getEmail();
+        this.firstName = u.getFirstName();
+        this.lastName = u.getLastName();
+        this.blocked = u.isBlocked();
+    }
 }

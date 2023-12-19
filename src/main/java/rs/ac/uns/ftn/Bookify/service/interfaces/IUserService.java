@@ -6,6 +6,7 @@ import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.User;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface IUserService {
     public Collection<User> getAll();
@@ -28,4 +29,5 @@ public interface IUserService {
     public void saveOwnerAccommodation(Accommodation accommodation, Long ownerId);
     public OwnerDTO setOwnerForAccommodation(Long id);
     public void checkInactiveUsers();
+    public List<AccommodationRequestDTO> findAccommodationRequests();
 }

@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.Bookify.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +15,7 @@ import rs.ac.uns.ftn.Bookify.exception.UserNotActivatedException;
 import rs.ac.uns.ftn.Bookify.mapper.UserRegisteredDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IUserRepository;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
@@ -24,19 +26,21 @@ import java.util.*;
 @Service
 public class UserService implements IUserService {
     private final IImageService imageService;
-
     private final IUserRepository userRepository;
     private final IReservationService reservationService;
-
     private final PasswordEncoder passwordEncoder;
+    private final IAccommodationService accommodationService;
+
+
 
     @Autowired
     public UserService(IImageService imageService, IUserRepository userRepository, IReservationService reservationService,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder, @Lazy IAccommodationService accommodationService) {
         this.imageService = imageService;
         this.userRepository = userRepository;
         this.reservationService = reservationService;
         this.passwordEncoder = passwordEncoder;
+        this.accommodationService = accommodationService;
     }
 
 
@@ -266,9 +270,20 @@ public class UserService implements IUserService {
             calendar.setTime(user.getActive().getTime());
             calendar.add(Calendar.MINUTE, 1);
             if (!user.getActive().isActive() && calendar.getTime().compareTo(new Date()) < 0) {
-                userRepository.deleteUser(user.getId());
+                userRepository.deleteById(user.getId());
             }
         }
+    }
+
+    @Override
+    public List<AccommodationRequestDTO> findAccommodationRequests() {
+        List<AccommodationRequestDTO> response = new ArrayList<>();
+        for (Owner owner : userRepository.findAllOwners()) {
+            for (Accommodation accommodation : owner.getAccommodations()) {
+                if (!isRequestReactedOn(accommodation)) response.add(new AccommodationRequestDTO(owner, accommodation));
+            }
+        }
+        return response;
     }
 
     private void updateUserData(UserDetailDTO updatedUser, User u) {
@@ -284,10 +299,14 @@ public class UserService implements IUserService {
     private boolean deletionIsPossibility(User user) {
         switch (getRole(user)) {
             case "OWNER":
+                List<Long> accId = new ArrayList<>();
                 for (Accommodation acc : ((Owner) user).getAccommodations()) {
-                    if (reservationService.hasFutureReservationsAccommodation(acc))
+                    if (reservationService.hasFutureReservationsAccommodation(acc)) {
                         throw new UserDeletionException("Some of your accommodations have active future reservations.");
+                    }
+                    accId.add(acc.getId());
                 }
+                accId.forEach(this.accommodationService::deleteAccommodation);
                 return true;
             case "GUEST":
                 if (reservationService.hasFutureReservationsGuest(user.getId()))
@@ -296,5 +315,9 @@ public class UserService implements IUserService {
             default:
                 throw new UserDeletionException("Administrator account can't be deleted");
         }
+    }
+
+    private boolean isRequestReactedOn(Accommodation a) {
+        return a.getStatus().toString().equals("APPROVED") || a.getStatus().toString().equals("REJECTED");
     }
 }
