@@ -11,7 +11,6 @@ import {MatDialog} from "@angular/material/dialog";
 import {ReserveComponent} from "../reserve/reserve.component";
 import {MessageDialogComponent} from "../../../layout/message-dialog/message-dialog.component";
 import {ReservationRequestDTO} from "../model/reservation-request.dto.model";
-import {NgbToast} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-accommodation-page',
@@ -56,10 +55,6 @@ export class AccommodationPageComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    window.scrollTo({
-      top: 0,
-      behavior: 'instant'
-    });
     this.getAccommodationData();
     this.setIfUser();
   }

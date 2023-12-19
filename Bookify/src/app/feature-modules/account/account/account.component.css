@@ -36,6 +36,7 @@ button[mat-button]{
   margin-right: auto;
   display: flex;
   flex-flow: column;
+  padding-bottom: 2.5rem;
 }
 
 .button-holder button[mat-button]{

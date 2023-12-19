@@ -28,6 +28,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
   private initMap(L: any): void {
     this.map = L.map('map', {
       center: [45.2396, 19.8227],
+      attributionControl: false,
       zoom: 13,
     });
 
@@ -61,7 +62,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
       const lat = coord.lat;
       const lng = coord.lng;
       this.clickedMap = true;
-      
+
       if (this.marker) {
         this.map.removeLayer(this.marker);
       }

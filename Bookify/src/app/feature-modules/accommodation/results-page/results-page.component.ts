@@ -57,7 +57,7 @@ export class ResultsPageComponent implements OnInit, AfterViewInit{
         this.allResults = data.results;
         this.filterComponent.minPossiblePrice = data.minPrice;
         this.filterComponent.minPrice = data.minPrice;
-        this.filterComponent.maxPossiblePrice = data.maxPrice;
+        this.filterComponent.maxPossiblePrice = data.maxPrice + 1;
         this.filterComponent.maxPrice = data.maxPrice;
       },
       error: (_) => {

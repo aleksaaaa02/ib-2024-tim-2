@@ -12,6 +12,9 @@ import { AccommodationCreateComponent } from './feature-modules/accommodation/up
 import { CalendarComponent } from './feature-modules/accommodation/update/calendar/calendar.component';
 import {authGuard} from "./feature-modules/authentication/guard/auth.guard";
 import { OwnerAccommodationsComponent } from './feature-modules/accommodation/owner-accommodations/owner-accommodations.component';
+import {
+  AccommodationRequestsComponent
+} from "./feature-modules/administration/accommodation-requests/accommodation-requests.component";
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -26,10 +29,11 @@ const routes: Routes = [
   { path: "accommodation/create", component: AccommodationCreateComponent, canActivate: [authGuard] },
   { path: "accommodations", component: OwnerAccommodationsComponent, canActivate: [authGuard]},
   { path: "accommodation/modify/:accommodationId", component: AccommodationCreateComponent, canActivate: [authGuard] },
+  { path: "accommodation-requests", component: AccommodationRequestsComponent, canActivate: [authGuard] }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {scrollPositionRestoration: 'enabled'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

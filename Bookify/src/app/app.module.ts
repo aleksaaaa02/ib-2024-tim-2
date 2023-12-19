@@ -34,6 +34,7 @@ import {FormsModule} from "@angular/forms";
 import {SharedModule} from "./shared/shared.module";
 import {AccountModule} from "./feature-modules/account/account.module";
 import {Interceptor} from "./feature-modules/authentication/interceptor/interceptor";
+import {AdministrationModule} from "./feature-modules/administration/administration.module";
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import {Interceptor} from "./feature-modules/authentication/interceptor/intercep
     FormsModule,
     AccommodationModule,
     SharedModule,
+    AdministrationModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true},

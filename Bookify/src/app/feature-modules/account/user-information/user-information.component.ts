@@ -145,7 +145,7 @@ export class UserInformationComponent implements OnInit {
           this.accountService.deleteAccount(this.account.id).subscribe({
             next: (value: string) => {
               this.authenticationService.logout();
-              this.openDialog("Account deleted successfully!", '');
+              this.openDialog("Account deleted successfully!", '/');
             },
             error: (err) => {
               console.log(err);

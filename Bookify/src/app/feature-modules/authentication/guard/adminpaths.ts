@@ -1,3 +1,4 @@
 export const AdminPaths : string[] = [
-  'account'
+  'account',
+  'accommodation-requests'
 ]
