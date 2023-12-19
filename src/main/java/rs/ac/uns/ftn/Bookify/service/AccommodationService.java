@@ -8,12 +8,14 @@ import rs.ac.uns.ftn.Bookify.enumerations.AccommodationStatusRequest;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
 import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
+import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
 import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAvailabilityRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IPriceListItemRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,6 +26,9 @@ import java.util.Collection;
 public class AccommodationService implements IAccommodationService {
     @Autowired
     IAccommodationRepository accommodationRepository;
+
+    @Autowired
+    IReservationService reservationService;
 
     @Autowired
     IUserService userService;
@@ -154,6 +159,8 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public Long update(Accommodation accommodation) {
         Accommodation a = accommodationRepository.getReferenceById(accommodation.getId());
+        if(this.reservationService.hasFutureReservationsAccommodation(a))
+            throw new BadRequestException("Accommodation has reservations in the future");
         List<Filter> filters = (List<Filter>) accommodation.getFilters();
         accommodation.setFilters(new HashSet<>());
 //        accommodation.setReviews(); //dodati
