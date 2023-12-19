@@ -27,6 +27,7 @@ export class AccommodationPhotosComponent implements OnChanges {
         reader.onload = (e) => {
           if (e.target) {
             const imageDataURL = e.target.result as string;
+            console.log(imageDataURL);
             const imageDTO: ImagesDTO = {
               url: imageDataURL,
               file: files[i]
