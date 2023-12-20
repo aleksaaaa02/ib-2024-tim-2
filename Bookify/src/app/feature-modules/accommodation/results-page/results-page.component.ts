@@ -6,6 +6,8 @@ import {FilterDTO} from "../model/filter.dto.model";
 import {FilterComponent} from "../../../layout/filter/filter.component";
 import {SearchComponent} from "../../../layout/search/search.component";
 import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild} from "@angular/core";
+import {SearchResultsService} from "../SearchResultService";
+import {filter} from "rxjs";
 
 @Component({
   selector: 'app-results-page',
@@ -28,9 +30,10 @@ export class ResultsPageComponent implements OnInit, AfterViewInit{
   pageSize = 5;
   allResults: number;
   sort: string = "";
+  loaded: boolean = false;
   filter: FilterDTO = {maxPrice: -1, minPrice: -1, filters: [], types: ["HOTEL", "APARTMENT", "ROOM"]}
 
-  constructor(private accommodationService: AccommodationService, private route: ActivatedRoute, private router: Router, private cdr: ChangeDetectorRef) {}
+  constructor(private accommodationService: AccommodationService, private route: ActivatedRoute, private router: Router, private cdr: ChangeDetectorRef, private searchResultsService: SearchResultsService) {}
 
   onSortChange() {
     this.currentPage = 1;
@@ -43,6 +46,7 @@ export class ResultsPageComponent implements OnInit, AfterViewInit{
       next: (data) => {
         this.accommodationModels = data.accommodations;
         this.allResults = data.results;
+        this.saveToCache();
       },
       error: (_) => {
         console.log("Error occurred!");
@@ -59,6 +63,7 @@ export class ResultsPageComponent implements OnInit, AfterViewInit{
         this.filterComponent.minPrice = data.minPrice;
         this.filterComponent.maxPossiblePrice = data.maxPrice + 1;
         this.filterComponent.maxPrice = data.maxPrice;
+        this.saveToCache();
       },
       error: (_) => {
         console.log("Error occurred!");
@@ -87,14 +92,27 @@ export class ResultsPageComponent implements OnInit, AfterViewInit{
   }
 
   ngOnInit(): void {
-    this.search = <string>this.route.snapshot.params['search'];
-    this.persons = Number(this.route.snapshot.params['persons']);
-    this.dateBeginS = <string>this.route.snapshot.params['begin'];
-    this.dateEndS = <string>this.route.snapshot.params['end'];
-    this.dateBegin = new Date(Date.parse(this.dateBeginS));
-    this.dateEnd = new Date(Date.parse(this.dateEndS));
+    this.accommodationModels = this.searchResultsService.accommodations;
 
-    this.getResults();
+    if (this.accommodationModels === undefined) {
+      console.log("TEST1")
+      this.loaded = false;
+      this.search = <string>this.route.snapshot.params['search'];
+      this.persons = Number(this.route.snapshot.params['persons']);
+      this.dateBeginS = <string>this.route.snapshot.params['begin'];
+      this.dateEndS = <string>this.route.snapshot.params['end'];
+      this.dateBegin = new Date(Date.parse(this.dateBeginS));
+      this.dateEnd = new Date(Date.parse(this.dateEndS));
+      this.getResults();
+    }
+    else {
+      console.log("TEST2 " + console.log(this.searchResultsService.currentPage));
+      this.loaded = true;
+      this.allResults = this.searchResultsService.results;
+      this.currentPage = this.searchResultsService.currentPage;
+      this.pageSize = this.searchResultsService.pageSize;
+      this.LoadSearchBar();
+    }
   }
 
   ngAfterViewInit() {
@@ -103,6 +121,9 @@ export class ResultsPageComponent implements OnInit, AfterViewInit{
     this.searchComponent.dateComponent.setDate(this.dateBeginS.split("-")[1] + "." + this.dateBeginS.split("-")[0] + "." + this.dateBeginS.split("-")[2],
                                                this.dateEndS.split("-")[1] + "." + this.dateEndS.split("-")[0] + "." + this.dateEndS.split("-")[2])
 
+
+    if (this.loaded)
+      this.LoadFilter();
 
     this.cdr.detectChanges();
   }
@@ -126,8 +147,35 @@ export class ResultsPageComponent implements OnInit, AfterViewInit{
     this.filter = {maxPrice: -1, minPrice: -1, filters: [], types: ["HOTEL", "APARTMENT", "ROOM"]}
     this.filterComponent.resetFilter();
     this.sort = "";
+
     this.getResults();
 
     this.router.navigate(['/results', {"search": values.search, "persons": values.persons, "begin": values.dateBegin, "end": values.dateEnd}]);
+  }
+
+  saveToCache(){
+    this.searchResultsService.pageSize = this.pageSize;
+    this.searchResultsService.currentPage = this.currentPage;
+    this.searchResultsService.results = this.allResults;
+    this.searchResultsService.accommodations = this.accommodationModels;
+    this.searchResultsService.selectMaxPrice = this.filterComponent.maxPrice;
+    this.searchResultsService.selectMinPrice = this.filterComponent.minPrice;
+    this.searchResultsService.maxPrice = this.filterComponent.maxPossiblePrice;
+    this.searchResultsService.minPrice = this.filterComponent.minPossiblePrice;
+    this.searchResultsService.filters = {filters: this.filter.filters, types: this.filter.types, maxPrice: this.filter.maxPrice, minPrice: this.filter.minPrice};
+  }
+
+  LoadSearchBar(){
+    this.search = <string>this.route.snapshot.params['search'];
+    this.persons = Number(this.route.snapshot.params['persons']);
+    this.dateBeginS = <string>this.route.snapshot.params['begin'];
+    this.dateEndS = <string>this.route.snapshot.params['end'];
+    this.dateBegin = new Date(Date.parse(this.dateBeginS));
+    this.dateEnd = new Date(Date.parse(this.dateEndS));
+  }
+
+  LoadFilter(){
+    console.log(this.searchResultsService.filters)
+    this.filterComponent.loadFilter(this.searchResultsService.selectMinPrice, this.searchResultsService.selectMaxPrice, this.searchResultsService.minPrice, this.searchResultsService.maxPrice-1, this.searchResultsService.filters);
   }
 }

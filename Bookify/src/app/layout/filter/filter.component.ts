@@ -58,6 +58,10 @@ export class FilterComponent {
     return label.toUpperCase().replace(/[^A-Z]/g, '_');
   }
 
+  transformBackLabel(label: string): string {
+    return label.at(0) + label.slice(1, label.length).toLowerCase();
+  }
+
   resetFilter(){
     for (const el of this.checkboxLabels){
       const c = document.getElementById("cbx-" + el) as HTMLInputElement;
@@ -65,6 +69,26 @@ export class FilterComponent {
     }
     for (const el of this.accommodationCheckbox){
       const c = document.getElementById("cbx-" + el) as HTMLInputElement;
+      c.checked = true;
+    }
+  }
+
+  loadFilter(minPrice: number, maxPrice: number, minPossiblePrice: number, maxPossiblePrice: number, filter: FilterDTO){
+    this.minPrice = minPrice;
+    this.maxPrice = maxPrice;
+    this.minPossiblePrice = minPossiblePrice;
+    this.maxPossiblePrice = maxPossiblePrice;
+
+    // for (const el of this.checkboxLabels){
+    //   const c = document.getElementById("cbx-" + el) as HTMLInputElement;
+    //   c.checked = false;
+    // }
+    for (const el of this.accommodationCheckbox){
+      const c = document.getElementById("cbx-" + el) as HTMLInputElement;
+      c.checked = false;
+    }
+    for (const el of filter.types){
+      const c = document.getElementById("cbx-" + this.transformBackLabel(el)) as HTMLInputElement;
       c.checked = true;
     }
   }
