@@ -31,6 +31,9 @@ public class Reservation {
 	@Column(nullable = false)
 	private int guestNumber;
 
+	@Column(nullable = false)
+	private double price;
+
 	@ManyToOne(cascade = {CascadeType.ALL})
 	private Guest guest;
 
@@ -39,4 +42,6 @@ public class Reservation {
 
 	@Enumerated(EnumType.STRING)
 	private Status status;
+
+
 }
