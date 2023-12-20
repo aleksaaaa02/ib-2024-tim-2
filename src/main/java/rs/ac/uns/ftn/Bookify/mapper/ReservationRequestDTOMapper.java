@@ -6,6 +6,9 @@ import rs.ac.uns.ftn.Bookify.dto.ReservationRequestDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.Status;
 import rs.ac.uns.ftn.Bookify.model.Reservation;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 @Component
 public class ReservationRequestDTOMapper {
 
@@ -16,6 +19,8 @@ public class ReservationRequestDTOMapper {
     public static Reservation fromReservationRequestDTOToReservation(ReservationRequestDTO reservationRequestDTO) {
         Reservation r = modelMapper.map(reservationRequestDTO, Reservation.class);
         r.setStatus(Status.PENDING);
+        r.setStart(reservationRequestDTO.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        r.setEnd(reservationRequestDTO.getEnd().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         return r;
     }
 }

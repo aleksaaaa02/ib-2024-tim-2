@@ -223,6 +223,10 @@ public class AccommodationService implements IAccommodationService {
         newPricelistItem.setEndDate(end);
         newPricelistItem.setPrice(item.getPrice());
 
+        if(reservationService.hasReservationInRange(accommodationId, item.getStartDate(), item.getEndDate())){
+            throw new BadRequestException("Accommodation has reservations");
+        }
+
         Accommodation accommodation = trimOverlapingIntervals(accommodationId, start, end);
 
         accommodation.getPriceList().add(newPricelistItem);
@@ -331,6 +335,11 @@ public class AccommodationService implements IAccommodationService {
 
     @Override
     public Boolean deletePriceListItem(Long accommodationId, PricelistItem item) {
+
+        if(reservationService.hasReservationInRange(accommodationId, item.getStartDate(), item.getEndDate())){
+            throw new BadRequestException("Accommodation has reservations");
+        }
+
         trimOverlapingIntervals(accommodationId, item.getStartDate(), item.getEndDate());
         trimOverlapingAvailabilityIntervals(accommodationId, item.getStartDate(), item.getEndDate());
         return true;

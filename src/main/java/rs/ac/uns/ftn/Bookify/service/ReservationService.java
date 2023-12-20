@@ -12,6 +12,7 @@ import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
@@ -33,14 +34,20 @@ public class ReservationService implements IReservationService {
 
     @Override
     public boolean hasFutureReservationsGuest(Long guestId) {
-        List<Reservation> futureReservations = this.reservationRepository.findByGuest_IdAndEndAfterAndStatusNotIn(guestId, new Date(), EnumSet.of(Status.CANCELED, Status.REJECTED));
+        List<Reservation> futureReservations = this.reservationRepository.findByGuest_IdAndEndAfterAndStatusNotIn(guestId, LocalDate.now(), EnumSet.of(Status.CANCELED, Status.REJECTED));
         return !futureReservations.isEmpty();
     }
 
     @Override
     public boolean hasFutureReservationsAccommodation(Accommodation accommodation) {
-        List<Reservation> futureReservations = this.reservationRepository.findByAccommodation_IdAndEndAfterAndStatusNotIn(accommodation.getId(), new Date(), EnumSet.of(Status.CANCELED, Status.REJECTED));
+        List<Reservation> futureReservations = this.reservationRepository.findByAccommodation_IdAndEndAfterAndStatusNotIn(accommodation.getId(), LocalDate.now(), EnumSet.of(Status.CANCELED, Status.REJECTED));
         return !futureReservations.isEmpty();
+    }
+
+    @Override
+    public boolean hasReservationInRange(Long accommodationId, LocalDate start, LocalDate end) {
+        List<Reservation> reservations = reservationRepository.findReservationsByAccommodation_IdAndStartBeforeAndEndAfterAndStatusNotIn(accommodationId, end, start, EnumSet.of(Status.CANCELED, Status.REJECTED));
+        return !reservations.isEmpty();
     }
 
     @Override
