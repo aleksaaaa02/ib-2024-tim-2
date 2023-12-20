@@ -157,7 +157,8 @@ export class AccommodationPageComponent implements OnInit{
                 created: new Date(),
                 start: begin,
                 end: end,
-                guestNumber: persons
+                guestNumber: persons,
+                price: Math.round(data * 100) / 100
               };
               this.accommodationService.createReservationRequest(reservation, id, this.authenticationService.getUserId()).subscribe({
                 next: (data): void => {
