@@ -101,7 +101,7 @@ public class AccommodationService implements IAccommodationService {
     }
 
     private boolean fitsPriceRange(AccommodationBasicDTO accommodation, float minPrice, float maxPrice) {
-        return (minPrice == -1 || accommodation.getTotalPrice() <= maxPrice && accommodation.getTotalPrice() > minPrice);
+        return (minPrice == -1 || accommodation.getTotalPrice() <= maxPrice && accommodation.getTotalPrice() >= minPrice);
     }
 
     private boolean fitsAccommodationType(Accommodation accommodation, List<AccommodationType> type) {
