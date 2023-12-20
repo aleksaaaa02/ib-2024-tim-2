@@ -23,10 +23,10 @@ public class Reservation {
 	private Date created;
 
 	@Column(nullable = false)
-	private Date start;
+	private LocalDate start;
 
 	@Column(nullable = false)
-	private Date end;
+	private LocalDate end;
 
 	@Column(nullable = false)
 	private int guestNumber;
