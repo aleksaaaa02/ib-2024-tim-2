@@ -4,6 +4,7 @@ package rs.ac.uns.ftn.Bookify.controller;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -129,15 +130,15 @@ public class UserController {
     }
 
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<UserJWT> login(@RequestBody UserCredentialsDTO userCredentials) {
+    public ResponseEntity<UserJWT> login(@RequestBody UserCredentialsDTO userCredentials, @RequestHeader(HttpHeaders.USER_AGENT) String userAgent) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userCredentials.getEmail(), userCredentials.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails user = (UserDetails) authentication.getPrincipal();
         User u = userService.get(user.getUsername());
         if (userService.isLoginAvailable(u.getId())) {
-            String jwt = jwtUtils.generateToken(user.getUsername(), u.getId(), userService.getRole(u));
-            int expiresIn = jwtUtils.getExpiredIn();
+            String jwt = jwtUtils.generateToken(user.getUsername(), u.getId(), userService.getRole(u), userAgent);
+            int expiresIn = jwtUtils.getExpiredIn(userAgent);
             return new ResponseEntity<>(new UserJWT(jwt, (long) expiresIn), HttpStatus.OK);
         }
 
