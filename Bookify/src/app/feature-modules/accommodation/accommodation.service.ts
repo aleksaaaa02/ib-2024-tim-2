@@ -11,9 +11,9 @@ import { PriceList } from './model/priceList.model';
 import { FilterDTO } from "./model/filter.dto.model";
 import { SearchResponseDTO } from "./model/search-response.dto.model";
 import { AccommodationDetailsDTO } from "./model/accommodation-details.dto.model";
-import {ReservationRequestDTO} from "./model/reservation-request.dto.model";
-import {Reservation} from "./model/reservation.model";
-import {AccommodationOwnerDtoModel} from "./model/accommodation.owner.dto.model";
+import { ReservationRequestDTO } from "./model/reservation-request.dto.model";
+import { Reservation } from "./model/reservation.model";
+import { AccommodationOwnerDtoModel } from "./model/accommodation.owner.dto.model";
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +54,7 @@ export class AccommodationService {
 
   }
 
-  getTotalPrice(accommodationId: number, begin: Date, end: Date, pricePer: string, persons: number){
+  getTotalPrice(accommodationId: number, begin: Date, end: Date, pricePer: string, persons: number) {
     return this.httpClient.get<number>(environment.apiHost + 'accommodations/' +
       "price?id=" + accommodationId +
       "&begin=" + (moment(begin)).format('DD.MM.YYYY') +
@@ -123,6 +123,6 @@ export class AccommodationService {
 
   createReservationRequest(reservation: ReservationRequestDTO, accommodationId: number, guestId: number): Observable<Reservation> {
     const params = new HttpParams().set('accommodationId', accommodationId).set('guestId', guestId);
-    return this.httpClient.post<Reservation>(environment.apiHost + "reservations/create", reservation, {params});
+    return this.httpClient.post<Reservation>(environment.apiHost + "reservations/create", reservation, { params });
   }
 }
