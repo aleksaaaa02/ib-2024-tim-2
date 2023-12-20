@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {AccommodationService} from "../accommodation.service";
 import {AccommodationDetailsDTO} from "../model/accommodation-details.dto.model";
@@ -62,6 +62,7 @@ export class AccommodationPageComponent implements OnInit{
   private setIfUser(){
     const reserve = document.getElementById("reserve-comp");
     if (reserve != null) {
+      console.log(this.authenticationService.getRole());
       if (this.authenticationService.getRole() == "GUEST")
         reserve.style.display = 'block';
     }

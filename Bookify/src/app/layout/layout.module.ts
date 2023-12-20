@@ -9,6 +9,11 @@ import { NavigationAdminComponent } from './navigation-admin/navigation-admin.co
 import { NavigationOwnerComponent } from './navigation-owner/navigation-owner.component';
 import { MessageDialogComponent } from './message-dialog/message-dialog.component';
 import { ReservationDialogComponent } from './reservation-dialog/reservation-dialog.component';
+import {FilterComponent} from "./filter/filter.component";
+import {FooterComponent} from "./footer/footer.component";
+import {SearchComponent} from "./search/search.component";
+import {FormsModule} from "@angular/forms";
+import {DatapickerRangeComponent} from "./datapicker-range/datapicker-range.component";
 
 
 @NgModule({
@@ -18,17 +23,25 @@ import { ReservationDialogComponent } from './reservation-dialog/reservation-dia
     NavigationAdminComponent,
     NavigationOwnerComponent,
     MessageDialogComponent,
-    ReservationDialogComponent
+    ReservationDialogComponent,
+    FilterComponent,
+    FooterComponent,
+    SearchComponent,
   ],
   imports: [
     CommonModule,
     MaterialModule,
     NgOptimizedImage,
     AccountModule,
-    RouterModule
+    RouterModule,
+    FormsModule,
+    DatapickerRangeComponent
   ],
   exports: [
-    NavigationBarComponent
+    NavigationBarComponent,
+    FilterComponent,
+    FooterComponent,
+    SearchComponent,
   ]
 })
 export class LayoutModule { }

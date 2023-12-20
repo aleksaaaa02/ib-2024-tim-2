@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AccommodationService } from "../accommodation.service";
-import { Router } from '@angular/router';
+import {Component, Input, OnInit} from '@angular/core';
+import {AccommodationService} from "../accommodation.service";
+import {Router} from '@angular/router';
 import {AccommodationOwnerDtoModel} from "../model/accommodation.owner.dto.model";
 
 @Component({
@@ -26,15 +26,16 @@ export class OwnerAccommodationsCardComponent implements OnInit {
         }
         reader.readAsDataURL(imageData);
       },
-      error: err => { }
+      error: err => {
+      }
     })
   }
 
-  editAccommodation() {
+  editAccommodation(): void {
     this.router.navigate(['/accommodation/modify/', this.accommodation.id]);
   }
 
-  editPrice() {
+  editPrice(): void {
     this.router.navigate(['/accommodation/calendar/', this.accommodation.id]);
   }
 }

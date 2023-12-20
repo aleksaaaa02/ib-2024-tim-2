@@ -52,8 +52,11 @@ export class CalendarComponent implements OnInit {
         data.forEach((element) => {
           this.addPrice(new Date(element.startDate), new Date(element.endDate), element.price);
         })
+      },
+      error: (e) => {
+        this.openSnackBar(e.error, 'Close');
       }
-    })
+    });
   }
 
   private initializeCalendar(): void {
@@ -207,6 +210,9 @@ export class CalendarComponent implements OnInit {
         this.service.addPriceList(this.accommodationId, priceList).subscribe({
           next: (_) => {
             this.getPriceList();
+          },
+          error: (e) => {
+            this.openSnackBar(e.error, 'Close');
           }
         });
       } else {
@@ -219,6 +225,9 @@ export class CalendarComponent implements OnInit {
         this.service.addPriceList(this.accommodationId, priceList).subscribe({
           next: (_) => {
             this.getPriceList();
+          },
+          error: (e) => {
+            this.openSnackBar(e.error, 'Close');
           }
         });
       }
@@ -249,6 +258,9 @@ export class CalendarComponent implements OnInit {
         this.service.deletePriceListItem(this.accommodationId, priceList).subscribe({
           next: (_) => {
             this.getPriceList();
+          },
+          error: (e) => {
+            this.openSnackBar(e.error, 'Close');
           }
         });
       } else {
@@ -261,7 +273,10 @@ export class CalendarComponent implements OnInit {
         this.service.deletePriceListItem(this.accommodationId, priceList).subscribe({
           next: (_) => {
             this.getPriceList();
-          }
+          },
+          error: (e) => {
+          this.openSnackBar(e.error, 'Close');
+        }
         });
       }
     } else {
