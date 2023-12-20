@@ -20,8 +20,7 @@ import {RouterLink} from "@angular/router";
     RouterLink
   ],
   exports: [
-    AccommodationRequestsComponent,
-    AccommodationRequestsCardComponent
+    AccommodationRequestsComponent
   ]
 })
 export class AdministrationModule { }

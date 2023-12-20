@@ -47,7 +47,7 @@ export class NavigationBarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authenticationService.userState.subscribe((result: string) => {
+    this.authenticationService.userState.subscribe((result: string): void => {
       this.role = result;
       this.setAccountImageIcon();
     });
@@ -60,7 +60,7 @@ export class NavigationBarComponent implements OnInit {
   private setAccountImageIcon(): void {
     this.userImage = "assets/images/user.jpg";
     const id: number = this.authenticationService.getUserId();
-    if(id === -1) return;
+    if (id === -1) return;
     this.accountService.getAccountImageId(id).subscribe({
       next: (id: number) => {
         if (id !== -1) {

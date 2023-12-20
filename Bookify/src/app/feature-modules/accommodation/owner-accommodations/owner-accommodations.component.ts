@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {AccommodationBasicModel} from "../model/accommodation-basic.model";
 import {AccommodationService} from "../accommodation.service";
 import {AuthenticationService} from "../../authentication/authentication.service";
 import {AccommodationOwnerDtoModel} from "../model/accommodation.owner.dto.model";

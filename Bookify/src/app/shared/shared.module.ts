@@ -14,7 +14,7 @@ import {MaterialModule} from "../infrastructure/material/material.module";
     MaterialModule
   ],
   exports:[
-    MapComponent
+    MapComponent,
   ]
 })
 export class SharedModule { }

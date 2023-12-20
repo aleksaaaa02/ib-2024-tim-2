@@ -5,13 +5,10 @@ import {NotificationsComponent} from './notifications/notifications.component';
 import {NotificationSettingsComponent} from './notification-settings/notification-settings.component';
 import {MaterialModule} from "../../infrastructure/material/material.module";
 import {AccountComponent} from "./account/account.component";
-import {MatOptionModule} from "@angular/material/core";
-import {MatSelectModule} from "@angular/material/select";
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { PasswordChangeDialogComponent } from './password-change-dialog/password-change-dialog.component';
 import { AccountDeleteDialogComponent } from './account-delete-dialog/account-delete-dialog.component';
-
 
 @NgModule({
   declarations: [
@@ -26,19 +23,12 @@ import { AccountDeleteDialogComponent } from './account-delete-dialog/account-de
     CommonModule,
     MaterialModule,
     NgOptimizedImage,
-    MatOptionModule,
-    MatSelectModule,
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule
   ],
   exports: [
-    AccountComponent,
-    AccountDeleteDialogComponent,
-    NotificationSettingsComponent,
-    NotificationsComponent,
-    PasswordChangeDialogComponent,
-    UserInformationComponent
+    AccountComponent
   ]
 })
 export class AccountModule {

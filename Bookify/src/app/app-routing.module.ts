@@ -10,7 +10,7 @@ import { ForgotPasswordComponent } from './feature-modules/authentication/forgot
 import { ConfirmationComponent } from './feature-modules/authentication/confirmation/confirmation.component';
 import { AccommodationCreateComponent } from './feature-modules/accommodation/update/accommodation-create/accommodation-create.component';
 import { CalendarComponent } from './feature-modules/accommodation/update/calendar/calendar.component';
-import {authGuard} from "./feature-modules/authentication/guard/auth.guard";
+import { authGuard } from "./feature-modules/authentication/guard/auth.guard";
 import { OwnerAccommodationsComponent } from './feature-modules/accommodation/owner-accommodations/owner-accommodations.component';
 import {
   AccommodationRequestsComponent
