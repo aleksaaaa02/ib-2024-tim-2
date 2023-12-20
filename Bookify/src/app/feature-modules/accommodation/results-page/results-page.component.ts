@@ -92,10 +92,7 @@ export class ResultsPageComponent implements OnInit, AfterViewInit{
   }
 
   ngOnInit(): void {
-    this.accommodationModels = this.searchResultsService.accommodations;
-
-    if (this.accommodationModels === undefined) {
-      console.log("TEST1")
+    if (this.searchResultsService.accommodations === undefined) {
       this.loaded = false;
       this.search = <string>this.route.snapshot.params['search'];
       this.persons = Number(this.route.snapshot.params['persons']);
@@ -106,7 +103,7 @@ export class ResultsPageComponent implements OnInit, AfterViewInit{
       this.getResults();
     }
     else {
-      console.log("TEST2 " + console.log(this.searchResultsService.currentPage));
+      this.accommodationModels = this.searchResultsService.accommodations;
       this.loaded = true;
       this.allResults = this.searchResultsService.results;
       this.currentPage = this.searchResultsService.currentPage;

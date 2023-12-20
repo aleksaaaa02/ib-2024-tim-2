@@ -8,7 +8,7 @@ import {AccommodationBasicModel} from "./model/accommodation-basic.model";
   providedIn: 'root',
 })
 export class SearchResultsService {
-  private _accommodations: AccommodationBasicModel[];
+  private _accommodations: AccommodationBasicModel[] | undefined;
   private _filters: FilterDTO;
   private _minPrice: number;
   private _maxPrice: number;
@@ -18,11 +18,11 @@ export class SearchResultsService {
   private _currentPage: number;
   private _pageSize: number;
 
-  get accommodations(): AccommodationBasicModel[] {
+  get accommodations(): AccommodationBasicModel[] | undefined{
     return this._accommodations;
   }
 
-  set accommodations(value: AccommodationBasicModel[]) {
+  set accommodations(value: AccommodationBasicModel[]| undefined) {
     this._accommodations = value;
   }
 
