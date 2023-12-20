@@ -122,8 +122,10 @@ export class ResultsPageComponent implements OnInit, AfterViewInit{
                                                this.dateEndS.split("-")[1] + "." + this.dateEndS.split("-")[0] + "." + this.dateEndS.split("-")[2])
 
 
-    if (this.loaded)
+    if (this.loaded) {
+      this.paginator.pageIndex = this.currentPage-1;
       this.LoadFilter();
+    }
 
     this.cdr.detectChanges();
   }
@@ -175,7 +177,6 @@ export class ResultsPageComponent implements OnInit, AfterViewInit{
   }
 
   LoadFilter(){
-    console.log(this.searchResultsService.filters)
-    this.filterComponent.loadFilter(this.searchResultsService.selectMinPrice, this.searchResultsService.selectMaxPrice, this.searchResultsService.minPrice, this.searchResultsService.maxPrice-1, this.searchResultsService.filters);
+    this.filterComponent.loadFilter(this.searchResultsService.selectMinPrice, this.searchResultsService.selectMaxPrice, this.searchResultsService.minPrice, this.searchResultsService.maxPrice, this.searchResultsService.filters);
   }
 }

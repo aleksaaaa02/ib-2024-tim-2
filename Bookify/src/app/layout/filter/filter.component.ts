@@ -59,7 +59,14 @@ export class FilterComponent {
   }
 
   transformBackLabel(label: string): string {
-    return label.at(0) + label.slice(1, label.length).toLowerCase();
+    if (label === 'FRONT_DESK') {
+      return '24-hour front desk';
+    }else if(label === 'FREE_WIFI'){
+      return 'Free WiFi';
+    }else if(label === 'NON_SMOKING'){
+      return 'Non-smoking';
+    }
+    return [label.at(0), ...label.slice(1).toLowerCase()].join('').replace('_', ' ');
   }
 
   resetFilter(){
@@ -79,10 +86,11 @@ export class FilterComponent {
     this.minPossiblePrice = minPossiblePrice;
     this.maxPossiblePrice = maxPossiblePrice;
 
-    // for (const el of this.checkboxLabels){
-    //   const c = document.getElementById("cbx-" + el) as HTMLInputElement;
-    //   c.checked = false;
-    // }
+    for (const el of filter.filters){
+      console.log(el);
+      const c = document.getElementById("cbx-" + this.transformBackLabel(el)) as HTMLInputElement;
+      c.checked = true;
+    }
     for (const el of this.accommodationCheckbox){
       const c = document.getElementById("cbx-" + el) as HTMLInputElement;
       c.checked = false;
