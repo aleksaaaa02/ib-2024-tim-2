@@ -270,7 +270,7 @@ public class UserService implements IUserService {
             calendar.setTime(user.getActive().getTime());
             calendar.add(Calendar.MINUTE, 1);
             if (!user.getActive().isActive() && calendar.getTime().compareTo(new Date()) < 0) {
-                userRepository.deleteById(user.getId());
+                userRepository.deleteUser(user.getId());
             }
         }
     }
