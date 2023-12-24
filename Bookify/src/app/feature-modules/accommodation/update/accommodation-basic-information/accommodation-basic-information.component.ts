@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AccommodationBasicFormModel } from '../../model/accommodation-basic.form.model';
 
@@ -11,6 +11,7 @@ export class AccommodationBasicInformationComponent implements OnChanges {
   @Output() basicInfoChanged = new EventEmitter<AccommodationBasicFormModel>();
   @Output() validationStatus: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() submitted: boolean = false;
+  @Input() basicInfo: AccommodationBasicFormModel | null = null;
 
   form: FormGroup;
 
@@ -27,6 +28,10 @@ export class AccommodationBasicInformationComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (this.submitted) {
       this.form.markAllAsTouched();
+    }
+    if (this.basicInfo) {
+      this.form.get('propertyName')?.setValue(this.basicInfo.propertyName);
+      this.form.get('description')?.setValue(this.basicInfo.description);
     }
   }
 

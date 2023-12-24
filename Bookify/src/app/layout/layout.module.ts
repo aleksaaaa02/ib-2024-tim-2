@@ -7,7 +7,13 @@ import {RouterModule} from "@angular/router";
 import { NavigationGuestComponent } from './navigation-guest/navigation-guest.component';
 import { NavigationAdminComponent } from './navigation-admin/navigation-admin.component';
 import { NavigationOwnerComponent } from './navigation-owner/navigation-owner.component';
-import { DatapickerRangeComponent } from './datapicker-range/datapicker-range.component';
+import { MessageDialogComponent } from './message-dialog/message-dialog.component';
+import { ReservationDialogComponent } from './reservation-dialog/reservation-dialog.component';
+import {FilterComponent} from "./filter/filter.component";
+import {FooterComponent} from "./footer/footer.component";
+import {SearchComponent} from "./search/search.component";
+import {FormsModule} from "@angular/forms";
+import {DatapickerRangeComponent} from "./datapicker-range/datapicker-range.component";
 
 
 @NgModule({
@@ -15,7 +21,12 @@ import { DatapickerRangeComponent } from './datapicker-range/datapicker-range.co
     NavigationBarComponent,
     NavigationGuestComponent,
     NavigationAdminComponent,
-    NavigationOwnerComponent
+    NavigationOwnerComponent,
+    MessageDialogComponent,
+    ReservationDialogComponent,
+    FilterComponent,
+    FooterComponent,
+    SearchComponent,
   ],
   imports: [
     CommonModule,
@@ -23,11 +34,15 @@ import { DatapickerRangeComponent } from './datapicker-range/datapicker-range.co
     NgOptimizedImage,
     AccountModule,
     RouterModule,
+    FormsModule,
     DatapickerRangeComponent
   ],
   exports: [
     NavigationBarComponent,
-    DatapickerRangeComponent
+    DatapickerRangeComponent,
+    FilterComponent,
+    FooterComponent,
+    SearchComponent
   ]
 })
 export class LayoutModule { }

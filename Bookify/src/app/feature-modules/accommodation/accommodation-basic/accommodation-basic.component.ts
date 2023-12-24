@@ -1,7 +1,6 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {AccommodationBasicModel} from "../model/accommodation-basic.model";
 import {AccommodationService} from "../accommodation.service";
-import {blob} from "stream/consumers";
 import {Router} from "@angular/router";
 
 @Component({

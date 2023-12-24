@@ -1,7 +1,7 @@
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { AccommodationBasicModel } from "./model/accommodation-basic.model";
 import { HttpClient, HttpParams, HttpResponse } from "@angular/common/http";
-import { map, Observable } from "rxjs";
+import { BehaviorSubject, map, Observable } from "rxjs";
 import { environment } from "../../../env/env";
 import moment from 'moment';
 import { AccommodationDTO } from './model/accommodation.dto.model';
@@ -10,7 +10,10 @@ import { PriceListDTO } from './model/priceList.dto.model';
 import { PriceList } from './model/priceList.model';
 import { FilterDTO } from "./model/filter.dto.model";
 import { SearchResponseDTO } from "./model/search-response.dto.model";
-import {AccommodationDetailsDTO} from "./model/accommodation-details.dto.model";
+import { AccommodationDetailsDTO } from "./model/accommodation-details.dto.model";
+import { ReservationRequestDTO } from "./model/reservation-request.dto.model";
+import { Reservation } from "./model/reservation.model";
+import { AccommodationOwnerDtoModel } from "./model/accommodation.owner.dto.model";
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +23,10 @@ export class AccommodationService {
   private accommodations: AccommodationDTO[] = [];
 
   constructor(private httpClient: HttpClient, @Inject(LOCALE_ID) private locale: string) { }
+
+  getOwnerAccommodations(ownerId: number | undefined): Observable<AccommodationOwnerDtoModel[]> {
+    return this.httpClient.get<AccommodationOwnerDtoModel[]>(environment.apiAccommodation + '/' + ownerId);
+  }
 
   getForSearch(location: string, dateBegin: Date, dateEnd: Date, persons: number, page: number, size: number): Observable<SearchResponseDTO> {
     return this.httpClient.get<SearchResponseDTO>(environment.apiHost + 'accommodations/' +
@@ -47,12 +54,21 @@ export class AccommodationService {
 
   }
 
+  getTotalPrice(accommodationId: number, begin: Date, end: Date, pricePer: string, persons: number) {
+    return this.httpClient.get<number>(environment.apiHost + 'accommodations/' +
+      "price?id=" + accommodationId +
+      "&begin=" + (moment(begin)).format('DD.MM.YYYY') +
+      "&end=" + (moment(end)).format('DD.MM.YYYY') +
+      "&pricePer=" + pricePer +
+      "&persons=" + persons);
+  }
+
   getImage(imageId: number): Observable<Blob> {
     return this.httpClient.get(environment.apiHost + "accommodations/image/" + imageId, { responseType: 'blob' });
   }
 
   getAccommodationImages(accommodationId: number): Observable<string[]> {
-    return this.httpClient.get<string[]>(environment.apiHost + "accommodations/images/" + accommodationId, {responseType:"json"});
+    return this.httpClient.get<string[]>(environment.apiHost + "accommodations/images/" + accommodationId, { responseType: "json" });
   }
 
   async getCountries(): Promise<string[]> {
@@ -74,11 +90,19 @@ export class AccommodationService {
 
   add(ownerId: number, accommodation: AccommodationDTO): Observable<Accommodation> {
     const params = new HttpParams().set('ownerId', ownerId);
-    return this.httpClient.post<Accommodation>(environment.apiAccommodation, accommodation, {params});
+    return this.httpClient.post<Accommodation>(environment.apiAccommodation, accommodation, { params });
+  }
+
+  modify(accommodation: Accommodation): Observable<number> {
+    return this.httpClient.put<number>(environment.apiAccommodation, accommodation);
+  }
+
+  getAccommodation(accommodationId: number): Observable<Accommodation> {
+    return this.httpClient.get<Accommodation>(environment.apiAccommodation + "/edit/" + accommodationId);
   }
 
   deletePriceListItem(accommodationId: number, priceListItem: PriceListDTO): Observable<PriceList> {
-    return this.httpClient.delete<PriceList>(environment.apiAccommodation + "/price/" + accommodationId, {"body": priceListItem});
+    return this.httpClient.delete<PriceList>(environment.apiAccommodation + "/price/" + accommodationId, { "body": priceListItem });
   }
 
   addImages(accommodationId: number, images: File[]) {
@@ -89,7 +113,16 @@ export class AccommodationService {
     return this.httpClient.post<string[]>(environment.apiAccommodation + "/" + accommodationId, data);
   }
 
+  getImages(accommodationId: number): Observable<Uint8Array[]> {
+    return this.httpClient.get<Uint8Array[]>(environment.apiAccommodation + "/images/" + accommodationId);
+  }
+
   addPriceList(accommodationId: number, priceList: PriceListDTO) {
     return this.httpClient.post<PriceListDTO>(environment.apiAccommodation + "/" + accommodationId + "/addPrice", priceList);
+  }
+
+  createReservationRequest(reservation: ReservationRequestDTO, accommodationId: number, guestId: number): Observable<Reservation> {
+    const params = new HttpParams().set('accommodationId', accommodationId).set('guestId', guestId);
+    return this.httpClient.post<Reservation>(environment.apiHost + "reservations/create", reservation, { params });
   }
 }

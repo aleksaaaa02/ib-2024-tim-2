@@ -64,6 +64,12 @@
     text-decoration: none;
 }
 
+span {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #a29d92;
+}
+
 @media(max-width: 991px) {
     .message {
         font-size: 1rem;

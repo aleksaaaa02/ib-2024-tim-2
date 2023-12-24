@@ -52,8 +52,11 @@ export class CalendarComponent implements OnInit {
         data.forEach((element) => {
           this.addPrice(new Date(element.startDate), new Date(element.endDate), element.price);
         })
+      },
+      error: (e) => {
+        this.openSnackBar(e.error, 'Close');
       }
-    })
+    });
   }
 
   private initializeCalendar(): void {
@@ -207,6 +210,9 @@ export class CalendarComponent implements OnInit {
         this.service.addPriceList(this.accommodationId, priceList).subscribe({
           next: (_) => {
             this.getPriceList();
+          },
+          error: (e) => {
+            this.openSnackBar(e.error, 'Close');
           }
         });
       } else {
@@ -219,6 +225,9 @@ export class CalendarComponent implements OnInit {
         this.service.addPriceList(this.accommodationId, priceList).subscribe({
           next: (_) => {
             this.getPriceList();
+          },
+          error: (e) => {
+            this.openSnackBar(e.error, 'Close');
           }
         });
       }
@@ -245,10 +254,15 @@ export class CalendarComponent implements OnInit {
           endDate: new Date(this.selectedEndDate),
           price: 0
         };
-        this.deletePrice(this.selectedStartDate, this.selectedEndDate);
+        const ss = this.selectedStartDate;
+        const se = this.selectedEndDate;
         this.service.deletePriceListItem(this.accommodationId, priceList).subscribe({
           next: (_) => {
+            this.deletePrice(ss, se);
             this.getPriceList();
+          },
+          error: (e) => {
+            this.openSnackBar(e.error, 'Close');
           }
         });
       } else {
@@ -257,11 +271,15 @@ export class CalendarComponent implements OnInit {
           endDate: new Date(this.selectedStartDate),
           price: 0
         };
-        this.deletePrice(this.selectedStartDate, this.selectedStartDate);
+        const ss = this.selectedStartDate;
         this.service.deletePriceListItem(this.accommodationId, priceList).subscribe({
           next: (_) => {
+            this.deletePrice(ss, ss);
             this.getPriceList();
-          }
+          },
+          error: (e) => {
+          this.openSnackBar(e.error, 'Close');
+        }
         });
       }
     } else {
@@ -288,6 +306,6 @@ export class CalendarComponent implements OnInit {
   }
 
   finish() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/accommodations']);
   }
 }

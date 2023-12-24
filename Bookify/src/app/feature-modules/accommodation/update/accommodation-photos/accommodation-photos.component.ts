@@ -1,16 +1,25 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { ImagesDTO } from '../../model/images';
-
 @Component({
   selector: 'app-accommodation-photos',
   templateUrl: './accommodation-photos.component.html',
   styleUrl: './accommodation-photos.component.css'
 })
 
-export class AccommodationPhotosComponent {
+export class AccommodationPhotosComponent implements OnChanges {
   @Output() photosChanged = new EventEmitter<ImagesDTO[]>();
+  @Input() images: ImagesDTO[];
 
   selectedImagesObject: ImagesDTO[] = [];
+<<<<<<< HEAD
+=======
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.images) {
+      this.selectedImagesObject = this.images;
+    }
+  }
+>>>>>>> development
 
   onFilesSelected(event: any): void {
     const files: FileList | null = event.target.files;
@@ -31,7 +40,6 @@ export class AccommodationPhotosComponent {
         reader.readAsDataURL(files[i]);
       }
     }
-
     this.photosChanged.emit(this.selectedImagesObject);
   }
 

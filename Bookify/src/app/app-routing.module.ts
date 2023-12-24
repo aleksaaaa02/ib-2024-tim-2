@@ -10,28 +10,28 @@ import { ForgotPasswordComponent } from './feature-modules/authentication/forgot
 import { ConfirmationComponent } from './feature-modules/authentication/confirmation/confirmation.component';
 import { AccommodationCreateComponent } from './feature-modules/accommodation/update/accommodation-create/accommodation-create.component';
 import { CalendarComponent } from './feature-modules/accommodation/update/calendar/calendar.component';
-import { OwnerReservationsComponent } from './feature-modules/reservation/owner-reservations/owner-reservations.component';
-import { GuestReservationsComponent } from './feature-modules/reservation/guest-reservations/guest-reservations.component';
-import { GuestRequestsComponent } from './feature-modules/reservation/guest-requests/guest-requests.component';
+import { OwnerAccommodationsComponent } from './feature-modules/accommodation/owner-accommodations/owner-accommodations.component';
+import {authGuard} from "./feature-modules/authentication/guard/auth.guard";
+import {AccommodationRequestsComponent} from "./feature-modules/administration/accommodation-requests/accommodation-requests.component";
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
   { path: "registration", component: RegistrationComponent },
   { path: "forgot-password", component: ForgotPasswordComponent },
   { path: "confirmation", component: ConfirmationComponent },
-  { path: "results",component: ResultsPageComponent },
+  { path: "results", component: ResultsPageComponent },
   { path: "accommodation/details/:accommodationId", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
-  { path: 'accommodation/calendar/:accommodationId', component: CalendarComponent },
-  { path: "account", component: AccountComponent },
-  { path: "reservation", component: OwnerReservationsComponent },
-  { path: "guest/reservations", component: GuestReservationsComponent },
-  { path: "guest/requests", component: GuestRequestsComponent },
-  { path: "accommodation/create", component: AccommodationCreateComponent }
+  { path: 'accommodation/calendar/:accommodationId', component: CalendarComponent, canActivate: [authGuard] },
+  { path: "account", component: AccountComponent, canActivate: [authGuard] },
+  { path: "accommodation/create", component: AccommodationCreateComponent, canActivate: [authGuard] },
+  { path: "accommodations", component: OwnerAccommodationsComponent, canActivate: [authGuard]},
+  { path: "accommodation/modify/:accommodationId", component: AccommodationCreateComponent, canActivate: [authGuard] },
+  { path: "accommodation-requests", component: AccommodationRequestsComponent, canActivate: [authGuard] }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {scrollPositionRestoration: 'enabled'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

@@ -20,7 +20,6 @@ export class MapComponent implements AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.locationAddress !== "" && !this.clickedMap) {
-      console.log(this.locationAddress);
       this.search(this.locationAddress);
     }
     this.clickedMap = false;
@@ -29,6 +28,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
   private initMap(L: any): void {
     this.map = L.map('map', {
       center: [45.2396, 19.8227],
+      attributionControl: false,
       zoom: 13,
     });
 
@@ -62,7 +62,7 @@ export class MapComponent implements AfterViewInit, OnChanges {
       const lat = coord.lat;
       const lng = coord.lng;
       this.clickedMap = true;
-      
+
       if (this.marker) {
         this.map.removeLayer(this.marker);
       }
@@ -89,10 +89,12 @@ export class MapComponent implements AfterViewInit, OnChanges {
           this.map.removeLayer(this.marker);
         }
         if(result.length>0){
-          this.marker = this.L.marker([result[0].lat, result[0].lon])
-            .addTo(this.map)
-            .openPopup();
-          this.setCenter([result[0].lat, result[0].lon]);
+          if(this.L){
+            this.marker = this.L.marker([result[0].lat, result[0].lon])
+              .addTo(this.map)
+              .openPopup();
+            this.setCenter([result[0].lat, result[0].lon]);
+          }
         }else{
           console.log("GRESKA");
         }

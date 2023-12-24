@@ -1,13 +1,16 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {AccommodationService} from "../accommodation.service";
-import {AccommodationDTO} from "../model/accommodation.dto.model";
 import {AccommodationDetailsDTO} from "../model/accommodation-details.dto.model";
 import {AccountService} from "../../account/account.service";
-import contains from "@popperjs/core/lib/dom-utils/contains";
-import {FilterComponent} from "../../../layout/filter/filter.component";
 import {MapComponent} from "../../../shared/map/map.component";
 import {CarouselComponent} from "../carousel/carousel.component";
+import {AuthenticationService} from "../../authentication/authentication.service";
+import {ReservationDialogComponent} from "../../../layout/reservation-dialog/reservation-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
+import {ReserveComponent} from "../reserve/reserve.component";
+import {MessageDialogComponent} from "../../../layout/message-dialog/message-dialog.component";
+import {ReservationRequestDTO} from "../model/reservation-request.dto.model";
 
 @Component({
   selector: 'app-accommodation-page',
@@ -46,15 +49,26 @@ export class AccommodationPageComponent implements OnInit{
   amenitiesList: [string, string][] = [];
   @ViewChild(MapComponent) mapComponent: MapComponent;
   @ViewChild(CarouselComponent) carouselComponent: CarouselComponent;
+  @ViewChild(ReserveComponent) reservationComponent: ReserveComponent;
 
-  constructor(private route: ActivatedRoute, private accommodationService: AccommodationService, private accountService: AccountService) {
+  constructor(public dialog: MatDialog, private authenticationService: AuthenticationService, private route: ActivatedRoute, private accommodationService: AccommodationService, private accountService: AccountService) {
   }
 
   ngOnInit(): void {
-    window.scrollTo({
-      top: 0,
-      behavior: 'instant'
-    });
+    this.getAccommodationData();
+    this.setIfUser();
+  }
+
+  private setIfUser(){
+    const reserve = document.getElementById("reserve-comp");
+    if (reserve != null) {
+      console.log(this.authenticationService.getRole());
+      if (this.authenticationService.getRole() == "GUEST")
+        reserve.style.display = 'block';
+    }
+  }
+
+  private getAccommodationData(){
     this.route.params.subscribe((params) => {
       const id = +params['accommodationId'];
       this.accommodationService.getAccommodationDetails(id).subscribe({
@@ -125,5 +139,35 @@ export class AccommodationPageComponent implements OnInit{
       if (el1 != null)
         el1.style.display = 'none';
     }
+  }
+
+  reservePressed(values: { persons: number, dateBegin: string, dateEnd: string}): void {
+    this.openDialog(this.accommodation.id, new Date(Date.parse(values.dateBegin)), new Date(Date.parse(values.dateEnd)), values.persons, this.accommodation.pricePer);
+  }
+
+  openDialog(id: number, begin: Date, end: Date, persons: number, pricePer: string): void {
+    this.accommodationService.getTotalPrice(id, begin, end, pricePer, persons).subscribe( {
+      next: (data): void => {
+        if (data == -1 || begin < new Date())
+          this.dialog.open(MessageDialogComponent, {data: {message:"Accommodation it not available for this parameters."}});
+        else {
+          this.dialog.open(ReservationDialogComponent, {data: {message: "Total cost for this reservation is " + Math.round(data * 100) / 100 + " EUR."}}).afterClosed().subscribe((result) => {
+            if (result) {
+              let reservation: ReservationRequestDTO = {
+                created: new Date(),
+                start: begin,
+                end: end,
+                guestNumber: persons,
+                price: Math.round(data * 100) / 100
+              };
+              this.accommodationService.createReservationRequest(reservation, id, this.authenticationService.getUserId()).subscribe({
+                next: (data): void => {
+                }
+              })
+            }
+          })
+        }
+      }
+    });
   }
 }
