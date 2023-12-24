@@ -19,15 +19,16 @@ export class ReservationService {
     return this.httpClient.get<ReservationDTO[]>(environment.apiHost + "reservations/guest" + "?userId=" + userId);
   }
 
-  // getForFilterAndSort(location: string, dateBegin: Date, dateEnd: Date, persons: number, page: number, size: number, sort: string, filter: FilterDTO): Observable<SearchResponseDTO> {
-  //   return this.httpClient.post<SearchResponseDTO>(environment.apiHost + 'accommodations/' +
-  //     "filter?location=" + location +
-  //     "&begin=" + (moment(dateBegin)).format('DD.MM.YYYY') +
-  //     "&end=" + (moment(dateEnd)).format('DD.MM.YYYY') +
-  //     "&persons=" + persons +
-  //     "&page=" + page +
-  //     "&size=" + size +
-  //     "&sort=" + sort, filter);
-  //
-  // }
+  getAccommodationMap(userId: number): Observable<any[]> {
+    return this.httpClient.get<any[]>(environment.apiHost + "reservations/accommodations/guest" + "?userId=" + userId);
+  }
+
+  getFilteredRequestsForGuest(userId: number, accommodationId: number, dateBegin: Date, dateEnd: Date, statuses: string[]): Observable<ReservationDTO[]> {
+    return this.httpClient.get<ReservationDTO[]>(environment.apiHost + "reservations/guest/filter" +
+                                                                            "?userId=" + userId +
+                                                                            "&accommodationId=" + accommodationId +
+                                                                            "&startDate=" + (moment(dateBegin)).format('DD.MM.YYYY') +
+                                                                            "&endDate=" + (moment(dateEnd)).format('DD.MM.YYYY') +
+                                                                            "&statuses=" + statuses);
+  }
 }

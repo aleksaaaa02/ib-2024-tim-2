@@ -6,7 +6,7 @@
     </div>
     <hr/>
   </div>
-  <app-filter-reservations></app-filter-reservations>
+  <app-filter-reservations (buttonPressed)="filterPress($event)"></app-filter-reservations>
   <div class="results">
     @for (request of requests; track request.id) {
       <app-guest-request-card [request]="request"></app-guest-request-card>
