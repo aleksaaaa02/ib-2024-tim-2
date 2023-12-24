@@ -11,6 +11,7 @@ import { AccommodationGuestsFormModel } from '../../model/accommodation-guests.f
 import { ImagesDTO } from '../../model/images';
 import { AccommodationAvailability } from '../../model/accommodation-availability.form.model';
 import { AuthenticationService } from '../../../authentication/authentication.service';
+import { ImageFileDTO } from '../../model/images.dto.model';
 
 @Component({
   selector: 'app-accommodation-create',
@@ -67,21 +68,36 @@ export class AccommodationCreateComponent implements OnInit {
             cancellationDeadline: accommodation.cancellationDeadline,
             pricePer: accommodation.pricePer
           }
-          this.accommodationService.getImages(this.accommodationId).subscribe({
-            next: (images: Uint8Array[]) => {
+          // this.accommodationService.getImages(this.accommodationId).subscribe({
+          //   next: (images: Uint8Array[]) => {
+          //     images.forEach((image) => {
+          //       const blob = new Blob([image], { type: 'application/octet-stream' });
+          //       fetchImageAsBlob("data:image/*;base64," + image).then(blob => {
+          //         const file = createFileFromBlob(blob, "test");
+          //         const imageDTO = {
+          //           url: "data:image/*;base64," + image,
+          //           file: file
+          //         }
+          //         this.images.push(imageDTO);
+          //       });
+          //     });
+          //   }
+          // })
+
+          this.accommodationService.getImagesDTO(this.accommodationId).subscribe({
+            next: (images: ImageFileDTO[]) => {
               images.forEach((image) => {
-                const blob = new Blob([image], { type: 'application/octet-stream' });
-                fetchImageAsBlob("data:image/*;base64," + image).then(blob => {
-                  const file = createFileFromBlob(blob, "test");
-                  const imageDTO = {
-                    url: "data:image/*;base64," + image,
-                    file: file
-                  }
-                  this.images.push(imageDTO);
-                });
+                const blob = new Blob([image.data], { type: 'application/octet-stream' })
+                const imageDTO = {
+                  url: "data:image/*;base64," + image.data,
+                  file: null,
+                  id: image.id
+                };
+                this.images.push(imageDTO);
               });
             }
           })
+
         }
       })
     }
@@ -151,7 +167,9 @@ export class AccommodationCreateComponent implements OnInit {
           {
             next: (data: Accommodation) => {
               this.images.forEach((elem) => {
-                this.f.push(elem.file);
+                if (elem.file) {
+                  this.f.push(elem.file);
+                }
               })
               this.accommodationService.addImages(data.id, this.f).subscribe({
                 next: () => {
@@ -178,7 +196,9 @@ export class AccommodationCreateComponent implements OnInit {
         this.accommodationService.modify(accommodation).subscribe({
           next: (id: number) => {
             this.images.forEach((elem) => {
-              this.f.push(elem.file);
+              if (elem.file) {
+                this.f.push(elem.file);
+              }
             })
             this.accommodationService.addImages(id, this.f).subscribe({
               next: () => {
@@ -187,7 +207,7 @@ export class AccommodationCreateComponent implements OnInit {
             });
           },
           error: (e) => {
-            console.log(e); 
+            console.log(e);
           }
         })
       }
