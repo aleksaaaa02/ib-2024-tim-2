@@ -4,15 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.*;
+import rs.ac.uns.ftn.Bookify.enumerations.AccommodationStatusRequest;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
 import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
+import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
 import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAvailabilityRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IPriceListItemRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,6 +26,9 @@ import java.util.Collection;
 public class AccommodationService implements IAccommodationService {
     @Autowired
     IAccommodationRepository accommodationRepository;
+
+    @Autowired
+    IReservationService reservationService;
 
     @Autowired
     IUserService userService;
@@ -95,7 +101,7 @@ public class AccommodationService implements IAccommodationService {
     }
 
     private boolean fitsPriceRange(AccommodationBasicDTO accommodation, float minPrice, float maxPrice) {
-        return (minPrice == -1 || accommodation.getTotalPrice() <= maxPrice && accommodation.getTotalPrice() > minPrice);
+        return (minPrice == -1 || accommodation.getTotalPrice() <= maxPrice && accommodation.getTotalPrice() >= minPrice);
     }
 
     private boolean fitsAccommodationType(Accommodation accommodation, List<AccommodationType> type) {
@@ -146,21 +152,25 @@ public class AccommodationService implements IAccommodationService {
 
     @Override
     public Accommodation save(Accommodation accommodation){
+        accommodation.setStatus(AccommodationStatusRequest.CREATED);
         return accommodationRepository.save(accommodation);
     }
 
     @Override
     public Long update(Accommodation accommodation) {
         Accommodation a = accommodationRepository.getReferenceById(accommodation.getId());
+        if(this.reservationService.hasFutureReservationsAccommodation(a))
+            throw new BadRequestException("Accommodation has reservations in the future");
         List<Filter> filters = (List<Filter>) accommodation.getFilters();
         accommodation.setFilters(new HashSet<>());
 //        accommodation.setReviews(); //dodati
         accommodation.setImages(a.getImages());
+        accommodation.setStatus(AccommodationStatusRequest.EDITED);
         accommodation.setAvailability(a.getAvailability());
         accommodation.setPriceList(a.getPriceList());
-        accommodationRepository.save(accommodation);
         accommodation.setFilters(filters);
         accommodationRepository.save(accommodation);
+
         return 1L;
     }
 
@@ -213,6 +223,10 @@ public class AccommodationService implements IAccommodationService {
         newPricelistItem.setStartDate(start);
         newPricelistItem.setEndDate(end);
         newPricelistItem.setPrice(item.getPrice());
+
+        if(reservationService.hasReservationInRange(accommodationId, item.getStartDate(), item.getEndDate())){
+            throw new BadRequestException("Accommodation has reservations");
+        }
 
         Accommodation accommodation = trimOverlapingIntervals(accommodationId, start, end);
 
@@ -322,6 +336,11 @@ public class AccommodationService implements IAccommodationService {
 
     @Override
     public Boolean deletePriceListItem(Long accommodationId, PricelistItem item) {
+
+        if(reservationService.hasReservationInRange(accommodationId, item.getStartDate(), item.getEndDate())){
+            throw new BadRequestException("Accommodation has reservations");
+        }
+
         trimOverlapingIntervals(accommodationId, item.getStartDate(), item.getEndDate());
         trimOverlapingAvailabilityIntervals(accommodationId, item.getStartDate(), item.getEndDate());
         return true;
@@ -399,8 +418,12 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public List<Accommodation> getOwnerAccommodation(Long ownerId) {
-        return accommodationRepository.getOwnerAccommodation(ownerId);
+    public List<AccommodationOwnerDTO> getOwnerAccommodation(Long ownerId) {
+        List<AccommodationOwnerDTO> result = new ArrayList<>();
+        for(Accommodation accommodation : accommodationRepository.getOwnerAccommodation(ownerId)){
+            result.add(new AccommodationOwnerDTO(accommodation, getAvgRating(accommodation.getId())));
+        }
+        return result;
     }
 
     @Override
@@ -467,6 +490,22 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public boolean checkPersons(Long id, int persons) {
         return accommodationRepository.checkPersons(id, persons) == 1;
+    }
+
+    @Override
+    public void setAccommodationStatus(Long id, AccommodationStatusRequest newStatus) {
+        Optional<Accommodation> accommodation = accommodationRepository.findById(id);
+        if(accommodation.isEmpty()) {
+            return;
+        }
+        Accommodation a = accommodation.get();
+        a.setStatus(newStatus);
+        accommodationRepository.save(a);
+    }
+
+    @Override
+    public void deleteAccommodation(Long accommodationId) {
+        this.accommodationRepository.deleteById(accommodationId);
     }
 
     public FileSystemResource getImage(Long id) {

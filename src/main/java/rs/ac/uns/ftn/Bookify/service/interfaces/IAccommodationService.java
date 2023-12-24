@@ -3,11 +3,11 @@ package rs.ac.uns.ftn.Bookify.service.interfaces;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.*;
+import rs.ac.uns.ftn.Bookify.enumerations.AccommodationStatusRequest;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
-import rs.ac.uns.ftn.Bookify.model.Reservation;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -38,7 +38,7 @@ public interface IAccommodationService {
     public List<FileSystemResourcesDTO> getAllImagesDTO(Long accommodationId);
     public float getAvgRating(Long id);
     public Collection<AccommodationBasicDTO> getAvgRatings(Collection<AccommodationBasicDTO> accommodations);
-    public List<Accommodation> getOwnerAccommodation(Long ownerId);
+    public List<AccommodationOwnerDTO> getOwnerAccommodation(Long ownerId);
     public Accommodation getAccommodation(Long accommodationId);
     public SearchResponseDTO getSearchResponseForSearch(Collection<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons, String location, int page, int size);
     public SearchResponseDTO getSearchReposnseForFilter(Collection<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons, String location, int page, int size, String sort, FilterDTO filter);
@@ -48,4 +48,6 @@ public interface IAccommodationService {
     public Collection<Accommodation> filterAccommodations(int persons, String location, LocalDate bein, LocalDate end, FilterDTO filter);
     public boolean isAvailable(Long id, LocalDate beginL, LocalDate endL);
     public boolean checkPersons(Long id, int persons);
+    public void setAccommodationStatus(Long id, AccommodationStatusRequest newStatus);
+    public void deleteAccommodation(Long accommodationId);
 }

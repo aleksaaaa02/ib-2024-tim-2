@@ -36,6 +36,6 @@ public class Review {
 	@Enumerated(EnumType.STRING)
 	private ReviewType reviewType;
 
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private Guest guest;
 }

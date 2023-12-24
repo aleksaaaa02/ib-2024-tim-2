@@ -14,4 +14,5 @@ public class ReservationRequestDTO {
     private Date start;
     private Date end;
     private int guestNumber;
+    private double price;
 }

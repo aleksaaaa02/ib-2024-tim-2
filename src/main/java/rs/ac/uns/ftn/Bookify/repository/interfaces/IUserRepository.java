@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import rs.ac.uns.ftn.Bookify.model.Owner;
 import rs.ac.uns.ftn.Bookify.model.User;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -29,4 +30,6 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("delete from User u where u.id= :userId")
     void deleteUser(Long userId);
+    @Query("SELECT o FROM Owner o")
+    List<Owner> findAllOwners();
 }

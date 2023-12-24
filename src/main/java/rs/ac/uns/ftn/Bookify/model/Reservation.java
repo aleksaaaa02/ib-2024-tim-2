@@ -23,20 +23,25 @@ public class Reservation {
 	private Date created;
 
 	@Column(nullable = false)
-	private Date start;
+	private LocalDate start;
 
 	@Column(nullable = false)
-	private Date end;
+	private LocalDate end;
 
 	@Column(nullable = false)
 	private int guestNumber;
 
-	@ManyToOne(cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
+	@Column(nullable = false)
+	private double price;
+
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private Guest guest;
 
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private Accommodation accommodation;
 
 	@Enumerated(EnumType.STRING)
 	private Status status;
+
+
 }
