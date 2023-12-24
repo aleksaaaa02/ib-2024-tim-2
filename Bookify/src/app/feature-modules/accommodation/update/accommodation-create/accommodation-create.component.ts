@@ -155,11 +155,10 @@ export class AccommodationCreateComponent implements OnInit {
                   this.f.push(elem.file);
                 }
               })
-              this.accommodationService.addImages(data.id, this.f).subscribe({
-                next: () => {
-                  this.router.navigate(['/accommodation/calendar/', data.id]);
-                }
-              });
+              if (this.f.length > 0) {
+                this.accommodationService.addImages(data.id, this.f).subscribe();
+              }
+              this.router.navigate(['/accommodation/calendar/', data.id]);
             },
             error: (_) => { }
           });
@@ -184,11 +183,10 @@ export class AccommodationCreateComponent implements OnInit {
                 this.f.push(elem.file);
               }
             })
-            this.accommodationService.addImages(id, this.f).subscribe({
-              next: () => {
-                this.router.navigate(['/accommodation/calendar/', id]);
-              }
-            });
+            if (this.f.length > 0) {
+              this.accommodationService.addImages(id, this.f).subscribe();
+            }
+            this.router.navigate(['/accommodation/calendar/', id]);
           },
           error: (e) => {
             this.openSnackBar(e.error, 'Close');
