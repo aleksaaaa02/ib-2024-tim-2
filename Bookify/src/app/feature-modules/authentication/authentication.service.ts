@@ -81,6 +81,9 @@ export class AuthenticationService {
   }
 
   activateAccount(token: Message): Observable<Message> {
+    if(window.innerWidth<=768){
+      return this.httpClient.put<Message>(environment.apiMobile + "/activate-account", token);
+    }
     return this.httpClient.put<Message>(environment.apiUser + "/activate-account", token);
   }
   
