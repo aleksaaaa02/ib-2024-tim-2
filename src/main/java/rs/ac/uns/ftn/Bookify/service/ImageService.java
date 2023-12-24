@@ -41,16 +41,17 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public void deleteById(Long imageId) {
+    public void deleteById(Long imageId) throws Exception {
         Accommodation accommodation = accommodationRepository.getAccommodationByImageId(imageId);
         accommodation.getImages().removeIf(image -> Objects.equals(image.getId(), imageId));
         accommodationRepository.save(accommodation);
+        delete();
         imageRepository.deleteById(imageId);
     }
 
     public void save(Long accommodationId, List<MultipartFile> images) throws Exception {
         Accommodation accommodation = accommodationRepository.getReferenceById(accommodationId);
-        delete();
+//        delete();
         for (MultipartFile image : images) {
             String location = fileSystemRepository.save(image.getBytes(), accommodationId.toString(), image.getName());
             Image newImage = new Image(location, image.getName());

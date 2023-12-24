@@ -80,11 +80,9 @@ public class WebSecurityConfig {
             request.dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/v1/accommodations/image/{imageId}","/api/v1/accommodations/search", "/api/v1/accommodations/details/{accommodationId}",
                             "/api/v1/accommodations/top-accommodations", "/api/v1/accommodations/top-locations", "/api/v1/users/image/{imageId}", "/api/v1/users/forgot-password/{email}",
-                            "/api/v1/accommodations/images/{accommodationId}", "/api/v1/reviews/accommodation/{accommodationId}", "/api/v1/reviews/owner/{ownerId}", "api/v1/accommodations/{accommodationId}/getPrice", "api/v1/accommodations/edit/{accommodationId}", "api/v1/accommodations/images/files/{accommodationId}").permitAll()
-                    .requestMatchers(HttpMethod.POST,"/api/v1/users/login", "/api/v1/users",
-                            "/api/v1/accommodations/filter", "/api/v1/users/mobile", "/api/v1/accommodations", "/api/v1/accommodations/{accommodationId}", "api/v1/accommodations/{accommodationId}/addPrice").permitAll()
-                    .requestMatchers(HttpMethod.PUT, "/api/v1/users/activate-account", "/api/v1/accommodations").permitAll()
-                    .requestMatchers(HttpMethod.DELETE, "api/v1/accommodations/price/{accommodationId}", "api/v1/accommodations/images/{imageId}").permitAll()
+                            "/api/v1/accommodations/images/{accommodationId}", "/api/v1/reviews/accommodation/{accommodationId}", "/api/v1/reviews/owner/{ownerId}").permitAll()
+                    .requestMatchers(HttpMethod.POST,"/api/v1/users/login", "/api/v1/users", "/api/v1/accommodations/filter", "/api/v1/users/mobile").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/api/v1/users/activate-account").permitAll()
                     .anyRequest().authenticated()
             ;
         });

@@ -190,6 +190,7 @@ public class AccommodationController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Accommodation> insert(@RequestParam Long ownerId, @RequestBody AccommodationInsertDTO accommodationDTO) {
         //insert new accommodation
         Accommodation accommodation = AccommodationInesertDTOMapper.fromDTOtoAccommodation(accommodationDTO);
@@ -208,6 +209,7 @@ public class AccommodationController {
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Long> updateAccommodation(@RequestBody AccommodationDTO dto) throws Exception {
         //update accommodation
         Accommodation accommodation = AccommodationDTOMapper.fromDTOtoAccommodation(dto);
@@ -274,12 +276,14 @@ public class AccommodationController {
     }
 
     @PostMapping("/{accommodationId}")
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Long> uploadAccommodationImages(@PathVariable Long accommodationId, @RequestParam("images") List<MultipartFile> images) throws Exception {
         imageService.save(accommodationId, images);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @PostMapping("/{accommodationId}/addPrice")
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Long> addPriceListItem(@PathVariable Long accommodationId, @RequestBody PriceListItemDTO dto) {
         PricelistItem item = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
         Availability availability = PriceListItemDTOMapper.fromDTOtoAvailability(dto);
@@ -289,6 +293,7 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/{accommodationId}/getPrice", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Collection<PriceListItemDTO>> getAccommodationPriceListItems(@PathVariable Long accommodationId) {
         Collection<PricelistItem> priceListItems = accommodationService.getAccommodationPriceListItems(accommodationId);
         Collection<PriceListItemDTO> priceListItemDTOS = PriceListItemDTOMapper.fromPriceListItemtoDTO(priceListItems);
@@ -296,6 +301,7 @@ public class AccommodationController {
     }
 
     @DeleteMapping("/price/{accommodationId}")
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<PriceListItemDTO> deletePriceList(@PathVariable Long accommodationId, @RequestBody PriceListItemDTO dto) {
         PricelistItem pricelistItem = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
         accommodationService.deletePriceListItem(accommodationId, pricelistItem);
@@ -303,6 +309,7 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/edit/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<AccommodationInsertDTO> getAccommodation(@PathVariable Long accommodationId) {
         Accommodation accommodation = accommodationService.getAccommodation(accommodationId);
         AccommodationInsertDTO accommodationInsertDTO = AccommodationInesertDTOMapper.fromAccommodationtoDTO(accommodation);
@@ -310,7 +317,8 @@ public class AccommodationController {
     }
 
     @DeleteMapping("/images/{imageId}")
-    public ResponseEntity<Long> deleteAccommodationImage(@PathVariable Long imageId) {
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
+    public ResponseEntity<Long> deleteAccommodationImage(@PathVariable Long imageId) throws Exception {
         imageService.deleteById(imageId);
         return new ResponseEntity<Long>(imageId, HttpStatus.OK);
     }

@@ -155,7 +155,7 @@ public class AccommodationService implements IAccommodationService {
         List<Filter> filters = (List<Filter>) accommodation.getFilters();
         accommodation.setFilters(new HashSet<>());
 //        accommodation.setReviews(); //dodati
-        accommodation.setImages(a.getImages()git);
+        accommodation.setImages(a.getImages());
         accommodation.setAvailability(a.getAvailability());
         accommodation.setPriceList(a.getPriceList());
         accommodationRepository.save(accommodation);

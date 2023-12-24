@@ -17,7 +17,7 @@ public interface IImageService {
 
     public void delete() throws Exception;
 
-    public void deleteById(Long imageId);
+    public void deleteById(Long imageId) throws Exception;
 
     public FileSystemResource find(Long imageId);
 }
