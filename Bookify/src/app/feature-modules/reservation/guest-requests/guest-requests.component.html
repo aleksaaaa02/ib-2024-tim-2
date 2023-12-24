@@ -1,12 +1,15 @@
 <div class="wrapper-reservations">
-    <div class="wrapper-title">
-        <h1>My Requests</h1>
-        <hr />
+  <div class="inline">
+    <div>
+      <span class="material-symbols-outlined apartment">request_page</span>
+      <h1 id="title">Requests</h1>
     </div>
-    <app-filter-reservations></app-filter-reservations>
-    <app-guest-request-card></app-guest-request-card>
-    <app-guest-request-card></app-guest-request-card>
-    <app-guest-request-card></app-guest-request-card>
-    <app-guest-request-card></app-guest-request-card>
-    <app-guest-request-card></app-guest-request-card>
+    <hr/>
+  </div>
+  <app-filter-reservations></app-filter-reservations>
+  <div class="results">
+    @for (request of requests; track request.id) {
+      <app-guest-request-card [request]="request"></app-guest-request-card>
+    }
+  </div>
 </div>

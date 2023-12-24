@@ -13,6 +13,10 @@ import { CalendarComponent } from './feature-modules/accommodation/update/calend
 import { OwnerAccommodationsComponent } from './feature-modules/accommodation/owner-accommodations/owner-accommodations.component';
 import {authGuard} from "./feature-modules/authentication/guard/auth.guard";
 import {AccommodationRequestsComponent} from "./feature-modules/administration/accommodation-requests/accommodation-requests.component";
+import {
+  GuestReservationsComponent
+} from "./feature-modules/reservation/guest-reservations/guest-reservations.component";
+import {GuestRequestsComponent} from "./feature-modules/reservation/guest-requests/guest-requests.component";
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -27,7 +31,8 @@ const routes: Routes = [
   { path: "accommodation/create", component: AccommodationCreateComponent, canActivate: [authGuard] },
   { path: "accommodations", component: OwnerAccommodationsComponent, canActivate: [authGuard]},
   { path: "accommodation/modify/:accommodationId", component: AccommodationCreateComponent, canActivate: [authGuard] },
-  { path: "accommodation-requests", component: AccommodationRequestsComponent, canActivate: [authGuard] }
+  { path: "accommodation-requests", component: AccommodationRequestsComponent, canActivate: [authGuard] },
+  { path: "requests", component: GuestRequestsComponent, canActivate: [authGuard] }
 ];
 
 @NgModule({

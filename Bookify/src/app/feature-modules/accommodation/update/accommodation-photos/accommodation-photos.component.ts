@@ -11,15 +11,12 @@ export class AccommodationPhotosComponent implements OnChanges {
   @Input() images: ImagesDTO[];
 
   selectedImagesObject: ImagesDTO[] = [];
-<<<<<<< HEAD
-=======
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.images) {
       this.selectedImagesObject = this.images;
     }
   }
->>>>>>> development
 
   onFilesSelected(event: any): void {
     const files: FileList | null = event.target.files;

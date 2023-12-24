@@ -1,11 +1,17 @@
 .search-card {
     margin: auto;
-    width: 70%;
+    width: 66%;
     border-radius: 1.2em;
     background-color: rgba(170, 169, 169, 0.7);
     padding: 0 0.7rem 0 1rem;
     display: grid;
     grid-template-columns: 50% 50%;
+}
+
+#acc {
+  margin-left: 1rem;
+  width: 26rem;
+  /*color: white; */
 }
 
 input[type="text"],
@@ -51,6 +57,7 @@ input[type="number"]:focus {
 }
 
 .inline {
+  margin-top: 1rem;
     display: flex;
     align-items: center;
 }
@@ -276,4 +283,8 @@ input[type="number"]:focus {
     to {
         transform: scale(1, 1);
     }
+}
+
+.date-picker{
+  margin-top: 1.3rem;
 }

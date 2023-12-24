@@ -1,14 +1,16 @@
 <div class="search-card">
     <div class="inline">
-        <!-- <mat-form-field appearance="fill"> -->
-        <mat-select required placeholder="Choose your accommodation">
-            <mat-option value="a">AAAA</mat-option>
-            <mat-option value="b">AAAA</mat-option>
-            <mat-option value="c">AAAA</mat-option>
+      <mat-form-field appearance="outline" id = "acc">
+        <mat-label>Accommodation</mat-label>
+        <mat-select>
+<!--          [(ngModel)]="sort" (ngModelChange)="onSortChange()"-->
+<!--          <mat-option value="Name">Name</mat-option>-->
+<!--          <mat-option value="Lowest">Price lowest to highest</mat-option>-->
+<!--          <mat-option value="Highest">Price highest to lowest</mat-option>-->
         </mat-select>
-        <!-- </mat-form-field> -->
+      </mat-form-field>
     </div>
-    <app-datapicker-range></app-datapicker-range>
+    <app-datapicker-range class="date-picker"></app-datapicker-range>
     <div class="filters">
         <div class="checkbox-wrapper-42">
             <input id="cbx-pending" type="checkbox" />
