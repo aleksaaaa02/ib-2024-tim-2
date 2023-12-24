@@ -32,4 +32,7 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     void deleteUser(Long userId);
     @Query("SELECT o FROM Owner o")
     List<Owner> findAllOwners();
+
+    @Query("SELECT o FROM Owner o JOIN o.accommodations a WHERE a.id = :accommodationId")
+    Owner getOwner(Long accommodationId);
 }

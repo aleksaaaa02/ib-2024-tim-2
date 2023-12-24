@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.Bookify.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.Bookify.dto.ReservationDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.Status;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Guest;
@@ -65,5 +66,10 @@ public class ReservationService implements IReservationService {
     public void setGuest(Guest guest, Reservation reservation) {
         reservation.setGuest(guest);
         reservationRepository.save(reservation);
+    }
+
+    @Override
+    public List<Reservation> getAllForGuest(Long userId) {
+        return reservationRepository.getAllForGuest(userId);
     }
 }

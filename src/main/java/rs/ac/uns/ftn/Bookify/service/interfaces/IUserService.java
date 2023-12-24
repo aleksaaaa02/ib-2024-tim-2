@@ -30,4 +30,5 @@ public interface IUserService {
     public OwnerDTO setOwnerForAccommodation(Long id);
     public void checkInactiveUsers();
     public List<AccommodationRequestDTO> findAccommodationRequests();
+    public UserReservationDTO getOwnerForReservation(Long accommodationId);
 }

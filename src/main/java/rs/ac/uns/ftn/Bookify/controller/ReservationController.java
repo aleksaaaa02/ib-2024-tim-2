@@ -7,19 +7,23 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.Bookify.dto.AccommodationBasicDTO;
 import rs.ac.uns.ftn.Bookify.dto.ReservationDTO;
 import rs.ac.uns.ftn.Bookify.dto.ReservationRequestDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.Status;
+import rs.ac.uns.ftn.Bookify.mapper.AccommodationBasicDTOMapper;
 import rs.ac.uns.ftn.Bookify.mapper.ReservationDTOMapper;
 import rs.ac.uns.ftn.Bookify.mapper.ReservationRequestDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Reservation;
+import rs.ac.uns.ftn.Bookify.model.User;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/reservations")
@@ -34,40 +38,26 @@ public class ReservationController {
     @Autowired
     private IUserService userService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST','ADMIN_ROLE')")
-    public ResponseEntity<Collection<ReservationDTO>> getReservations() {
-        //return all reservations
-        Collection<ReservationDTO> reservations = new HashSet<>();
-        reservations.add(new ReservationDTO(1L, new Date(), new Date(),
-                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING));
-        reservations.add(new ReservationDTO(2L, new Date(), new Date(),
-                new Date(), 1, new Guest(), new Accommodation(), Status.PENDING));
-        return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
-    public ResponseEntity<Collection<ReservationDTO>> findReservationsByUserId(@PathVariable Long userId) {
-        //return all reservations of one user
-        Collection<ReservationDTO> reservations = new HashSet<>();
-        reservations.add(new ReservationDTO(1L, new Date(), new Date(),
-                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING));
-        reservations.add(new ReservationDTO(2L, new Date(), new Date(),
-                new Date(), 1, new Guest(), new Accommodation(), Status.PENDING));
-        return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
+    @GetMapping(value="/guest", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    public ResponseEntity<Collection<ReservationDTO>> findReservationsByUserId(@RequestParam Long userId) {
+        //return all reservations of one guest
+        Collection<Reservation> reservations = reservationService.getAllForGuest(userId);
+        Collection<ReservationDTO> reservationDTOS = reservations.stream()
+                .map(ReservationDTOMapper::toReservationDTO)
+                .collect(Collectors.toList());
+        for (ReservationDTO reservation : reservationDTOS){
+            reservation.setUser(userService.getOwnerForReservation(reservation.getAccommodationId()));
+            reservation.setAvgRating(accommodationService.getAvgRating(reservation.getAccommodationId()));
+        }
+        return new ResponseEntity<Collection<ReservationDTO>>(reservationDTOS, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{userId}/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
     public ResponseEntity<Collection<ReservationDTO>> findReservationsByUserIdAndStatus(@PathVariable Long userId, @PathVariable Status status) {
         // return all reservations of one user where reservation status == status (g, tabs)
-        Collection<ReservationDTO> reservations = new HashSet<>();
-        reservations.add(new ReservationDTO(1L, new Date(), new Date(),
-                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING));
-        reservations.add(new ReservationDTO(2L, new Date(), new Date(),
-                new Date(), 1, new Guest(), new Accommodation(), Status.PENDING));
-        return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -89,8 +79,7 @@ public class ReservationController {
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable Long reservationId) {
         //change status into canceled
-        ReservationDTO canceledReservation = new ReservationDTO(1L, new Date(), new Date(),
-                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING);
+        ReservationDTO canceledReservation = new ReservationDTO();
         return new ResponseEntity<ReservationDTO>(canceledReservation, HttpStatus.OK);
     }
 
@@ -98,8 +87,7 @@ public class ReservationController {
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<ReservationDTO> acceptReservation(@PathVariable Long reservationId) {
         //change status into accepted
-        ReservationDTO acceptedReservation = new ReservationDTO(1L, new Date(), new Date(),
-                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING);
+        ReservationDTO acceptedReservation = new ReservationDTO();
         return new ResponseEntity<ReservationDTO>(acceptedReservation, HttpStatus.OK);
     }
 
@@ -107,8 +95,7 @@ public class ReservationController {
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<ReservationDTO> rejectReservation(@PathVariable Long reservationId) {
         //change status into rejected
-        ReservationDTO rejectedReservation = new ReservationDTO(1L, new Date(), new Date(),
-                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING);
+        ReservationDTO rejectedReservation = new ReservationDTO();
         return new ResponseEntity<ReservationDTO>(rejectedReservation, HttpStatus.OK);
     }
 
@@ -125,10 +112,6 @@ public class ReservationController {
                                                                            @RequestParam("statuses") Set<Status> statuses) {
         // return all requests of one user using filters (g, tabs)
         Collection<ReservationDTO> reservations = new HashSet<>();
-        reservations.add(new ReservationDTO(1L, new Date(), new Date(),
-                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING));
-        reservations.add(new ReservationDTO(2L, new Date(), new Date(),
-                new Date(), 1, new Guest(), new Accommodation(), Status.PENDING));
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
 
@@ -139,10 +122,6 @@ public class ReservationController {
                                                                            @RequestParam("statuses") Set<Status> statuses) {
         // return all requests of one user using filters (g, tabs)
         Collection<ReservationDTO> reservations = new HashSet<>();
-        reservations.add(new ReservationDTO(1L, new Date(), new Date(),
-                new Date(), 2, new Guest(), new Accommodation(), Status.PENDING));
-        reservations.add(new ReservationDTO(2L, new Date(), new Date(),
-                new Date(), 1, new Guest(), new Accommodation(), Status.PENDING));
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
 }

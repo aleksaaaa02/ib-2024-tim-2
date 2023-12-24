@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.Bookify.repository.interfaces;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import rs.ac.uns.ftn.Bookify.dto.ReservationDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.Status;
 import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Reservation;
@@ -20,4 +21,7 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
             "AND r.end >= :start " +
             "AND r.status NOT IN :statuses")
     public List<Reservation> findReservationsByAccommodation_IdAndStartBeforeAndEndAfterAndStatusNotIn(Long accommodationId, LocalDate end, LocalDate start, Set<Status> statuses);
+
+    @Query("SELECT r FROM Reservation r WHERE r.guest.id = :guestId")
+    public List<Reservation> getAllForGuest(Long guestId);
 }
