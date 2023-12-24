@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {AccommodationService} from "../accommodation.service";
 import {AccommodationDetailsDTO} from "../model/accommodation-details.dto.model";
@@ -11,7 +11,6 @@ import {MatDialog} from "@angular/material/dialog";
 import {ReserveComponent} from "../reserve/reserve.component";
 import {MessageDialogComponent} from "../../../layout/message-dialog/message-dialog.component";
 import {ReservationRequestDTO} from "../model/reservation-request.dto.model";
-import {NgbToast} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-accommodation-page',
@@ -56,10 +55,6 @@ export class AccommodationPageComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    window.scrollTo({
-      top: 0,
-      behavior: 'instant'
-    });
     this.getAccommodationData();
     this.setIfUser();
   }
@@ -67,6 +62,7 @@ export class AccommodationPageComponent implements OnInit{
   private setIfUser(){
     const reserve = document.getElementById("reserve-comp");
     if (reserve != null) {
+      console.log(this.authenticationService.getRole());
       if (this.authenticationService.getRole() == "GUEST")
         reserve.style.display = 'block';
     }
@@ -161,7 +157,8 @@ export class AccommodationPageComponent implements OnInit{
                 created: new Date(),
                 start: begin,
                 end: end,
-                guestNumber: persons
+                guestNumber: persons,
+                price: Math.round(data * 100) / 100
               };
               this.accommodationService.createReservationRequest(reservation, id, this.authenticationService.getUserId()).subscribe({
                 next: (data): void => {

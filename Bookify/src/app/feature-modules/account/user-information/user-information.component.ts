@@ -6,8 +6,6 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {PasswordChangeDialogComponent} from "../password-change-dialog/password-change-dialog.component";
 import {Router} from "@angular/router";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {DefaultSnackbarComponent} from "../../../layout/default-snackbar/default-snackbar.component";
 import {AccountDeleteDialogComponent} from '../account-delete-dialog/account-delete-dialog.component';
 import {MessageDialogComponent} from "../../../layout/message-dialog/message-dialog.component";
 
@@ -70,7 +68,7 @@ export class UserInformationComponent implements OnInit {
         this.image = "assets/images/user.jpg"
         this.accountService.getAccountImage(this.account.imageId).subscribe({
           next: (data: Blob): void => {
-            const reader = new FileReader();
+            const reader: FileReader = new FileReader();
             reader.onloadend = () => {
               this.image = reader.result;
 
@@ -145,7 +143,7 @@ export class UserInformationComponent implements OnInit {
           this.accountService.deleteAccount(this.account.id).subscribe({
             next: (value: string) => {
               this.authenticationService.logout();
-              this.openDialog("Account deleted successfully!", '');
+              this.openDialog("Account deleted successfully!", '/');
             },
             error: (err) => {
               console.log(err);
@@ -189,15 +187,6 @@ export class UserInformationComponent implements OnInit {
           this.openDialog('Ops something went wrong!', "account");
         }
       })
-    }
-  }
-
-  refreshPage(route: string): Function {
-    return () => {
-      const router = this.router;
-      router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
-        router.navigate([route]);
-      });
     }
   }
 

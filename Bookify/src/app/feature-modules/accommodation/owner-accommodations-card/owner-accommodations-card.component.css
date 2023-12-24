@@ -71,7 +71,6 @@
 }
 
 .average-rating::before {
-  --percent: calc(4.3/5*100%);
   content: '★★★★★';
   font-size: 1.2rem;
   background:
@@ -81,9 +80,23 @@
 }
 
 .button-holder{
-  margin-top: 4.5rem;
+  margin-top: 3.5rem;
+  margin-bottom: 0.5rem;
   margin-right: 3rem;
   display: flex;
   flex-flow: row-reverse;
   gap: 1rem;
+}
+.information{
+  /*font-size: large;*/
+  font-weight: bolder;
+  color: #326268;
+}
+
+.title-underline {
+  background-color: #A29D92;
+  height: 4px;
+  width: 94%;
+  box-shadow: black;
+  border-radius: 20px;
 }

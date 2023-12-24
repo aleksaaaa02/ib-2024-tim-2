@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AccommodationBasicModel } from "../model/accommodation-basic.model";
-import { AccommodationService } from "../accommodation.service";
-import { Router } from '@angular/router';
+import {Component, Input, OnInit} from '@angular/core';
+import {AccommodationService} from "../accommodation.service";
+import {Router} from '@angular/router';
+import {AccommodationOwnerDtoModel} from "../model/accommodation.owner.dto.model";
 
 @Component({
   selector: 'app-owner-accommodations-card',
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class OwnerAccommodationsCardComponent implements OnInit {
   @Input()
-  accommodation: AccommodationBasicModel;
+  accommodation: AccommodationOwnerDtoModel;
   image: string | ArrayBuffer | null = null;
 
   constructor(private accommodationService: AccommodationService, private router: Router) {
@@ -26,15 +26,16 @@ export class OwnerAccommodationsCardComponent implements OnInit {
         }
         reader.readAsDataURL(imageData);
       },
-      error: err => { }
+      error: err => {
+      }
     })
   }
 
-  editAccommodation() {
+  editAccommodation(): void {
     this.router.navigate(['/accommodation/modify/', this.accommodation.id]);
   }
-  
-  editPrice() {
+
+  editPrice(): void {
     this.router.navigate(['/accommodation/calendar/', this.accommodation.id]);
   }
 }

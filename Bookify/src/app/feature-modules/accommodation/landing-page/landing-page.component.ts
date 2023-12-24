@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AccommodationService} from "../accommodation.service";
 import {ActivatedRoute, Router} from '@angular/router';
+import {SearchResultsService} from "../SearchResultService";
 
 @Component({
   selector: 'app-landing-page',
@@ -13,9 +14,10 @@ export class LandingPageComponent implements OnInit{
   dateBegin: string;
   dateEnd: string;
 
-  constructor(private accommodationService: AccommodationService, private router: Router) {}
+  constructor(private accommodationService: AccommodationService, private router: Router,  private searchResultsService: SearchResultsService) {}
 
   ngOnInit(): void {
+    this.searchResultsService.accommodations = undefined;
   }
   handleButtonPress(values: { search: string; persons: number, dateBegin: string, dateEnd: string}): void {
     this.search = values.search;

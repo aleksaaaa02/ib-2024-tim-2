@@ -207,7 +207,7 @@ export class AccommodationCreateComponent implements OnInit {
             });
           },
           error: (e) => {
-            console.log(e);
+            this.openSnackBar(e.error, 'Close');
           }
         })
       }
