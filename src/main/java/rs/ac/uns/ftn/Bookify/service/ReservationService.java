@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ReservationService implements IReservationService {
@@ -71,5 +72,15 @@ public class ReservationService implements IReservationService {
     @Override
     public List<Reservation> getAllForGuest(Long userId) {
         return reservationRepository.getAllForGuest(userId);
+    }
+
+    @Override
+    public List<Object[]> getGuestAccommodations(Long userId) {
+        return reservationRepository.getIdToNameGuestMap(userId);
+    }
+
+    @Override
+    public List<Reservation> filterForGuest(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses) {
+        return reservationRepository.filterForGuest(userId, accommodationId, startDate, endDate, statuses);
     }
 }

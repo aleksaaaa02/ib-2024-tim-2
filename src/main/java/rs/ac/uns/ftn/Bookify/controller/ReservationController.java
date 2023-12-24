@@ -22,6 +22,8 @@ import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -52,6 +54,36 @@ public class ReservationController {
         }
         return new ResponseEntity<Collection<ReservationDTO>>(reservationDTOS, HttpStatus.OK);
     }
+
+    @GetMapping(value="/guest/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    public ResponseEntity<Collection<ReservationDTO>> fFilterReservationsForGuest(@RequestParam Long userId, @RequestParam Long accommodationId,
+                                                                                  @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") Date startDate, @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") Date endDate, @RequestParam Status[] statuses) {
+        //return all reservations of one guest
+        LocalDate beginL = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endL = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Collection<Reservation> reservations = reservationService.filterForGuest(userId, accommodationId, beginL, endL, statuses);
+
+        Collection<ReservationDTO> reservationDTOS = reservations.stream()
+                .map(ReservationDTOMapper::toReservationDTO)
+                .collect(Collectors.toList());
+        for (ReservationDTO reservation : reservationDTOS){
+            reservation.setUser(userService.getOwnerForReservation(reservation.getAccommodationId()));
+            reservation.setAvgRating(accommodationService.getAvgRating(reservation.getAccommodationId()));
+        }
+        System.out.println(reservationDTOS);
+        return new ResponseEntity<Collection<ReservationDTO>>(reservationDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/accommodations/guest", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('ROLE_GUEST', 'ROLE_OWNER')")
+    public ResponseEntity<List<Object[]>> getAccommodationNames(@RequestParam Long userId) {
+        //return all accommodation names and ids for guest
+        List<Object[]> returns = reservationService.getGuestAccommodations(userId);
+        return new ResponseEntity<>(returns, HttpStatus.OK);
+    }
+
+
 
     @GetMapping(value = "/{userId}/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
