@@ -68,22 +68,6 @@ export class AccommodationCreateComponent implements OnInit {
             cancellationDeadline: accommodation.cancellationDeadline,
             pricePer: accommodation.pricePer
           }
-          // this.accommodationService.getImages(this.accommodationId).subscribe({
-          //   next: (images: Uint8Array[]) => {
-          //     images.forEach((image) => {
-          //       const blob = new Blob([image], { type: 'application/octet-stream' });
-          //       fetchImageAsBlob("data:image/*;base64," + image).then(blob => {
-          //         const file = createFileFromBlob(blob, "test");
-          //         const imageDTO = {
-          //           url: "data:image/*;base64," + image,
-          //           file: file
-          //         }
-          //         this.images.push(imageDTO);
-          //       });
-          //     });
-          //   }
-          // })
-
           this.accommodationService.getImagesDTO(this.accommodationId).subscribe({
             next: (images: ImageFileDTO[]) => {
               images.forEach((image) => {
