@@ -227,3 +227,7 @@ img {
   padding-bottom: 1rem;
   display: none;
 }
+
+#favorite-button {
+  visibility: hidden;
+}

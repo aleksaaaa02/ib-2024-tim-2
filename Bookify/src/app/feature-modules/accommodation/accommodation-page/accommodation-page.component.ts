@@ -51,20 +51,27 @@ export class AccommodationPageComponent implements OnInit{
   @ViewChild(CarouselComponent) carouselComponent: CarouselComponent;
   @ViewChild(ReserveComponent) reservationComponent: ReserveComponent;
 
-  constructor(public dialog: MatDialog, private authenticationService: AuthenticationService, private route: ActivatedRoute, private accommodationService: AccommodationService, private accountService: AccountService) {
+  constructor(public dialog: MatDialog, protected authenticationService: AuthenticationService, private route: ActivatedRoute, private accommodationService: AccommodationService, private accountService: AccountService) {
   }
 
   ngOnInit(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: "instant"
+    });
     this.getAccommodationData();
     this.setIfUser();
   }
 
   private setIfUser(){
     const reserve = document.getElementById("reserve-comp");
-    if (reserve != null) {
+    const favorite = document.getElementById("favorite-button");
+    if (reserve != null && favorite != null) {
       console.log(this.authenticationService.getRole());
-      if (this.authenticationService.getRole() == "GUEST")
+      if (this.authenticationService.getRole() == "GUEST") {
         reserve.style.display = 'block';
+        favorite.style.visibility = 'visible';
+      }
     }
   }
 
