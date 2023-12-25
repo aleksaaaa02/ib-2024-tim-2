@@ -35,6 +35,7 @@ public interface IAccommodationService {
     public void mergeAvailabilityIntervals(Long accommodationId);
     public Boolean deletePriceListItem(Long accommodationId, PricelistItem item);
     public List<FileSystemResource> getAllImages(Long accommodationId);
+    public List<FileSystemResourcesDTO> getAllImagesDTO(Long accommodationId);
     public float getAvgRating(Long id);
     public Collection<AccommodationBasicDTO> getAvgRatings(Collection<AccommodationBasicDTO> accommodations);
     public List<AccommodationOwnerDTO> getOwnerAccommodation(Long ownerId);

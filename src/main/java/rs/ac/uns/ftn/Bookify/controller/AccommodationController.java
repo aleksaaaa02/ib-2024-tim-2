@@ -255,6 +255,15 @@ public class AccommodationController {
         return new ResponseEntity<>(data,  HttpStatus.OK);
     }
 
+    @GetMapping(value = "/images/files/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<ImageMobileDTO>> getAccommodationImagesFiles(@PathVariable Long accommodationId) throws IOException {
+        Collection<ImageMobileDTO> data = new ArrayList<>();
+        for(FileSystemResourcesDTO f : accommodationService.getAllImagesDTO(accommodationId)) {
+            data.add(new ImageMobileDTO(f.getFile().getContentAsByteArray(), f.getId()));
+        }
+        return new ResponseEntity<>(data,  HttpStatus.OK);
+    }
+
     @PostMapping("/images/{accommodationId}")
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Long> uploadAccommodationImage(@PathVariable Long accommodationId, @RequestParam MultipartFile image) throws Exception {
@@ -302,6 +311,14 @@ public class AccommodationController {
         AccommodationInsertDTO accommodationInsertDTO = AccommodationInesertDTOMapper.fromAccommodationtoDTO(accommodation);
         return new ResponseEntity<>(accommodationInsertDTO, HttpStatus.OK);
     }
+
+    @DeleteMapping("/images/{imageId}")
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
+    public ResponseEntity<Long> deleteAccommodationImage(@PathVariable Long imageId) throws Exception {
+        imageService.deleteById(imageId);
+        return new ResponseEntity<Long>(imageId, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/requests", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<Collection<AccommodationRequestDTO>> getRequests() {
