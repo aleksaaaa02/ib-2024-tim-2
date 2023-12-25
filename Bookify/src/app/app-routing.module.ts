@@ -17,6 +17,9 @@ import {
   GuestReservationsComponent
 } from "./feature-modules/reservation/guest-reservations/guest-reservations.component";
 import {GuestRequestsComponent} from "./feature-modules/reservation/guest-requests/guest-requests.component";
+import {
+  OwnerReservationsComponent
+} from "./feature-modules/reservation/owner-reservations/owner-reservations.component";
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -32,7 +35,8 @@ const routes: Routes = [
   { path: "accommodations", component: OwnerAccommodationsComponent, canActivate: [authGuard]},
   { path: "accommodation/modify/:accommodationId", component: AccommodationCreateComponent, canActivate: [authGuard] },
   { path: "accommodation-requests", component: AccommodationRequestsComponent, canActivate: [authGuard] },
-  { path: "requests", component: GuestRequestsComponent, canActivate: [authGuard] }
+  { path: "requests/guest", component: GuestRequestsComponent, canActivate: [authGuard] },
+  { path: "requests/owner", component: OwnerReservationsComponent, canActivate: [authGuard] }
 ];
 
 @NgModule({
