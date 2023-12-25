@@ -34,7 +34,6 @@ import {SharedModule} from "./shared/shared.module";
     AccommodationModule,
     ReservationModule,
     SharedModule,
-    SharedModule,
     AdministrationModule
   ],
   providers: [
