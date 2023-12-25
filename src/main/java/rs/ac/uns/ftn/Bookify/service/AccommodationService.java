@@ -164,6 +164,7 @@ public class AccommodationService implements IAccommodationService {
         List<Filter> filters = (List<Filter>) accommodation.getFilters();
         accommodation.setFilters(new HashSet<>());
 //        accommodation.setReviews(); //dodati
+        accommodation.setImages(a.getImages());
         accommodation.setStatus(AccommodationStatusRequest.EDITED);
         accommodation.setAvailability(a.getAvailability());
         accommodation.setPriceList(a.getPriceList());
@@ -385,6 +386,16 @@ public class AccommodationService implements IAccommodationService {
         List<FileSystemResource> returns = new ArrayList<>();
         for (Image image : a.getImages()) {
             returns.add(imageService.find(image.getId()));
+        }
+        return returns;
+    }
+
+    @Override
+    public List<FileSystemResourcesDTO> getAllImagesDTO(Long accommodationId) {
+        Accommodation a = accommodationRepository.findById(accommodationId).get();
+        List<FileSystemResourcesDTO> returns = new ArrayList<>();
+        for (Image image : a.getImages()) {
+            returns.add( new FileSystemResourcesDTO(imageService.find(image.getId()), image.getId()));
         }
         return returns;
     }

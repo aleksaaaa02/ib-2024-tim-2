@@ -50,6 +50,7 @@ public class UserController {
     @Autowired
     private JWTUtils jwtUtils;
 
+    private final String IP_ADDRESS = "192.168.1.5";
 
     @GetMapping(value = "/reported", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -117,6 +118,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @CrossOrigin(origins = "http://" + IP_ADDRESS + ":4200")
     @PutMapping(value = "/activate-account", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MessageDTO> activateAccount(@RequestBody MessageDTO uuid) {
         boolean activated = userService.activateUser(uuid.getToken());
@@ -211,6 +213,20 @@ public class UserController {
         } else {
             throw new BadRequestException("User is not authenticated");
         }
+    }
+
+    @PostMapping(value = "/mobile")
+    public ResponseEntity<MessageDTO> registerUserMobile(@RequestBody UserRegisteredDTO newUser) throws MessagingException {
+        User user = userService.create(newUser);
+        MessageDTO token = new MessageDTO();
+        if (user != null) {
+            emailService.sendEmail("Account Activation", user.getEmail(), "Click the link to activate your account: ",
+                    "http://" + IP_ADDRESS + ":4200/confirmation?uuid=" + user.getActive().getHashToken());
+            token.setToken(user.getActive().getHashToken());
+            return new ResponseEntity<>(token, HttpStatus.OK);
+        }
+        token.setToken("Failed to create new user");
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 }
 
