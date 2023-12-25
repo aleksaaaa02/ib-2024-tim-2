@@ -69,6 +69,11 @@ export class AccommodationService {
     return this.httpClient.get<string[]>(environment.apiHost + "accommodations/images/" + accommodationId, { responseType: "json" });
   }
 
+  addToFavorites(guestId: number, accommodationId: number): Observable<string> {
+    const url = `${environment.apiHost}accommodations/add-to-favorites/${guestId}/${accommodationId}`;
+    return this.httpClient.post(url, {}, { responseType: "text" });
+  }
+
   async getCountries(): Promise<string[]> {
     try {
       const response = await fetch('https://restcountries.com/v3.1/all');

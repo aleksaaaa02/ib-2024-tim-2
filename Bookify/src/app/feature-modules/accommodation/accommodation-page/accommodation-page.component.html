@@ -1,6 +1,13 @@
 <div>
   <div class="inline title-main">
-    <span class="material-symbols-outlined favorite" id="favorite-button">favorite</span>
+    <span
+      class="material-symbols-outlined favorite"
+      id="favorite-button"
+      (click)="addToFavorites()"
+      >
+      <ng-container *ngIf="!isFavorite; else fullHeart">&#9825;</ng-container>
+      <ng-template #fullHeart>&#9829;</ng-template>
+    </span>
     <p id="hotel-name">{{ accommodation?.name }}</p>
     <meter id="accRating" class="average-rating" min="0" max="5" style="--percent: calc({{accommodation?.avgRating}}/5*100%);"></meter>
   </div>
