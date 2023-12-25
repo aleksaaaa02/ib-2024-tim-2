@@ -1,10 +1,10 @@
-<div class="reservation-card">
+<div class="reservation-card" *ngIf="visible">
     <div class="column-left">
         <img class="reservation-image" [src]="image">
     </div>
     <div class="column-center">
         <div class="inline">
-            <p class="title">{{ request.accommodationName }}</p>
+            <p class="title" [routerLink]="['/accommodation/details', request.id]">{{ request.accommodationName }}</p>
             <meter class="average-rating" min="0" max="5" style="--percent: calc({{request.avgRating}}/5*100%);"></meter>
         </div>
         <hr />
@@ -15,7 +15,7 @@
         <div class="wrapper">
             <p class="description">Status: {{ request.status }}</p>
             <div *ngIf="request.status === 'PENDING'" class="button-wrapper">
-                <button class="details-button accept">Cancel</button>
+                <button class="details-button accept" (click)="onDeletePressed()">Delete</button>
             </div>
         </div>
     </div>

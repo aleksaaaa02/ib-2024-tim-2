@@ -40,6 +40,10 @@ export class ReservationService {
     return this.httpClient.get<any[]>(environment.apiHost + "reservations/accommodations/owner" + "?userId=" + userId);
   }
 
+  deleteRequest(reservationId: number): Observable<string> {
+    return this.httpClient.put(environment.apiHost + "reservations/delete/" + reservationId, {}, {responseType:"text"});
+  }
+
   getFilteredRequestsForOwner(userId: number, accommodationId: number, dateBegin: Date, dateEnd: Date, statuses: string[]): Observable<ReservationDTO[]> {
     return this.httpClient.get<ReservationDTO[]>(environment.apiHost + "reservations/owner/filter" +
       "?userId=" + userId +

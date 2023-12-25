@@ -12,6 +12,7 @@ import { GuestReservationCardComponent } from './guest-reservation-card/guest-re
 import { GuestReservationsComponent } from './guest-reservations/guest-reservations.component';
 import { GuestRequestCardComponent } from './guest-request-card/guest-request-card.component';
 import { GuestRequestsComponent } from './guest-requests/guest-requests.component';
+import {RouterModule} from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { GuestRequestsComponent } from './guest-requests/guest-requests.componen
     LayoutModule,
     MatInputModule,
     FormsModule,
-    MatSelectModule
+    MatSelectModule,
+    RouterModule.forRoot([])
   ],
   exports:[
     RequestCardComponent,
