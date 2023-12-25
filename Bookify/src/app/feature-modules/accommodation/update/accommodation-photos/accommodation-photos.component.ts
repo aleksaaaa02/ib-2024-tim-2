@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { ImagesDTO } from '../../model/images';
+import { AccommodationService } from '../../accommodation.service';
 @Component({
   selector: 'app-accommodation-photos',
   templateUrl: './accommodation-photos.component.html',
@@ -11,6 +12,8 @@ export class AccommodationPhotosComponent implements OnChanges {
   @Input() images: ImagesDTO[];
 
   selectedImagesObject: ImagesDTO[] = [];
+
+  constructor(private accommodationService: AccommodationService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.images) {
@@ -29,7 +32,8 @@ export class AccommodationPhotosComponent implements OnChanges {
             const imageDataURL = e.target.result as string;
             const imageDTO: ImagesDTO = {
               url: imageDataURL,
-              file: files[i]
+              file: files[i],
+              id: null
             }
             this.selectedImagesObject.push(imageDTO);
           }
@@ -43,6 +47,10 @@ export class AccommodationPhotosComponent implements OnChanges {
   removeImage(image: ImagesDTO): void {
     this.selectedImagesObject = this.selectedImagesObject.filter(img => img !== image);
     this.photosChanged.emit(this.selectedImagesObject);
+    if(image.id){
+      console.log(image.id);
+      this.accommodationService.deleteImage(image.id).subscribe();
+    }
   }
 
 }
