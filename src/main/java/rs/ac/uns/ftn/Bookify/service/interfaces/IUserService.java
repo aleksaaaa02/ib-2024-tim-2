@@ -32,4 +32,5 @@ public interface IUserService {
     public List<AccommodationRequestDTO> findAccommodationRequests();
     public UserReservationDTO getOwnerForReservation(Long accommodationId);
     public UserReservationDTO getGuestForReservation(Long accommodationId);
+    public void addToFavorites(Long guestId, Long accommodationId);
 }

@@ -202,6 +202,7 @@ public class AccommodationController {
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<String> addAccommodationToFavorites(@PathVariable Long guestId, @PathVariable Long accommodationId) {
         //inserts accommodation to favorites
+        accommodationService.insertForGuest(guestId, accommodationId);
         return new ResponseEntity<>("Accommodation added to favorites", HttpStatus.OK);
     }
 

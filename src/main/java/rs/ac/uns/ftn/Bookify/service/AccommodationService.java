@@ -508,6 +508,11 @@ public class AccommodationService implements IAccommodationService {
         this.accommodationRepository.deleteById(accommodationId);
     }
 
+    @Override
+    public void insertForGuest(Long guestId, Long accommodationId) {
+        userService.addToFavorites(guestId, accommodationId);
+    }
+
     public FileSystemResource getImage(Long id) {
         return imageService.find(id);
     }
