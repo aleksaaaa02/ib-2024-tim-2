@@ -32,7 +32,7 @@ export class GuestRequestsComponent implements OnInit {
   }
 
   getAccommodations(){
-    this.reservationService.getAccommodationMap(this.authenticationService.getUserId()).subscribe({
+    this.reservationService.getAccommodationMapForGuest(this.authenticationService.getUserId()).subscribe({
       next: (data) => {
         this.filterReservationComponent.accommodations = data;
       }

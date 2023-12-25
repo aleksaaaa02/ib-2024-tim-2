@@ -19,7 +19,7 @@ export class ReservationService {
     return this.httpClient.get<ReservationDTO[]>(environment.apiHost + "reservations/guest" + "?userId=" + userId);
   }
 
-  getAccommodationMap(userId: number): Observable<any[]> {
+  getAccommodationMapForGuest(userId: number): Observable<any[]> {
     return this.httpClient.get<any[]>(environment.apiHost + "reservations/accommodations/guest" + "?userId=" + userId);
   }
 
@@ -30,5 +30,22 @@ export class ReservationService {
                                                                             "&startDate=" + (moment(dateBegin)).format('DD.MM.YYYY') +
                                                                             "&endDate=" + (moment(dateEnd)).format('DD.MM.YYYY') +
                                                                             "&statuses=" + statuses);
+  }
+
+  getAllRequestsForOwner(userId: number): Observable<ReservationDTO[]> {
+    return this.httpClient.get<ReservationDTO[]>(environment.apiHost + "reservations/owner" + "?userId=" + userId);
+  }
+
+  getAccommodationMapForOwner(userId: number): Observable<any[]> {
+    return this.httpClient.get<any[]>(environment.apiHost + "reservations/accommodations/owner" + "?userId=" + userId);
+  }
+
+  getFilteredRequestsForOwner(userId: number, accommodationId: number, dateBegin: Date, dateEnd: Date, statuses: string[]): Observable<ReservationDTO[]> {
+    return this.httpClient.get<ReservationDTO[]>(environment.apiHost + "reservations/owner/filter" +
+      "?userId=" + userId +
+      "&accommodationId=" + accommodationId +
+      "&startDate=" + (moment(dateBegin)).format('DD.MM.YYYY') +
+      "&endDate=" + (moment(dateEnd)).format('DD.MM.YYYY') +
+      "&statuses=" + statuses);
   }
 }

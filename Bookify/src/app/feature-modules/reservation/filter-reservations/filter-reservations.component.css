@@ -5,13 +5,12 @@
     background-color: rgba(170, 169, 169, 0.7);
     padding: 0 0.7rem 0 1rem;
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 55% 45%;
 }
 
 #acc {
   margin-left: 1rem;
   width: 26rem;
-  /*color: white; */
 }
 
 input[type="text"],
@@ -94,7 +93,7 @@ input[type="number"]:focus {
     display: grid;
     margin-left: 3vw;
     margin-right: 3vw;
-    grid-template-columns: 33% 33% 33%;
+    grid-template-columns: 25% 25% 25% 25%;
 }
 
 .checkbox-wrapper-42 {

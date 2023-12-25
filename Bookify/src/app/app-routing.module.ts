@@ -35,8 +35,8 @@ const routes: Routes = [
   { path: "accommodations", component: OwnerAccommodationsComponent, canActivate: [authGuard]},
   { path: "accommodation/modify/:accommodationId", component: AccommodationCreateComponent, canActivate: [authGuard] },
   { path: "accommodation-requests", component: AccommodationRequestsComponent, canActivate: [authGuard] },
-  { path: "requests/guest", component: GuestRequestsComponent, canActivate: [authGuard] },
-  { path: "requests/owner", component: OwnerReservationsComponent, canActivate: [authGuard] }
+  { path: "guest-requests", component: GuestRequestsComponent, canActivate: [authGuard] },
+  { path: "owner-requests", component: OwnerReservationsComponent, canActivate: [authGuard] }
 ];
 
 @NgModule({

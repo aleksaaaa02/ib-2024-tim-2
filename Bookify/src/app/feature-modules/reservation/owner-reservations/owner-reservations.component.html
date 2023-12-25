@@ -6,15 +6,10 @@
     </div>
     <hr/>
   </div>
-  <app-filter-reservations></app-filter-reservations>
-  <app-request-card></app-request-card>
-  <app-request-card></app-request-card>
-  <app-request-card></app-request-card>
-  <app-request-card></app-request-card>
-  <app-request-card></app-request-card>
-  <app-reservation-card></app-reservation-card>
-  <app-reservation-card></app-reservation-card>
-  <app-reservation-card></app-reservation-card>
-  <app-reservation-card></app-reservation-card>
-  <app-reservation-card></app-reservation-card>
+  <app-filter-reservations (buttonPressed)="filterPress($event)"></app-filter-reservations>
+  <div class="results">
+    @for (request of requests; track request.id) {
+      <app-reservation-card [request]="request"></app-reservation-card>
+    }
+  </div>
 </div>

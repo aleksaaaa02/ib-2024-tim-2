@@ -13,7 +13,7 @@ export class FilterReservationsComponent {
   @ViewChild(DatapickerRangeComponent) dateComponent: DatapickerRangeComponent;
   selectedAccommodation: number;
   accommodations: any[];
-  statuses = ["PENDING", "ACCEPTED", "REJECTED"]
+  statuses = ["PENDING", "ACCEPTED", "REJECTED", "CANCELED"]
 
   constructor(private _snackBar: MatSnackBar) {}
 
