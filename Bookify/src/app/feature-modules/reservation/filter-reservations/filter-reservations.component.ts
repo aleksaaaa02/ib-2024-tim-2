@@ -1,6 +1,8 @@
 import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import {DatapickerRangeComponent} from "../../../layout/datapicker-range/datapicker-range.component";
 import {NgbDate} from "@ng-bootstrap/ng-bootstrap";
+import {ReservationDTO} from "../model/ReservationDTO";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-filter-reservations',
@@ -13,20 +15,27 @@ export class FilterReservationsComponent {
   accommodations: any[];
   statuses = ["PENDING", "ACCEPTED", "REJECTED"]
 
+  constructor(private _snackBar: MatSnackBar) {}
+
   @Output() buttonPressed= new EventEmitter<{ accommodationId: number; dateBegin: Date, dateEnd: Date, statuses: string[] }>();
 
   onFilterPress(): void {
     let from = this.dateComponent.fromDate;
     let to = this.dateComponent.toDate;
 
-    if (from != null && to != null) {
-      const values = {
-        accommodationId: this.selectedAccommodation,
-        dateBegin: new Date(from.year, from.month - 1, from.day),
-        dateEnd: new Date(to.year, to.month - 1, to.day),
-        statuses: this.getStatuses()
-      };
-      this.buttonPressed.emit(values);
+    if (this.selectedAccommodation == undefined){
+      this.openSnackBar("Please select accommodation", "Close");
+    }
+    else {
+      if (from != null && to != null) {
+        const values = {
+          accommodationId: this.selectedAccommodation,
+          dateBegin: new Date(from.year, from.month - 1, from.day),
+          dateEnd: new Date(to.year, to.month - 1, to.day),
+          statuses: this.getStatuses()
+        };
+        this.buttonPressed.emit(values);
+      }
     }
   }
 
@@ -47,5 +56,11 @@ export class FilterReservationsComponent {
 
   onAccommodationChange(){
 
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 2000,
+    });
   }
 }

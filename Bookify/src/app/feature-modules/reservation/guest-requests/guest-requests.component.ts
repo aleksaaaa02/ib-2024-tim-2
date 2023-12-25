@@ -6,6 +6,7 @@ import {ReservationDTO} from "../model/ReservationDTO";
 import {MatPaginator} from "@angular/material/paginator";
 import {FilterReservationsComponent} from "../filter-reservations/filter-reservations.component";
 import {FilterDTO} from "../../accommodation/model/filter.dto.model";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-guest-requests',
@@ -25,7 +26,7 @@ export class GuestRequestsComponent implements OnInit {
   filterPress(values: { accommodationId: number; dateBegin: Date, dateEnd: Date, statuses: string[]}){
     this.reservationService.getFilteredRequestsForGuest(this.authenticationService.getUserId(), values.accommodationId, values.dateBegin, values.dateEnd, values.statuses).subscribe({
       next: (data) => {
-        this.filterReservationComponent.accommodations = data;
+        this.requests = data;
       }
     })
   }
@@ -45,5 +46,4 @@ export class GuestRequestsComponent implements OnInit {
       }
     })
   }
-
 }
