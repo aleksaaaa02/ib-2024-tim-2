@@ -43,4 +43,7 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     @Query(nativeQuery = true, value = "INSERT INTO users_favorites (guest_id, favorites_id) VALUES (:userId, :accommodationId)")
     void addFavoriteToUser(@Param("userId") Long userId, @Param("accommodationId") Long accommodationId);
 
+    @Query(value = "SELECT COUNT(*) FROM users_favorites WHERE guest_id = :guestId AND favorites_id = :accommodationId", nativeQuery = true)
+    int checkIfInFavorites(@Param("guestId") Long guestId, @Param("accommodationId") Long accommodationId);
+
 }

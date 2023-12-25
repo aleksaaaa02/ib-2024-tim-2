@@ -206,6 +206,14 @@ public class AccommodationController {
         return new ResponseEntity<>("Accommodation added to favorites", HttpStatus.OK);
     }
 
+    @GetMapping("/added-to-favorites/{guestId}/{accommodationId}")
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    public ResponseEntity<Boolean> addedAccommodationToFavorites(@PathVariable Long guestId, @PathVariable Long accommodationId) {
+        //inserts accommodation to favorites
+        boolean result = userService.checkIfInFavorites(guestId, accommodationId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Long> updateAccommodation(@RequestBody AccommodationDTO dto) throws Exception {
@@ -228,13 +236,6 @@ public class AccommodationController {
     public ResponseEntity<String> rejectAccommodation(@PathVariable Long accommodationId) {
         this.accommodationService.setAccommodationStatus(accommodationId, AccommodationStatusRequest.REJECTED);
         return new ResponseEntity<>(String.format("Accommodation %d rejected", accommodationId), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/remove-from-favorites/{guestId}/{accommodationId}")
-    @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<String> removeAccommodationFromFavorites(@PathVariable Long guestId, @PathVariable Long accommodationId) {
-        //delete accommodation from favorites
-        return new ResponseEntity<>("Accommodation removed from favorites", HttpStatus.OK);
     }
 
     @DeleteMapping("/{accommodationId}")

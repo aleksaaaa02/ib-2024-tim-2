@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.Bookify.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +27,7 @@ public class Guest extends User {
     @Column(name = "is_enabled")
     private Map<NotificationType, Boolean> notificationType;
 
+    @JsonIgnore
     @ManyToMany
     private List<Accommodation> favorites;
 

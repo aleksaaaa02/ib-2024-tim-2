@@ -317,6 +317,11 @@ public class UserService implements IUserService {
         userRepository.addFavoriteToUser(guestId, accommodationId);
     }
 
+    @Override
+    public boolean checkIfInFavorites(Long guestId, Long accommodationId) {
+        return userRepository.checkIfInFavorites(guestId, accommodationId) == 1;
+    }
+
     private void updateUserData(UserDetailDTO updatedUser, User u) {
         u.getAddress().setAddress(updatedUser.getAddress().getAddress());
         u.getAddress().setCity(updatedUser.getAddress().getCity());
