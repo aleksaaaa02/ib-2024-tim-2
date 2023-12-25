@@ -36,4 +36,33 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
             "AND r.end <= :endDate AND " +
             "r.status IN :statuses")
     List<Reservation> filterForGuest(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses);
+
+    @Query("SELECT r " +
+            "FROM Owner o " +
+            "JOIN o.accommodations a "+
+            "JOIN Reservation r ON r.accommodation.id = a.id " +
+            "WHERE o.id = :ownerId")
+    public List<Reservation> getAllForOwner(Long ownerId);
+
+
+    @Query("SELECT DISTINCT a.id as id, a.name as name " +
+            "FROM Owner o " +
+            "JOIN o.accommodations a " +
+            "JOIN Reservation r ON r.accommodation.id = a.id " +
+            "WHERE o.id = :userId")
+    List<Object[]> getIdToNameOwnerMap(Long userId);
+
+    @Query("SELECT r " +
+            "FROM Owner o " +
+            "JOIN o.accommodations a "+
+            "JOIN Reservation r ON r.accommodation.id = a.id " +
+            "WHERE o.id = :userId " +
+            "AND r.accommodation.id = :accommodationId " +
+            "AND r.start >= :startDate " +
+            "AND r.end <= :endDate AND " +
+            "r.status IN :statuses")
+    List<Reservation> filterForOwner(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses);
+
+    @Query("SELECT count(r) FROM Reservation r WHERE r.guest.id = :userId AND r.status = 'CANCELED'")
+    int getCancellationTimes(Long userId);
 }

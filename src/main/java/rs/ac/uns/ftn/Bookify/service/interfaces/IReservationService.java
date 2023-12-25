@@ -23,4 +23,7 @@ public interface IReservationService {
     public List<Reservation> getAllForGuest(Long userId);
     public List<Object[]> getGuestAccommodations(Long UserId);
     public List<Reservation> filterForGuest(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses);
+    List<Reservation> getAllForOwner(Long userId);
+    public List<Object[]> getOwnerAccommodations(Long UserId);
+    public List<Reservation> filterForOwner(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses);
 }
