@@ -1,4 +1,5 @@
 export const GuestPaths : string[] = [
   'account',
-  'requests'
+  'requests',
+  'favorites'
 ]
