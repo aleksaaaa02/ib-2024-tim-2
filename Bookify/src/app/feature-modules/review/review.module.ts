@@ -7,13 +7,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommentComponent } from './comment/comment.component';
 import { RatingsComponent } from './ratings/ratings.component';
 import { CommentsRatingsComponent } from './comments-ratings/comments-ratings.component';
+import { OwnerPageComponent } from './owner-page/owner-page.component';
 
 @NgModule({
   declarations: [
     NewCommentComponent,
     CommentComponent,
     RatingsComponent,
-    CommentsRatingsComponent
+    CommentsRatingsComponent,
+    OwnerPageComponent
   ],
   imports: [
     CommonModule,
@@ -25,7 +27,8 @@ import { CommentsRatingsComponent } from './comments-ratings/comments-ratings.co
     NewCommentComponent,
     CommentComponent,
     RatingsComponent,
-    CommentsRatingsComponent
+    CommentsRatingsComponent,
+    OwnerPageComponent
   ]
 })
 export class ReviewModule { }

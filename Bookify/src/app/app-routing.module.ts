@@ -13,7 +13,7 @@ import { CalendarComponent } from './feature-modules/accommodation/update/calend
 import { authGuard } from "./feature-modules/authentication/guard/auth.guard";
 import { OwnerAccommodationsComponent } from './feature-modules/accommodation/owner-accommodations/owner-accommodations.component';
 import { AccommodationRequestsComponent } from "./feature-modules/administration/accommodation-requests/accommodation-requests.component";
-import { CommentsRatingsComponent } from './feature-modules/review/comments-ratings/comments-ratings.component';
+import { OwnerPageComponent } from './feature-modules/review/owner-page/owner-page.component';
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: "results", component: ResultsPageComponent },
   { path: "accommodation/details/:accommodationId", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
-  { path: 'comment', component: CommentsRatingsComponent },
+  { path: 'comment', component: OwnerPageComponent },
   { path: 'accommodation/calendar/:accommodationId', component: CalendarComponent, canActivate: [authGuard] },
   { path: "account", component: AccountComponent, canActivate: [authGuard] },
   { path: "accommodation/create", component: AccommodationCreateComponent, canActivate: [authGuard] },
