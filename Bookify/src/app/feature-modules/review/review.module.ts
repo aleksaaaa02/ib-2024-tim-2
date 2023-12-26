@@ -6,23 +6,26 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommentComponent } from './comment/comment.component';
 import { RatingsComponent } from './ratings/ratings.component';
+import { CommentsRatingsComponent } from './comments-ratings/comments-ratings.component';
 
 @NgModule({
   declarations: [
     NewCommentComponent,
     CommentComponent,
-    RatingsComponent
+    RatingsComponent,
+    CommentsRatingsComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   exports:[
     NewCommentComponent,
     CommentComponent,
-    RatingsComponent
+    RatingsComponent,
+    CommentsRatingsComponent
   ]
 })
 export class ReviewModule { }

@@ -12,11 +12,8 @@ import { AccommodationCreateComponent } from './feature-modules/accommodation/up
 import { CalendarComponent } from './feature-modules/accommodation/update/calendar/calendar.component';
 import { authGuard } from "./feature-modules/authentication/guard/auth.guard";
 import { OwnerAccommodationsComponent } from './feature-modules/accommodation/owner-accommodations/owner-accommodations.component';
-import {
-  AccommodationRequestsComponent
-} from "./feature-modules/administration/accommodation-requests/accommodation-requests.component";
-import { CommentComponent } from './feature-modules/review/comment/comment.component';
-import { RatingsComponent } from './feature-modules/review/ratings/ratings.component';
+import { AccommodationRequestsComponent } from "./feature-modules/administration/accommodation-requests/accommodation-requests.component";
+import { CommentsRatingsComponent } from './feature-modules/review/comments-ratings/comments-ratings.component';
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -26,17 +23,17 @@ const routes: Routes = [
   { path: "results", component: ResultsPageComponent },
   { path: "accommodation/details/:accommodationId", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
-  { path: 'comment', component: RatingsComponent },
+  { path: 'comment', component: CommentsRatingsComponent },
   { path: 'accommodation/calendar/:accommodationId', component: CalendarComponent, canActivate: [authGuard] },
   { path: "account", component: AccountComponent, canActivate: [authGuard] },
   { path: "accommodation/create", component: AccommodationCreateComponent, canActivate: [authGuard] },
-  { path: "accommodations", component: OwnerAccommodationsComponent, canActivate: [authGuard]},
+  { path: "accommodations", component: OwnerAccommodationsComponent, canActivate: [authGuard] },
   { path: "accommodation/modify/:accommodationId", component: AccommodationCreateComponent, canActivate: [authGuard] },
   { path: "accommodation-requests", component: AccommodationRequestsComponent, canActivate: [authGuard] }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {scrollPositionRestoration: 'enabled'})],
+  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

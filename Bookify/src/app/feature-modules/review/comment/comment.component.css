@@ -4,15 +4,13 @@
 }
 
 .comment-card {
-    margin-top: 20vh;
-    margin-left: auto;
-    margin-right: auto;
-    width: 60%;
+    margin: 1rem auto;
+    width: 75%;
     border-radius: 1.5em;
     background-color: #A29D92;
     display: grid;
-    position: relative;
-    grid-template-columns: 30% 70%;
+    position: relative; 
+    grid-template-columns: 20% 80%;
 }
 
 .column-left {
@@ -71,8 +69,8 @@
     border-radius: 100%;
     border: 3px solid #5d5d5d;
     margin: 0.6rem auto;
-    width: 8rem;
-    height: 8rem;
+    width: 4rem;
+    height: 4rem;
 }
 
 .image {

@@ -2,9 +2,9 @@
     background: transparent;
     display: flex;
     flex-direction: column;
-    margin-top: 20rem;
-    width: 30%;
+    width: 100%;
     align-items: center;
+    margin-bottom: 2rem;
 }
 
 .title{
@@ -67,14 +67,12 @@
     display: inline-block;
     vertical-align: baseline;
     margin-right: 0.7rem;
-    width: 12rem; 
+    width: 20rem; 
     margin-top: 1rem;
-    /* height: 20px; */
-    /* --percent: 50%; */
 }
 
 .progress::before {
-    content: ''; /* No content for the pseudo-element */
+    content: '';
     display: block;
     width: var(--percent);
     height: 100%;
