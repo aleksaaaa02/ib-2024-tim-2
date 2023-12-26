@@ -21,6 +21,7 @@ import rs.ac.uns.ftn.Bookify.config.utils.JWTUtils;
 import rs.ac.uns.ftn.Bookify.config.utils.UserJWT;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
+import rs.ac.uns.ftn.Bookify.mapper.OwnerBasidDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.User;
 import rs.ac.uns.ftn.Bookify.service.EmailService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
@@ -227,6 +228,14 @@ public class UserController {
         }
         token.setToken("Failed to create new user");
         return new ResponseEntity<>(token, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/owner/{ownerId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_GUEST')")
+    public ResponseEntity<OwnerBasicDTO> getOwner(@PathVariable Long ownerId){
+        Owner owner = userService.getOwner(ownerId);
+        OwnerBasicDTO dto = OwnerBasidDTOMapper.fromOwnertoDTO(owner);
+        return new ResponseEntity<OwnerBasicDTO>(dto, HttpStatus.OK);
     }
 }
 

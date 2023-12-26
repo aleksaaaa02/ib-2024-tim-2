@@ -286,6 +286,11 @@ public class UserService implements IUserService {
         return response;
     }
 
+    @Override
+    public Owner getOwner(Long ownerId) {
+        return userRepository.findOwnerById(ownerId);
+    }
+
     private void updateUserData(UserDetailDTO updatedUser, User u) {
         u.getAddress().setAddress(updatedUser.getAddress().getAddress());
         u.getAddress().setCity(updatedUser.getAddress().getCity());
