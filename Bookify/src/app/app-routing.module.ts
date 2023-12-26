@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: "results", component: ResultsPageComponent },
   { path: "accommodation/details/:accommodationId", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
-  { path: 'comment', component: OwnerPageComponent },
+  { path: 'owner/:ownerId', component: OwnerPageComponent, canActivate: [authGuard] },
   { path: 'accommodation/calendar/:accommodationId', component: CalendarComponent, canActivate: [authGuard] },
   { path: "account", component: AccountComponent, canActivate: [authGuard] },
   { path: "accommodation/create", component: AccommodationCreateComponent, canActivate: [authGuard] },
