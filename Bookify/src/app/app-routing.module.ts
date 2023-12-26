@@ -15,6 +15,7 @@ import { OwnerAccommodationsComponent } from './feature-modules/accommodation/ow
 import {
   AccommodationRequestsComponent
 } from "./feature-modules/administration/accommodation-requests/accommodation-requests.component";
+import { CommentComponent } from './feature-modules/review/comment/comment.component';
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: "results", component: ResultsPageComponent },
   { path: "accommodation/details/:accommodationId", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
+  { path: 'comment', component: CommentComponent },
   { path: 'accommodation/calendar/:accommodationId', component: CalendarComponent, canActivate: [authGuard] },
   { path: "account", component: AccountComponent, canActivate: [authGuard] },
   { path: "accommodation/create", component: AccommodationCreateComponent, canActivate: [authGuard] },
