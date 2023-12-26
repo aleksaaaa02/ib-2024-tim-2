@@ -8,6 +8,7 @@ import { CommentComponent } from './comment/comment.component';
 import { RatingsComponent } from './ratings/ratings.component';
 import { CommentsRatingsComponent } from './comments-ratings/comments-ratings.component';
 import { OwnerPageComponent } from './owner-page/owner-page.component';
+import { OwnerInfoComponent } from './owner-info/owner-info.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { OwnerPageComponent } from './owner-page/owner-page.component';
     CommentComponent,
     RatingsComponent,
     CommentsRatingsComponent,
-    OwnerPageComponent
+    OwnerPageComponent,
+    OwnerInfoComponent
   ],
   imports: [
     CommonModule,
