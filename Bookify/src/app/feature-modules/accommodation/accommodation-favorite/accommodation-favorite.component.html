@@ -1,19 +1,14 @@
 <div class="accommodation-card">
   <div class="column-left">
-    <img class="accommodation-image" src="../../../../assets/images/accommodation.png">
+    <img class="accommodation-image" [src]="image">
   </div>
   <div class="column-center">
-    <p class="subtitle">Apartment</p>
+    <p class="subtitle">{{accommodation.type}}</p>
     <div class="inline">
-      <p class="title">Park House Apartments</p>
-      <meter class="average-rating" min="0" max="5" value="4.3"></meter>
+      <p class="title">{{accommodation.name}}</p>
+      <meter class="average-rating" min="0" max="5" style="--percent: calc({{accommodation.avgRating}}/5*100%);"></meter>
     </div>
-    <p class="subtitle">47 N Row, London W1K 6DG, United Kingdom</p>
-    <p class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      Quisque porttitor convallis rhoncus. Nunc semper, justo a
-      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a
-      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a
-      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a
-      bibendum luctus. Lorem ipsum dolor sit amet.</p>
+    <p class="subtitle">{{accommodation.address.address}}, {{accommodation.address.city}}, {{accommodation.address.country}}</p>
+    <p class="description">{{accommodation.description}}</p>
   </div>
 </div>

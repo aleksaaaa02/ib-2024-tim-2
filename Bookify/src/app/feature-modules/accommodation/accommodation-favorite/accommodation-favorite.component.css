@@ -62,8 +62,7 @@
   vertical-align: baseline;
 }
 
-.average-rating::before {
-  --percent: calc(4.3/5*100%);
+.average-rating::before { 
   content: '★★★★★';
   font-size: 1.2rem;
   background:

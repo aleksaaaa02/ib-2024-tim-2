@@ -27,6 +27,7 @@ import {LayoutModule} from "../../layout/layout.module";
 import {DatapickerRangeComponent} from "../../layout/datapicker-range/datapicker-range.component";
 import {FavoritesPageComponent} from "./favorites-page/favorites-page.component";
 import {AccommodationFavoriteComponent} from "./accommodation-favorite/accommodation-favorite.component";
+import {ReservationModule} from "../reservation/reservation.module";
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import {AccommodationFavoriteComponent} from "./accommodation-favorite/accommoda
     LayoutModule,
     RouterLink,
     CarouselComponent,
-    DatapickerRangeComponent
+    DatapickerRangeComponent,
+    ReservationModule
   ],
   exports:[
     AccommodationCreateComponent,

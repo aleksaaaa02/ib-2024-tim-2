@@ -5,10 +5,9 @@
     <h1>Favorites</h1>
   </div>
   <hr>
-  <div>
-    <app-accommodation-favorite></app-accommodation-favorite>
-    <app-accommodation-favorite></app-accommodation-favorite>
-    <app-accommodation-favorite></app-accommodation-favorite>
-    <app-accommodation-favorite></app-accommodation-favorite>
+  <div class="results">
+    @for (accommodation of accommodations; track accommodation.id) {
+      <app-accommodation-favorite [accommodation]="accommodation"></app-accommodation-favorite>
+    }
   </div>
 </div>

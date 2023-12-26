@@ -74,6 +74,10 @@ export class AccommodationService {
     return this.httpClient.post(url, {}, { responseType: "text" });
   }
 
+  getFavorites(guestId: number): Observable<AccommodationBasicModel[]>{
+    return this.httpClient.get<AccommodationBasicModel[]>(environment.apiHost + "accommodations/favorites?guestId=" + guestId);
+  }
+
   checkIfInFavorites(guestId: number, accommodationId: number): Observable<boolean> {
     const url = `${environment.apiHost}accommodations/added-to-favorites/${guestId}/${accommodationId}`;
     return this.httpClient.get<boolean>(url);
