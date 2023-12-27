@@ -28,4 +28,5 @@ public interface IReservationService {
     public List<Reservation> filterForOwner(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses);
     public void setReservationStatus(Long reservationId, Status status);
     public void delete(Long reservationId);
+    public boolean cancelGuestsReservations(Long guestId);
 }

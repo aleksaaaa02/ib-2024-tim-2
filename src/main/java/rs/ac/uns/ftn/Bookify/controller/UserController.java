@@ -156,8 +156,10 @@ public class UserController {
     @PutMapping("/{userId}/block-user")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> blockUser(@PathVariable Long userId) {
-
-        return new ResponseEntity<>("User blocked successfully", HttpStatus.OK);
+        boolean success = this.userService.block(userId);
+        if(success)
+            return new ResponseEntity<>("User blocked successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Something went wrong", HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(value = "/report")

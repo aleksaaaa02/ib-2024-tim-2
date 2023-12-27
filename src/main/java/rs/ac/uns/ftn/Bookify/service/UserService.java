@@ -34,7 +34,6 @@ public class UserService implements IUserService {
     private final IAccommodationService accommodationService;
 
 
-
     @Autowired
     public UserService(IImageService imageService, IUserRepository userRepository, IReservationService reservationService,
                        PasswordEncoder passwordEncoder, @Lazy IAccommodationService accommodationService, IReservationRepository reservationRepository) {
@@ -202,7 +201,16 @@ public class UserService implements IUserService {
 
     @Override
     public boolean block(Long userId) {
-        return false;
+        Optional<User> u = userRepository.findById(userId);
+        if (u.isEmpty()) {
+            return false;
+        }
+        User user = u.get();
+
+        if (!user.isBlocked()) {
+            return block(user);
+        }
+        return unblock(user);
     }
 
     @Override
@@ -358,4 +366,24 @@ public class UserService implements IUserService {
     private boolean isRequestReactedOn(Accommodation a) {
         return a.getStatus().toString().equals("APPROVED") || a.getStatus().toString().equals("REJECTED");
     }
+
+    private boolean unblock(User user) {
+        String role = getRole(user);
+        if(role.equals("ADMIN")) throw new BadRequestException("Administrator's account cannot be blocked/unblocked");
+        user.setBlocked(false);
+        userRepository.save(user);
+        return true;
+    }
+
+    private boolean block(User user) {
+        String role = getRole(user);
+        if(role.equals("ADMIN")) throw new BadRequestException("Administrator's account cannot be blocked/unblocked");
+        if(role.equals("GUEST")) {
+            reservationService.cancelGuestsReservations(user.getId());
+        }
+        user.setBlocked(true);
+        userRepository.save(user);
+        return true;
+    }
+
 }

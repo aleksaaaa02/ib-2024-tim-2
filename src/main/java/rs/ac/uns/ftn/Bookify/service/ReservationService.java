@@ -110,4 +110,15 @@ public class ReservationService implements IReservationService {
     public void delete(Long reservationId) {
         this.reservationRepository.deleteById(reservationId);
     }
+
+    @Override
+    public boolean cancelGuestsReservations(Long guestId) {
+        List<Reservation> reservations = this.reservationRepository.findAllByGuest_IdAndEndAfter(guestId, LocalDate.now());
+        reservations.forEach((reservation -> {
+            // Should add logic for cancellation to return date if possible so owner is not damaged
+            reservation.setStatus(Status.CANCELED);
+            reservationRepository.save(reservation);
+        }));
+        return true;
+    }
 }
