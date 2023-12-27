@@ -10,10 +10,19 @@ import {AccommodationService} from "../../accommodation/accommodation.service";
 })
 export class GuestRequestCardComponent implements OnInit{
 
-  @Input() request: ReservationDTO
-  image: string | ArrayBuffer | null
+  @Input() request: ReservationDTO;
+  image: string | ArrayBuffer | null;
+  visible: boolean = true;
 
   constructor(private reservationService: ReservationService, private accommodationService: AccommodationService) {
+  }
+
+  onDeletePressed(){
+    this.reservationService.deleteRequest(this.request.id).subscribe({
+      next: (data) => {
+        this.visible = false;
+    }
+    });
   }
 
   ngOnInit(): void {
