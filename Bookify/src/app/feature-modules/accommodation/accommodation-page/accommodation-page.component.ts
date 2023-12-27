@@ -11,6 +11,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ReserveComponent} from "../reserve/reserve.component";
 import {MessageDialogComponent} from "../../../layout/message-dialog/message-dialog.component";
 import {ReservationRequestDTO} from "../model/reservation-request.dto.model";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-accommodation-page',
@@ -47,24 +48,31 @@ export class AccommodationPageComponent implements OnInit{
   ownerImage: string | ArrayBuffer | null = null;
   accommodationImages: string[] = [];
   amenitiesList: [string, string][] = [];
+  isFavorite: boolean = false;
   @ViewChild(MapComponent) mapComponent: MapComponent;
   @ViewChild(CarouselComponent) carouselComponent: CarouselComponent;
   @ViewChild(ReserveComponent) reservationComponent: ReserveComponent;
 
-  constructor(public dialog: MatDialog, private authenticationService: AuthenticationService, private route: ActivatedRoute, private accommodationService: AccommodationService, private accountService: AccountService) {
-  }
+  constructor(public dialog: MatDialog, protected authenticationService: AuthenticationService, private route: ActivatedRoute, private accommodationService: AccommodationService, private accountService: AccountService, private _snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: "instant"
+    });
     this.getAccommodationData();
     this.setIfUser();
   }
 
   private setIfUser(){
     const reserve = document.getElementById("reserve-comp");
-    if (reserve != null) {
+    const favorite = document.getElementById("favorite-button");
+    if (reserve != null && favorite != null) {
       console.log(this.authenticationService.getRole());
-      if (this.authenticationService.getRole() == "GUEST")
+      if (this.authenticationService.getRole() == "GUEST") {
         reserve.style.display = 'block';
+        favorite.style.visibility = 'visible';
+      }
     }
   }
 
@@ -83,6 +91,12 @@ export class AccommodationPageComponent implements OnInit{
           this.getAccommodationPhotos(id);
           const address = this.accommodation.address.address + ", " + this.accommodation.address.city + ", " + this.accommodation.address.zipCode + ", " + this.accommodation.address.country;
           this.mapComponent.search(address);
+          console.log(data);
+          this.accommodationService.checkIfInFavorites(this.authenticationService.getUserId(), this.accommodation.id).subscribe({
+            next: (data) => {
+              this.isFavorite = data;
+            }
+          })
         }
       })
     });
@@ -168,6 +182,23 @@ export class AccommodationPageComponent implements OnInit{
           })
         }
       }
+    });
+  }
+
+  addToFavorites() {
+    if (!this.isFavorite) {
+      this.accommodationService.addToFavorites(this.authenticationService.getUserId(), this.accommodation.id).subscribe({
+        next: (data) => {
+          this.isFavorite = !this.isFavorite;
+          this.openSnackBar("Added to favorites", "Close");
+        }
+      })
+    }
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 2000,
     });
   }
 }
