@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {AccommodationRequests} from "./model/accommodation.requests";
 import {environment} from "../../../env/env";
+import {User} from "./model/user";
 
 @Injectable({
     providedIn: 'root'
@@ -23,5 +24,9 @@ export class AdministrationService {
 
     approveAccommodationRequest(accommodationId: number): Observable<string> {
         return this.httpClient.put(environment.apiAccommodation + "/approve/" + accommodationId,{}, {responseType:"text"});
+    }
+
+    getAllUsers(): Observable<User[]> {
+      return this.httpClient.get<User[]>(environment.apiUser);
     }
 }
