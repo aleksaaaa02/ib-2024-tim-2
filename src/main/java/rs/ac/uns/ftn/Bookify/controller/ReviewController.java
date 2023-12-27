@@ -1,12 +1,15 @@
 package rs.ac.uns.ftn.Bookify.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.Bookify.dto.RatingDTO;
 import rs.ac.uns.ftn.Bookify.dto.ReviewDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.ReviewType;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IReviewService;
 
 import java.util.Date;
 import java.util.Collection;
@@ -15,8 +18,8 @@ import java.util.HashSet;
 @RestController
 @RequestMapping("/api/v1/reviews")
 public class ReviewController {
-//    @Autowired
-//    private IReviewService reviewService;
+    @Autowired
+    private IReviewService reviewService;
 
     @GetMapping(value = "/created", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -62,6 +65,14 @@ public class ReviewController {
         reviewDTO.add(review1);
         reviewDTO.add(review2);
         return new ResponseEntity<>(reviewDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/owner/{ownerId}/rating", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    public ResponseEntity<RatingDTO> getRating(@PathVariable Long ownerId){
+        //returns reviews for owner
+        RatingDTO dto = reviewService.getRating(ownerId);
+        return new ResponseEntity<RatingDTO>(dto, HttpStatus.OK);
     }
 
     @PostMapping(value = "/new-accommodation/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
