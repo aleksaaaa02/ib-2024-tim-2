@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ReviewService } from '../review.service';
 import { ActivatedRoute } from '@angular/router';
 import { CommentDTO } from '../model/comment.model.dto';
@@ -12,8 +12,9 @@ export class CommentsRatingsComponent implements OnChanges {
   @Input() load : boolean;
   ownerId: number;
   comments: CommentDTO[];
+  loading: boolean = false;
 
-  constructor(private reviewServise: ReviewService, private route: ActivatedRoute) { }
+  constructor(private reviewServise: ReviewService, private route: ActivatedRoute, private cdr: ChangeDetectorRef) { }
  
   ngOnChanges(changes: SimpleChanges): void {
     if(this.load){
@@ -36,5 +37,21 @@ export class CommentsRatingsComponent implements OnChanges {
         }
       });
     }
+  }
+
+  onEmitChange(data: boolean): void {
+    console.log("JAOO");
+    this.reviewServise.getOwnerComments(this.ownerId).subscribe({
+      next: (comments: CommentDTO[]) => {
+        this.comments = comments;
+        this.loading = true;
+        this.load = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  onLoadingChange(data: boolean): void {
+    this.loading = false; 
   }
 }

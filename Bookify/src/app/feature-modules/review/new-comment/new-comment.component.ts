@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ReviewService } from '../review.service';
 import { NewCommentDTO } from '../model/new-comment.model.dto';
 import { AuthenticationService } from '../../authentication/authentication.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-new-comment',
@@ -19,7 +20,7 @@ export class NewCommentComponent implements OnInit {
 
   ownerId: number;
   
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private reviewService: ReviewService, private authenticationService: AuthenticationService) {
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private reviewService: ReviewService, private authenticationService: AuthenticationService, private _snackBar: MatSnackBar) {
     this.form = this.fb.group({
       comment: ['', Validators.required],
     });
@@ -49,8 +50,19 @@ export class NewCommentComponent implements OnInit {
       this.reviewService.add(this.ownerId, comment).subscribe({
         next: () => {
           this.emit.emit(true);
+          this.openSnackBar("Your comment has been sent to admin for approval", "close");
+          this.form.get('comment')?.reset();
+          this.percent = 0;
+          this.submitted = false;
         }
       })
     }
   }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 2000,
+    });
+  }
+
 }

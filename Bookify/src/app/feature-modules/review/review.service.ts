@@ -30,7 +30,7 @@ export class ReviewService {
     return this.httpClient.post<null>(environment.apiReview + "/new-owner/" + ownerId, newComment);
   }
 
-  delete(reviewId: number) {
-
+  delete(ownerId: number, reviewId: number) {
+    return this.httpClient.delete<null>(environment.apiReview + "/owner-delete/" + ownerId + "/" + reviewId);
   }
 }
