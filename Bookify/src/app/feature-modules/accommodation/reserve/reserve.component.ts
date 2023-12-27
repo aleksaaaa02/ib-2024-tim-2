@@ -15,7 +15,7 @@ export class ReserveComponent {
   @Output() buttonPressed= new EventEmitter<{persons: number, dateBegin: string, dateEnd: string}>();
   persons: number = 2;
 
-  constructor(public dialog: MatDialog, private accommodationService: AccommodationService){}
+  constructor(public dialog: MatDialog){}
 
   onReservePress(): void {
     const values = {

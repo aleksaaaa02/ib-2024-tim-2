@@ -20,9 +20,6 @@ import { AccommodationOwnerDtoModel } from "./model/accommodation.owner.dto.mode
   providedIn: 'root'
 })
 export class AccommodationService {
-  private basicAccommodationList: AccommodationBasicModel[] = [];
-  private accommodations: AccommodationDTO[] = [];
-
   constructor(private httpClient: HttpClient, @Inject(LOCALE_ID) private locale: string) { }
 
   getOwnerAccommodations(ownerId: number | undefined): Observable<AccommodationOwnerDtoModel[]> {
