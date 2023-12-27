@@ -12,12 +12,7 @@ export class AccommodationBasicComponent implements OnInit{
   @Input() basicAccommodation: AccommodationBasicModel
   image: string | ArrayBuffer | null
 
-  constructor(private accommodationService: AccommodationService, private router: Router) {
-  }
-
-  calculatePercent(): string {
-    return `calc(${this.basicAccommodation.avgRating}/5*100%)`;
-  }
+  constructor(private accommodationService: AccommodationService) {}
 
   ngOnInit(): void {
     this.accommodationService.getImage(this.basicAccommodation.imageId).subscribe({

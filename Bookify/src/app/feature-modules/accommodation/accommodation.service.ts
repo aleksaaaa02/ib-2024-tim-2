@@ -20,9 +20,6 @@ import { AccommodationOwnerDtoModel } from "./model/accommodation.owner.dto.mode
   providedIn: 'root'
 })
 export class AccommodationService {
-  private basicAccommodationList: AccommodationBasicModel[] = [];
-  private accommodations: AccommodationDTO[] = [];
-
   constructor(private httpClient: HttpClient, @Inject(LOCALE_ID) private locale: string) { }
 
   getOwnerAccommodations(ownerId: number | undefined): Observable<AccommodationOwnerDtoModel[]> {
@@ -70,6 +67,20 @@ export class AccommodationService {
 
   getAccommodationImages(accommodationId: number): Observable<string[]> {
     return this.httpClient.get<string[]>(environment.apiHost + "accommodations/images/" + accommodationId, { responseType: "json" });
+  }
+
+  addToFavorites(guestId: number, accommodationId: number): Observable<string> {
+    const url = `${environment.apiHost}accommodations/add-to-favorites/${guestId}/${accommodationId}`;
+    return this.httpClient.post(url, {}, { responseType: "text" });
+  }
+
+  getFavorites(guestId: number): Observable<AccommodationBasicModel[]>{
+    return this.httpClient.get<AccommodationBasicModel[]>(environment.apiHost + "accommodations/favorites?guestId=" + guestId);
+  }
+
+  checkIfInFavorites(guestId: number, accommodationId: number): Observable<boolean> {
+    const url = `${environment.apiHost}accommodations/added-to-favorites/${guestId}/${accommodationId}`;
+    return this.httpClient.get<boolean>(url);
   }
 
   async getCountries(): Promise<string[]> {

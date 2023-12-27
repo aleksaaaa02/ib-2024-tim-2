@@ -27,7 +27,7 @@ export class SearchComponent implements AfterViewInit {
   private convertDate (date: string): string{
     let el = date.split(".");
     return el[1] + "-" + el[0] + "-" + el[2];
-}
+  }
 
   ngAfterViewInit(): void {
   }

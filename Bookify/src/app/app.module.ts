@@ -15,6 +15,7 @@ import { AccountModule } from "./feature-modules/account/account.module";
 import { Interceptor } from "./feature-modules/authentication/interceptor/interceptor";
 import { AdministrationModule } from "./feature-modules/administration/administration.module";
 import { ReviewModule } from './feature-modules/review/review.module';
+import { ReservationModule } from './feature-modules/reservation/reservation.module';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { ReviewModule } from './feature-modules/review/review.module';
     HttpClientModule,
     DatapickerRangeComponent,
     AccommodationModule,
+    ReservationModule,
     SharedModule,
     AdministrationModule,
     ReviewModule

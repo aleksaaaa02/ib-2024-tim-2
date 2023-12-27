@@ -39,9 +39,10 @@ import {DatapickerRangeComponent} from "./datapicker-range/datapicker-range.comp
   ],
   exports: [
     NavigationBarComponent,
+    DatapickerRangeComponent,
     FilterComponent,
     FooterComponent,
-    SearchComponent,
+    SearchComponent
   ]
 })
 export class LayoutModule { }
