@@ -83,4 +83,19 @@ public class ReservationService implements IReservationService {
     public List<Reservation> filterForGuest(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses) {
         return reservationRepository.filterForGuest(userId, accommodationId, startDate, endDate, statuses);
     }
+
+    @Override
+    public List<Reservation> getAllForOwner(Long userId) {
+        return reservationRepository.getAllForOwner(userId);
+    }
+
+    @Override
+    public List<Object[]> getOwnerAccommodations(Long userId) {
+        return reservationRepository.getIdToNameOwnerMap(userId);
+    }
+
+    @Override
+    public List<Reservation> filterForOwner(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses) {
+        return reservationRepository.filterForOwner(userId, accommodationId, startDate, endDate, statuses);
+    }
 }
