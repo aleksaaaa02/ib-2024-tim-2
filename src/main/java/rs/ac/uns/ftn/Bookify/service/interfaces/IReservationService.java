@@ -6,6 +6,7 @@ import rs.ac.uns.ftn.Bookify.model.Reservation;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 public interface IReservationService {
 
@@ -16,4 +17,5 @@ public interface IReservationService {
     Reservation save(Reservation reservation);
     public void setAccommodation(Accommodation accommodation, Reservation reservation);
     public void setGuest(Guest guest, Reservation reservation);
+    public List<Reservation> getReservations(Long guestId);
 }

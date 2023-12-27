@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Owner;
 import rs.ac.uns.ftn.Bookify.model.User;
 
@@ -18,6 +19,9 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT o FROM Owner o WHERE o.id=:ownerId")
     Owner findOwnerById(@Param("ownerId") Long ownerId);
+
+    @Query("SELECT g FROM Guest g WHERE g.id=:guestId")
+    Guest findGuestById(@Param("guestId") Long guestId);
 
     @Query("SELECT AVG(r.rate) FROM Owner o JOIN o.reviews r WHERE o.id = :ownerId")
     Float getAverageReviewByOwnerId(@Param("ownerId") Long ownerId);

@@ -62,4 +62,9 @@ public class ReviewService implements IReviewService {
         }
         return dtos;
     }
+
+    @Override
+    public Review save(Review review) {
+        return reviewRepository.save(review);
+    }
 }

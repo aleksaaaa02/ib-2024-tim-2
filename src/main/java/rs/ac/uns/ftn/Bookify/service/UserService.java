@@ -291,6 +291,16 @@ public class UserService implements IUserService {
         return userRepository.findOwnerById(ownerId);
     }
 
+    @Override
+    public Guest getGuest(Long guestId) {
+        return userRepository.findGuestById(guestId);
+    }
+
+    @Override
+    public void saveOwner(Owner owner) {
+        userRepository.save(owner);
+    }
+
     private void updateUserData(UserDetailDTO updatedUser, User u) {
         u.getAddress().setAddress(updatedUser.getAddress().getAddress());
         u.getAddress().setCity(updatedUser.getAddress().getCity());

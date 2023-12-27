@@ -8,10 +8,10 @@ import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Owner;
 
 @Component
-public class OwnerBasidDTOMapper {
+public class OwnerBasicDTOMapper {
     private static ModelMapper modelMapper;
 
-    public OwnerBasidDTOMapper(ModelMapper modelMapper) {
+    public OwnerBasicDTOMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 

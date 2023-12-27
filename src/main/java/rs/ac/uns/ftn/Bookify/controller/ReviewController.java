@@ -7,10 +7,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.Bookify.dto.CommentDTO;
+import rs.ac.uns.ftn.Bookify.dto.NewReviewDTO;
 import rs.ac.uns.ftn.Bookify.dto.RatingDTO;
 import rs.ac.uns.ftn.Bookify.dto.ReviewDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.ReviewType;
+import rs.ac.uns.ftn.Bookify.mapper.NewReviewDTOMapper;
+import rs.ac.uns.ftn.Bookify.model.Guest;
+import rs.ac.uns.ftn.Bookify.model.Owner;
+import rs.ac.uns.ftn.Bookify.model.Review;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IReviewService;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
 import java.util.Date;
 import java.util.Collection;
@@ -21,6 +28,12 @@ import java.util.HashSet;
 public class ReviewController {
     @Autowired
     private IReviewService reviewService;
+
+    @Autowired
+    private IUserService userService;
+
+    @Autowired
+    private IReservationService reservationService;
 
     @GetMapping(value = "/created", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -81,11 +94,22 @@ public class ReviewController {
     }
 
     @PostMapping(value = "/new-owner/{ownerId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<ReviewDTO> newReviewOwner(@PathVariable Long ownerId, @RequestBody ReviewDTO review) {
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    public ResponseEntity<ReviewDTO> newReviewOwner(@PathVariable Long ownerId, @RequestBody NewReviewDTO newReview) {
         //insert new review for owner
-        ReviewDTO savedReview = new ReviewDTO(1L, 4, "Nice", new Date(), true, false, 2L, ReviewType.OWNER);
-        return new ResponseEntity<ReviewDTO>(savedReview, HttpStatus.CREATED);
+
+        Review review = NewReviewDTOMapper.fromDTOtoReview(newReview);
+        Guest guest = userService.getGuest(newReview.getGuestId());
+        review.setGuest(guest);
+        if(reservationService.getReservations(guest.getId()).isEmpty()){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        Review insertedReview = reviewService.save(review);
+        Owner owner = userService.getOwner(ownerId);
+        owner.getReviews().add(insertedReview);
+        userService.saveOwner(owner);
+
+        return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 
     @PutMapping(value="/reject/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)

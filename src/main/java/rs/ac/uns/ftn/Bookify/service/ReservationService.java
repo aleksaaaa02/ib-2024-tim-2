@@ -66,4 +66,9 @@ public class ReservationService implements IReservationService {
         reservation.setGuest(guest);
         reservationRepository.save(reservation);
     }
+
+    @Override
+    public List<Reservation> getReservations(Long guestId) {
+        return reservationRepository.getReservations(guestId, LocalDate.now(), Status.ACCEPTED);
+    }
 }
