@@ -99,7 +99,7 @@ public class ReservationController {
 
     @GetMapping(value="/owner/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<Collection<ReservationDTO>> fFilterReservationsForOwner(@RequestParam Long userId, @RequestParam Long accommodationId,
+    public ResponseEntity<Collection<ReservationDTO>> FilterReservationsForOwner(@RequestParam Long userId, @RequestParam Long accommodationId,
                                                                                   @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") Date startDate, @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") Date endDate, @RequestParam Status[] statuses) {
         //return all reservations of one guest
         LocalDate beginL = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
