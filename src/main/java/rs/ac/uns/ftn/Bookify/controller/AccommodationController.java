@@ -126,26 +126,21 @@ public class AccommodationController {
         return new ResponseEntity<>(this.accommodationService.getOwnerAccommodation(ownerId), HttpStatus.OK);
     }
 
-    @GetMapping("/favorites/{guestId}")
+    @GetMapping("/favorites")
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<Collection<AccommodationBasicDTO>> getFavoritesAccommodations(@PathVariable Long guestId) {
+    public ResponseEntity<Collection<AccommodationBasicDTO>> getFavoritesAccommodations(@RequestParam("guestId") Long guestId) {
         //returns all favorites accommodation of user
-        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
-                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet.");
-        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
-                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet.");
-        Collection<AccommodationBasicDTO> basicAccommodations = new HashSet<>();
-        basicAccommodations.add(basicDTO1);
-        basicAccommodations.add(basicDTO2);
-        return new ResponseEntity<>(basicAccommodations, HttpStatus.OK);
+        User user = userService.get(guestId);
+        List<Accommodation> accommodations = new ArrayList<>();
+        if (user instanceof Guest)
+            accommodations = ((Guest) user).getFavorites();
+
+        Collection<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
+                .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
+                .collect(Collectors.toList());
+        for (AccommodationBasicDTO accommodationBasic : accommodationBasicDTO)
+            accommodationBasic.setAvgRating(accommodationService.getAvgRating(accommodationBasic.getId()));
+        return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/charts", produces = MediaType.APPLICATION_JSON_VALUE)
