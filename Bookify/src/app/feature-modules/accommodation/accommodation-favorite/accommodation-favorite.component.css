@@ -7,6 +7,7 @@
   margin-left: auto;
   margin-right: auto;
   width: 94%;
+  cursor: pointer;
   border-radius: 1.5em;
   background-color: whitesmoke;
   display: grid;
@@ -62,7 +63,7 @@
   vertical-align: baseline;
 }
 
-.average-rating::before { 
+.average-rating::before {
   content: '★★★★★';
   font-size: 1.2rem;
   background:
