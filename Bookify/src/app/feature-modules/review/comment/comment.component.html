@@ -5,13 +5,13 @@
     <div class="column-center">
       <div class="inline">
         <div>
-            <p class="title">Ime</p>
-            <p class="date">Datum</p>
+            <p class="title">{{comment.name}}</p>
+            <p class="date">{{formatDate(comment.date)}}</p>
         </div>
-        <meter class="average-rating" min="0" max="5" style="--percent: calc(4/5*100%);"></meter>
+        <meter class="average-rating" min="0" max="5" style="--percent: calc({{comment.rate}}/5*100%);"></meter>
       </div>
-      <p class="description">ssslmosfdlkjavszdl;kfjacms;lkdfjc;alks\ nklajsldksfamldxl;</p>
+      <p class="description">{{comment.comment}}</p>
     </div>
-    <span class="material-symbols-outlined">cancel</span>
+    <span class="material-symbols-outlined" *ngIf="comment.guestId===guestId" (click)="deleteComment(comment.id)">cancel</span>
   </div>
   

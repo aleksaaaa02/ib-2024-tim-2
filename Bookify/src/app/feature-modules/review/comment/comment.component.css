@@ -68,9 +68,9 @@
 #account-pic {
     border-radius: 100%;
     border: 3px solid #5d5d5d;
-    margin: 0.6rem auto;
-    width: 4rem;
-    height: 4rem;
+    margin: auto;
+    width: 5rem;
+    height: 5rem;
 }
 
 .image {

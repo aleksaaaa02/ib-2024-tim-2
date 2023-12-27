@@ -38,7 +38,6 @@ export class RatingsComponent implements OnInit {
 
           const temp = this.oneStar + 2 * this.twoStars + 3 * this.threeStars + 4 * this.fourStars + 5 * this.fiveStars;
           this.sumProgress = temp / this.sum;
-          console.log(this.sumProgress);
         }
       })
     }

@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { OwnerDTO } from './model/owner.model.dto';
 import { environment } from '../../../env/env';
 import { RatingDTO } from './model/rating.model.dto';
+import { CommentDTO } from './model/comment.model.dto';
+import { NewCommentDTO } from './model/new-comment.model.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +20,13 @@ export class ReviewService {
 
   getOwnerRating(ownerId: number): Observable<RatingDTO>{
     return this.httpClient.get<RatingDTO>(environment.apiReview + "/owner/" + ownerId + "/rating");
+  }
+
+  getOwnerComments(ownerId: number): Observable<CommentDTO[]>{
+    return this.httpClient.get<CommentDTO[]>(environment.apiReview + "/owner/" + ownerId);
+  }
+
+  add(ownerId: number,newComment: NewCommentDTO): Observable<any> {
+    return this.httpClient.post<any>(environment.apiReview + "/new-owner/" + ownerId, newComment);
   }
 }
