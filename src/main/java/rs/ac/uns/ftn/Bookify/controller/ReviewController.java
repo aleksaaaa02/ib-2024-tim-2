@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.Bookify.dto.CommentDTO;
 import rs.ac.uns.ftn.Bookify.dto.RatingDTO;
 import rs.ac.uns.ftn.Bookify.dto.ReviewDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.ReviewType;
@@ -57,20 +58,16 @@ public class ReviewController {
     }
 
     @GetMapping(value = "/owner/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ReviewDTO>> getReviewsForOwner(@PathVariable Long ownerId){
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    public ResponseEntity<Collection<CommentDTO>> getReviewsForOwner(@PathVariable Long ownerId){
         //returns reviews for owner
-        ReviewDTO review1 = new ReviewDTO(3L, 4, "Nice", new Date(), true, false, 2L, ReviewType.OWNER);
-        ReviewDTO review2 = new ReviewDTO(4L, 3, "Bad", new Date(), true, false, 1L, ReviewType.OWNER);
-        Collection<ReviewDTO> reviewDTO = new HashSet<>();
-        reviewDTO.add(review1);
-        reviewDTO.add(review2);
-        return new ResponseEntity<>(reviewDTO, HttpStatus.OK);
+        Collection<CommentDTO> dtos = reviewService.getOwnerComments(ownerId);
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
     @GetMapping(value = "/owner/{ownerId}/rating", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<RatingDTO> getRating(@PathVariable Long ownerId){
-        //returns reviews for owner
         RatingDTO dto = reviewService.getRating(ownerId);
         return new ResponseEntity<RatingDTO>(dto, HttpStatus.OK);
     }
