@@ -166,7 +166,10 @@ VALUES
     (true, 'Good amenities.', '2024-03-19 06:15:00', 3, false, 'ACCOMMODATION', 5),
     (true, 'Beautiful view.', '2024-03-16 22:00:00', 5, false, 'OWNER', 10),
     (true, 'Homey feel.', '2024-03-18 11:30:00', 4, false, 'OWNER', 2),
-    (true, 'Good amenities.', '2024-03-20 06:15:00', 3, false, 'OWNER', 5);
+    (true, 'Good amenities.', '2024-03-20 06:15:00', 3, false, 'OWNER', 5),
+    (true, 'Beautiful view.', '2023-03-16 22:00:00', 2, false, 'OWNER', 10),
+    (true, 'Homey feel.', '2023-03-18 11:30:00', 1, false, 'OWNER', 2),
+    (true, 'Good amenities.', '2023-03-20 06:15:00', 3, false, 'OWNER', 5);
 
 INSERT INTO accommodations_reviews (accommodation_id, reviews_id)
 VALUES
@@ -175,7 +178,7 @@ VALUES
 
 INSERT INTO users_reviews (owner_id, reviews_id)
 VALUES
-    (3, 17), (3, 18), (7,19);
+    (3, 17), (3, 18), (7,19), (3, 20), (3, 21), (3, 22);
 
 
 INSERT INTO accommodation_filters (accommodation_id, filters)
@@ -218,7 +221,7 @@ VALUES
     (36, 'GARDEN'), (36, 'WHEELCHAIR'), (36, 'BAR'), (36, 'FREE_WIFI'), (36, 'LUNCH');
 
 
-SET @path = '/Users/olivera/Documents/Bookify/images/';
+SET @path = 'C:/Users/Dell/Documents/images/';
 INSERT INTO image (image_name, image_path)
 VALUES
     ('image', CONCAT(@path, '1/1.jpeg')), ('image', CONCAT(@path, '1/2.jpeg')),

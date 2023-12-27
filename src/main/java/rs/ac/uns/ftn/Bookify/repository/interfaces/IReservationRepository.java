@@ -23,6 +23,12 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
             "AND r.status NOT IN :statuses")
     public List<Reservation> findReservationsByAccommodation_IdAndStartBeforeAndEndAfterAndStatusNotIn(Long accommodationId, LocalDate end, LocalDate start, Set<Status> statuses);
 
+    @Query("SELECT r FROM Reservation r WHERE r.guest.id = :guestId " +
+            "AND r.end <= :date " +
+            "AND r.status = :status " +
+            "AND r.accommodation IN (SELECT o.accommodations FROM Owner o WHERE o.id = :ownerId)")
+    public List<Reservation> getReservations(Long guestId, LocalDate date, Status status, Long ownerId);
+
     @Query("SELECT r FROM Reservation r WHERE r.guest.id = :guestId")
     public List<Reservation> getAllForGuest(Long guestId);
 

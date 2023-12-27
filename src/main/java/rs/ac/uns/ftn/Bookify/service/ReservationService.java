@@ -67,6 +67,11 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
+    public List<Reservation> getReservations(Long guestId, Long ownerId) {
+        return reservationRepository.getReservations(guestId, LocalDate.now(), Status.ACCEPTED, ownerId);
+    }
+
+    @Override
     public List<Reservation> getAllForGuest(Long userId) {
         return reservationRepository.getAllForGuest(userId);
     }
