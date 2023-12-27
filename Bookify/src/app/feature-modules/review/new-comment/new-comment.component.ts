@@ -54,6 +54,9 @@ export class NewCommentComponent implements OnInit {
           this.form.get('comment')?.reset();
           this.percent = 0;
           this.submitted = false;
+        },
+        error: () => {
+          this.openSnackBar("You need to have a reservation to be able to comment on the owner", "cancel");
         }
       })
     }

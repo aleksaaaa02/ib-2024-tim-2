@@ -4,6 +4,7 @@ import { DatePipe } from '@angular/common';
 import { AuthenticationService } from '../../authentication/authentication.service';
 import { ActivatedRoute } from '@angular/router';
 import { ReviewService } from '../review.service';
+import { AccountService } from '../../account/account.service';
 
 @Component({
   selector: 'app-comment',
@@ -16,13 +17,34 @@ export class CommentComponent implements OnInit {
   @Output() emit = new EventEmitter<boolean>();
   guestId: number;
   ownerId: number;
+  ownerImage: string | ArrayBuffer | null = null;
 
-  constructor(public datepipe: DatePipe, private authenticationService: AuthenticationService, private route: ActivatedRoute, private reviewService: ReviewService) {
+  constructor(public datepipe: DatePipe, private authenticationService: AuthenticationService, private route: ActivatedRoute,
+     private reviewService: ReviewService, private accountService: AccountService) {
     this.guestId = authenticationService.getUserId();
   }
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.ownerId = +params['ownerId'];
+      if (this.comment.imageId != 0)
+      this.getOwnerPhoto(this.comment.imageId);
+    else
+      this.ownerImage = "../../assets/images/user.jpg";
+    });
+  }
+
+  getOwnerPhoto(id: number) {
+    this.accountService.getAccountImage(id).subscribe({
+      next: (data: Blob): void => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          this.ownerImage = reader.result;
+        }
+        reader.readAsDataURL(data);
+      },
+      error: err => {
+        console.error(err);
+      }
     });
   }
 
