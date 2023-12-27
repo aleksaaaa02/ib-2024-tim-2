@@ -34,10 +34,10 @@ public class Reservation {
 	@Column(nullable = false)
 	private double price;
 
-	@ManyToOne(cascade = {CascadeType.ALL})
+	@ManyToOne()
 	private Guest guest;
 
-	@ManyToOne(cascade = {CascadeType.ALL})
+	@ManyToOne()
 	private Accommodation accommodation;
 
 	@Enumerated(EnumType.STRING)

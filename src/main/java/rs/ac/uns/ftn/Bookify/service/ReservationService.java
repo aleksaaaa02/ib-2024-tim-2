@@ -14,10 +14,7 @@ import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ReservationService implements IReservationService {
@@ -97,5 +94,20 @@ public class ReservationService implements IReservationService {
     @Override
     public List<Reservation> filterForOwner(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses) {
         return reservationRepository.filterForOwner(userId, accommodationId, startDate, endDate, statuses);
+    }
+
+    @Override
+    public void setReservationStatus(Long reservationId, Status status) {
+        Optional<Reservation> reservation = reservationRepository.findById(reservationId);
+        if(reservation.isPresent()) {
+            Reservation r = reservation.get();
+            r.setStatus(status);
+            reservationRepository.save(r);
+        }
+    }
+
+    @Override
+    public void delete(Long reservationId) {
+        this.reservationRepository.deleteById(reservationId);
     }
 }

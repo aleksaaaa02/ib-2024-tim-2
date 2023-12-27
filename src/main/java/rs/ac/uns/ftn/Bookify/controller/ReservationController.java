@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.Bookify.dto.AccommodationBasicDTO;
 import rs.ac.uns.ftn.Bookify.dto.ReservationDTO;
 import rs.ac.uns.ftn.Bookify.dto.ReservationRequestDTO;
+import rs.ac.uns.ftn.Bookify.enumerations.AccommodationStatusRequest;
 import rs.ac.uns.ftn.Bookify.enumerations.Status;
 import rs.ac.uns.ftn.Bookify.mapper.AccommodationBasicDTOMapper;
 import rs.ac.uns.ftn.Bookify.mapper.ReservationDTOMapper;
@@ -124,6 +125,9 @@ public class ReservationController {
         return new ResponseEntity<>(returns, HttpStatus.OK);
     }
 
+
+
+
     @GetMapping(value = "/{userId}/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
     public ResponseEntity<Collection<ReservationDTO>> findReservationsByUserIdAndStatus(@PathVariable Long userId, @PathVariable Status status) {
@@ -146,12 +150,12 @@ public class ReservationController {
         return new ResponseEntity<>(new ReservationDTO(), HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/cancel/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/delete/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable Long reservationId) {
+    public ResponseEntity<String> cancelReservation(@PathVariable Long reservationId) {
         //change status into canceled
-        ReservationDTO canceledReservation = new ReservationDTO();
-        return new ResponseEntity<ReservationDTO>(canceledReservation, HttpStatus.OK);
+        this.reservationService.delete(reservationId);
+        return new ResponseEntity<String>(String.format("Accommodation %d canceled", reservationId), HttpStatus.OK);
     }
 
     @PutMapping(value = "/accept/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
