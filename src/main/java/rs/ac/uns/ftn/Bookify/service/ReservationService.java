@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.Bookify.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.Bookify.dto.ReservationDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.Status;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Guest;
@@ -13,9 +14,7 @@ import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ReservationService implements IReservationService {
@@ -68,7 +67,52 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public List<Reservation> getReservations(Long guestId) {
-        return reservationRepository.getReservations(guestId, LocalDate.now(), Status.ACCEPTED);
+    public List<Reservation> getReservations(Long guestId, Long ownerId) {
+        return reservationRepository.getReservations(guestId, LocalDate.now(), Status.ACCEPTED, ownerId);
+    }
+
+    @Override
+    public List<Reservation> getAllForGuest(Long userId) {
+        return reservationRepository.getAllForGuest(userId);
+    }
+
+    @Override
+    public List<Object[]> getGuestAccommodations(Long userId) {
+        return reservationRepository.getIdToNameGuestMap(userId);
+    }
+
+    @Override
+    public List<Reservation> filterForGuest(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses) {
+        return reservationRepository.filterForGuest(userId, accommodationId, startDate, endDate, statuses);
+    }
+
+    @Override
+    public List<Reservation> getAllForOwner(Long userId) {
+        return reservationRepository.getAllForOwner(userId);
+    }
+
+    @Override
+    public List<Object[]> getOwnerAccommodations(Long userId) {
+        return reservationRepository.getIdToNameOwnerMap(userId);
+    }
+
+    @Override
+    public List<Reservation> filterForOwner(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses) {
+        return reservationRepository.filterForOwner(userId, accommodationId, startDate, endDate, statuses);
+    }
+
+    @Override
+    public void setReservationStatus(Long reservationId, Status status) {
+        Optional<Reservation> reservation = reservationRepository.findById(reservationId);
+        if(reservation.isPresent()) {
+            Reservation r = reservation.get();
+            r.setStatus(status);
+            reservationRepository.save(r);
+        }
+    }
+
+    @Override
+    public void delete(Long reservationId) {
+        this.reservationRepository.deleteById(reservationId);
     }
 }

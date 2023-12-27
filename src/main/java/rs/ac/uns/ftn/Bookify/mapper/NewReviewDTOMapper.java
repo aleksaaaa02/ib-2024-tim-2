@@ -2,7 +2,6 @@ package rs.ac.uns.ftn.Bookify.mapper;
 
 import org.modelmapper.ModelMapper;
 import rs.ac.uns.ftn.Bookify.dto.NewReviewDTO;
-import rs.ac.uns.ftn.Bookify.dto.OwnerBasicDTO;
 import rs.ac.uns.ftn.Bookify.dto.ReviewDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.ReviewType;
 import rs.ac.uns.ftn.Bookify.model.Owner;

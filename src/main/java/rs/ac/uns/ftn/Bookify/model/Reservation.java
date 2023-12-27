@@ -20,7 +20,7 @@ public class Reservation {
 	private Long id;
 
 	@Column(nullable = false)
-	private Date created;
+	private LocalDate created;
 
 	@Column(nullable = false)
 	private LocalDate start;
@@ -34,10 +34,10 @@ public class Reservation {
 	@Column(nullable = false)
 	private double price;
 
-	@ManyToOne(cascade = {CascadeType.ALL})
+	@ManyToOne()
 	private Guest guest;
 
-	@ManyToOne(cascade = {CascadeType.ALL})
+	@ManyToOne()
 	private Accommodation accommodation;
 
 	@Enumerated(EnumType.STRING)

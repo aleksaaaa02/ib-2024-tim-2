@@ -126,26 +126,21 @@ public class AccommodationController {
         return new ResponseEntity<>(this.accommodationService.getOwnerAccommodation(ownerId), HttpStatus.OK);
     }
 
-    @GetMapping("/favorites/{guestId}")
+    @GetMapping("/favorites")
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<Collection<AccommodationBasicDTO>> getFavoritesAccommodations(@PathVariable Long guestId) {
+    public ResponseEntity<Collection<AccommodationBasicDTO>> getFavoritesAccommodations(@RequestParam("guestId") Long guestId) {
         //returns all favorites accommodation of user
-        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
-                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet.");
-        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
-                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet.");
-        Collection<AccommodationBasicDTO> basicAccommodations = new HashSet<>();
-        basicAccommodations.add(basicDTO1);
-        basicAccommodations.add(basicDTO2);
-        return new ResponseEntity<>(basicAccommodations, HttpStatus.OK);
+        User user = userService.get(guestId);
+        List<Accommodation> accommodations = new ArrayList<>();
+        if (user instanceof Guest)
+            accommodations = ((Guest) user).getFavorites();
+
+        Collection<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
+                .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
+                .collect(Collectors.toList());
+        for (AccommodationBasicDTO accommodationBasic : accommodationBasicDTO)
+            accommodationBasic.setAvgRating(accommodationService.getAvgRating(accommodationBasic.getId()));
+        return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/charts", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -202,7 +197,16 @@ public class AccommodationController {
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<String> addAccommodationToFavorites(@PathVariable Long guestId, @PathVariable Long accommodationId) {
         //inserts accommodation to favorites
+        accommodationService.insertForGuest(guestId, accommodationId);
         return new ResponseEntity<>("Accommodation added to favorites", HttpStatus.OK);
+    }
+
+    @GetMapping("/added-to-favorites/{guestId}/{accommodationId}")
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    public ResponseEntity<Boolean> addedAccommodationToFavorites(@PathVariable Long guestId, @PathVariable Long accommodationId) {
+        //inserts accommodation to favorites
+        boolean result = userService.checkIfInFavorites(guestId, accommodationId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -227,13 +231,6 @@ public class AccommodationController {
     public ResponseEntity<String> rejectAccommodation(@PathVariable Long accommodationId) {
         this.accommodationService.setAccommodationStatus(accommodationId, AccommodationStatusRequest.REJECTED);
         return new ResponseEntity<>(String.format("Accommodation %d rejected", accommodationId), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/remove-from-favorites/{guestId}/{accommodationId}")
-    @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<String> removeAccommodationFromFavorites(@PathVariable Long guestId, @PathVariable Long accommodationId) {
-        //delete accommodation from favorites
-        return new ResponseEntity<>("Accommodation removed from favorites", HttpStatus.OK);
     }
 
     @DeleteMapping("/{accommodationId}")

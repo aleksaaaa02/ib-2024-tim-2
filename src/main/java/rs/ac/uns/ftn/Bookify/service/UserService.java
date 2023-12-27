@@ -14,6 +14,7 @@ import rs.ac.uns.ftn.Bookify.exception.UserIsBlockedException;
 import rs.ac.uns.ftn.Bookify.exception.UserNotActivatedException;
 import rs.ac.uns.ftn.Bookify.mapper.UserRegisteredDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.*;
+import rs.ac.uns.ftn.Bookify.repository.interfaces.IReservationRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IUserRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
@@ -27,6 +28,7 @@ import java.util.*;
 public class UserService implements IUserService {
     private final IImageService imageService;
     private final IUserRepository userRepository;
+    private final IReservationRepository reservationRepository;
     private final IReservationService reservationService;
     private final PasswordEncoder passwordEncoder;
     private final IAccommodationService accommodationService;
@@ -35,12 +37,13 @@ public class UserService implements IUserService {
 
     @Autowired
     public UserService(IImageService imageService, IUserRepository userRepository, IReservationService reservationService,
-                       PasswordEncoder passwordEncoder, @Lazy IAccommodationService accommodationService) {
+                       PasswordEncoder passwordEncoder, @Lazy IAccommodationService accommodationService, IReservationRepository reservationRepository) {
         this.imageService = imageService;
         this.userRepository = userRepository;
         this.reservationService = reservationService;
         this.passwordEncoder = passwordEncoder;
         this.accommodationService = accommodationService;
+        this.reservationRepository = reservationRepository;
     }
 
 
@@ -299,6 +302,39 @@ public class UserService implements IUserService {
     @Override
     public void saveOwner(Owner owner) {
         userRepository.save(owner);
+    }
+
+    @Override
+    public UserReservationDTO getOwnerForReservation(Long accommodationId) {
+        Owner owner = userRepository.getOwner(accommodationId);
+        UserReservationDTO user = new UserReservationDTO();
+        user.setId(owner.getId());
+        user.setFirstName(owner.getFirstName());
+        user.setLastName(owner.getLastName());
+        user.setAvgRating(getAvgRating(owner.getId()));
+        return user;
+    }
+
+    @Override
+    public UserReservationDTO getGuestForReservation(Long reservationId) {
+        Guest guest = reservationRepository.findById(reservationId).get().getGuest();
+        UserReservationDTO user = new UserReservationDTO();
+        user.setId(guest.getId());
+        user.setFirstName(guest.getFirstName());
+        user.setLastName(guest.getLastName());
+        user.setCancellationTimes(reservationRepository.getCancellationTimes(user.getId()));
+        return user;
+    }
+
+    @Transactional
+    @Override
+    public void addToFavorites(Long guestId, Long accommodationId) {
+        userRepository.addFavoriteToUser(guestId, accommodationId);
+    }
+
+    @Override
+    public boolean checkIfInFavorites(Long guestId, Long accommodationId) {
+        return userRepository.checkIfInFavorites(guestId, accommodationId) == 1;
     }
 
     private void updateUserData(UserDetailDTO updatedUser, User u) {

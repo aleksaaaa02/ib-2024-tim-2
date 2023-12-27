@@ -21,6 +21,7 @@ public class ReservationRequestDTOMapper {
         r.setStatus(Status.PENDING);
         r.setStart(reservationRequestDTO.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         r.setEnd(reservationRequestDTO.getEnd().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        r.setCreated(reservationRequestDTO.getCreated().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         return r;
     }
 }

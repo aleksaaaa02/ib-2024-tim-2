@@ -35,4 +35,8 @@ public interface IUserService {
     public Owner getOwner(Long ownerId);
     public Guest getGuest(Long guestId);
     public void saveOwner(Owner owner);
+    public UserReservationDTO getOwnerForReservation(Long accommodationId);
+    public UserReservationDTO getGuestForReservation(Long accommodationId);
+    public void addToFavorites(Long guestId, Long accommodationId);
+    public boolean checkIfInFavorites(Long guestId, Long accommodationId);
 }

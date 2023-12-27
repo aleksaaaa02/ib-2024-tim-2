@@ -98,7 +98,7 @@ public class ReviewController {
         Review review = NewReviewDTOMapper.fromDTOtoReview(newReview);
         Guest guest = userService.getGuest(newReview.getGuestId());
         review.setGuest(guest);
-        if(reservationService.getReservations(guest.getId()).isEmpty()){
+        if(reservationService.getReservations(guest.getId(), ownerId).isEmpty()){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         Review insertedReview = reviewService.save(review);
@@ -147,6 +147,7 @@ public class ReviewController {
         Review review = reviewService.getReview(reviewId);
         Owner owner = userService.getOwner(ownerId);
         owner.getReviews().remove(review);
+        owner.setDeleted(false);
         userService.saveOwner(owner);
         reviewService.deleteReview(reviewId);
         return new ResponseEntity<ReviewDTO>(HttpStatus.NO_CONTENT);

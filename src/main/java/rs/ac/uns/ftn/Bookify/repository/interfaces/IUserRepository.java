@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import rs.ac.uns.ftn.Bookify.model.Guest;
+import org.springframework.transaction.annotation.Transactional;
+import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Owner;
 import rs.ac.uns.ftn.Bookify.model.User;
 
@@ -36,4 +38,16 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     void deleteUser(Long userId);
     @Query("SELECT o FROM Owner o")
     List<Owner> findAllOwners();
+
+    @Query("SELECT o FROM Owner o JOIN o.accommodations a WHERE a.id = :accommodationId")
+    Owner getOwner(Long accommodationId);
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true, value = "INSERT INTO users_favorites (guest_id, favorites_id) VALUES (:userId, :accommodationId)")
+    void addFavoriteToUser(@Param("userId") Long userId, @Param("accommodationId") Long accommodationId);
+
+    @Query(value = "SELECT COUNT(*) FROM users_favorites WHERE guest_id = :guestId AND favorites_id = :accommodationId", nativeQuery = true)
+    int checkIfInFavorites(@Param("guestId") Long guestId, @Param("accommodationId") Long accommodationId);
+
 }

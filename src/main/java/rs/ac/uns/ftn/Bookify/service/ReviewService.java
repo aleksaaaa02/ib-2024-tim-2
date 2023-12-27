@@ -59,7 +59,11 @@ public class ReviewService implements IReviewService {
         for (Review review : reviews) {
             Guest guest = review.getGuest();
             String name = guest.getFirstName() + " " + guest.getLastName();
-            dtos.add(new CommentDTO(review.getId(), name, review.getDate(), review.getComment(), review.getRate(), guest.getId()));
+            Long imageId = 0L;
+            if (guest.getProfileImage() != null) {
+                imageId = guest.getProfileImage().getId();
+            }
+            dtos.add(new CommentDTO(review.getId(), name, review.getDate(), review.getComment(), review.getRate(), guest.getId(), imageId));
         }
         return dtos;
     }
