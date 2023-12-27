@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ReviewService } from '../review.service';
 import { ActivatedRoute } from '@angular/router';
 import { OwnerDTO } from '../model/owner.model.dto';
+import { AuthenticationService } from '../../authentication/authentication.service';
 
 @Component({
   selector: 'app-owner-page',
@@ -10,6 +11,11 @@ import { OwnerDTO } from '../model/owner.model.dto';
 })
 export class OwnerPageComponent {
   load: boolean = false;
+  role: string;
+
+  constructor(private authenticationService: AuthenticationService) {
+    this.role = authenticationService.getRole();
+   }
 
   handleEmit(data: boolean) {
     this.load = data;

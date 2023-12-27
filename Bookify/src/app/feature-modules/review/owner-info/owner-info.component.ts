@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ReviewService } from '../review.service';
 import { ActivatedRoute } from '@angular/router';
 import { OwnerDTO } from '../model/owner.model.dto';
+import { AccountService } from '../../account/account.service';
 
 @Component({
   selector: 'app-owner-info',
@@ -14,7 +15,7 @@ export class OwnerInfoComponent implements OnInit {
   ownerLastName: string;
   ownerPhone: string;
 
-  constructor(private reviewServise: ReviewService, private route: ActivatedRoute) { }
+  constructor(private reviewServise: ReviewService, private route: ActivatedRoute, private accountService: AccountService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -30,5 +31,4 @@ export class OwnerInfoComponent implements OnInit {
       });
     }
   }
-
 }

@@ -10,10 +10,16 @@
 .title{
     display: flex;
     align-items: baseline;
+    align-self: center;
 }
+
 
 .title > .number {
     align-self: flex-end;
+}
+
+.title > span:first-child {
+    margin-right: 1rem;
 }
 
 .average-rating {
@@ -24,6 +30,7 @@
     vertical-align: baseline;
     font-size: 2rem;
     width: fit-content;
+    margin-right: 1rem;
 }
 
 .average-rating::before {

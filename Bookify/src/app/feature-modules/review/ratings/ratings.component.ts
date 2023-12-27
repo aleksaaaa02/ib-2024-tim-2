@@ -54,6 +54,10 @@ export class RatingsComponent implements OnInit, OnChanges {
 
         const temp = this.oneStar + 2 * this.twoStars + 3 * this.threeStars + 4 * this.fourStars + 5 * this.fiveStars;
         this.sumProgress = temp / this.sum;
+        this.sumProgress = +this.sumProgress.toFixed(2);
+        if(Number.isNaN(this.sumProgress)){
+          this.sumProgress = 0;
+        }
       }
     });
   }
