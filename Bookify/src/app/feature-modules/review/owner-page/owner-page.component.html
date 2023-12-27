@@ -4,6 +4,6 @@
     <app-owner-info></app-owner-info>
     <app-report></app-report>
     <hr>
-    <app-new-comment></app-new-comment>
-    <app-comments-ratings></app-comments-ratings>
+    <app-new-comment (emit)="handleEmit($event)"></app-new-comment>
+    <app-comments-ratings [load]="load"></app-comments-ratings>
 </div>

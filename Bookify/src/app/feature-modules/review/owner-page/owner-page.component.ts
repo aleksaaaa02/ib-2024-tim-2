@@ -9,20 +9,10 @@ import { OwnerDTO } from '../model/owner.model.dto';
   styleUrl: './owner-page.component.css'
 })
 export class OwnerPageComponent {
+  load: boolean = false;
 
-  // ownerId: number;
-
-  // constructor(private reviewServise: ReviewService, private route: ActivatedRoute) { }
-
-  // ngOnInit(): void {
-  //   this.route.params.subscribe(params => {
-  //     this.ownerId = +params['accommodationId'];
-  //   });
-  //   this.reviewServise.getOwnerDTO(this.ownerId).subscribe({
-  //     next: (owner: OwnerDTO) => {
-        
-  //     }
-  //   })
-  // }
+  handleEmit(data: boolean) {
+    this.load = data;
+  }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ReviewService } from '../review.service';
@@ -11,6 +11,8 @@ import { AuthenticationService } from '../../authentication/authentication.servi
   styleUrl: './new-comment.component.css'
 })
 export class NewCommentComponent implements OnInit {
+  @Output() emit = new EventEmitter<boolean>();
+  
   percent: number = 0;
   form: FormGroup;
   submitted: boolean;
@@ -45,7 +47,9 @@ export class NewCommentComponent implements OnInit {
         guestId: this.authenticationService.getUserId()
       } 
       this.reviewService.add(this.ownerId, comment).subscribe({
-        
+        next: () => {
+          this.emit.emit(true);
+        }
       })
     }
   }

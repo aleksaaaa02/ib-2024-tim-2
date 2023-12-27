@@ -26,7 +26,11 @@ export class ReviewService {
     return this.httpClient.get<CommentDTO[]>(environment.apiReview + "/owner/" + ownerId);
   }
 
-  add(ownerId: number,newComment: NewCommentDTO): Observable<any> {
-    return this.httpClient.post<any>(environment.apiReview + "/new-owner/" + ownerId, newComment);
+  add(ownerId: number,newComment: NewCommentDTO) {
+    return this.httpClient.post<null>(environment.apiReview + "/new-owner/" + ownerId, newComment);
+  }
+
+  delete(reviewId: number) {
+
   }
 }

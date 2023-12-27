@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ReviewService } from '../review.service';
 import { ActivatedRoute } from '@angular/router';
 import { CommentDTO } from '../model/comment.model.dto';
@@ -8,11 +8,22 @@ import { CommentDTO } from '../model/comment.model.dto';
   templateUrl: './comments-ratings.component.html',
   styleUrl: './comments-ratings.component.css'
 })
-export class CommentsRatingsComponent {
+export class CommentsRatingsComponent implements OnChanges {
+  @Input() load : boolean;
   ownerId: number;
   comments: CommentDTO[];
 
   constructor(private reviewServise: ReviewService, private route: ActivatedRoute) { }
+ 
+  ngOnChanges(changes: SimpleChanges): void {
+    if(this.load){
+      this.reviewServise.getOwnerComments(this.ownerId).subscribe({
+        next: (comments: CommentDTO[]) => {
+          this.comments = comments;
+        }
+      });
+    }
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -23,7 +34,7 @@ export class CommentsRatingsComponent {
         next: (comments: CommentDTO[]) => {
           this.comments = comments;
         }
-      })
+      });
     }
   }
 }
