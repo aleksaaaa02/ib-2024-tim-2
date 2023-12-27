@@ -11,11 +11,11 @@
     <div>
       <p class="information">First name: {{user.firstName}}</p>
       <p class="information">Last name: {{ user.lastName}}</p>
-      <p class="information">Status: {{user.isBlocked ? "Blocked" : "Not blocked"}}</p>
+      <p class="information">Status: {{user.blocked ? "Blocked" : "Not blocked"}}</p>
     </div>
     <div class="button-holder">
-      <button class="button-block" *ngIf="!user.isBlocked">Block</button>
-      <button class="button-unblock" *ngIf="user.isBlocked">Unblock</button>
+      <button class="button-block" *ngIf="!user.blocked" (click)="blockUser()">Block</button>
+      <button class="button-unblock" *ngIf="user.blocked" (click)="blockUser()">Unblock</button>
     </div>
   </div>
 </div>

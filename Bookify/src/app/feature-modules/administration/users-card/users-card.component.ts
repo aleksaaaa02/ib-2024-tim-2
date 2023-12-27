@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {User} from "../model/user";
 import {AccountService} from "../../account/account.service";
+import {AdministrationService} from "../administration.service";
 
 @Component({
   selector: 'app-users-card',
@@ -12,7 +13,8 @@ export class UsersCardComponent implements OnInit {
   user: User = {}
   image: ArrayBuffer | string | null = 'assets/images/user.jpg';
 
-  constructor(private accService: AccountService) {
+  constructor(private accService: AccountService,
+              private adminService: AdministrationService) {
   }
 
   ngOnInit(): void {
@@ -32,5 +34,16 @@ export class UsersCardComponent implements OnInit {
         }
       });
     }
+  }
+  blockUser(): void {
+    this.adminService.changeUsersBlockStatus(this.user.id).subscribe({
+      next: value => {
+        this.user.blocked = !this.user.blocked;
+        console.log(value);
+      },
+      error: err => {
+        console.log(err)
+      }
+    });
   }
 }
