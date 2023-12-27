@@ -71,7 +71,6 @@ public class ReviewController {
     }
 
     @GetMapping(value = "/owner/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<Collection<CommentDTO>> getReviewsForOwner(@PathVariable Long ownerId){
         //returns reviews for owner
         Collection<CommentDTO> dtos = reviewService.getOwnerComments(ownerId);
@@ -79,7 +78,6 @@ public class ReviewController {
     }
 
     @GetMapping(value = "/owner/{ownerId}/rating", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<RatingDTO> getRating(@PathVariable Long ownerId){
         RatingDTO dto = reviewService.getRating(ownerId);
         return new ResponseEntity<RatingDTO>(dto, HttpStatus.OK);
@@ -94,7 +92,6 @@ public class ReviewController {
     }
 
     @PostMapping(value = "/new-owner/{ownerId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<ReviewDTO> newReviewOwner(@PathVariable Long ownerId, @RequestBody NewReviewDTO newReview) {
         //insert new review for owner
 

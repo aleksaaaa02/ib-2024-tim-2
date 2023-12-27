@@ -47,7 +47,8 @@ public class ReviewService implements IReviewService {
         }
         int sum = 5 * dto.getFiveStars() + 4 * dto.getFourStars() + 3 * dto.getThreeStars() + 2 * dto.getTwoStars() + dto.getOneStars();
         int count = dto.getFiveStars() + dto.getFourStars() + dto.getThreeStars() + dto.getTwoStars() + dto.getOneStars();
-        dto.setAvgRating(sum / count);
+        if (count != 0)
+            dto.setAvgRating(sum / count);
         return dto;
     }
 

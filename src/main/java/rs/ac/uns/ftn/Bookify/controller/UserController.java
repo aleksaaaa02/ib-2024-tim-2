@@ -232,7 +232,6 @@ public class UserController {
     }
 
     @GetMapping(value = "/owner/{ownerId}")
-    @PreAuthorize("hasAnyAuthority('ROLE_GUEST')")
     public ResponseEntity<OwnerBasicDTO> getOwner(@PathVariable Long ownerId){
         Owner owner = userService.getOwner(ownerId);
         OwnerBasicDTO dto = OwnerBasicDTOMapper.fromOwnertoDTO(owner);
