@@ -48,8 +48,10 @@ public class UserService implements IUserService {
 
 
     @Override
-    public Collection<User> getAll() {
-        return null;
+    public List<User> getAll() {
+        List<User> users = userRepository.findAll();
+        users.removeIf(user -> user instanceof Admin);
+        return users;
     }
 
     @Override

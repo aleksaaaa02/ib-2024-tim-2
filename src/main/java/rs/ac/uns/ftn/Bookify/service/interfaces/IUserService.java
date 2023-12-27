@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 public interface IUserService {
-    public Collection<User> getAll();
+    public List<User> getAll();
     public User get(String email);
     public User get(Long userId);
     public String getRole(User user);

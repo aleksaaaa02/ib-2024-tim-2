@@ -25,15 +25,11 @@ import rs.ac.uns.ftn.Bookify.model.User;
 import rs.ac.uns.ftn.Bookify.service.EmailService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
-import java.util.Date;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 import rs.ac.uns.ftn.Bookify.dto.ReportedUserDTO;
 import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Owner;
-
-import java.util.HashSet;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -65,9 +61,11 @@ public class UserController {
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Collection<UserDTO>> getAllUsers() {
-        Collection<User> response = userService.getAll();
-        return null;
-//        return new ResponseEntity<>(response, HttpStatus.FOUND);
+        List<UserDTO> response = new ArrayList<>();
+        userService.getAll().forEach((u) ->{
+            response.add(new UserDTO(u));
+        });
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")

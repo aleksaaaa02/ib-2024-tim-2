@@ -14,12 +14,14 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private boolean blocked;
+    private Long imageId;
 
-    public UserDTO(User u){
+    public UserDTO(User u) {
         this.id = u.getId();
         this.email = u.getEmail();
         this.firstName = u.getFirstName();
         this.lastName = u.getLastName();
         this.blocked = u.isBlocked();
+        if (u.getProfileImage() != null) this.imageId = u.getProfileImage().getId();
     }
 }
