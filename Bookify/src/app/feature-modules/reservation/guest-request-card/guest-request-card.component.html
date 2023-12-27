@@ -1,10 +1,10 @@
-<div class="reservation-card" *ngIf="visible">
+<div class="reservation-card">
     <div class="column-left">
         <img class="reservation-image" [src]="image">
     </div>
     <div class="column-center">
         <div class="inline">
-            <p class="title" [routerLink]="['/accommodation/details', request.id]">{{ request.accommodationName }}</p>
+            <p class="title">{{ request.accommodationName }}</p>
             <meter class="average-rating" min="0" max="5" style="--percent: calc({{request.avgRating}}/5*100%);"></meter>
         </div>
         <hr />
