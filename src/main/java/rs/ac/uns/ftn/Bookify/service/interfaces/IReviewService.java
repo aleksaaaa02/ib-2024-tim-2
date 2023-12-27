@@ -10,4 +10,6 @@ public interface IReviewService {
     public RatingDTO getRating(Long ownerId);
     public Collection<CommentDTO> getOwnerComments(Long ownerId);
     public Review save(Review review);
+    public Review getReview(Long id);
+    public void deleteReview(Long id);
 }

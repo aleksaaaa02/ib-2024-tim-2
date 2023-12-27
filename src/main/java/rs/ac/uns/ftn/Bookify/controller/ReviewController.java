@@ -144,9 +144,14 @@ public class ReviewController {
     }
 
     @DeleteMapping("/owner-delete/{ownerId}/{reviewId}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<ReviewDTO> deleteOwnerReview(@PathVariable Long reviewId, @PathVariable Long ownerId) {
         //delete review for owner
+        Review review = reviewService.getReview(reviewId);
+        Owner owner = userService.getOwner(ownerId);
+        owner.getReviews().remove(review);
+        userService.saveOwner(owner);
+        reviewService.deleteReview(reviewId);
         return new ResponseEntity<ReviewDTO>(HttpStatus.NO_CONTENT);
     }
 }

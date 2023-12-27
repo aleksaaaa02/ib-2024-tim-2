@@ -67,4 +67,14 @@ public class ReviewService implements IReviewService {
     public Review save(Review review) {
         return reviewRepository.save(review);
     }
+
+    @Override
+    public Review getReview(Long id) {
+        return reviewRepository.findById(id).get();
+    }
+
+    @Override
+    public void deleteReview(Long id) {
+        reviewRepository.deleteById(id);
+    }
 }
