@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.Bookify.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.Bookify.dto.ReservationDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.Status;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Guest;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ReservationService implements IReservationService {
@@ -65,5 +67,20 @@ public class ReservationService implements IReservationService {
     public void setGuest(Guest guest, Reservation reservation) {
         reservation.setGuest(guest);
         reservationRepository.save(reservation);
+    }
+
+    @Override
+    public List<Reservation> getAllForGuest(Long userId) {
+        return reservationRepository.getAllForGuest(userId);
+    }
+
+    @Override
+    public List<Object[]> getGuestAccommodations(Long userId) {
+        return reservationRepository.getIdToNameGuestMap(userId);
+    }
+
+    @Override
+    public List<Reservation> filterForGuest(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses) {
+        return reservationRepository.filterForGuest(userId, accommodationId, startDate, endDate, statuses);
     }
 }

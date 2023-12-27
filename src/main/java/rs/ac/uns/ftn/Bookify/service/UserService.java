@@ -286,6 +286,17 @@ public class UserService implements IUserService {
         return response;
     }
 
+    @Override
+    public UserReservationDTO getOwnerForReservation(Long accommodationId) {
+        Owner owner = userRepository.getOwner(accommodationId);
+        UserReservationDTO user = new UserReservationDTO();
+        user.setId(owner.getId());
+        user.setFirstName(owner.getFirstName());
+        user.setLastName(owner.getLastName());
+        user.setAvgRating(getAvgRating(owner.getId()));
+        return user;
+    }
+
     private void updateUserData(UserDetailDTO updatedUser, User u) {
         u.getAddress().setAddress(updatedUser.getAddress().getAddress());
         u.getAddress().setCity(updatedUser.getAddress().getCity());

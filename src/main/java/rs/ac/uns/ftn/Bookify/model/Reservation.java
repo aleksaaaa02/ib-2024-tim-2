@@ -20,7 +20,7 @@ public class Reservation {
 	private Long id;
 
 	@Column(nullable = false)
-	private Date created;
+	private LocalDate created;
 
 	@Column(nullable = false)
 	private LocalDate start;
