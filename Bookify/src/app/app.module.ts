@@ -8,13 +8,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthenticationModule } from './feature-modules/authentication/authentication.module';
 import { CarouselComponent } from "./feature-modules/accommodation/carousel/carousel.component";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { DatapickerRangeComponent } from "./layout/datapicker-range/datapicker-range.component";
+import { SharedModule } from "./shared/shared.module";
+import { AccountModule } from "./feature-modules/account/account.module";
+import { Interceptor } from "./feature-modules/authentication/interceptor/interceptor";
+import { AdministrationModule } from "./feature-modules/administration/administration.module";
+import { ReviewModule } from './feature-modules/review/review.module';
 import { ReservationModule } from './feature-modules/reservation/reservation.module';
-import {Interceptor} from "./feature-modules/authentication/interceptor/interceptor";
-import {AdministrationModule} from "./feature-modules/administration/administration.module";
-import {AccountModule} from "./feature-modules/account/account.module";
-import {SharedModule} from "./shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -34,10 +35,11 @@ import {SharedModule} from "./shared/shared.module";
     AccommodationModule,
     ReservationModule,
     SharedModule,
-    AdministrationModule
+    AdministrationModule,
+    ReviewModule
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true},
+    { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true },
     provideClientHydration(withNoHttpTransferCache()),
   ],
   bootstrap: [AppComponent]

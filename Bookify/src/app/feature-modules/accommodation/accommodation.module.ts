@@ -13,18 +13,18 @@ import { SharedModule } from "../../shared/shared.module";
 import { CalendarComponent } from './update/calendar/calendar.component';
 import { OwnerAccommodationsComponent } from './owner-accommodations/owner-accommodations.component';
 import { OwnerAccommodationsCardComponent } from './owner-accommodations-card/owner-accommodations-card.component';
-import {RouterLink} from "@angular/router";
-import {MaterialModule} from "../../infrastructure/material/material.module";
-import {AccommodationBasicComponent} from "./accommodation-basic/accommodation-basic.component";
-import {ResultsPageComponent} from "./results-page/results-page.component";
-import {AccommodationPageComponent} from "./accommodation-page/accommodation-page.component";
-import {ReserveComponent} from "./reserve/reserve.component";
-import {LandingPageComponent} from "./landing-page/landing-page.component";
-import {TopDestinationComponent} from "../../layout/top-destination/top-destination.component";
-import {TopAccommodationComponent} from "../../layout/top-accommodation/top-accommodation.component";
-import {CarouselComponent} from "./carousel/carousel.component";
-import {LayoutModule} from "../../layout/layout.module";
-import {DatapickerRangeComponent} from "../../layout/datapicker-range/datapicker-range.component";
+import { RouterLink } from "@angular/router";
+import { MaterialModule } from "../../infrastructure/material/material.module";
+import { AccommodationBasicComponent } from "./accommodation-basic/accommodation-basic.component";
+import { ResultsPageComponent } from "./results-page/results-page.component";
+import { AccommodationPageComponent } from "./accommodation-page/accommodation-page.component";
+import { ReserveComponent } from "./reserve/reserve.component";
+import { LandingPageComponent } from "./landing-page/landing-page.component";
+import { TopDestinationComponent } from "../../layout/top-destination/top-destination.component";
+import { TopAccommodationComponent } from "../../layout/top-accommodation/top-accommodation.component";
+import { CarouselComponent } from "./carousel/carousel.component";
+import { LayoutModule } from "../../layout/layout.module";
+import { DatapickerRangeComponent } from "../../layout/datapicker-range/datapicker-range.component";
 import {FavoritesPageComponent} from "./favorites-page/favorites-page.component";
 import {AccommodationFavoriteComponent} from "./accommodation-favorite/accommodation-favorite.component";
 import {ReservationModule} from "../reservation/reservation.module";
@@ -63,7 +63,7 @@ import {ReservationModule} from "../reservation/reservation.module";
     DatapickerRangeComponent,
     ReservationModule
   ],
-  exports:[
+  exports: [
     AccommodationCreateComponent,
     OwnerAccommodationsComponent,
     ResultsPageComponent,
