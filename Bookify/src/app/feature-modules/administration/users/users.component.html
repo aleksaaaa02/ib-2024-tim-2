@@ -8,8 +8,8 @@
     </div>
     </mat-tab>
     <mat-tab label="Reported users">
-    <div class="card-holder">
-      <app-reported-users-card></app-reported-users-card>
+    <div class="card-holder" *ngFor="let report of allReports">
+      <app-reported-users-card [report]="report"></app-reported-users-card>
     </div>
     </mat-tab>
   </mat-tab-group>

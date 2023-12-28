@@ -4,6 +4,7 @@ import {Observable} from "rxjs";
 import {AccommodationRequests} from "./model/accommodation.requests";
 import {environment} from "../../../env/env";
 import {User} from "./model/user";
+import {ReportedUser} from "./model/reported.user";
 
 @Injectable({
   providedIn: 'root'
@@ -32,5 +33,9 @@ export class AdministrationService {
 
   changeUsersBlockStatus(userId: undefined | number): Observable<string> {
     return this.httpClient.put(environment.apiUser + "/" + userId + "/block-user", {}, {responseType: "text"});
+  }
+
+  getAllReports(): Observable<ReportedUser[]> {
+    return this.httpClient.get<ReportedUser[]>(environment.apiUser + "/reported");
   }
 }

@@ -1,1 +1,23 @@
-<p>reported-users-card works!</p>
+<div class="report-card">
+    <p class="reason">{{report.reason}}</p>
+    <div class="title-underline"></div>
+    <div class="users-holder">
+        <div class="user">
+            <p>Reported by</p>
+            <p>{{report.createdBy.email}}</p>
+            <p>{{report.createdBy.firstName + " " + report.createdBy.lastName}}</p>
+        </div>
+        <div class="divider"></div>
+        <div class="user">
+            <p>Reported user</p>
+            <p>{{report.reportedUser.email}}</p>
+            <p>{{report.reportedUser.firstName + " " + report.reportedUser.lastName}}</p>
+            <p>{{"Status " + report.reportedUser.blocked ? "Not blocked" : "Blocked"}}</p>
+        </div>
+    </div>
+    <div class="button-holder">
+        <button class="button-block" *ngIf="!report.reportedUser.blocked">Block</button>
+        <button class="button-dismiss">Dismiss</button>
+    </div>
+</div>
+
