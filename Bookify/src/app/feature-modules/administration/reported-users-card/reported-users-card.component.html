@@ -12,7 +12,7 @@
             <p>Reported user</p>
             <p>{{report.reportedUser.email}}</p>
             <p>{{report.reportedUser.firstName + " " + report.reportedUser.lastName}}</p>
-            <p>{{"Status " + report.reportedUser.blocked ? "Not blocked" : "Blocked"}}</p>
+            <p>Status: {{report.reportedUser.blocked ? "Blocked" : "Not Blocked"}}</p>
         </div>
     </div>
     <div class="button-holder">
