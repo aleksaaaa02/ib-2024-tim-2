@@ -23,6 +23,7 @@ import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
 import rs.ac.uns.ftn.Bookify.model.User;
 import rs.ac.uns.ftn.Bookify.service.EmailService;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IReportedUserService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
 import java.util.*;
@@ -41,21 +42,23 @@ public class UserController {
     private EmailService emailService;
 
     @Autowired
+    private IReportedUserService reportedUserService;
+
+    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
     private JWTUtils jwtUtils;
+
 
     private final String IP_ADDRESS = "192.168.1.5";
 
     @GetMapping(value = "/reported", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Collection<ReportedUserDTO>> getReportedUsers() {
-        //return all reported users
-        Collection<ReportedUserDTO> reportedUsers = new HashSet<>();
-        reportedUsers.add(new ReportedUserDTO("Reason", new Date(), new Owner(), new Guest()));
-        reportedUsers.add(new ReportedUserDTO("Reason", new Date(), new Owner(), new Guest()));
-        return new ResponseEntity<Collection<ReportedUserDTO>>(reportedUsers, HttpStatus.OK);
+        List<ReportedUserDTO> response = new ArrayList<>();
+        reportedUserService.getAllReports().forEach(reportedUser -> response.add(new ReportedUserDTO(reportedUser)));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping
@@ -166,8 +169,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<ReportedUserDTO> insertReport(@RequestBody ReportedUserDTO reservation) {
         //insert new report
-        ReportedUserDTO reportedUserDTO = new ReportedUserDTO("Reason", new Date(), new Owner(), new Guest());
-        return new ResponseEntity<>(reportedUserDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 
     @GetMapping("/search")
