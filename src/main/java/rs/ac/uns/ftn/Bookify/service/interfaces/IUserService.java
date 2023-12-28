@@ -3,6 +3,8 @@ package rs.ac.uns.ftn.Bookify.service.interfaces;
 import org.springframework.core.io.FileSystemResource;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
+import rs.ac.uns.ftn.Bookify.model.Guest;
+import rs.ac.uns.ftn.Bookify.model.Owner;
 import rs.ac.uns.ftn.Bookify.model.User;
 
 import java.util.Collection;
@@ -30,6 +32,9 @@ public interface IUserService {
     public OwnerDTO setOwnerForAccommodation(Long id);
     public void checkInactiveUsers();
     public List<AccommodationRequestDTO> findAccommodationRequests();
+    public Owner getOwner(Long ownerId);
+    public Guest getGuest(Long guestId);
+    public void saveOwner(Owner owner);
     public UserReservationDTO getOwnerForReservation(Long accommodationId);
     public UserReservationDTO getGuestForReservation(Long accommodationId);
     public void addToFavorites(Long guestId, Long accommodationId);

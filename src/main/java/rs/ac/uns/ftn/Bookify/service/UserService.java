@@ -300,6 +300,21 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public Owner getOwner(Long ownerId) {
+        return userRepository.findOwnerById(ownerId);
+    }
+
+    @Override
+    public Guest getGuest(Long guestId) {
+        return userRepository.findGuestById(guestId);
+    }
+
+    @Override
+    public void saveOwner(Owner owner) {
+        userRepository.save(owner);
+    }
+
+    @Override
     public UserReservationDTO getOwnerForReservation(Long accommodationId) {
         Owner owner = userRepository.getOwner(accommodationId);
         UserReservationDTO user = new UserReservationDTO();
