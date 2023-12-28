@@ -1,0 +1,9 @@
+<div class="comments-ratings-wrapper">
+    <h3>Comments and ratings</h3>
+    <hr>
+    <app-ratings [load]="loading" (loadingChange)="onLoadingChange($event)"></app-ratings>
+
+    <div *ngFor="let comment of comments">
+        <app-comment [comment]="comment" (emit)="onEmitChange($event)"></app-comment>
+    </div>
+</div>
