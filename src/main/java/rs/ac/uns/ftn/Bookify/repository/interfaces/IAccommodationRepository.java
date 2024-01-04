@@ -136,4 +136,10 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     List<Tuple> getOverallReport(@Param("ownerId") Long ownerId,
                                  @Param("begin") LocalDate begin,
                                  @Param("end") LocalDate end);
+
+    @Query(value = "SELECT a.id, a.name " +
+            "from users_accommodations ua " +
+            "join accommodations a on a.id = ua.accommodations_id " +
+            "where owner_id = :ownerId", nativeQuery = true)
+    List<Tuple> getAccommodationNames(@Param("ownerId") Long ownerId);
 }

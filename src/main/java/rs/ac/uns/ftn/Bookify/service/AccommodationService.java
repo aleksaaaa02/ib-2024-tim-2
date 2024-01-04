@@ -603,6 +603,18 @@ public class AccommodationService implements IAccommodationService {
         }
     }
 
+    @Override
+    public Map<Long, String> getAccommodationNames(Long ownerId) {
+        List<Tuple> tuple =  accommodationRepository.getAccommodationNames(ownerId);
+        Map<Long, String> map = new HashMap<>();
+        for (Tuple t : tuple) {
+            Long accommodationId = t.get(0, Long.class);
+            String accommodationName = t.get(1, String.class);
+            map.put(accommodationId, accommodationName);
+        }
+        return map;
+    }
+
     private void addTableHeader(PdfPTable table, boolean isMonth) {
         PdfPCell cell;
 

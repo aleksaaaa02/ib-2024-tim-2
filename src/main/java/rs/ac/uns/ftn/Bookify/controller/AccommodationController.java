@@ -145,6 +145,14 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/charts-accommodations", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
+    public ResponseEntity<Map<Long, String>> getChartsAccommodations(@RequestParam("ownerId") Long ownerId) {
+        //get names and ids for accommodations of owner
+        Map<Long, String> map = accommodationService.getAccommodationNames(ownerId);
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/overall-charts", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Collection<ChartDTO>> getChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
@@ -173,23 +181,26 @@ public class AccommodationController {
         return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
     }
 
-//    @GetMapping(value = "/charts/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @GetMapping(value = "/download-reports-accommodation", produces = MediaType.APPLICATION_JSON_VALUE)
 //    @PreAuthorize("hasAuthority('ROLE_OWNER')")
-//    public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@PathVariable Long accommodationId, @PathVariable int year) {
+//    public ResponseEntity<byte[]> downloadChartsByPeriod(@RequestParam("ownerId") Long ownerId,
+//                                                         @RequestParam("accommodationId") Long accommodationId, @RequestParam("year") int year) throws DocumentException {
+//        //download pdf
+//        byte[] pdfContent = accommodationService.generatePdfReportForAccommodation(ownerId, accommodationId, year);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_PDF);
+//        headers.setContentDispositionFormData("inline", "report.pdf");
+//
+//        return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
+//    }
+//
+//    @GetMapping(value = "/accommodation-charts", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
+//    public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@RequestParam("ownerId") Long ownerId, @RequestParam("accommodationId") Long accommodationId, @RequestParam("year") int year) {
 //        //return all charts for accommodation
-//        Collection<ChartDTO> charts = new HashSet<>();
-//        charts.add(new ChartDTO(12, 32.2));
-//        charts.add(new ChartDTO(1, 2.1));
-//        charts.add(new ChartDTO(22, 75.8));
+//        Collection<ChartDTO> charts = accommodationService.getChartsByAccommodationAndYear(ownerId, accommodationId, year);
 //        return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
 //    }
-
-    @GetMapping(value = "/charts-download/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<String> downloadChartsByAccommodation(@PathVariable Long accommodationId, @PathVariable int year) {
-        //download pdf report for accommodation in one year
-        return new ResponseEntity<>("PDF", HttpStatus.OK);
-    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
