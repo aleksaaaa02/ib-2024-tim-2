@@ -615,6 +615,38 @@ public class AccommodationService implements IAccommodationService {
         return map;
     }
 
+    @Override
+    public List<ChartDTO> getChartsByAccommodationAndYear(Long ownerId, Long accommodationId, int year) {
+        List<ChartDTO> chart = new ArrayList<>();
+        for (int i = 1; i <= 12; i++){
+            LocalDate date = LocalDate.of(year, i, 1);
+            List<Tuple> tuple = accommodationRepository.getAccommodationReport(ownerId, accommodationId, date);
+            double totalRevenue = 0;
+            int totalDays = 0;
+            for (Tuple t : tuple){
+                PricePer pricePer = PricePer.valueOf(t.get(0, String.class));
+                Integer guestNumber = t.get(1, Integer.class);
+                LocalDate startDate = LocalDate.parse(t.get(2, String.class));
+                java.sql.Date sqlEndDate = t.get(3, java.sql.Date.class);
+                LocalDate endDate = sqlEndDate.toLocalDate();
+
+                double totalPrice = getTotalPrice(accommodationId, startDate, endDate, pricePer, guestNumber);
+                int days = (int) ChronoUnit.DAYS.between(startDate, endDate);
+
+                totalRevenue += totalPrice;
+                totalDays += days;
+            }
+            ChartDTO chartDTO = new ChartDTO(Integer.toString(i), totalDays, totalRevenue);
+            chart.add(chartDTO);
+        }
+        return chart;
+    }
+
+    @Override
+    public byte[] generatePdfReportForAccommodation(Long ownerId, Long accommodationId, int year) throws DocumentException {
+        return new byte[0];
+    }
+
     private void addTableHeader(PdfPTable table, boolean isMonth) {
         PdfPCell cell;
 

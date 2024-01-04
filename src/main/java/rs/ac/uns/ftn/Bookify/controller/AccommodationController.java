@@ -193,14 +193,14 @@ public class AccommodationController {
 //
 //        return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
 //    }
-//
-//    @GetMapping(value = "/accommodation-charts", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
-//    public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@RequestParam("ownerId") Long ownerId, @RequestParam("accommodationId") Long accommodationId, @RequestParam("year") int year) {
-//        //return all charts for accommodation
-//        Collection<ChartDTO> charts = accommodationService.getChartsByAccommodationAndYear(ownerId, accommodationId, year);
-//        return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
-//    }
+
+    @GetMapping(value = "/accommodation-charts", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
+    public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@RequestParam("ownerId") Long ownerId, @RequestParam("accommodationId") Long accommodationId, @RequestParam("year") int year) {
+        //return all charts for accommodation
+        Collection<ChartDTO> charts = accommodationService.getChartsByAccommodationAndYear(ownerId, accommodationId, year);
+        return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
+    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")

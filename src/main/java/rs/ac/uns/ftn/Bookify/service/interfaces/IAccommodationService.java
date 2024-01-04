@@ -56,4 +56,6 @@ public interface IAccommodationService {
     public List<ChartDTO> getChartsByPeriod(Long ownerId, LocalDate begin, LocalDate end);
     public byte[] generatePdfReportForOverall(Long ownerId, LocalDate begin, LocalDate end) throws DocumentException;
     public Map<Long, String> getAccommodationNames(Long ownerId);
+    public List<ChartDTO> getChartsByAccommodationAndYear(Long ownerId, Long accommodationId, int year);
+    public byte[] generatePdfReportForAccommodation(Long ownerId, Long accommodationId, int year) throws DocumentException;
 }
