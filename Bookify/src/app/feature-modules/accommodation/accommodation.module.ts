@@ -20,7 +20,6 @@ import { ResultsPageComponent } from "./results-page/results-page.component";
 import { AccommodationPageComponent } from "./accommodation-page/accommodation-page.component";
 import { ReserveComponent } from "./reserve/reserve.component";
 import { LandingPageComponent } from "./landing-page/landing-page.component";
-import { TopDestinationComponent } from "../../layout/top-destination/top-destination.component";
 import { TopAccommodationComponent } from "../../layout/top-accommodation/top-accommodation.component";
 import { CarouselComponent } from "./carousel/carousel.component";
 import { LayoutModule } from "../../layout/layout.module";
@@ -28,6 +27,18 @@ import { DatapickerRangeComponent } from "../../layout/datapicker-range/datapick
 import {FavoritesPageComponent} from "./favorites-page/favorites-page.component";
 import {AccommodationFavoriteComponent} from "./accommodation-favorite/accommodation-favorite.component";
 import {ReservationModule} from "../reservation/reservation.module";
+import {
+  OverallChartReservationsComponent
+} from "./reports/overall-chart-reservations/overall-chart-reservations.component";
+import {OverallChartRevenueComponent} from "./reports/overall-chart-revenue/overall-chart-revenue.component";
+import {
+  AccommodationChartReservationsComponent
+} from "./reports/accommodation-chart-reservations/accommodation-chart-reservations.component";
+import {
+  AccommodationChartRevenueComponent
+} from "./reports/accommodation-chart-revenue/accommodation-chart-revenue.component";
+import {ReportsPageComponent} from "./reports/reports-page/reports-page.component";
+import {TopDestinationComponent} from "../../layout/top-destination/top-destination.component";
 
 @NgModule({
   declarations: [
@@ -46,10 +57,15 @@ import {ReservationModule} from "../reservation/reservation.module";
     AccommodationPageComponent,
     ReserveComponent,
     LandingPageComponent,
-    TopDestinationComponent,
     TopAccommodationComponent,
     FavoritesPageComponent,
-    AccommodationFavoriteComponent
+    AccommodationFavoriteComponent,
+    OverallChartReservationsComponent,
+    OverallChartRevenueComponent,
+    AccommodationChartReservationsComponent,
+    AccommodationChartRevenueComponent,
+    ReportsPageComponent,
+    TopDestinationComponent
   ],
   imports: [
     CommonModule,

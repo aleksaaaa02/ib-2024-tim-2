@@ -25,6 +25,7 @@ import {
   AccommodationFavoriteComponent
 } from "./feature-modules/accommodation/accommodation-favorite/accommodation-favorite.component";
 import {FavoritesPageComponent} from "./feature-modules/accommodation/favorites-page/favorites-page.component";
+import {ReportsPageComponent} from "./feature-modules/accommodation/reports/reports-page/reports-page.component";
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -43,7 +44,8 @@ const routes: Routes = [
   { path: "accommodation-requests", component: AccommodationRequestsComponent, canActivate: [authGuard] },
   { path: "guest-requests", component: GuestRequestsComponent, canActivate: [authGuard] },
   { path: "owner-requests", component: OwnerReservationsComponent, canActivate: [authGuard] },
-  {path: "favorites", component: FavoritesPageComponent, canActivate: [authGuard]}
+  {path: "favorites", component: FavoritesPageComponent, canActivate: [authGuard]},
+  {path: "accommodation/reports", component: ReportsPageComponent, canActivate: [authGuard]}
 ];
 
 @NgModule({
