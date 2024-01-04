@@ -51,4 +51,5 @@ public interface IAccommodationService {
     public void setAccommodationStatus(Long id, AccommodationStatusRequest newStatus);
     public void deleteAccommodation(Long accommodationId);
     public void insertForGuest(Long guestId, Long accommodationId);
+    public List<ChartDTO> getChartsByPeriod(Long ownerId, LocalDate begin, LocalDate end);
 }

@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.Bookify.service;
 
+import jakarta.persistence.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.Collection;
 
@@ -511,6 +513,37 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public void insertForGuest(Long guestId, Long accommodationId) {
         userService.addToFavorites(guestId, accommodationId);
+    }
+
+    @Override
+    public List<ChartDTO> getChartsByPeriod(Long ownerId, LocalDate begin, LocalDate end) {
+        List<Tuple> helper = accommodationRepository.getOverallReport(ownerId, begin, end);
+        List<ChartDTO> chart = new ArrayList<>();
+        Map<Long, ChartDTO> map = new HashMap<>();
+        for (Tuple t : helper){
+            Long accommodationId = t.get(0, Long.class);
+            String accommodationName = t.get(1, String.class);
+            PricePer pricePer = PricePer.valueOf(t.get(2, String.class));
+            Integer guestNumber = t.get(3, Integer.class);
+            LocalDate startDate = LocalDate.parse(t.get(4, String.class));
+            LocalDate endDate = LocalDate.parse(t.get(5, String.class));
+
+            double totalPrice = getTotalPrice(accommodationId, startDate, endDate, pricePer, guestNumber);
+            int days = (int) ChronoUnit.DAYS.between(startDate, endDate);
+
+            if (!map.containsKey(accommodationId)) {
+                ChartDTO chartDTO = new ChartDTO(accommodationName, days, totalPrice);
+                map.put(accommodationId, chartDTO);
+            }
+            else {
+                ChartDTO chartDTO = map.get(accommodationId);
+                chartDTO.setProfitOfAccommodation(chartDTO.getProfitOfAccommodation() + totalPrice);
+                chartDTO.setNumberOfReservations(chartDTO.getNumberOfReservations() + days);
+            }
+        }
+        for (Long id : map.keySet())
+            chart.add(map.get(id));
+        return chart;
     }
 
     public FileSystemResource getImage(Long id) {
