@@ -200,17 +200,25 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean block(Long userId) {
+    public UserDTO block(Long userId) {
         Optional<User> u = userRepository.findById(userId);
-        if (u.isEmpty()) {
-            return false;
-        }
+        if (u.isEmpty()) throw new BadRequestException("User not found");
         User user = u.get();
 
-        if (!user.isBlocked()) {
-            return block(user);
-        }
-        return unblock(user);
+        if (user.isBlocked()) throw new BadRequestException("User is already blocked");
+
+        return new UserDTO(block(user));
+
+    }
+
+    @Override
+    public UserDTO unblock(Long userId) {
+        Optional<User> u = userRepository.findById(userId);
+        if (u.isEmpty()) throw new BadRequestException("User not found");
+        User user = u.get();
+
+        if(!user.isBlocked()) throw new BadRequestException("User is not blocked");
+        return new UserDTO(unblock(user));
     }
 
     @Override
@@ -382,23 +390,21 @@ public class UserService implements IUserService {
         return a.getStatus().toString().equals("APPROVED") || a.getStatus().toString().equals("REJECTED");
     }
 
-    private boolean unblock(User user) {
+    private User unblock(User user) {
         String role = getRole(user);
-        if(role.equals("ADMIN")) throw new BadRequestException("Administrator's account cannot be blocked/unblocked");
+        if (role.equals("ADMIN")) throw new BadRequestException("Administrator's account cannot be blocked/unblocked");
         user.setBlocked(false);
-        userRepository.save(user);
-        return true;
+        return userRepository.save(user);
     }
 
-    private boolean block(User user) {
+    private User block(User user) {
         String role = getRole(user);
-        if(role.equals("ADMIN")) throw new BadRequestException("Administrator's account cannot be blocked/unblocked");
-        if(role.equals("GUEST")) {
+        if (role.equals("ADMIN")) throw new BadRequestException("Administrator's account cannot be blocked/unblocked");
+        if (role.equals("GUEST")) {
             reservationService.cancelGuestsReservations(user.getId());
         }
         user.setBlocked(true);
-        userRepository.save(user);
-        return true;
+        return userRepository.save(user);
     }
 
 }
