@@ -1,6 +1,11 @@
 package rs.ac.uns.ftn.Bookify.service;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.persistence.Tuple;
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
@@ -11,6 +16,7 @@ import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
 import rs.ac.uns.ftn.Bookify.model.*;
+import rs.ac.uns.ftn.Bookify.model.Image;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAvailabilityRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IPriceListItemRepository;
@@ -20,9 +26,11 @@ import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class AccommodationService implements IAccommodationService {
@@ -544,6 +552,116 @@ public class AccommodationService implements IAccommodationService {
         for (Long id : map.keySet())
             chart.add(map.get(id));
         return chart;
+    }
+
+    @Override
+    public byte[] generatePdfReportForOverall(Long ownerId, LocalDate begin, LocalDate end) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            Document document = new Document();
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            document.open();
+
+            // Add heading
+            Font headingFont = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.BOLD, BaseColor.BLACK);
+            Paragraph heading = new Paragraph("Report", headingFont);
+            heading.setAlignment(Element.ALIGN_CENTER);
+            document.add(heading);
+
+            // Add dates
+            Font datesFont = new Font(Font.FontFamily.HELVETICA, 12.0f, Font.NORMAL, BaseColor.BLACK);
+            Paragraph dates = new Paragraph("From " + begin + " to " + end, datesFont);
+            dates.setAlignment(Element.ALIGN_CENTER);
+            document.add(dates);
+
+            // Add a line break
+            document.add(new Paragraph("\n"));
+
+            //table
+            float[] columnWidths = {2, 1, 1};
+            PdfPTable table = new PdfPTable(columnWidths);
+            table.setWidthPercentage(90);
+            table.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+            // Add table header
+            addTableHeader(table, false);
+
+            // Add table body
+            List<ChartDTO> chartDTOS = getChartsByPeriod(ownerId, begin, end);
+            addTableBody(table, chartDTOS, false);
+
+            // Add total row
+            addTotalRow(table, chartDTOS);
+
+            document.add(table);
+            document.close();
+
+            return baos.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void addTableHeader(PdfPTable table, boolean isMonth) {
+        PdfPCell cell;
+
+        Font headerFont = new Font(Font.FontFamily.HELVETICA, 13, Font.NORMAL, BaseColor.BLACK);
+
+        if (isMonth)
+            cell = new PdfPCell(new Phrase("Month", headerFont));
+        else
+            cell = new PdfPCell(new Phrase("Name", headerFont));
+        cell.setBackgroundColor(new BaseColor(192, 192, 192)); // Grey color
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Days reserved", headerFont));
+        cell.setBackgroundColor(new BaseColor(192, 192, 192)); // Grey color
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Revenue", headerFont));
+        cell.setBackgroundColor(new BaseColor(192, 192, 192)); // Grey color
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        table.addCell(cell);
+    }
+
+    private void addTableBody(PdfPTable table, List<ChartDTO> chartDTOS, boolean isMonth) {
+        for (ChartDTO c : chartDTOS) {
+            if (isMonth){
+                Month month = Month.of(Integer.parseInt(c.getName()));
+                String monthName = month.getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH);
+                table.addCell(monthName);
+            }
+            else
+                table.addCell(c.getName());
+
+            table.addCell(String.valueOf(c.getNumberOfReservations()));
+            table.addCell(String.valueOf(c.getProfitOfAccommodation()) + "€");
+        }
+    }
+
+    private void addTotalRow(PdfPTable table, List<ChartDTO> chartDTOS) {
+        PdfPCell cell = new PdfPCell();
+        cell.setColspan(1);
+        cell.setBackgroundColor(new BaseColor(225, 225, 225));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setPhrase(new Phrase("Total", new Font(Font.FontFamily.HELVETICA, 13, Font.NORMAL)));
+        table.addCell(cell);
+
+        int totalReservations = chartDTOS.stream().mapToInt(ChartDTO::getNumberOfReservations).sum();
+        double totalRevenue = chartDTOS.stream().mapToDouble(ChartDTO::getProfitOfAccommodation).sum();
+
+        cell = new PdfPCell(new Phrase(String.valueOf(totalReservations), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
+        cell.setBackgroundColor(new BaseColor(225, 225, 225));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(String.valueOf(totalRevenue) + "€", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
+        cell.setBackgroundColor(new BaseColor(225, 225, 225));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        table.addCell(cell);
     }
 
     public FileSystemResource getImage(Long id) {

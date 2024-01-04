@@ -1,4 +1,5 @@
 package rs.ac.uns.ftn.Bookify.controller;
+import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.jpa.repository.Query;
@@ -156,21 +157,21 @@ public class AccommodationController {
         return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
     }
 
-//    @GetMapping(value = "/download-reports-overall", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
-//    public ResponseEntity<byte[]> downloadChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
-//    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end) throws DocumentException {
-//        //download pdf
-//        LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-//        LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-//
-//        byte[] pdfContent = accommodationService.generatePdfReportForOverall(ownerId, beginL, endL);
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_PDF);
-//        headers.setContentDispositionFormData("inline", "report.pdf");
-//
-//        return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
-//    }
+    @GetMapping(value = "/download-reports-overall", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
+    public ResponseEntity<byte[]> downloadChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
+    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end) throws DocumentException {
+        //download pdf
+        LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        byte[] pdfContent = accommodationService.generatePdfReportForOverall(ownerId, beginL, endL);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("inline", "report.pdf");
+
+        return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
+    }
 
 //    @GetMapping(value = "/charts/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
 //    @PreAuthorize("hasAuthority('ROLE_OWNER')")

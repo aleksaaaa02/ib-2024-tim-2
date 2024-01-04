@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.Bookify.service.interfaces;
 
+import com.itextpdf.text.DocumentException;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.*;
@@ -52,4 +53,5 @@ public interface IAccommodationService {
     public void deleteAccommodation(Long accommodationId);
     public void insertForGuest(Long guestId, Long accommodationId);
     public List<ChartDTO> getChartsByPeriod(Long ownerId, LocalDate begin, LocalDate end);
+    public byte[] generatePdfReportForOverall(Long ownerId, LocalDate begin, LocalDate end) throws DocumentException;
 }
