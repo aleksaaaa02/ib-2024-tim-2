@@ -644,7 +644,51 @@ public class AccommodationService implements IAccommodationService {
 
     @Override
     public byte[] generatePdfReportForAccommodation(Long ownerId, Long accommodationId, int year) throws DocumentException {
-        return new byte[0];
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            Document document = new Document();
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            document.open();
+
+            // Add heading
+            Font headingFont = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.BOLD, BaseColor.BLACK);
+            Paragraph heading = new Paragraph("Report", headingFont);
+            heading.setAlignment(Element.ALIGN_CENTER);
+            document.add(heading);
+
+            // Add dates
+            Font datesFont = new Font(Font.FontFamily.HELVETICA, 12.0f, Font.NORMAL, BaseColor.BLACK);
+            Paragraph dates = new Paragraph("For " + getAccommodation(accommodationId).getName() + " for " + year + ".", datesFont);
+            dates.setAlignment(Element.ALIGN_CENTER);
+            document.add(dates);
+
+            // Add a line break
+            document.add(new Paragraph("\n"));
+
+            //table
+            float[] columnWidths = {2, 1, 1};
+            PdfPTable table = new PdfPTable(columnWidths);
+            table.setWidthPercentage(90);
+            table.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+            // Add table header
+            addTableHeader(table, true);
+
+            // Add table body
+            List<ChartDTO> chartDTOS = getChartsByAccommodationAndYear(ownerId, accommodationId, year);
+            addTableBody(table, chartDTOS, true);
+
+            // Add total row
+            addTotalRow(table, chartDTOS);
+
+            document.add(table);
+            document.close();
+
+            return baos.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private void addTableHeader(PdfPTable table, boolean isMonth) {

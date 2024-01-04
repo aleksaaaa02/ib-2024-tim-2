@@ -181,18 +181,18 @@ public class AccommodationController {
         return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
     }
 
-//    @GetMapping(value = "/download-reports-accommodation", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
-//    public ResponseEntity<byte[]> downloadChartsByPeriod(@RequestParam("ownerId") Long ownerId,
-//                                                         @RequestParam("accommodationId") Long accommodationId, @RequestParam("year") int year) throws DocumentException {
-//        //download pdf
-//        byte[] pdfContent = accommodationService.generatePdfReportForAccommodation(ownerId, accommodationId, year);
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_PDF);
-//        headers.setContentDispositionFormData("inline", "report.pdf");
-//
-//        return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
-//    }
+    @GetMapping(value = "/download-reports-accommodation", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
+    public ResponseEntity<byte[]> downloadChartsByPeriod(@RequestParam("ownerId") Long ownerId,
+                                                         @RequestParam("accommodationId") Long accommodationId, @RequestParam("year") int year) throws DocumentException {
+        //download pdf
+        byte[] pdfContent = accommodationService.generatePdfReportForAccommodation(ownerId, accommodationId, year);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("inline", "report.pdf");
+
+        return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
+    }
 
     @GetMapping(value = "/accommodation-charts", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
