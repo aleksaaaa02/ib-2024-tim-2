@@ -23,7 +23,7 @@ export class UsersCardComponent implements OnInit {
         next: (image: Blob) => {
           const reader: FileReader = new FileReader();
           reader.onloadend = () => {
-            if(reader.result) {
+            if (reader.result) {
               this.image = reader.result;
             }
           };
@@ -35,15 +35,26 @@ export class UsersCardComponent implements OnInit {
       });
     }
   }
+
   blockUser(): void {
-    this.adminService.changeUsersBlockStatus(this.user.id).subscribe({
-      next: value => {
-        this.user.blocked = !this.user.blocked;
-        console.log(value);
+    this.adminService.blockUser(this.user.id).subscribe({
+      next: (user: User) => {
+        this.user = user;
       },
       error: err => {
         console.log(err)
       }
     });
+  }
+
+  unblockUser(): void {
+    this.adminService.unblockUser(this.user.id).subscribe({
+      next: (user: User) => {
+        this.user = user;
+      },
+      error: err => {
+        console.log(err);
+      }
+    })
   }
 }

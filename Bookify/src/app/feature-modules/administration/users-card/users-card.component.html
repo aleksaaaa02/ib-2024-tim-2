@@ -5,7 +5,7 @@
     </div>
   </div>
   <div class="column-center">
-    <!--    We should insert a router to go on a specific user and show his details   -->
+
     <p class="title">{{user.email}}</p>
     <div class="title-underline"></div>
     <div>
@@ -15,7 +15,7 @@
     </div>
     <div class="button-holder">
       <button class="button-block" *ngIf="!user.blocked" (click)="blockUser()">Block</button>
-      <button class="button-unblock" *ngIf="user.blocked" (click)="blockUser()">Unblock</button>
+      <button class="button-unblock" *ngIf="user.blocked" (click)="unblockUser()">Unblock</button>
     </div>
   </div>
 </div>

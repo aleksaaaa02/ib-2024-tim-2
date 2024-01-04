@@ -31,10 +31,13 @@ export class AdministrationService {
     return this.httpClient.get<User[]>(environment.apiUser);
   }
 
-  changeUsersBlockStatus(userId: undefined | number): Observable<string> {
-    return this.httpClient.put(environment.apiUser + "/" + userId + "/block-user", {}, {responseType: "text"});
+  blockUser(userId: undefined | number): Observable<User> {
+    return this.httpClient.put<User>(environment.apiUser + "/" + userId + "/block-user", {});
   }
 
+  unblockUser(userId: undefined | number): Observable<User> {
+    return this.httpClient.put<User>(environment.apiUser + "/" + userId + "/unblock-user", {});
+  }
   getAllReports(): Observable<ReportedUser[]> {
     return this.httpClient.get<ReportedUser[]>(environment.apiUser + "/reported");
   }
