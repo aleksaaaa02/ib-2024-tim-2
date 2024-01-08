@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReviewService } from '../review.service';
 import { ActivatedRoute } from '@angular/router';
-import { OwnerDTO } from '../model/owner.model.dto';
+import { UserDTO } from '../model/user.model.dto';
 import { AccountService } from '../../account/account.service';
 
 @Component({
@@ -24,8 +24,8 @@ export class OwnerInfoComponent implements OnInit {
       this.ownerId = +params['ownerId'];
     });
     if (!Number.isNaN(this.ownerId)) {
-      this.reviewServise.getOwnerDTO(this.ownerId).subscribe({
-        next: (owner: OwnerDTO) => {
+      this.reviewServise.getUserDTO(this.ownerId).subscribe({
+        next: (owner: UserDTO) => {
           this.ownerFirstName = owner.firstName;
           this.ownerLastName = owner.lastName;
           this.ownerPhone = owner.phone;

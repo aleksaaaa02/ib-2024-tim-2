@@ -20,7 +20,8 @@ export class NewCommentComponent implements OnInit {
 
   ownerId: number;
   
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private reviewService: ReviewService, private authenticationService: AuthenticationService, private _snackBar: MatSnackBar) {
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private reviewService: ReviewService,
+     private authenticationService: AuthenticationService, private _snackBar: MatSnackBar) {
     this.form = this.fb.group({
       comment: ['', Validators.required],
     });
