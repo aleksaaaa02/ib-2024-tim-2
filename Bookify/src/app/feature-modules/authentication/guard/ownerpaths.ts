@@ -4,5 +4,6 @@ export const OwnerPaths : string[] = [
   'accommodation/calendar/',
   'accommodations',
   'accommodation/modify/',
-  'owner-requests'
+  'owner-requests',
+  'accommodation/reports'
 ]

@@ -15,6 +15,7 @@ import { ImageFileDTO } from './model/images.dto.model';
 import { ReservationRequestDTO } from "./model/reservation-request.dto.model";
 import { Reservation } from "./model/reservation.model";
 import { AccommodationOwnerDtoModel } from "./model/accommodation.owner.dto.model";
+import {ChartsDTO} from "./model/accommodation-charts.dto.model";
 
 @Injectable({
   providedIn: 'root'
@@ -144,5 +145,30 @@ export class AccommodationService {
 
   deleteImage(imageId: number): Observable<number> {
     return this.httpClient.delete<number>(environment.apiAccommodation + "/images/" + imageId);
+  }
+
+  getOverallCharts(ownerId: number, startDate: string, endDate: string): Observable<ChartsDTO[]> {
+    return this.httpClient.get<ChartsDTO[]>(environment.apiHost + "accommodations/overall-charts?ownerId=" + ownerId +
+      "&begin=" + startDate +
+      "&end=" + endDate);
+  }
+
+  getNamesForAccommodations(ownerId: number): Observable<{ [key: number]: string }> {
+    return this.httpClient.get<{ [key: number]: string }>(environment.apiHost + "accommodations/charts-accommodations?ownerId=" + ownerId);
+  }
+
+  getAccommodationCharts(ownerId: number, accommodationId: number, year: number): Observable<ChartsDTO[]> {
+    return this.httpClient.get<ChartsDTO[]>(environment.apiHost + "accommodations/accommodation-charts?ownerId=" + ownerId + "&accommodationId=" + accommodationId + "&year=" + year);
+  }
+
+
+  generatePdfReportForOverall(ownerId: number, begin: string, end:string): Observable<Blob> {
+    return this.httpClient.get(environment.apiHost + "accommodations/download-reports-overall?ownerId=" + ownerId +
+      "&begin=" + begin + "&end=" + end, { responseType: 'blob' });
+  }
+
+  generatePdfReportForAccommodation(ownerId: number, accommodationId: number, year: number): Observable<Blob> {
+    return this.httpClient.get(environment.apiHost + "accommodations/download-reports-accommodation?ownerId=" + ownerId +
+      "&accommodationId=" + accommodationId + "&year=" + year, { responseType: 'blob' });
   }
 }
