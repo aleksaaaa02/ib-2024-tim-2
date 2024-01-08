@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { ReviewService } from '../review.service';
 import { ActivatedRoute } from '@angular/router';
 import { RatingDTO } from '../model/rating.model.dto';
+import { AuthenticationService } from '../../authentication/authentication.service';
 
 @Component({
   selector: 'app-ratings',
@@ -22,7 +23,7 @@ export class RatingsComponent implements OnInit, OnChanges {
 
   sumProgress: number;
 
-  constructor(private reviewServise: ReviewService, private route: ActivatedRoute) { }
+  constructor(private reviewServise: ReviewService, private route: ActivatedRoute, private authenticationService: AuthenticationService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.load) {
@@ -35,6 +36,9 @@ export class RatingsComponent implements OnInit, OnChanges {
     this.route.params.subscribe(params => {
       this.ownerId = +params['ownerId'];
     });
+    if(Number.isNaN(this.ownerId)){
+      this.ownerId = this.authenticationService.getUserId();
+    }
     if (!Number.isNaN(this.ownerId)) {
       this.getRating();
     }

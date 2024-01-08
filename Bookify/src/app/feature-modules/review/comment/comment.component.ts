@@ -14,6 +14,7 @@ import { AccountService } from '../../account/account.service';
 })
 export class CommentComponent implements OnInit {
   @Input() comment: CommentDTO;
+  @Input() owner: number = 0;
   @Output() emit = new EventEmitter<boolean>();
   guestId: number;
   ownerId: number;
