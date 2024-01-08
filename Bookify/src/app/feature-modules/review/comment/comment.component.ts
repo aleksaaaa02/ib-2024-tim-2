@@ -28,7 +28,7 @@ export class CommentComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.ownerId = +params['ownerId'];
+      this.ownerId = +params['userId'];
       if (this.comment.imageId != 0)
         this.getOwnerPhoto(this.comment.imageId);
       else

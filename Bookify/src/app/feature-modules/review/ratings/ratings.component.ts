@@ -34,7 +34,7 @@ export class RatingsComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.ownerId = +params['ownerId'];
+      this.ownerId = +params['userId'];
     });
     if(Number.isNaN(this.ownerId)){
       this.ownerId = this.authenticationService.getUserId();

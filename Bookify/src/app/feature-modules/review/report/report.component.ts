@@ -27,7 +27,7 @@ export class ReportComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.reportedUserId = +params['ownerId'];
+      this.reportedUserId = +params['userId'];
     });
   }
 
