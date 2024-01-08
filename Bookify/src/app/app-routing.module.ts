@@ -20,6 +20,7 @@ import { OwnerReservationsComponent } from "./feature-modules/reservation/owner-
 import { AccommodationFavoriteComponent } from "./feature-modules/accommodation/accommodation-favorite/accommodation-favorite.component";
 import { FavoritesPageComponent } from "./feature-modules/accommodation/favorites-page/favorites-page.component";
 import { GuestPageComponent } from './feature-modules/review/guest-page/guest-page.component';
+import { ReportsPageComponent } from "./feature-modules/accommodation/reports/reports-page/reports-page.component";
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -30,7 +31,7 @@ const routes: Routes = [
   { path: "accommodation/details/:accommodationId", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
   { path: 'owner/:ownerId', component: OwnerPageComponent },
-  { path: 'guest/:ownerId', component: GuestPageComponent},
+  { path: 'guest/:ownerId', component: GuestPageComponent },
   { path: 'accommodation/calendar/:accommodationId', component: CalendarComponent, canActivate: [authGuard] },
   { path: "account", component: AccountComponent, canActivate: [authGuard] },
   { path: "accommodation/create", component: AccommodationCreateComponent, canActivate: [authGuard] },
@@ -39,7 +40,8 @@ const routes: Routes = [
   { path: "accommodation-requests", component: AccommodationRequestsComponent, canActivate: [authGuard] },
   { path: "guest-requests", component: GuestRequestsComponent, canActivate: [authGuard] },
   { path: "owner-requests", component: OwnerReservationsComponent, canActivate: [authGuard] },
-  { path: "favorites", component: FavoritesPageComponent, canActivate: [authGuard] }
+  { path: "favorites", component: FavoritesPageComponent, canActivate: [authGuard] },
+  { path: "accommodation/reports", component: ReportsPageComponent, canActivate: [authGuard] }
 ];
 
 @NgModule({
