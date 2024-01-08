@@ -33,4 +33,8 @@ export class ReviewService {
   delete(ownerId: number, reviewId: number) {
     return this.httpClient.delete<null>(environment.apiReview + "/owner-delete/" + ownerId + "/" + reviewId);
   }
+  
+  reportReview(reviewId: number): Observable<number> {
+    return this.httpClient.put<number>(environment.apiReview + "/report/" + reviewId, null);
+  }
 }
