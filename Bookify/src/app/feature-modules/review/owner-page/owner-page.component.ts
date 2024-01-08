@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReviewService } from '../review.service';
 import { ActivatedRoute } from '@angular/router';
-import { OwnerDTO } from '../model/owner.model.dto';
+import { UserDTO } from '../model/user.model.dto';
 import { AuthenticationService } from '../../authentication/authentication.service';
 
 @Component({

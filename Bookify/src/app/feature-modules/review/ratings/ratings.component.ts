@@ -25,8 +25,6 @@ export class RatingsComponent implements OnInit, OnChanges {
   constructor(private reviewServise: ReviewService, private route: ActivatedRoute) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log("Ocenice");
-    console.log(this.load);
     if (this.load) {
       this.getRating();
       this.loadingChange.emit(true);

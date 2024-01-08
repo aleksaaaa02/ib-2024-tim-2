@@ -13,18 +13,13 @@ import { CalendarComponent } from './feature-modules/accommodation/update/calend
 import { OwnerAccommodationsComponent } from './feature-modules/accommodation/owner-accommodations/owner-accommodations.component';
 import { AccommodationRequestsComponent } from "./feature-modules/administration/accommodation-requests/accommodation-requests.component";
 import { OwnerPageComponent } from './feature-modules/review/owner-page/owner-page.component';
-import {authGuard} from "./feature-modules/authentication/guard/auth.guard";
-import {
-  GuestReservationsComponent
-} from "./feature-modules/reservation/guest-reservations/guest-reservations.component";
-import {GuestRequestsComponent} from "./feature-modules/reservation/guest-requests/guest-requests.component";
-import {
-  OwnerReservationsComponent
-} from "./feature-modules/reservation/owner-reservations/owner-reservations.component";
-import {
-  AccommodationFavoriteComponent
-} from "./feature-modules/accommodation/accommodation-favorite/accommodation-favorite.component";
-import {FavoritesPageComponent} from "./feature-modules/accommodation/favorites-page/favorites-page.component";
+import { authGuard } from "./feature-modules/authentication/guard/auth.guard";
+import { GuestReservationsComponent } from "./feature-modules/reservation/guest-reservations/guest-reservations.component";
+import { GuestRequestsComponent } from "./feature-modules/reservation/guest-requests/guest-requests.component";
+import { OwnerReservationsComponent } from "./feature-modules/reservation/owner-reservations/owner-reservations.component";
+import { AccommodationFavoriteComponent } from "./feature-modules/accommodation/accommodation-favorite/accommodation-favorite.component";
+import { FavoritesPageComponent } from "./feature-modules/accommodation/favorites-page/favorites-page.component";
+import { GuestPageComponent } from './feature-modules/review/guest-page/guest-page.component';
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -34,7 +29,8 @@ const routes: Routes = [
   { path: "results", component: ResultsPageComponent },
   { path: "accommodation/details/:accommodationId", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },
-  { path: 'owner/:ownerId', component: OwnerPageComponent},
+  { path: 'owner/:ownerId', component: OwnerPageComponent },
+  { path: 'guest/:ownerId', component: GuestPageComponent},
   { path: 'accommodation/calendar/:accommodationId', component: CalendarComponent, canActivate: [authGuard] },
   { path: "account", component: AccountComponent, canActivate: [authGuard] },
   { path: "accommodation/create", component: AccommodationCreateComponent, canActivate: [authGuard] },
@@ -43,7 +39,7 @@ const routes: Routes = [
   { path: "accommodation-requests", component: AccommodationRequestsComponent, canActivate: [authGuard] },
   { path: "guest-requests", component: GuestRequestsComponent, canActivate: [authGuard] },
   { path: "owner-requests", component: OwnerReservationsComponent, canActivate: [authGuard] },
-  {path: "favorites", component: FavoritesPageComponent, canActivate: [authGuard]}
+  { path: "favorites", component: FavoritesPageComponent, canActivate: [authGuard] }
 ];
 
 @NgModule({
