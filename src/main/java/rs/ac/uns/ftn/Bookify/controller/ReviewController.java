@@ -126,11 +126,11 @@ public class ReviewController {
     }
 
     @PutMapping(value="/report/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_GUEST','ROLE_OWNER')")
-    public ResponseEntity<ReviewDTO> reportReview(@PathVariable Long reviewId) {
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
+    public ResponseEntity<Long> reportReview(@PathVariable Long reviewId) {
         //change to report
-        ReviewDTO reportReview = new ReviewDTO(1L, 4, "Nice", new Date(), true, true, 2L, ReviewType.OWNER);
-        return new ResponseEntity<ReviewDTO>(reportReview, HttpStatus.OK);
+        reviewService.reportReview(reviewId);
+        return new ResponseEntity<Long>(reviewId, HttpStatus.OK);
     }
 
     @DeleteMapping("/accommodation-delete/{accommodationId}/{reviewId}")

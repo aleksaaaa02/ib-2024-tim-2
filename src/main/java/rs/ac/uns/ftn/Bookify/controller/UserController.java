@@ -230,10 +230,12 @@ public class UserController {
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/owner/{ownerId}")
-    public ResponseEntity<UserBasicDTO> getOwner(@PathVariable Long ownerId){
-        Owner owner = userService.getOwner(ownerId);
-        UserBasicDTO dto = UserBasicDTOMapper.fromOwnertoDTO(owner);
+    @GetMapping(value = "/user/{userId}")
+    public ResponseEntity<UserBasicDTO> getUser(@PathVariable Long userId) {
+        User user = userService.get(userId);
+        if (user == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        UserBasicDTO dto = UserBasicDTOMapper.fromOwnertoDTO(user);
         return new ResponseEntity<UserBasicDTO>(dto, HttpStatus.OK);
     }
 }
