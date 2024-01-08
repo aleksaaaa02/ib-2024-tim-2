@@ -136,4 +136,25 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     List<Tuple> getOverallReport(@Param("ownerId") Long ownerId,
                                  @Param("begin") LocalDate begin,
                                  @Param("end") LocalDate end);
+
+    @Query(value = "SELECT a.id, a.name " +
+            "from users_accommodations ua " +
+            "join accommodations a on a.id = ua.accommodations_id " +
+            "where owner_id = :ownerId", nativeQuery = true)
+    List<Tuple> getAccommodationNames(@Param("ownerId") Long ownerId);
+
+    @Query(value = "SELECT ac.price_per, r.guest_number, (CASE WHEN r.start < :date THEN :date ELSE r.start END) AS startDate, (CASE WHEN r.end > LAST_DAY(:date) THEN LAST_DAY(:date) ELSE r.end END) AS endDate " +
+            "FROM users_accommodations a " +
+            "JOIN reservations r ON a.accommodations_id = r.accommodation_id " +
+            "JOIN accommodations ac ON ac.id = a.accommodations_id " +
+            "WHERE owner_id = :ownerId " +
+            "AND ((r.start >= :date AND r.end <= LAST_DAY(:date)) " +
+            "OR (r.start <= :date AND r.end >= :date AND r.end <= LAST_DAY(:date)) " +
+            "OR (r.end >= LAST_DAY(:date) AND r.start >= :date AND r.start <= LAST_DAY(:date)) " +
+            "OR (r.start <= :date AND r.end >= LAST_DAY(:date))) " +
+            "AND ac.id = :accommodationId " +
+            "AND r.status = 'ACCEPTED' ", nativeQuery = true)
+    List<Tuple> getAccommodationReport(@Param("ownerId") Long ownerId,
+                                       @Param("accommodationId") Long accommodationId,
+                                       @Param("date") LocalDate date);
 }
