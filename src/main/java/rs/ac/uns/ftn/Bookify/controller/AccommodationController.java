@@ -1,8 +1,10 @@
 package rs.ac.uns.ftn.Bookify.controller;
+import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -143,36 +145,44 @@ public class AccommodationController {
         return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/charts", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/overall-charts", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<Collection<AccommodationsChartDTO>> getChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
+    public ResponseEntity<Collection<ChartDTO>> getChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end) {
         //return all charts for period
-        Collection<AccommodationsChartDTO> charts = new HashSet<>();
-        charts.add(new AccommodationsChartDTO(new Accommodation(), 12, 32.2));
-        charts.add(new AccommodationsChartDTO(new Accommodation(), 1, 2.1));
-        charts.add(new AccommodationsChartDTO(new Accommodation(), 22, 75.8));
-        return new ResponseEntity<Collection<AccommodationsChartDTO>>(charts, HttpStatus.OK);
-    }
+        LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-    @GetMapping(value = "/charts-download", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<String> downloadChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
-    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end) {
-        //download pdf report for period
-        return new ResponseEntity<>("PDF", HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/charts/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@PathVariable Long accommodationId, @PathVariable int year) {
-        //return all charts for accommodation
-        Collection<ChartDTO> charts = new HashSet<>();
-        charts.add(new ChartDTO(12, 32.2));
-        charts.add(new ChartDTO(1, 2.1));
-        charts.add(new ChartDTO(22, 75.8));
+        Collection<ChartDTO> charts = accommodationService.getChartsByPeriod(ownerId, beginL, endL);
         return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/download-reports-overall", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
+    public ResponseEntity<byte[]> downloadChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
+    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end) throws DocumentException {
+        //download pdf
+        LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        byte[] pdfContent = accommodationService.generatePdfReportForOverall(ownerId, beginL, endL);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("inline", "report.pdf");
+
+        return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
+    }
+
+//    @GetMapping(value = "/charts/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
+//    public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@PathVariable Long accommodationId, @PathVariable int year) {
+//        //return all charts for accommodation
+//        Collection<ChartDTO> charts = new HashSet<>();
+//        charts.add(new ChartDTO(12, 32.2));
+//        charts.add(new ChartDTO(1, 2.1));
+//        charts.add(new ChartDTO(22, 75.8));
+//        return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
+//    }
 
     @GetMapping(value = "/charts-download/{accommodationId}/{year}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
