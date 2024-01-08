@@ -6,6 +6,7 @@ import { environment } from '../../../env/env';
 import { RatingDTO } from './model/rating.model.dto';
 import { CommentDTO } from './model/comment.model.dto';
 import { NewCommentDTO } from './model/new-comment.model.dto';
+import { ReportedUserDTO } from './model/reported-user.model.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -36,5 +37,9 @@ export class ReviewService {
   
   reportReview(reviewId: number): Observable<number> {
     return this.httpClient.put<number>(environment.apiReview + "/report/" + reviewId, null);
+  }
+  
+  reportUser(reportedUser: ReportedUserDTO): Observable<number> {
+    return this.httpClient.post<number>(environment.apiUser + "/report", reportedUser);
   }
 }
