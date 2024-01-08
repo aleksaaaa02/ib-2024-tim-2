@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.CommentDTO;
 import rs.ac.uns.ftn.Bookify.dto.RatingDTO;
+import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
 import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Review;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IReviewRepository;
@@ -81,5 +82,14 @@ public class ReviewService implements IReviewService {
     @Override
     public void deleteReview(Long id) {
         reviewRepository.deleteById(id);
+    }
+
+    @Override
+    public void reportReview(Long id) {
+        Review review = reviewRepository.findById(id).orElse(null);
+        if (review == null)
+            throw new BadRequestException("Not found");
+        review.setReported(true);
+        reviewRepository.save(review);
     }
 }

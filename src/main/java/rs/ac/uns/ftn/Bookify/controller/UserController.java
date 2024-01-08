@@ -21,8 +21,7 @@ import rs.ac.uns.ftn.Bookify.config.utils.JWTUtils;
 import rs.ac.uns.ftn.Bookify.config.utils.UserJWT;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
-import rs.ac.uns.ftn.Bookify.mapper.OwnerBasicDTOMapper;
-import rs.ac.uns.ftn.Bookify.mapper.OwnerBasicDTOMapper;
+import rs.ac.uns.ftn.Bookify.mapper.UserBasicDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.User;
 import rs.ac.uns.ftn.Bookify.service.EmailService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
@@ -231,11 +230,13 @@ public class UserController {
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/owner/{ownerId}")
-    public ResponseEntity<OwnerBasicDTO> getOwner(@PathVariable Long ownerId){
-        Owner owner = userService.getOwner(ownerId);
-        OwnerBasicDTO dto = OwnerBasicDTOMapper.fromOwnertoDTO(owner);
-        return new ResponseEntity<OwnerBasicDTO>(dto, HttpStatus.OK);
+    @GetMapping(value = "/user/{userId}")
+    public ResponseEntity<UserBasicDTO> getUser(@PathVariable Long userId) {
+        User user = userService.get(userId);
+        if (user == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        UserBasicDTO dto = UserBasicDTOMapper.fromOwnertoDTO(user);
+        return new ResponseEntity<UserBasicDTO>(dto, HttpStatus.OK);
     }
 }
 

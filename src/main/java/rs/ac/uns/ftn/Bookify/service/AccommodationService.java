@@ -173,7 +173,7 @@ public class AccommodationService implements IAccommodationService {
             throw new BadRequestException("Accommodation has reservations in the future");
         List<Filter> filters = (List<Filter>) accommodation.getFilters();
         accommodation.setFilters(new HashSet<>());
-//        accommodation.setReviews(); //dodati
+        accommodation.setReviews(a.getReviews());
         accommodation.setImages(a.getImages());
         accommodation.setStatus(AccommodationStatusRequest.EDITED);
         accommodation.setAvailability(a.getAvailability());

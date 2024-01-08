@@ -12,4 +12,5 @@ public interface IReviewService {
     public Review save(Review review);
     public Review getReview(Long id);
     public void deleteReview(Long id);
+    public void reportReview(Long id);
 }
