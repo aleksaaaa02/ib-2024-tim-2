@@ -15,8 +15,8 @@ public class ReportedUserDTO {
 
     private String reason;
     private Date created;
-    private Long reportedUser;
-    private Long createdBy;
+    private User reportedUser;
+    private User createdBy;
 }
 
 
