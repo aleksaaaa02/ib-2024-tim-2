@@ -146,7 +146,7 @@ public class ReservationController {
         reservationService.setAccommodation(accommodation, ra);
         Guest guest = (Guest) userService.get(guestId);
         reservationService.setGuest(guest, ra);
-
+        accommodationService.acceptReservationIfAutomaticConformation(ra);
         return new ResponseEntity<>(new ReservationDTO(), HttpStatus.CREATED);
     }
 
@@ -162,8 +162,9 @@ public class ReservationController {
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<ReservationDTO> acceptReservation(@PathVariable Long reservationId) {
         //change status into accepted
-        ReservationDTO acceptedReservation = new ReservationDTO();
-        return new ResponseEntity<ReservationDTO>(acceptedReservation, HttpStatus.OK);
+        Reservation reservation = reservationService.accept(reservationId);
+        accommodationService.acceptReservationForAccommodation(reservation);
+        return new ResponseEntity<ReservationDTO>(ReservationDTOMapper.toReservationDTO(reservation), HttpStatus.OK);
     }
 
     @PutMapping(value = "/reject/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)

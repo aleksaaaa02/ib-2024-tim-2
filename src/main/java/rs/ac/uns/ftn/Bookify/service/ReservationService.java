@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.ReservationDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.Status;
+import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Reservation;
@@ -114,5 +115,28 @@ public class ReservationService implements IReservationService {
     @Override
     public void delete(Long reservationId) {
         this.reservationRepository.deleteById(reservationId);
+    }
+
+    @Override
+    public void cancelOverlappingReservations(Long accommodationId, LocalDate startDate, LocalDate endDate) {
+        List<Reservation> overlappingReservations = reservationRepository.findReservationsByAccommodation_IdAndStartBeforeAndEndAfterAndStatusNotIn(
+                        accommodationId,
+                        endDate,
+                        startDate,
+                        EnumSet.of(Status.CANCELED, Status.ACCEPTED, Status.REJECTED));
+        for(Reservation reservation : overlappingReservations){
+            reservation.setStatus(Status.CANCELED);
+            reservationRepository.save(reservation);
+        }
+    }
+
+    @Override
+    public Reservation accept(Long reservationId) {
+        Optional<Reservation> r = reservationRepository.findById(reservationId);
+        if(r.isEmpty()) throw new BadRequestException("Reservation not found");
+        Reservation reservation = r.get();
+        reservation.setStatus(Status.ACCEPTED);
+        reservationRepository.save(reservation);
+        return reservation;
     }
 }

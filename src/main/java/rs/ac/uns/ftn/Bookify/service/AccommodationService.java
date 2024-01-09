@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.*;
-import rs.ac.uns.ftn.Bookify.enumerations.AccommodationStatusRequest;
-import rs.ac.uns.ftn.Bookify.enumerations.AccommodationType;
-import rs.ac.uns.ftn.Bookify.enumerations.Filter;
-import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
+import rs.ac.uns.ftn.Bookify.enumerations.*;
 import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
 import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
@@ -511,6 +508,23 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public void insertForGuest(Long guestId, Long accommodationId) {
         userService.addToFavorites(guestId, accommodationId);
+    }
+
+    @Override
+    public void acceptReservationIfAutomaticConformation(Reservation reservation) {
+        Accommodation accommodation = reservation.getAccommodation();
+        if (accommodation.isManual()) return;
+        acceptReservationForAccommodation(reservation);
+
+    }
+
+    @Override
+    public void acceptReservationForAccommodation(Reservation reservation) {
+        Accommodation accommodation = reservation.getAccommodation();
+        reservation.setStatus(Status.ACCEPTED);
+        reservationService.save(reservation);
+        reservationService.cancelOverlappingReservations(accommodation.getId(), reservation.getStart(), reservation.getEnd());
+        trimOverlapingAvailabilityIntervals(accommodation.getId(), reservation.getStart(), reservation.getEnd());
     }
 
     public FileSystemResource getImage(Long id) {
