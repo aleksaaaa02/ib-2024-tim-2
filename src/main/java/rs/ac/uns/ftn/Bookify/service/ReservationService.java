@@ -176,7 +176,7 @@ public class ReservationService implements IReservationService {
                 availability.setEndDate(reservation.getEnd());
                 accommodationService.addAvailability(reservation.getAccommodation().getId(), availability);
             }
-            reservation.setStatus(Status.REJECTED);
+            reservation.setStatus(Status.CANCELED);
             reservationRepository.save(reservation);
         });
         return true;
