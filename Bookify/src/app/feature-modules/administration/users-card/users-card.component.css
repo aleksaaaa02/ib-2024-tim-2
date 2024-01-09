@@ -11,11 +11,6 @@
   margin: 0.12rem 1rem 0 0;
 }
 
-.title:hover {
-  cursor: pointer;
-  text-decoration: underline 1px #326268;
-}
-
 .user-card {
   margin-top: 3vh;
   margin-left: auto;

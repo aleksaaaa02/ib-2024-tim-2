@@ -16,8 +16,7 @@
         </div>
     </div>
     <div class="button-holder">
-        <button class="button-block" *ngIf="!report.reportedUser.blocked">Block</button>
-        <button class="button-dismiss">Dismiss</button>
+        <button class="button-block" (click)="block()" >Block</button>
     </div>
 </div>
 
