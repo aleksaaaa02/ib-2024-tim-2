@@ -26,17 +26,14 @@ import rs.ac.uns.ftn.Bookify.mapper.UserBasicDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.ReportedUser;
 import rs.ac.uns.ftn.Bookify.model.User;
 import rs.ac.uns.ftn.Bookify.service.EmailService;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IReportedUserService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
-import java.util.Date;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 import rs.ac.uns.ftn.Bookify.dto.ReportedUserDTO;
 import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Owner;
-
-import java.util.HashSet;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -48,27 +45,33 @@ public class UserController {
     private EmailService emailService;
 
     @Autowired
+    private IReportedUserService reportedUserService;
+
+    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
     private JWTUtils jwtUtils;
 
+
     private final String IP_ADDRESS = "192.168.1.5";
 
     @GetMapping(value = "/reported", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Collection<ReportedUserDTO>> getReportedUsers() {
-        //return all reported users
-        Collection<ReportedUserDTO> reportedUsers = new HashSet<>();
-        return new ResponseEntity<Collection<ReportedUserDTO>>(reportedUsers, HttpStatus.OK);
+    public ResponseEntity<Collection<ReportedUserDetailsDTO>> getReportedUsers() {
+        List<ReportedUserDetailsDTO> response = new ArrayList<>();
+        reportedUserService.getAllReports().forEach(reportedUser -> response.add(new ReportedUserDetailsDTO(reportedUser)));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Collection<UserDTO>> getAllUsers() {
-        Collection<User> response = userService.getAll();
-        return null;
-//        return new ResponseEntity<>(response, HttpStatus.FOUND);
+        List<UserDTO> response = new ArrayList<>();
+        userService.getAll().forEach((u) ->{
+            response.add(new UserDTO(u));
+        });
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
@@ -158,10 +161,24 @@ public class UserController {
 
     @PutMapping("/{userId}/block-user")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> blockUser(@PathVariable Long userId) {
-
-        return new ResponseEntity<>("User blocked successfully", HttpStatus.OK);
+    public ResponseEntity<UserDTO> blockUser(@PathVariable Long userId) {
+        UserDTO response = this.userService.block(userId);
+        if(response != null) {
+            reportedUserService.deletedUsersReports(response.getId());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
+
+    @PutMapping("/{userId}/unblock-user")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    public ResponseEntity<UserDTO> unblockUser(@PathVariable Long userId) {
+        UserDTO response = this.userService.unblock(userId);
+        if(response != null)
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    }
+
 
     @PostMapping(value = "/report")
     @PreAuthorize("hasAnyAuthority('ROLE_GUEST', 'ROLE_OWNER')")

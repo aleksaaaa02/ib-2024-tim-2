@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 public interface IUserService {
-    public Collection<User> getAll();
+    public List<User> getAll();
     public User get(String email);
     public User get(Long userId);
     public String getRole(User user);
@@ -19,7 +19,8 @@ public interface IUserService {
     public boolean activateUser(String uuid);
     public boolean isLoginAvailable(Long userId);
     public boolean delete(Long userId);
-    public boolean block(Long userId);
+    public UserDTO block(Long userId);
+    public UserDTO unblock(Long userId);
     public Collection<User> searchUsers(String searchParam);
     public Long updateImage(byte[] bytes, String imageName, Long userId) throws Exception;
     public FileSystemResource getImage(Long imageId);
