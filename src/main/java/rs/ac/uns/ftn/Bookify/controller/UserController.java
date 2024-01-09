@@ -21,7 +21,9 @@ import rs.ac.uns.ftn.Bookify.config.utils.JWTUtils;
 import rs.ac.uns.ftn.Bookify.config.utils.UserJWT;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
+import rs.ac.uns.ftn.Bookify.mapper.ReportedUserDTOMapper;
 import rs.ac.uns.ftn.Bookify.mapper.UserBasicDTOMapper;
+import rs.ac.uns.ftn.Bookify.model.ReportedUser;
 import rs.ac.uns.ftn.Bookify.model.User;
 import rs.ac.uns.ftn.Bookify.service.EmailService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
@@ -58,8 +60,6 @@ public class UserController {
     public ResponseEntity<Collection<ReportedUserDTO>> getReportedUsers() {
         //return all reported users
         Collection<ReportedUserDTO> reportedUsers = new HashSet<>();
-        reportedUsers.add(new ReportedUserDTO("Reason", new Date(), new Owner(), new Guest()));
-        reportedUsers.add(new ReportedUserDTO("Reason", new Date(), new Owner(), new Guest()));
         return new ResponseEntity<Collection<ReportedUserDTO>>(reportedUsers, HttpStatus.OK);
     }
 
@@ -164,11 +164,18 @@ public class UserController {
     }
 
     @PostMapping(value = "/report")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
-    public ResponseEntity<ReportedUserDTO> insertReport(@RequestBody ReportedUserDTO reservation) {
+    @PreAuthorize("hasAnyAuthority('ROLE_GUEST', 'ROLE_OWNER')")
+    public ResponseEntity<Long> insertReport(@RequestBody ReportedUserDTO dto) {
         //insert new report
-        ReportedUserDTO reportedUserDTO = new ReportedUserDTO("Reason", new Date(), new Owner(), new Guest());
-        return new ResponseEntity<>(reportedUserDTO, HttpStatus.CREATED);
+        ReportedUser user = ReportedUserDTOMapper.fromDTOtoUser(dto);
+        User reportedUser = userService.get(dto.getReportedUser());
+        User reportingUser = userService.get(dto.getCreatedBy());
+        user.setCreatedBy(reportingUser);
+        user.setReportedUser(reportedUser);
+        user.setCreated(new Date());
+
+        Long id = userService.reportUser(user);
+        return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
     @GetMapping("/search")
