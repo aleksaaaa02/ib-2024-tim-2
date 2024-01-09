@@ -6,13 +6,19 @@ import { AccommodationRequestsCardComponent } from './accommodation-requests-car
 import {CreatedPipe} from "./pipes/created";
 import {EditedPipe} from "./pipes/edited";
 import {RouterLink} from "@angular/router";
+import { UsersComponent } from './users/users.component';
+import { UsersCardComponent } from './users-card/users-card.component';
+import { ReportedUsersCardComponent } from './reported-users-card/reported-users-card.component';
 
 @NgModule({
   declarations: [
     AccommodationRequestsComponent,
     AccommodationRequestsCardComponent,
     EditedPipe,
-    CreatedPipe
+    CreatedPipe,
+    UsersComponent,
+    UsersCardComponent,
+    ReportedUsersCardComponent
   ],
   imports: [
     CommonModule,
