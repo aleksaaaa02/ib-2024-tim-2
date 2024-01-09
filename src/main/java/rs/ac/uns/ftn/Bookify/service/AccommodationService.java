@@ -533,7 +533,7 @@ public class AccommodationService implements IAccommodationService {
         Accommodation accommodation = reservation.getAccommodation();
         reservation.setStatus(Status.ACCEPTED);
         reservationService.save(reservation);
-        reservationService.cancelOverlappingReservations(accommodation.getId(), reservation.getStart(), reservation.getEnd());
+        reservationService.rejectOverlappingReservations(accommodation.getId(), reservation.getStart(), reservation.getEnd());
         trimOverlapingAvailabilityIntervals(accommodation.getId(), reservation.getStart(), reservation.getEnd());
     }
 

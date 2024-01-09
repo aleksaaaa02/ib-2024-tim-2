@@ -162,17 +162,23 @@ public class ReservationController {
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<ReservationDTO> acceptReservation(@PathVariable Long reservationId) {
         //change status into accepted
-        Reservation reservation = reservationService.accept(reservationId);
-        accommodationService.acceptReservationForAccommodation(reservation);
-        return new ResponseEntity<ReservationDTO>(ReservationDTOMapper.toReservationDTO(reservation), HttpStatus.OK);
+        Reservation r = reservationService.accept(reservationId);
+        accommodationService.acceptReservationForAccommodation(r);
+        ReservationDTO reservation = ReservationDTOMapper.toReservationDTO(r);
+        reservation.setUser(userService.getGuestForReservation(reservation.getId()));
+        reservation.setAvgRating(accommodationService.getAvgRating(reservation.getAccommodationId()));
+        return new ResponseEntity<ReservationDTO>(reservation, HttpStatus.OK);
     }
 
     @PutMapping(value = "/reject/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<ReservationDTO> rejectReservation(@PathVariable Long reservationId) {
         //change status into rejected
-        ReservationDTO rejectedReservation = new ReservationDTO();
-        return new ResponseEntity<ReservationDTO>(rejectedReservation, HttpStatus.OK);
+        Reservation r = reservationService.reject(reservationId);
+        ReservationDTO reservation = ReservationDTOMapper.toReservationDTO(r);
+        reservation.setUser(userService.getGuestForReservation(reservation.getId()));
+        reservation.setAvgRating(accommodationService.getAvgRating(reservation.getAccommodationId()));
+        return new ResponseEntity<ReservationDTO>(reservation, HttpStatus.OK);
     }
 
     @DeleteMapping("/{reservationId}")
