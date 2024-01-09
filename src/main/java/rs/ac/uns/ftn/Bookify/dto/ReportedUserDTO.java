@@ -3,9 +3,9 @@ package rs.ac.uns.ftn.Bookify.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import rs.ac.uns.ftn.Bookify.model.ReportedUser;
 import rs.ac.uns.ftn.Bookify.model.User;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -13,10 +13,11 @@ import java.util.Date;
 @NoArgsConstructor
 public class ReportedUserDTO {
 
+    private Long id;
     private String reason;
     private Date created;
-    private User reportedUser;
-    private User createdBy;
+    private Long reportedUser;
+    private Long createdBy;
 }
 
 

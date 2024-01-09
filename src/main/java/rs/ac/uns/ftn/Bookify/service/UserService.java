@@ -14,12 +14,10 @@ import rs.ac.uns.ftn.Bookify.exception.UserIsBlockedException;
 import rs.ac.uns.ftn.Bookify.exception.UserNotActivatedException;
 import rs.ac.uns.ftn.Bookify.mapper.UserRegisteredDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.*;
+import rs.ac.uns.ftn.Bookify.repository.interfaces.IReportedUserRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IReservationRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IUserRepository;
-import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
-import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
-import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
-import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
+import rs.ac.uns.ftn.Bookify.service.interfaces.*;
 
 import java.security.SecureRandom;
 import java.util.*;
@@ -28,28 +26,32 @@ import java.util.*;
 public class UserService implements IUserService {
     private final IImageService imageService;
     private final IUserRepository userRepository;
+    private final IReportedUserRepository reportedUserRepository;
     private final IReservationRepository reservationRepository;
     private final IReservationService reservationService;
     private final PasswordEncoder passwordEncoder;
     private final IAccommodationService accommodationService;
 
 
-
     @Autowired
     public UserService(IImageService imageService, IUserRepository userRepository, IReservationService reservationService,
-                       PasswordEncoder passwordEncoder, @Lazy IAccommodationService accommodationService, IReservationRepository reservationRepository) {
+                       PasswordEncoder passwordEncoder, @Lazy IAccommodationService accommodationService, IReservationRepository reservationRepository,
+                       IReportedUserRepository reportedUserRepository) {
         this.imageService = imageService;
         this.userRepository = userRepository;
         this.reservationService = reservationService;
         this.passwordEncoder = passwordEncoder;
         this.accommodationService = accommodationService;
         this.reservationRepository = reservationRepository;
+        this.reportedUserRepository = reportedUserRepository;
     }
 
 
     @Override
-    public Collection<User> getAll() {
-        return null;
+    public List<User> getAll() {
+        List<User> users = userRepository.findAll();
+        users.removeIf(user -> user instanceof Admin);
+        return users;
     }
 
     @Override
@@ -199,8 +201,25 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean block(Long userId) {
-        return false;
+    public UserDTO block(Long userId) {
+        Optional<User> u = userRepository.findById(userId);
+        if (u.isEmpty()) throw new BadRequestException("User not found");
+        User user = u.get();
+
+        if (user.isBlocked()) throw new BadRequestException("User is already blocked");
+
+        return new UserDTO(block(user));
+
+    }
+
+    @Override
+    public UserDTO unblock(Long userId) {
+        Optional<User> u = userRepository.findById(userId);
+        if (u.isEmpty()) throw new BadRequestException("User not found");
+        User user = u.get();
+
+        if(!user.isBlocked()) throw new BadRequestException("User is not blocked");
+        return new UserDTO(unblock(user));
     }
 
     @Override
@@ -332,6 +351,28 @@ public class UserService implements IUserService {
         userRepository.addFavoriteToUser(guestId, accommodationId);
     }
 
+
+    @Override
+    public Long reportUser(ReportedUser reportedUser) {
+        Guest guest;
+        Owner owner;
+        if(reportedUser.getReportedUser() instanceof Guest){
+            guest = (Guest) reportedUser.getReportedUser();
+            owner = (Owner) reportedUser.getCreatedBy();
+            if(reservationService.getReservations(guest.getId(), owner.getId()).isEmpty()){
+                throw new BadRequestException("Do not have reservations");
+            }
+        }else{
+            owner = (Owner) reportedUser.getReportedUser();
+            guest = (Guest) reportedUser.getCreatedBy();
+            if(reservationService.getReservations(guest.getId(), owner.getId()).isEmpty()){
+                throw new BadRequestException("Do not have reservations");
+            }
+        }
+        return reportedUserRepository.save(reportedUser).getId();
+    }
+
+
     @Override
     public boolean checkIfInFavorites(Long guestId, Long accommodationId) {
         return userRepository.checkIfInFavorites(guestId, accommodationId) == 1;
@@ -371,4 +412,22 @@ public class UserService implements IUserService {
     private boolean isRequestReactedOn(Accommodation a) {
         return a.getStatus().toString().equals("APPROVED") || a.getStatus().toString().equals("REJECTED");
     }
+
+    private User unblock(User user) {
+        String role = getRole(user);
+        if (role.equals("ADMIN")) throw new BadRequestException("Administrator's account cannot be blocked/unblocked");
+        user.setBlocked(false);
+        return userRepository.save(user);
+    }
+
+    private User block(User user) {
+        String role = getRole(user);
+        if (role.equals("ADMIN")) throw new BadRequestException("Administrator's account cannot be blocked/unblocked");
+        if (role.equals("GUEST")) {
+            reservationService.cancelGuestsReservations(user.getId());
+        }
+        user.setBlocked(true);
+        return userRepository.save(user);
+    }
+
 }

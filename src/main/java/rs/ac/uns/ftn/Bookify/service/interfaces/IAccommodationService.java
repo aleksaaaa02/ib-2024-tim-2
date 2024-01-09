@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.Bookify.service.interfaces;
 
+import com.itextpdf.text.DocumentException;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.*;
@@ -13,6 +14,7 @@ import rs.ac.uns.ftn.Bookify.model.Reservation;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface IAccommodationService {
@@ -54,4 +56,9 @@ public interface IAccommodationService {
     public void insertForGuest(Long guestId, Long accommodationId);
     public void acceptReservationIfAutomaticConformation(Reservation reservation);
     public void acceptReservationForAccommodation(Reservation reservation);
+    public List<ChartDTO> getChartsByPeriod(Long ownerId, LocalDate begin, LocalDate end);
+    public byte[] generatePdfReportForOverall(Long ownerId, LocalDate begin, LocalDate end) throws DocumentException;
+    public Map<Long, String> getAccommodationNames(Long ownerId);
+    public List<ChartDTO> getChartsByAccommodationAndYear(Long ownerId, Long accommodationId, int year);
+    public byte[] generatePdfReportForAccommodation(Long ownerId, Long accommodationId, int year) throws DocumentException;
 }

@@ -17,7 +17,7 @@ public interface IReservationService {
     Reservation save(Reservation reservation);
     public void setAccommodation(Accommodation accommodation, Reservation reservation);
     public void setGuest(Guest guest, Reservation reservation);
-    public List<Reservation> getReservations(Long guestId, Long ownerID);
+    public List<Reservation> getReservations(Long guestId, Long ownerId);
     public List<Reservation> getAllForGuest(Long userId);
     public List<Object[]> getGuestAccommodations(Long UserId);
     public List<Reservation> filterForGuest(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses);
@@ -28,4 +28,5 @@ public interface IReservationService {
     public void delete(Long reservationId);
     public void cancelOverlappingReservations(Long accommodationId, LocalDate startDate, LocalDate endDate);
     public Reservation accept(Long reservationId);
+    public boolean cancelGuestsReservations(Long guestId);
 }
