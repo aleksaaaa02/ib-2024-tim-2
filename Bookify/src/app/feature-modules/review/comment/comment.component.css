@@ -9,7 +9,7 @@
     border-radius: 1.5em;
     background-color: #A29D92;
     display: grid;
-    position: relative; 
+    position: relative;
     grid-template-columns: 20% 80%;
 }
 
@@ -30,6 +30,7 @@
 
 .description {
     margin-top: 0.5rem;
+    margin-right: 8rem;
     font-size: medium;
     overflow: hidden;
     display: -webkit-box;
@@ -85,4 +86,17 @@
     top: 5px;
     right: 5px;
     cursor: pointer;
+}
+
+button[mat-button] {
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 20px;
+    background-color: #326268;
+    color: white;
+    padding: 0 1.8rem;
+    margin: -1.9rem 1rem 1rem 0;
+    width: fit-content;
+    height: fit-content;
+    grid-column: 2;
+    justify-self: end;
 }

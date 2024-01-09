@@ -1,4 +1,4 @@
-export interface OwnerDTO {
+export interface UserDTO {
     firstName: string,
     lastName: string,
     phone: string,

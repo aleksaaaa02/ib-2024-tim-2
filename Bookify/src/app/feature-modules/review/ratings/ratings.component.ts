@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { ReviewService } from '../review.service';
 import { ActivatedRoute } from '@angular/router';
 import { RatingDTO } from '../model/rating.model.dto';
+import { AuthenticationService } from '../../authentication/authentication.service';
 
 @Component({
   selector: 'app-ratings',
@@ -22,11 +23,9 @@ export class RatingsComponent implements OnInit, OnChanges {
 
   sumProgress: number;
 
-  constructor(private reviewServise: ReviewService, private route: ActivatedRoute) { }
+  constructor(private reviewServise: ReviewService, private route: ActivatedRoute, private authenticationService: AuthenticationService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log("Ocenice");
-    console.log(this.load);
     if (this.load) {
       this.getRating();
       this.loadingChange.emit(true);
@@ -35,8 +34,11 @@ export class RatingsComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.ownerId = +params['ownerId'];
+      this.ownerId = +params['userId'];
     });
+    if(Number.isNaN(this.ownerId)){
+      this.ownerId = this.authenticationService.getUserId();
+    }
     if (!Number.isNaN(this.ownerId)) {
       this.getRating();
     }
