@@ -162,8 +162,10 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<UserDTO> blockUser(@PathVariable Long userId) {
         UserDTO response = this.userService.block(userId);
-        if(response != null)
+        if(response != null) {
+            reportedUserService.deletedUsersReports(response.getId());
             return new ResponseEntity<>(response, HttpStatus.OK);
+        }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 

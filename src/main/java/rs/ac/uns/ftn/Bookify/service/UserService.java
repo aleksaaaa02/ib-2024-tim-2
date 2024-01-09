@@ -16,10 +16,7 @@ import rs.ac.uns.ftn.Bookify.mapper.UserRegisteredDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IReservationRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IUserRepository;
-import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
-import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
-import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
-import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
+import rs.ac.uns.ftn.Bookify.service.interfaces.*;
 
 import java.security.SecureRandom;
 import java.util.*;

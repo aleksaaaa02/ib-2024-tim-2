@@ -5,4 +5,5 @@ import rs.ac.uns.ftn.Bookify.model.ReportedUser;
 
 public interface IReportedUserRepository extends JpaRepository<ReportedUser, Long> {
 
+    public void deleteByReportedUser_Id(Long userId);
 }

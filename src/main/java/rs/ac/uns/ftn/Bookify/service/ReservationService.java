@@ -1,13 +1,11 @@
 package rs.ac.uns.ftn.Bookify.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.ReservationDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.Status;
-import rs.ac.uns.ftn.Bookify.model.Accommodation;
-import rs.ac.uns.ftn.Bookify.model.Guest;
-import rs.ac.uns.ftn.Bookify.model.Reservation;
-import rs.ac.uns.ftn.Bookify.model.User;
+import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IReservationRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
@@ -20,10 +18,16 @@ import java.util.*;
 public class ReservationService implements IReservationService {
 
     IReservationRepository reservationRepository;
+    IAccommodationService accommodationService;
 
     @Autowired
     public ReservationService(IReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
+    }
+    @Autowired
+    @Lazy
+    public void setAccommodationService(IAccommodationService accommodationService){
+        this.accommodationService = accommodationService;
     }
 
     @Override
@@ -119,11 +123,17 @@ public class ReservationService implements IReservationService {
     @Override
     public boolean cancelGuestsReservations(Long guestId) {
         List<Reservation> reservations = this.reservationRepository.findAllByGuest_IdAndEndAfter(guestId, LocalDate.now());
-        reservations.forEach((reservation -> {
-            // Should add logic for cancellation to return date if possible so owner is not damaged
+        reservations.forEach(reservation -> {
+            if(reservation.getStatus() == Status.ACCEPTED
+                && !(LocalDate.now().isAfter(reservation.getStart()) && LocalDate.now().isBefore(reservation.getEnd()))) {
+                Availability availability = new Availability();
+                availability.setStartDate(reservation.getStart());
+                availability.setEndDate(reservation.getEnd());
+                accommodationService.addAvailability(reservation.getAccommodation().getId(), availability);
+            }
             reservation.setStatus(Status.CANCELED);
             reservationRepository.save(reservation);
-        }));
+        });
         return true;
     }
 }

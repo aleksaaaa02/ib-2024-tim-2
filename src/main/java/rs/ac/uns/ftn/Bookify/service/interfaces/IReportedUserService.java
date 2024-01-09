@@ -7,4 +7,5 @@ import java.util.List;
 public interface IReportedUserService {
     public List<ReportedUser> getAllReports();
     public boolean dismiss(Long reportId);
+    public void deletedUsersReports(Long userId);
 }
