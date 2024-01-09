@@ -47,6 +47,11 @@
     margin-bottom: 0.2rem;
 }
 
+.subtitle:first-of-type {
+    cursor: pointer;
+}
+
+
 .title {
     font-size: larger;
     font-weight: bold;

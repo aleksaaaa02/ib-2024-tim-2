@@ -29,7 +29,7 @@ export class NewCommentComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.ownerId = +params['ownerId'];
+      this.ownerId = +params['userId'];
     });
   }
 
