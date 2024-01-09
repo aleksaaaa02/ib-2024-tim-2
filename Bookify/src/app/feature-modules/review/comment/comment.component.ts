@@ -5,6 +5,7 @@ import { AuthenticationService } from '../../authentication/authentication.servi
 import { ActivatedRoute } from '@angular/router';
 import { ReviewService } from '../review.service';
 import { AccountService } from '../../account/account.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-comment',
@@ -14,22 +15,24 @@ import { AccountService } from '../../account/account.service';
 })
 export class CommentComponent implements OnInit {
   @Input() comment: CommentDTO;
+  @Input() owner: number = 0;
   @Output() emit = new EventEmitter<boolean>();
   guestId: number;
   ownerId: number;
   ownerImage: string | ArrayBuffer | null = null;
 
   constructor(public datepipe: DatePipe, private authenticationService: AuthenticationService, private route: ActivatedRoute,
-     private reviewService: ReviewService, private accountService: AccountService) {
+    private reviewService: ReviewService, private accountService: AccountService, private _snackBar: MatSnackBar) {
     this.guestId = authenticationService.getUserId();
   }
+
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.ownerId = +params['ownerId'];
+      this.ownerId = +params['userId'];
       if (this.comment.imageId != 0)
-      this.getOwnerPhoto(this.comment.imageId);
-    else
-      this.ownerImage = "../../assets/images/user.jpg";
+        this.getOwnerPhoto(this.comment.imageId);
+      else
+        this.ownerImage = "../../assets/images/user.jpg";
     });
   }
 
@@ -57,6 +60,24 @@ export class CommentComponent implements OnInit {
       next: (_) => {
         this.emit.emit(true);
       }
+    });
+  }
+
+  
+  onClick(): void {
+    this.reviewService.reportReview(this.comment.id).subscribe({
+      next: (id: number) => {
+        this.openSnackBar("Comment reported", "cancel");
+      },
+      error: (_) => {
+        
+      }
+    })
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 2000,
     });
   }
 }

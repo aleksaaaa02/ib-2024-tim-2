@@ -10,6 +10,8 @@ import { CommentsRatingsComponent } from './comments-ratings/comments-ratings.co
 import { OwnerPageComponent } from './owner-page/owner-page.component';
 import { OwnerInfoComponent } from './owner-info/owner-info.component';
 import { ReportComponent } from './report/report.component';
+import { ReportGuestComponent } from './report-guest/report-guest.component';
+import { GuestPageComponent } from './guest-page/guest-page.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { ReportComponent } from './report/report.component';
     CommentsRatingsComponent,
     OwnerPageComponent,
     OwnerInfoComponent,
-    ReportComponent
+    ReportComponent,
+    ReportGuestComponent,
+    GuestPageComponent
   ],
   imports: [
     CommonModule,

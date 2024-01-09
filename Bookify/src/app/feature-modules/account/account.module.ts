@@ -9,6 +9,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { PasswordChangeDialogComponent } from './password-change-dialog/password-change-dialog.component';
 import { AccountDeleteDialogComponent } from './account-delete-dialog/account-delete-dialog.component';
+import { ReviewModule } from '../review/review.module';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { AccountDeleteDialogComponent } from './account-delete-dialog/account-de
     NgOptimizedImage,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    ReviewModule
   ],
   exports: [
     AccountComponent
