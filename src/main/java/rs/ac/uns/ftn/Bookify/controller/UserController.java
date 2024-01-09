@@ -21,8 +21,9 @@ import rs.ac.uns.ftn.Bookify.config.utils.JWTUtils;
 import rs.ac.uns.ftn.Bookify.config.utils.UserJWT;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
-import rs.ac.uns.ftn.Bookify.mapper.OwnerBasicDTOMapper;
-import rs.ac.uns.ftn.Bookify.mapper.OwnerBasicDTOMapper;
+import rs.ac.uns.ftn.Bookify.mapper.ReportedUserDTOMapper;
+import rs.ac.uns.ftn.Bookify.mapper.UserBasicDTOMapper;
+import rs.ac.uns.ftn.Bookify.model.ReportedUser;
 import rs.ac.uns.ftn.Bookify.model.User;
 import rs.ac.uns.ftn.Bookify.service.EmailService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IReportedUserService;
@@ -57,9 +58,9 @@ public class UserController {
 
     @GetMapping(value = "/reported", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Collection<ReportedUserDTO>> getReportedUsers() {
-        List<ReportedUserDTO> response = new ArrayList<>();
-        reportedUserService.getAllReports().forEach(reportedUser -> response.add(new ReportedUserDTO(reportedUser)));
+    public ResponseEntity<Collection<ReportedUserDetailsDTO>> getReportedUsers() {
+        List<ReportedUserDetailsDTO> response = new ArrayList<>();
+        reportedUserService.getAllReports().forEach(reportedUser -> response.add(new ReportedUserDetailsDTO(reportedUser)));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -180,10 +181,18 @@ public class UserController {
 
 
     @PostMapping(value = "/report")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
-    public ResponseEntity<ReportedUserDTO> insertReport(@RequestBody ReportedUserDTO reservation) {
+    @PreAuthorize("hasAnyAuthority('ROLE_GUEST', 'ROLE_OWNER')")
+    public ResponseEntity<Long> insertReport(@RequestBody ReportedUserDTO dto) {
         //insert new report
-        return new ResponseEntity<>(null, HttpStatus.CREATED);
+        ReportedUser user = ReportedUserDTOMapper.fromDTOtoUser(dto);
+        User reportedUser = userService.get(dto.getReportedUser());
+        User reportingUser = userService.get(dto.getCreatedBy());
+        user.setCreatedBy(reportingUser);
+        user.setReportedUser(reportedUser);
+        user.setCreated(new Date());
+
+        Long id = userService.reportUser(user);
+        return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
     @GetMapping("/search")
@@ -245,11 +254,13 @@ public class UserController {
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/owner/{ownerId}")
-    public ResponseEntity<OwnerBasicDTO> getOwner(@PathVariable Long ownerId){
-        Owner owner = userService.getOwner(ownerId);
-        OwnerBasicDTO dto = OwnerBasicDTOMapper.fromOwnertoDTO(owner);
-        return new ResponseEntity<OwnerBasicDTO>(dto, HttpStatus.OK);
+    @GetMapping(value = "/user/{userId}")
+    public ResponseEntity<UserBasicDTO> getUser(@PathVariable Long userId) {
+        User user = userService.get(userId);
+        if (user == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        UserBasicDTO dto = UserBasicDTOMapper.fromOwnertoDTO(user);
+        return new ResponseEntity<UserBasicDTO>(dto, HttpStatus.OK);
     }
 }
 

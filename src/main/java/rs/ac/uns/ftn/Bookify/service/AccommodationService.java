@@ -1,5 +1,11 @@
 package rs.ac.uns.ftn.Bookify.service;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import jakarta.persistence.Tuple;
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
@@ -10,6 +16,7 @@ import rs.ac.uns.ftn.Bookify.enumerations.Filter;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
 import rs.ac.uns.ftn.Bookify.model.*;
+import rs.ac.uns.ftn.Bookify.model.Image;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAvailabilityRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IPriceListItemRepository;
@@ -19,8 +26,11 @@ import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class AccommodationService implements IAccommodationService {
@@ -163,7 +173,7 @@ public class AccommodationService implements IAccommodationService {
             throw new BadRequestException("Accommodation has reservations in the future");
         List<Filter> filters = (List<Filter>) accommodation.getFilters();
         accommodation.setFilters(new HashSet<>());
-//        accommodation.setReviews(); //dodati
+        accommodation.setReviews(a.getReviews());
         accommodation.setImages(a.getImages());
         accommodation.setStatus(AccommodationStatusRequest.EDITED);
         accommodation.setAvailability(a.getAvailability());
@@ -511,6 +521,235 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public void insertForGuest(Long guestId, Long accommodationId) {
         userService.addToFavorites(guestId, accommodationId);
+    }
+
+    @Override
+    public List<ChartDTO> getChartsByPeriod(Long ownerId, LocalDate begin, LocalDate end) {
+        List<Tuple> helper = accommodationRepository.getOverallReport(ownerId, begin, end);
+        List<ChartDTO> chart = new ArrayList<>();
+        Map<Long, ChartDTO> map = new HashMap<>();
+        for (Tuple t : helper){
+            Long accommodationId = t.get(0, Long.class);
+            String accommodationName = t.get(1, String.class);
+            PricePer pricePer = PricePer.valueOf(t.get(2, String.class));
+            Integer guestNumber = t.get(3, Integer.class);
+            LocalDate startDate = LocalDate.parse(t.get(4, String.class));
+            LocalDate endDate = LocalDate.parse(t.get(5, String.class));
+
+            double totalPrice = getTotalPrice(accommodationId, startDate, endDate, pricePer, guestNumber);
+            int days = (int) ChronoUnit.DAYS.between(startDate, endDate);
+
+            if (!map.containsKey(accommodationId)) {
+                ChartDTO chartDTO = new ChartDTO(accommodationName, days, totalPrice);
+                map.put(accommodationId, chartDTO);
+            }
+            else {
+                ChartDTO chartDTO = map.get(accommodationId);
+                chartDTO.setProfitOfAccommodation(chartDTO.getProfitOfAccommodation() + totalPrice);
+                chartDTO.setNumberOfReservations(chartDTO.getNumberOfReservations() + days);
+            }
+        }
+        for (Long id : map.keySet())
+            chart.add(map.get(id));
+        return chart;
+    }
+
+    @Override
+    public byte[] generatePdfReportForOverall(Long ownerId, LocalDate begin, LocalDate end) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            Document document = new Document();
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            document.open();
+
+            // Add heading
+            Font headingFont = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.BOLD, BaseColor.BLACK);
+            Paragraph heading = new Paragraph("Report", headingFont);
+            heading.setAlignment(Element.ALIGN_CENTER);
+            document.add(heading);
+
+            // Add dates
+            Font datesFont = new Font(Font.FontFamily.HELVETICA, 12.0f, Font.NORMAL, BaseColor.BLACK);
+            Paragraph dates = new Paragraph("From " + begin + " to " + end, datesFont);
+            dates.setAlignment(Element.ALIGN_CENTER);
+            document.add(dates);
+
+            // Add a line break
+            document.add(new Paragraph("\n"));
+
+            //table
+            float[] columnWidths = {2, 1, 1};
+            PdfPTable table = new PdfPTable(columnWidths);
+            table.setWidthPercentage(90);
+            table.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+            // Add table header
+            addTableHeader(table, false);
+
+            // Add table body
+            List<ChartDTO> chartDTOS = getChartsByPeriod(ownerId, begin, end);
+            addTableBody(table, chartDTOS, false);
+
+            // Add total row
+            addTotalRow(table, chartDTOS);
+
+            document.add(table);
+            document.close();
+
+            return baos.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public Map<Long, String> getAccommodationNames(Long ownerId) {
+        List<Tuple> tuple =  accommodationRepository.getAccommodationNames(ownerId);
+        Map<Long, String> map = new HashMap<>();
+        for (Tuple t : tuple) {
+            Long accommodationId = t.get(0, Long.class);
+            String accommodationName = t.get(1, String.class);
+            map.put(accommodationId, accommodationName);
+        }
+        return map;
+    }
+
+    @Override
+    public List<ChartDTO> getChartsByAccommodationAndYear(Long ownerId, Long accommodationId, int year) {
+        List<ChartDTO> chart = new ArrayList<>();
+        for (int i = 1; i <= 12; i++){
+            LocalDate date = LocalDate.of(year, i, 1);
+            List<Tuple> tuple = accommodationRepository.getAccommodationReport(ownerId, accommodationId, date);
+            double totalRevenue = 0;
+            int totalDays = 0;
+            for (Tuple t : tuple){
+                PricePer pricePer = PricePer.valueOf(t.get(0, String.class));
+                Integer guestNumber = t.get(1, Integer.class);
+                LocalDate startDate = LocalDate.parse(t.get(2, String.class));
+                java.sql.Date sqlEndDate = t.get(3, java.sql.Date.class);
+                LocalDate endDate = sqlEndDate.toLocalDate();
+
+                double totalPrice = getTotalPrice(accommodationId, startDate, endDate, pricePer, guestNumber);
+                int days = (int) ChronoUnit.DAYS.between(startDate, endDate);
+
+                totalRevenue += totalPrice;
+                totalDays += days;
+            }
+            ChartDTO chartDTO = new ChartDTO(Integer.toString(i), totalDays, totalRevenue);
+            chart.add(chartDTO);
+        }
+        return chart;
+    }
+
+    @Override
+    public byte[] generatePdfReportForAccommodation(Long ownerId, Long accommodationId, int year) throws DocumentException {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            Document document = new Document();
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
+            document.open();
+
+            // Add heading
+            Font headingFont = new Font(Font.FontFamily.HELVETICA, 25.0f, Font.BOLD, BaseColor.BLACK);
+            Paragraph heading = new Paragraph("Report", headingFont);
+            heading.setAlignment(Element.ALIGN_CENTER);
+            document.add(heading);
+
+            // Add dates
+            Font datesFont = new Font(Font.FontFamily.HELVETICA, 12.0f, Font.NORMAL, BaseColor.BLACK);
+            Paragraph dates = new Paragraph("For " + getAccommodation(accommodationId).getName() + " for " + year + ".", datesFont);
+            dates.setAlignment(Element.ALIGN_CENTER);
+            document.add(dates);
+
+            // Add a line break
+            document.add(new Paragraph("\n"));
+
+            //table
+            float[] columnWidths = {2, 1, 1};
+            PdfPTable table = new PdfPTable(columnWidths);
+            table.setWidthPercentage(90);
+            table.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+            // Add table header
+            addTableHeader(table, true);
+
+            // Add table body
+            List<ChartDTO> chartDTOS = getChartsByAccommodationAndYear(ownerId, accommodationId, year);
+            addTableBody(table, chartDTOS, true);
+
+            // Add total row
+            addTotalRow(table, chartDTOS);
+
+            document.add(table);
+            document.close();
+
+            return baos.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void addTableHeader(PdfPTable table, boolean isMonth) {
+        PdfPCell cell;
+
+        Font headerFont = new Font(Font.FontFamily.HELVETICA, 13, Font.NORMAL, BaseColor.BLACK);
+
+        if (isMonth)
+            cell = new PdfPCell(new Phrase("Month", headerFont));
+        else
+            cell = new PdfPCell(new Phrase("Name", headerFont));
+        cell.setBackgroundColor(new BaseColor(192, 192, 192)); // Grey color
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Days reserved", headerFont));
+        cell.setBackgroundColor(new BaseColor(192, 192, 192)); // Grey color
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase("Revenue", headerFont));
+        cell.setBackgroundColor(new BaseColor(192, 192, 192)); // Grey color
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        table.addCell(cell);
+    }
+
+    private void addTableBody(PdfPTable table, List<ChartDTO> chartDTOS, boolean isMonth) {
+        for (ChartDTO c : chartDTOS) {
+            if (isMonth){
+                Month month = Month.of(Integer.parseInt(c.getName()));
+                String monthName = month.getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH);
+                table.addCell(monthName);
+            }
+            else
+                table.addCell(c.getName());
+
+            table.addCell(String.valueOf(c.getNumberOfReservations()));
+            table.addCell(String.valueOf(c.getProfitOfAccommodation()) + "€");
+        }
+    }
+
+    private void addTotalRow(PdfPTable table, List<ChartDTO> chartDTOS) {
+        PdfPCell cell = new PdfPCell();
+        cell.setColspan(1);
+        cell.setBackgroundColor(new BaseColor(225, 225, 225));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setPhrase(new Phrase("Total", new Font(Font.FontFamily.HELVETICA, 13, Font.NORMAL)));
+        table.addCell(cell);
+
+        int totalReservations = chartDTOS.stream().mapToInt(ChartDTO::getNumberOfReservations).sum();
+        double totalRevenue = chartDTOS.stream().mapToDouble(ChartDTO::getProfitOfAccommodation).sum();
+
+        cell = new PdfPCell(new Phrase(String.valueOf(totalReservations), new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
+        cell.setBackgroundColor(new BaseColor(225, 225, 225));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(String.valueOf(totalRevenue) + "€", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
+        cell.setBackgroundColor(new BaseColor(225, 225, 225));
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        table.addCell(cell);
     }
 
     public FileSystemResource getImage(Long id) {

@@ -14,6 +14,7 @@ import rs.ac.uns.ftn.Bookify.exception.UserIsBlockedException;
 import rs.ac.uns.ftn.Bookify.exception.UserNotActivatedException;
 import rs.ac.uns.ftn.Bookify.mapper.UserRegisteredDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.*;
+import rs.ac.uns.ftn.Bookify.repository.interfaces.IReportedUserRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IReservationRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IUserRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.*;
@@ -25,6 +26,7 @@ import java.util.*;
 public class UserService implements IUserService {
     private final IImageService imageService;
     private final IUserRepository userRepository;
+    private final IReportedUserRepository reportedUserRepository;
     private final IReservationRepository reservationRepository;
     private final IReservationService reservationService;
     private final PasswordEncoder passwordEncoder;
@@ -33,13 +35,15 @@ public class UserService implements IUserService {
 
     @Autowired
     public UserService(IImageService imageService, IUserRepository userRepository, IReservationService reservationService,
-                       PasswordEncoder passwordEncoder, @Lazy IAccommodationService accommodationService, IReservationRepository reservationRepository) {
+                       PasswordEncoder passwordEncoder, @Lazy IAccommodationService accommodationService, IReservationRepository reservationRepository,
+                       IReportedUserRepository reportedUserRepository) {
         this.imageService = imageService;
         this.userRepository = userRepository;
         this.reservationService = reservationService;
         this.passwordEncoder = passwordEncoder;
         this.accommodationService = accommodationService;
         this.reservationRepository = reservationRepository;
+        this.reportedUserRepository = reportedUserRepository;
     }
 
 
@@ -346,6 +350,28 @@ public class UserService implements IUserService {
     public void addToFavorites(Long guestId, Long accommodationId) {
         userRepository.addFavoriteToUser(guestId, accommodationId);
     }
+
+
+    @Override
+    public Long reportUser(ReportedUser reportedUser) {
+        Guest guest;
+        Owner owner;
+        if(reportedUser.getReportedUser() instanceof Guest){
+            guest = (Guest) reportedUser.getReportedUser();
+            owner = (Owner) reportedUser.getCreatedBy();
+            if(reservationService.getReservations(guest.getId(), owner.getId()).isEmpty()){
+                throw new BadRequestException("Do not have reservations");
+            }
+        }else{
+            owner = (Owner) reportedUser.getReportedUser();
+            guest = (Guest) reportedUser.getCreatedBy();
+            if(reservationService.getReservations(guest.getId(), owner.getId()).isEmpty()){
+                throw new BadRequestException("Do not have reservations");
+            }
+        }
+        return reportedUserRepository.save(reportedUser).getId();
+    }
+
 
     @Override
     public boolean checkIfInFavorites(Long guestId, Long accommodationId) {

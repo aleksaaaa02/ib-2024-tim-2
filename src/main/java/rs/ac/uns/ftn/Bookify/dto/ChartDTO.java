@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChartDTO {
-
-    private int numberOfReservations;
-    private double profiteOfAccommodation;
+    String name;
+    int numberOfReservations;
+    double profitOfAccommodation;
 }
