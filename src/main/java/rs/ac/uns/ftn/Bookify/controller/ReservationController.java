@@ -213,13 +213,24 @@ public class ReservationController {
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<Collection<ReservationGuestViewDTO>> getReservationsByGuestId(@PathVariable Long guestId){
         List<ReservationGuestViewDTO> response = new ArrayList<>();
-        reservationService.getAllForGuest(guestId).forEach(r -> {
+        reservationService.getAllGuestReservations(guestId).forEach(r -> {
             ReservationGuestViewDTO reservation = ReservationGuestViewDTOMapper.toReservationGuestViewDTO(r);
             reservation.setUser(userService.getGuestForReservation(reservation.getId()));
             reservation.setAvgRating(accommodationService.getAvgRating(reservation.getAccommodationId()));
             response.add(reservation);
         });
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/cancel/{reservationId}")
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    public ResponseEntity<ReservationGuestViewDTO> cancelReservationGuest(@PathVariable Long reservationId){
+        Reservation r = reservationService.cancelReservation(reservationId);
+        ReservationGuestViewDTO reservation = ReservationGuestViewDTOMapper.toReservationGuestViewDTO(r);
+        reservation.setUser(userService.getGuestForReservation(reservation.getId()));
+        reservation.setAvgRating(accommodationService.getAvgRating(reservation.getAccommodationId()));
+
+        return new ResponseEntity<>(reservation, HttpStatus.OK);
     }
 
 }
