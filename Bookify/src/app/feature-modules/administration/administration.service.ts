@@ -5,6 +5,7 @@ import {AccommodationRequests} from "./model/accommodation.requests";
 import {environment} from "../../../env/env";
 import {User} from "./model/user";
 import {ReportedUser} from "./model/reported.user";
+import {Review} from "./model/review";
 
 @Injectable({
   providedIn: 'root'
@@ -41,4 +42,13 @@ export class AdministrationService {
   getAllReports(): Observable<ReportedUser[]> {
     return this.httpClient.get<ReportedUser[]>(environment.apiUser + "/reported");
   }
+
+  getAllCreatedReviews(): Observable<Review[]> {
+    return this.httpClient.get<Review[]>(environment.apiReview + "/created");
+  }
+
+  getAllReportedReviews(): Observable<Review[]>{
+    return this.httpClient.get<Review[]>(environment.apiReview + "/reported");
+  }
+
 }
