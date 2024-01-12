@@ -21,9 +21,10 @@
   </div>
   <div id="top-accommodation">
     <p class="subtitle top-acc">Most popular properties</p>
-    <div class="list">
-      <app-top-accommodation class="margin-right"></app-top-accommodation>
-      <app-top-accommodation></app-top-accommodation>
+    <div class="list-accommodations">
+      @for (basicAccommodation of accommodations; track basicAccommodation.id) {
+        <app-top-accommodation [accommodation]="basicAccommodation"></app-top-accommodation>
+      }
     </div>
   </div>
   <app-footer></app-footer>

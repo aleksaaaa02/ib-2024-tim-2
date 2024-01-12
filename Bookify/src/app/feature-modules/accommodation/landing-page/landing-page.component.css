@@ -96,3 +96,14 @@
   background-image: url("../../../../assets/images/copenhagen.jpg");
 }
 
+.list-accommodations {
+  display: flex;
+  width: 80%;
+  margin: auto;
+  justify-content: center;
+}
+
+.list-accommodations > * {
+  margin-right: 1rem;
+  margin-left: 1rem;
+}
