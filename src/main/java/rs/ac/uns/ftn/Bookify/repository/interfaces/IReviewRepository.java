@@ -16,4 +16,6 @@ public interface IReviewRepository extends JpaRepository<Review, Long> {
 
     @Query("SELECT g FROM Guest g WHERE g.id=:guestId")
     Guest findGuestById(@Param("guestId") Long guestId);
+
+    List<Review> findByAcceptedIsAndReportedIs(boolean accepted, boolean reported);
 }

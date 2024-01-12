@@ -92,4 +92,15 @@ public class ReviewService implements IReviewService {
         review.setReported(true);
         reviewRepository.save(review);
     }
+
+    @Override
+    public List<Review> getCreatedReviews() {
+        return reviewRepository.findByAcceptedIsAndReportedIs(false, false);
+
+    }
+
+    @Override
+    public List<Review> getReportedReviews() {
+        return reviewRepository.findByAcceptedIsAndReportedIs(true, true);
+    }
 }

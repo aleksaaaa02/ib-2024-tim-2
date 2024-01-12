@@ -6,12 +6,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.Bookify.dto.CommentDTO;
-import rs.ac.uns.ftn.Bookify.dto.NewReviewDTO;
-import rs.ac.uns.ftn.Bookify.dto.RatingDTO;
-import rs.ac.uns.ftn.Bookify.dto.ReviewDTO;
+import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.enumerations.ReviewType;
 import rs.ac.uns.ftn.Bookify.mapper.NewReviewDTOMapper;
+import rs.ac.uns.ftn.Bookify.mapper.ReviewAdminViewDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Owner;
 import rs.ac.uns.ftn.Bookify.model.Review;
@@ -19,9 +17,7 @@ import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IReviewService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
-import java.util.Date;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/reviews")
@@ -37,26 +33,24 @@ public class ReviewController {
 
     @GetMapping(value = "/created", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Collection<ReviewDTO>> getAllCreatedReviews(){
+    public ResponseEntity<Collection<ReviewAdminViewDTO>> getAllCreatedReviews(){
         //returns all created reviews
-        ReviewDTO review1 = new ReviewDTO(1L, 4, "Nice", new Date(), false, false, 1L, ReviewType.ACCOMMODATION);
-        ReviewDTO review2 = new ReviewDTO(2L, 3, "Bad", new Date(), false, false, 1L, ReviewType.ACCOMMODATION);
-        Collection<ReviewDTO> reviewDTO = new HashSet<>();
-        reviewDTO.add(review1);
-        reviewDTO.add(review2);
-        return new ResponseEntity<>(reviewDTO, HttpStatus.OK);
+        List<ReviewAdminViewDTO> response = new ArrayList<>();
+        this.reviewService.getCreatedReviews().forEach(review -> {
+            response.add(ReviewAdminViewDTOMapper.toReviewDTO(review));
+        });
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/reported", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Collection<ReviewDTO>> getAllReportedReviews(){
+    public ResponseEntity<Collection<ReviewAdminViewDTO>> getAllReportedReviews(){
         //returns all reported reviews
-        ReviewDTO review1 = new ReviewDTO(1L, 4, "Nice", new Date(), false, true, 1L, ReviewType.ACCOMMODATION);
-        ReviewDTO review2 = new ReviewDTO(2L, 3, "Bad", new Date(), false, true, 1L, ReviewType.ACCOMMODATION);
-        Collection<ReviewDTO> reviewDTO = new HashSet<>();
-        reviewDTO.add(review1);
-        reviewDTO.add(review2);
-        return new ResponseEntity<>(reviewDTO, HttpStatus.OK);
+        List<ReviewAdminViewDTO> response = new ArrayList<>();
+        this.reviewService.getReportedReviews().forEach(review -> {
+            response.add(ReviewAdminViewDTOMapper.toReviewDTO(review));
+        });
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/accommodation/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
