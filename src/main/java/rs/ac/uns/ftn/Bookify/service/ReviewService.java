@@ -103,4 +103,33 @@ public class ReviewService implements IReviewService {
     public List<Review> getReportedReviews() {
         return reviewRepository.findByAcceptedIsAndReportedIs(true, true);
     }
+
+    @Override
+    public Review acceptReview(Long reviewId) {
+        Review review = this.getReview(reviewId);
+        review.setAccepted(true);
+        reviewRepository.save(review);
+        return review;
+    }
+
+    @Override
+    public Review declineReview(Long reviewId) {
+        return removeReview(reviewId);
+    }
+
+    @Override
+    public Review removeReview(Long reviewId) {
+        Review review = this.getReview(reviewId);
+        this.reviewRepository.delete(review);
+//        this.reviewRepository.deleteById(reviewId);
+        return review;
+    }
+
+    @Override
+    public Review ignoreReview(Long reviewId) {
+        Review review = this.getReview(reviewId);
+        review.setReported(false);
+        this.reviewRepository.save(review);
+        return review;
+    }
 }

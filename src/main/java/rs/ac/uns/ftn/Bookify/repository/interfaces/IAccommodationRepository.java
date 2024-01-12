@@ -157,4 +157,6 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     List<Tuple> getAccommodationReport(@Param("ownerId") Long ownerId,
                                        @Param("accommodationId") Long accommodationId,
                                        @Param("date") LocalDate date);
+
+    Accommodation findByReviewsContains(Review review);
 }

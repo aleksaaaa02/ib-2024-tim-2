@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.Bookify.repository.interfaces;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Owner;
 import rs.ac.uns.ftn.Bookify.model.Review;
@@ -18,4 +19,5 @@ public interface IReviewRepository extends JpaRepository<Review, Long> {
     Guest findGuestById(@Param("guestId") Long guestId);
 
     List<Review> findByAcceptedIsAndReportedIs(boolean accepted, boolean reported);
+
 }

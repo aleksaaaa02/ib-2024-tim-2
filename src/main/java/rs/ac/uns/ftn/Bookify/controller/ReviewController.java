@@ -13,6 +13,7 @@ import rs.ac.uns.ftn.Bookify.mapper.ReviewAdminViewDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Owner;
 import rs.ac.uns.ftn.Bookify.model.Review;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IReviewService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
@@ -30,6 +31,9 @@ public class ReviewController {
 
     @Autowired
     private IReservationService reservationService;
+
+    @Autowired
+    private IAccommodationService accommodationService;
 
     @GetMapping(value = "/created", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -103,20 +107,50 @@ public class ReviewController {
         return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 
-    @PutMapping(value="/reject/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value="/decline/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<ReviewDTO> rejectReview(@PathVariable Long reviewId) {
+    public ResponseEntity<ReviewAdminViewDTO> declineReview(@PathVariable Long reviewId) {
         //change to rejected
-        ReviewDTO rejectReview = new ReviewDTO(1L, 4, "Nice", new Date(), false, true, 2L, ReviewType.ACCOMMODATION);
-        return new ResponseEntity<ReviewDTO>(rejectReview, HttpStatus.OK);
+        Review review = reviewService.getReview(reviewId);
+        if(review.getReviewType().equals(ReviewType.ACCOMMODATION)){
+            accommodationService.removeReview(review);
+        } else {
+            userService.removeOwnerReview(review);
+        }
+        review = reviewService.declineReview(reviewId);
+        ReviewAdminViewDTO response = ReviewAdminViewDTOMapper.toReviewDTO(review);
+        return new ResponseEntity<ReviewAdminViewDTO>(response, HttpStatus.OK);
     }
 
     @PutMapping(value="/accept/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<ReviewDTO> acceptReview(@PathVariable Long reviewId) {
+    public ResponseEntity<ReviewAdminViewDTO> acceptReview(@PathVariable Long reviewId) {
         //change to accepted
-        ReviewDTO acceptReview = new ReviewDTO(1L, 4, "Nice", new Date(), true, false, 2L, ReviewType.ACCOMMODATION);
-        return new ResponseEntity<ReviewDTO>(acceptReview, HttpStatus.OK);
+        Review review = reviewService.acceptReview(reviewId);
+        ReviewAdminViewDTO response = ReviewAdminViewDTOMapper.toReviewDTO(review);
+        return new ResponseEntity<ReviewAdminViewDTO>(response, HttpStatus.OK);
+    }
+    @PutMapping(value="/ignore/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<ReviewAdminViewDTO> ignoreReview(@PathVariable Long reviewId) {
+        //change to accepted
+        Review review = reviewService.ignoreReview(reviewId);
+        ReviewAdminViewDTO response = ReviewAdminViewDTOMapper.toReviewDTO(review);
+        return new ResponseEntity<ReviewAdminViewDTO>(response, HttpStatus.OK);
+    }
+    @DeleteMapping(value="/remove/{reviewId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<ReviewAdminViewDTO> removeReview(@PathVariable Long reviewId) {
+        //change to accepted
+        Review review = reviewService.getReview(reviewId);
+        if(review.getReviewType().equals(ReviewType.ACCOMMODATION)){
+            accommodationService.removeReview(review);
+        } else {
+            userService.removeOwnerReview(review);
+        }
+        review = reviewService.removeReview(reviewId);
+        ReviewAdminViewDTO response = ReviewAdminViewDTOMapper.toReviewDTO(review);
+        return new ResponseEntity<ReviewAdminViewDTO>(response, HttpStatus.OK);
     }
 
     @PutMapping(value="/report/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)

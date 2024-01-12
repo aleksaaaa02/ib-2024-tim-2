@@ -16,4 +16,8 @@ public interface IReviewService {
     public void reportReview(Long id);
     public List<Review> getCreatedReviews();
     public List<Review> getReportedReviews();
+    public Review acceptReview(Long reviewId);
+    public Review declineReview(Long reviewId);
+    public Review removeReview(Long reviewId);
+    public Review ignoreReview(Long reviewId);
 }
