@@ -15,8 +15,8 @@
         <p class="subtitle">Cancellation due: {{reservation.cancellationDate}}</p>
         <div class="wrapper">
             <p class="description">Status: {{reservation.status}}</p>
-            <div class="button-wrapper">
-                <button class="details-button accept">Cancel</button>
+            <div class="button-wrapper" *ngIf="reservation.status==='ACCEPTED'">
+                <button class="details-button accept" (click)="cancelReservation()">Cancel</button>
             </div>
         </div>
     </div>

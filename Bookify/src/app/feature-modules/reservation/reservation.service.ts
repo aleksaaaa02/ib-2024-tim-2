@@ -64,4 +64,9 @@ export class ReservationService {
   getGuestReservations(guestId: number): Observable<ReservationGuestViewDTO[]> {
     return this.httpClient.get<ReservationGuestViewDTO[]>(environment.apiHost + "reservations/guest/" + guestId);
   }
+
+  cancelGuestReservation(reservationId: number): Observable<ReservationGuestViewDTO> {
+    return this.httpClient.put<ReservationGuestViewDTO>(environment.apiHost + "reservations/cancel/"+ reservationId , {});
+  }
+
 }
