@@ -38,7 +38,6 @@ import {
   AccommodationChartRevenueComponent
 } from "./reports/accommodation-chart-revenue/accommodation-chart-revenue.component";
 import {ReportsPageComponent} from "./reports/reports-page/reports-page.component";
-import {TopDestinationComponent} from "../../layout/top-destination/top-destination.component";
 
 @NgModule({
   declarations: [
@@ -64,8 +63,7 @@ import {TopDestinationComponent} from "../../layout/top-destination/top-destinat
     OverallChartRevenueComponent,
     AccommodationChartReservationsComponent,
     AccommodationChartRevenueComponent,
-    ReportsPageComponent,
-    TopDestinationComponent
+    ReportsPageComponent
   ],
   imports: [
     CommonModule,
