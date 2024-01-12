@@ -704,6 +704,11 @@ public class AccommodationService implements IAccommodationService {
         }
     }
 
+    @Override
+    public List<Accommodation> getTopAccommodations(int results) {
+        return accommodationRepository.getTopAccommodations(results);
+    }
+
     private void addTableHeader(PdfPTable table, boolean isMonth) {
         PdfPCell cell;
 

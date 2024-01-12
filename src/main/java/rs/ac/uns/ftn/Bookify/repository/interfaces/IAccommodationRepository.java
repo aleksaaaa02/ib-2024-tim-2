@@ -157,4 +157,13 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     List<Tuple> getAccommodationReport(@Param("ownerId") Long ownerId,
                                        @Param("accommodationId") Long accommodationId,
                                        @Param("date") LocalDate date);
+
+    @Query(value = "SELECT a.* " +
+            "FROM accommodations a " +
+            "JOIN reservations r ON a.id = r.accommodation_id " +
+            "WHERE r.status = 'ACCEPTED' " +
+            "GROUP BY a.id, a.name, a.address " +
+            "ORDER BY COUNT(r.id) DESC " +
+            "LIMIT :results", nativeQuery = true)
+    List<Accommodation> getTopAccommodations(int results);
 }
