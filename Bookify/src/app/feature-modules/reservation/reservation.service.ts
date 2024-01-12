@@ -7,6 +7,7 @@ import moment from "moment/moment";
 import {HttpClient} from "@angular/common/http";
 import {ReservationRequestDTO} from "../accommodation/model/reservation-request.dto.model";
 import {ReservationDTO} from "./model/ReservationDTO";
+import {ReservationGuestViewDTO} from "./model/ReservationGuestViewDTO";
 
 @Injectable({
   providedIn: 'root'
@@ -58,6 +59,14 @@ export class ReservationService {
   }
   rejectReservation(reservationId: number): Observable<ReservationDTO> {
     return this.httpClient.put<ReservationDTO>(environment.apiHost + "reservations/reject/" + reservationId,{});
+  }
+
+  getGuestReservations(guestId: number): Observable<ReservationGuestViewDTO[]> {
+    return this.httpClient.get<ReservationGuestViewDTO[]>(environment.apiHost + "reservations/guest/" + guestId);
+  }
+
+  cancelGuestReservation(reservationId: number): Observable<ReservationGuestViewDTO> {
+    return this.httpClient.put<ReservationGuestViewDTO>(environment.apiHost + "reservations/cancel/"+ reservationId , {});
   }
 
 }
