@@ -51,4 +51,19 @@ export class AdministrationService {
     return this.httpClient.get<Review[]>(environment.apiReview + "/reported");
   }
 
+  acceptReview(reviewId: number | undefined): Observable<Review> {
+    return this.httpClient.put<Review>(environment.apiReview + "/accept/" + reviewId,{});
+  }
+
+  declineReview(reviewId: number | undefined): Observable<Review> {
+    return this.httpClient.put<Review>(environment.apiReview + "/decline/" + reviewId,{});
+  }
+
+  ignoreReview(reviewId: number | undefined): Observable<Review> {
+    return this.httpClient.put<Review>(environment.apiReview + "/ignore/" + reviewId,{});
+  }
+
+  removeReview(reviewId: number | undefined): Observable<Review> {
+    return this.httpClient.delete<Review>(environment.apiReview + "/remove/" + reviewId);
+  }
 }

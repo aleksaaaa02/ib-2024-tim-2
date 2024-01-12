@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Review} from "../model/review";
 import {AccountService} from "../../account/account.service";
 import {AdministrationService} from "../administration.service";
@@ -13,6 +13,9 @@ export class ReviewCardComponent implements OnInit {
   @Input()
   review: Review;
   image: string | ArrayBuffer | null = 'assets/images/user.jpg';
+
+  @Output()
+  clicked: EventEmitter<Review> = new EventEmitter<Review>();
 
   constructor(private accountService: AccountService,
               private adminService: AdministrationService) {
@@ -38,11 +41,26 @@ export class ReviewCardComponent implements OnInit {
   }
 
   accept(): void {
-
+    this.adminService.acceptReview(this.review.id).subscribe({
+      next: (review: Review): void => {
+        this.review = review;
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
   }
 
   decline(): void {
-
+    this.adminService.declineReview(this.review.id).subscribe({
+      next: (review: Review): void => {
+        this.clicked.emit(this.review);
+        this.review = review;
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
   }
 
 }

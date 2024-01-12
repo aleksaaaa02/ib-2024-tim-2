@@ -29,4 +29,15 @@ export class FeedbackComponent implements OnInit {
     });
   }
 
+  onRemovedReview(review: Review): void {
+      const index: number = this.createdReviews.indexOf(review);
+      this.createdReviews.splice(index,1);
+  }
+
+  onRemovedReportedReview(review: Review): void {
+    const index: number = this.reportedReviews.indexOf(review);
+    this.reportedReviews.splice(index,1);
+
+  }
+
 }

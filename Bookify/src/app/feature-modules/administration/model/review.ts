@@ -12,5 +12,6 @@ export interface Review {
     email?:string,
     imageId?: number
   }
-  imageId?: number
+  imageId?: number,
+  reviewType: string
 }
