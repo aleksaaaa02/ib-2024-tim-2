@@ -7,8 +7,10 @@ import rs.ac.uns.ftn.Bookify.model.Review;
 import java.util.Collection;
 
 public interface IReviewService {
-    public RatingDTO getRating(Long ownerId);
+    public RatingDTO getOwnerRating(Long ownerId);
+    public RatingDTO getAccommodationRating(Long accommodationId);
     public Collection<CommentDTO> getOwnerComments(Long ownerId);
+    public Collection<CommentDTO> getAccommodationComments(Long accommodationId);
     public Review save(Review review);
     public Review getReview(Long id);
     public void deleteReview(Long id);

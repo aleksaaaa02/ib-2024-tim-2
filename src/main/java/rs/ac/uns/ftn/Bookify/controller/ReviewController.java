@@ -42,7 +42,7 @@ public class ReviewController {
 
     @GetMapping(value = "/created", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Collection<ReviewDTO>> getAllCreatedReviews(){
+    public ResponseEntity<Collection<ReviewDTO>> getAllCreatedReviews() {
         //returns all created reviews
         ReviewDTO review1 = new ReviewDTO(1L, 4, "Nice", new Date(), false, false, 1L, ReviewType.ACCOMMODATION);
         ReviewDTO review2 = new ReviewDTO(2L, 3, "Bad", new Date(), false, false, 1L, ReviewType.ACCOMMODATION);
@@ -54,7 +54,7 @@ public class ReviewController {
 
     @GetMapping(value = "/reported", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Collection<ReviewDTO>> getAllReportedReviews(){
+    public ResponseEntity<Collection<ReviewDTO>> getAllReportedReviews() {
         //returns all reported reviews
         ReviewDTO review1 = new ReviewDTO(1L, 4, "Nice", new Date(), false, true, 1L, ReviewType.ACCOMMODATION);
         ReviewDTO review2 = new ReviewDTO(2L, 3, "Bad", new Date(), false, true, 1L, ReviewType.ACCOMMODATION);
@@ -65,38 +65,41 @@ public class ReviewController {
     }
 
     @GetMapping(value = "/accommodation/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ReviewDTO>> getReviewsForAccommodation(@PathVariable Long accommodationId){
+    public ResponseEntity<Collection<CommentDTO>> getReviewsForAccommodation(@PathVariable Long accommodationId) {
         //returns reviews for accommodation
-        ReviewDTO review1 = new ReviewDTO(1L, 4, "Nice", new Date(), true, false, 2L, ReviewType.ACCOMMODATION);
-        ReviewDTO review2 = new ReviewDTO(1L, 3, "Bad", new Date(), true, false, 1L, ReviewType.ACCOMMODATION);
-        Collection<ReviewDTO> reviewDTO = new HashSet<>();
-        reviewDTO.add(review1);
-        reviewDTO.add(review2);
-        return new ResponseEntity<>(reviewDTO, HttpStatus.OK);
+        Collection<CommentDTO> dtos = reviewService.getAccommodationComments(accommodationId);
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
     @GetMapping(value = "/owner/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<CommentDTO>> getReviewsForOwner(@PathVariable Long ownerId){
+    public ResponseEntity<Collection<CommentDTO>> getReviewsForOwner(@PathVariable Long ownerId) {
         //returns reviews for owner
         Collection<CommentDTO> dtos = reviewService.getOwnerComments(ownerId);
         return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
     @GetMapping(value = "/owner/{ownerId}/rating", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RatingDTO> getRating(@PathVariable Long ownerId){
-        RatingDTO dto = reviewService.getRating(ownerId);
+    public ResponseEntity<RatingDTO> getOwnerRating(@PathVariable Long ownerId) {
+        RatingDTO dto = reviewService.getOwnerRating(ownerId);
+        return new ResponseEntity<RatingDTO>(dto, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/accommodation/{accommodationId}/rating", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RatingDTO> getAccommodationRating(@PathVariable Long accommodationId) {
+        RatingDTO dto = reviewService.getAccommodationRating(accommodationId);
         return new ResponseEntity<RatingDTO>(dto, HttpStatus.OK);
     }
 
     @PostMapping(value = "/new-accommodation/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<ReviewDTO> newReviewAccommodation(@PathVariable Long accommodationId, @RequestBody NewReviewDTO newReview) {
+    public ResponseEntity<NewReviewDTO> newReviewAccommodation(@PathVariable Long accommodationId, @RequestBody NewReviewDTO newReview) {
         //insert new review for accommodation
 
         Review review = NewReviewDTOMapper.fromDTOtoReview(newReview);
         Guest guest = userService.getGuest(newReview.getGuestId());
         review.setGuest(guest);
-        if(reservationService.getReservationsForAccommodationInLast7Days(guest.getId(), accommodationId).isEmpty()){
+        review.setReviewType(ReviewType.ACCOMMODATION);
+        if (reservationService.getReservationsForAccommodationInLast7Days(guest.getId(), accommodationId).isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         Review insertedReview = reviewService.save(review);
@@ -104,18 +107,19 @@ public class ReviewController {
         accommodation.getReviews().add(insertedReview);
         accommodationService.saveAccommodation(accommodation);
 
-        return new ResponseEntity<>(null, HttpStatus.CREATED);
+        return new ResponseEntity<>(newReview, HttpStatus.OK);
     }
 
     @PostMapping(value = "/new-owner/{ownerId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
-    public ResponseEntity<ReviewDTO> newReviewOwner(@PathVariable Long ownerId, @RequestBody NewReviewDTO newReview) {
+    public ResponseEntity<NewReviewDTO> newReviewOwner(@PathVariable Long ownerId, @RequestBody NewReviewDTO newReview) {
         //insert new review for owner
 
         Review review = NewReviewDTOMapper.fromDTOtoReview(newReview);
         Guest guest = userService.getGuest(newReview.getGuestId());
         review.setGuest(guest);
-        if(reservationService.getReservations(guest.getId(), ownerId).isEmpty()){
+        review.setReviewType(ReviewType.OWNER);
+        if (reservationService.getReservations(guest.getId(), ownerId).isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         Review insertedReview = reviewService.save(review);
@@ -123,10 +127,10 @@ public class ReviewController {
         owner.getReviews().add(insertedReview);
         userService.saveOwner(owner);
 
-        return new ResponseEntity<>(null, HttpStatus.CREATED);
+        return new ResponseEntity<>(newReview, HttpStatus.OK);
     }
 
-    @PutMapping(value="/reject/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/reject/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ReviewDTO> rejectReview(@PathVariable Long reviewId) {
         //change to rejected
@@ -134,7 +138,7 @@ public class ReviewController {
         return new ResponseEntity<ReviewDTO>(rejectReview, HttpStatus.OK);
     }
 
-    @PutMapping(value="/accept/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/accept/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ReviewDTO> acceptReview(@PathVariable Long reviewId) {
         //change to accepted
@@ -142,7 +146,7 @@ public class ReviewController {
         return new ResponseEntity<ReviewDTO>(acceptReview, HttpStatus.OK);
     }
 
-    @PutMapping(value="/report/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/report/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Long> reportReview(@PathVariable Long reviewId) {
         //change to report
@@ -151,9 +155,15 @@ public class ReviewController {
     }
 
     @DeleteMapping("/accommodation-delete/{accommodationId}/{reviewId}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<ReviewDTO> deleteAccommodationReview(@PathVariable Long reviewId, @PathVariable Long accommodationId) {
         //delete review for accommodation
+        Review review = reviewService.getReview(reviewId);
+        Accommodation accommodation = accommodationService.getAccommodation(accommodationId);
+        accommodation.getReviews().remove(review);
+//        accommodation.setDeleted(false);
+        accommodationService.saveAccommodation(accommodation);
+        reviewService.deleteReview(reviewId);
         return new ResponseEntity<ReviewDTO>(HttpStatus.NO_CONTENT);
     }
 
@@ -164,7 +174,7 @@ public class ReviewController {
         Review review = reviewService.getReview(reviewId);
         Owner owner = userService.getOwner(ownerId);
         owner.getReviews().remove(review);
-        owner.setDeleted(false);
+//        owner.setDeleted(false);
         userService.saveOwner(owner);
         reviewService.deleteReview(reviewId);
         return new ResponseEntity<ReviewDTO>(HttpStatus.NO_CONTENT);

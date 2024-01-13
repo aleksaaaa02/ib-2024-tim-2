@@ -46,6 +46,12 @@ public class AccommodationService implements IAccommodationService {
     @Autowired
     IImageService imageService;
 
+    @Autowired
+    private IAvailabilityRepository availabilityRepository;
+
+    @Autowired
+    private IPriceListItemRepository priceListItemRepository;
+
     @Override
     public Collection<Accommodation> getAccommodationsForSearch(Integer persons, String location, LocalDate begin, LocalDate end) {
         return accommodationRepository.findByLocationAndGuestRange(location, persons, begin, end);
@@ -153,12 +159,6 @@ public class AccommodationService implements IAccommodationService {
         else
             return roundedValue.floatValue()*persons;
     }
-
-    @Autowired
-    private IAvailabilityRepository availabilityRepository;
-
-    @Autowired
-    private IPriceListItemRepository priceListItemRepository;
 
     @Override
     public Accommodation save(Accommodation accommodation){
