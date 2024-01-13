@@ -30,4 +30,6 @@ public interface IReservationService {
     public Reservation accept(Long reservationId);
     public Reservation reject(Long reservationId);
     public boolean cancelGuestsReservations(Long guestId);
+    public Reservation cancelReservation(Long reservationId);
+    public List<Reservation> getAllGuestReservations(Long guestId);
 }
