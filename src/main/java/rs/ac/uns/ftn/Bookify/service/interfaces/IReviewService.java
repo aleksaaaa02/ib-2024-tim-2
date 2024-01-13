@@ -5,6 +5,7 @@ import rs.ac.uns.ftn.Bookify.dto.RatingDTO;
 import rs.ac.uns.ftn.Bookify.model.Review;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface IReviewService {
     public RatingDTO getOwnerRating(Long ownerId);
@@ -15,4 +16,10 @@ public interface IReviewService {
     public Review getReview(Long id);
     public void deleteReview(Long id);
     public void reportReview(Long id);
+    public List<Review> getCreatedReviews();
+    public List<Review> getReportedReviews();
+    public Review acceptReview(Long reviewId);
+    public Review declineReview(Long reviewId);
+    public Review removeReview(Long reviewId);
+    public Review ignoreReview(Long reviewId);
 }
