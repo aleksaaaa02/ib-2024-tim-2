@@ -58,4 +58,9 @@ public abstract class User implements Serializable {
 
 	@Embedded
 	private Address address;
+
+	public String getUserType() {
+		DiscriminatorValue discriminatorValue = getClass().getAnnotation(DiscriminatorValue.class);
+		return (discriminatorValue != null) ? discriminatorValue.value() : null;
+	}
 }
