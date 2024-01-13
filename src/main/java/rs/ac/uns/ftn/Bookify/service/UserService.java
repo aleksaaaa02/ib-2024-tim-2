@@ -372,6 +372,13 @@ public class UserService implements IUserService {
         return reportedUserRepository.save(reportedUser).getId();
     }
 
+    @Override
+    public void removeOwnerReview(Review review) {
+        Owner owner = userRepository.getOwnerByReview(review);
+        owner.getReviews().remove(review);
+        userRepository.save(owner);
+    }
+
 
     @Override
     public boolean checkIfInFavorites(Long guestId, Long accommodationId) {

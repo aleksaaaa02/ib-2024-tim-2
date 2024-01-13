@@ -5,11 +5,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import rs.ac.uns.ftn.Bookify.model.Guest;
+import rs.ac.uns.ftn.Bookify.model.*;
 import org.springframework.transaction.annotation.Transactional;
-import rs.ac.uns.ftn.Bookify.model.Accommodation;
-import rs.ac.uns.ftn.Bookify.model.Owner;
-import rs.ac.uns.ftn.Bookify.model.User;
 
 import java.util.Collection;
 import java.util.List;
@@ -51,4 +48,6 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT COUNT(*) FROM users_favorites WHERE guest_id = :guestId AND favorites_id = :accommodationId", nativeQuery = true)
     int checkIfInFavorites(@Param("guestId") Long guestId, @Param("accommodationId") Long accommodationId);
 
+    @Query("SELECT o FROM Owner o WHERE :review MEMBER OF o.reviews")
+    Owner getOwnerByReview(Review review);
 }
