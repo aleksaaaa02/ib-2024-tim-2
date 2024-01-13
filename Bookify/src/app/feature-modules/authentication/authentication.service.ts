@@ -7,6 +7,7 @@ import { environment } from "../../../env/env";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { UserRegistrationDTO } from "./model/user.registration.dto.model";
 import { Message } from "./model/message.dto.model";
+import {NotificationService} from "../account/notification.service";
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,8 @@ import { Message } from "./model/message.dto.model";
 
 export class AuthenticationService {
   constructor(@Inject(LOCALE_ID) private locale: string,
-    private httpClient: HttpClient) {
+    private httpClient: HttpClient,
+              private notificationService: NotificationService) {
   }
 
   user$: BehaviorSubject<string> = new BehaviorSubject("");
@@ -56,7 +58,7 @@ export class AuthenticationService {
     }
     return '';
   }
-  
+
   getUserId(): number {
     if (this.isLoggedIn()) {
       const accessToken: any = localStorage.getItem('user');
@@ -74,6 +76,11 @@ export class AuthenticationService {
     this.user$.next('');
     localStorage.removeItem('user');
     this.httpClient.get(environment.apiHost + "users/logout");
+    this.notificationService.closeSocket();
+  }
+
+  connectWithWebSocket():void {
+    this.notificationService.initializeWebSocketConnection(this.getUserId());
   }
 
   register(user: UserRegistrationDTO): Observable<Message> {
@@ -86,8 +93,12 @@ export class AuthenticationService {
     }
     return this.httpClient.put<Message>(environment.apiUser + "/activate-account", token);
   }
-  
+
   resetPassword(email: string): Observable<string> {
     return this.httpClient.get<string>(environment.apiUser + "/forgot-password/" + email);
+  }
+
+  getNotificationNumber(): Observable<number> {
+    return this.notificationService.notificationNum;
   }
 }

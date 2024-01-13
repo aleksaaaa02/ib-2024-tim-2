@@ -18,6 +18,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatCardModule} from "@angular/material/card";
 import {MatSliderModule} from "@angular/material/slider";
 import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatBadgeModule} from "@angular/material/badge";
 
 @NgModule({
   declarations: [],
@@ -40,7 +41,8 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
     MatPaginatorModule,
     MatCardModule,
     MatSliderModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatBadgeModule
   ],
   exports: [
     MatToolbarModule,
@@ -62,7 +64,8 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
     MatPaginatorModule,
     MatCardModule,
     MatSliderModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatBadgeModule
   ]
 })
 

@@ -5,9 +5,6 @@
   <app-navigation-admin *ngIf="role==='ADMIN'"></app-navigation-admin>
   <app-navigation-guest *ngIf="role==='GUEST'"></app-navigation-guest>
   <app-navigation-owner *ngIf="role==='OWNER'"></app-navigation-owner>
-  <a mat-button *ngIf="role==='GUEST||OWNER'">
-    <mat-icon fontIcon="notifications_active"></mat-icon>
-    Notifications</a>
   <a routerLink="account" mat-button *ngIf="role!==''" class="account">Account</a>
   <div id="account-icon-holder" *ngIf="role!==''">
     <img alt="" id="account-icon" [src]="userImage"/>
