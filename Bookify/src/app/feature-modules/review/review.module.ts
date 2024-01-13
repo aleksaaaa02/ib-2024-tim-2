@@ -13,6 +13,7 @@ import { ReportComponent } from './report/report.component';
 import { ReportGuestComponent } from './report-guest/report-guest.component';
 import { GuestPageComponent } from './guest-page/guest-page.component';
 import { AccommodationNewReviewComponent } from './accommodation-new-review/accommodation-new-review.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { AccommodationNewReviewComponent } from './accommodation-new-review/acco
     CommonModule,
     MaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule.forRoot([])
   ],
   exports:[
     NewCommentComponent,
