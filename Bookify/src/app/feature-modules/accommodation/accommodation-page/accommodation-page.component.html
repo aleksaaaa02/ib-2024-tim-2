@@ -64,4 +64,8 @@
   <div class="two-part" id="reserve-comp">
     <app-reserve (buttonPressed)="reservePressed($event)"></app-reserve>
   </div>
+  <div class="reviews">
+    <app-accommodation-new-review *ngIf="role==='GUEST'"></app-accommodation-new-review>
+    <app-accommodation-reviews [ownerId]="accommodation?.owner?.id"></app-accommodation-reviews>
+  </div>
 </div>

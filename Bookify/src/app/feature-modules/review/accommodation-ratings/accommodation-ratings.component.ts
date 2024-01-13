@@ -1,18 +1,18 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ReviewService } from '../review.service';
 import { ActivatedRoute } from '@angular/router';
-import { RatingDTO } from '../model/rating.model.dto';
 import { AuthenticationService } from '../../authentication/authentication.service';
+import { RatingDTO } from '../model/rating.model.dto';
 
 @Component({
-  selector: 'app-ratings',
-  templateUrl: './ratings.component.html',
-  styleUrl: './ratings.component.css'
+  selector: 'app-accommodation-ratings',
+  templateUrl: './accommodation-ratings.component.html',
+  styleUrl: './accommodation-ratings.component.css'
 })
-export class RatingsComponent implements OnInit, OnChanges {
+export class AccommodationRatingsComponent implements OnInit, OnChanges {
   @Input() load: boolean;
   @Output() loadingChange = new EventEmitter<boolean>();
-  userId: number;
+  accommodationId: number;
 
   oneStar: number;
   twoStars: number;
@@ -34,18 +34,18 @@ export class RatingsComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.userId = +params['userId'];
+      this.accommodationId = +params['accommodationId'];
     });
-    // if (Number.isNaN(this.userId)) {
-    //   this.userId = this.authenticationService.getUserId();
-    // }
-    if (!Number.isNaN(this.userId)) {
+    if(Number.isNaN(this.accommodationId)){
+      this.accommodationId = this.authenticationService.getUserId();
+    }
+    if (!Number.isNaN(this.accommodationId)) {
       this.getRating();
     }
   }
 
-  getRating() {
-    this.reviewServise.getOwnerRating(this.userId).subscribe({
+  getRating(){
+    this.reviewServise.getAccommodationRating(this.accommodationId).subscribe({
       next: (rating: RatingDTO) => {
         this.oneStar = rating.oneStars;
         this.twoStars = rating.twoStars;
@@ -57,7 +57,7 @@ export class RatingsComponent implements OnInit, OnChanges {
         const temp = this.oneStar + 2 * this.twoStars + 3 * this.threeStars + 4 * this.fourStars + 5 * this.fiveStars;
         this.sumProgress = temp / this.sum;
         this.sumProgress = +this.sumProgress.toFixed(2);
-        if (Number.isNaN(this.sumProgress)) {
+        if(Number.isNaN(this.sumProgress)){
           this.sumProgress = 0;
         }
       }
