@@ -57,7 +57,7 @@ export class AccommodationNewReviewComponent implements OnInit {
           this.submitted = false;
         },
         error: () => {
-          this.openSnackBar("You need to have a reservation to be able to comment on the accommodation", "cancel");
+          this.openSnackBar("You must have a reservation that did not end more than 7 days ago", "cancel");
         }
       });
     }
