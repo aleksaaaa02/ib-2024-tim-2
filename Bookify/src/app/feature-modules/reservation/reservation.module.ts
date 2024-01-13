@@ -12,7 +12,7 @@ import { GuestReservationCardComponent } from './guest-reservation-card/guest-re
 import { GuestReservationsComponent } from './guest-reservations/guest-reservations.component';
 import { GuestRequestCardComponent } from './guest-request-card/guest-request-card.component';
 import { GuestRequestsComponent } from './guest-requests/guest-requests.component';
-import { RouterModule } from "@angular/router";
+import {RouterModule} from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -33,7 +33,7 @@ import { RouterModule } from "@angular/router";
     MatSelectModule,
     RouterModule.forRoot([])
   ],
-  exports: [
+  exports:[
     RequestCardComponent,
     ReservationCardComponent,
     OwnerReservationsComponent

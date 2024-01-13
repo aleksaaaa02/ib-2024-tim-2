@@ -12,11 +12,6 @@ import { OwnerInfoComponent } from './owner-info/owner-info.component';
 import { ReportComponent } from './report/report.component';
 import { ReportGuestComponent } from './report-guest/report-guest.component';
 import { GuestPageComponent } from './guest-page/guest-page.component';
-import { AccommodationNewReviewComponent } from './accommodation-new-review/accommodation-new-review.component';
-import { RouterModule } from '@angular/router';
-import { AccommodationRatingsComponent } from './accommodation-ratings/accommodation-ratings.component';
-import { AccommodationReviewComponent } from './accommodation-review/accommodation-review.component';
-import { AccommodationReviewsComponent } from './accommodation-reviews/accommodation-reviews.component';
 
 @NgModule({
   declarations: [
@@ -28,27 +23,20 @@ import { AccommodationReviewsComponent } from './accommodation-reviews/accommoda
     OwnerInfoComponent,
     ReportComponent,
     ReportGuestComponent,
-    GuestPageComponent,
-    AccommodationNewReviewComponent,
-    AccommodationRatingsComponent,
-    AccommodationReviewComponent,
-    AccommodationReviewsComponent
+    GuestPageComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forRoot([])
   ],
   exports:[
     NewCommentComponent,
     CommentComponent,
     RatingsComponent,
     CommentsRatingsComponent,
-    OwnerPageComponent,
-    AccommodationNewReviewComponent,
-    AccommodationReviewsComponent
+    OwnerPageComponent
   ]
 })
 export class ReviewModule { }

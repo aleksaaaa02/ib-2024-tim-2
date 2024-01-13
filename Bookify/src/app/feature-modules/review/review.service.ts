@@ -23,34 +23,18 @@ export class ReviewService {
     return this.httpClient.get<RatingDTO>(environment.apiReview + "/owner/" + ownerId + "/rating");
   }
 
-  getAccommodationRating(accommodationId: number): Observable<RatingDTO>{
-    return this.httpClient.get<RatingDTO>(environment.apiReview + "/accommodation/" + accommodationId + "/rating");
-  }
-
   getOwnerComments(ownerId: number): Observable<CommentDTO[]>{
     return this.httpClient.get<CommentDTO[]>(environment.apiReview + "/owner/" + ownerId);
-  }
-
-  getAccommodationComments(accommodationId: number): Observable<CommentDTO[]>{
-    return this.httpClient.get<CommentDTO[]>(environment.apiReview + "/accommodation/" + accommodationId);
   }
 
   add(ownerId: number,newComment: NewCommentDTO) {
     return this.httpClient.post<null>(environment.apiReview + "/new-owner/" + ownerId, newComment);
   }
 
-  addAccommodationReview(accommodationId: number,newComment: NewCommentDTO) {
-    return this.httpClient.post<null>(environment.apiReview + "/new-accommodation/" + accommodationId, newComment);
-  }
-
   delete(ownerId: number, reviewId: number) {
     return this.httpClient.delete<null>(environment.apiReview + "/owner-delete/" + ownerId + "/" + reviewId);
   }
   
-  deleteAccommodationReview(accommodationId: number, reviewId: number) {
-    return this.httpClient.delete<null>(environment.apiReview + "/accommodation-delete/" + accommodationId + "/" + reviewId);
-  }
-
   reportReview(reviewId: number): Observable<number> {
     return this.httpClient.put<number>(environment.apiReview + "/report/" + reviewId, null);
   }
