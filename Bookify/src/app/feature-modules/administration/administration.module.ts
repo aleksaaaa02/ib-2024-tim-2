@@ -9,6 +9,9 @@ import {RouterLink} from "@angular/router";
 import { UsersComponent } from './users/users.component';
 import { UsersCardComponent } from './users-card/users-card.component';
 import { ReportedUsersCardComponent } from './reported-users-card/reported-users-card.component';
+import { FeedbackComponent } from './feedback/feedback.component';
+import { ReviewCardComponent } from './review-card/review-card.component';
+import { ReviewReportedCardComponent } from './review-reported-card/review-reported-card.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +21,10 @@ import { ReportedUsersCardComponent } from './reported-users-card/reported-users
     CreatedPipe,
     UsersComponent,
     UsersCardComponent,
-    ReportedUsersCardComponent
+    ReportedUsersCardComponent,
+    FeedbackComponent,
+    ReviewCardComponent,
+    ReviewReportedCardComponent
   ],
   imports: [
     CommonModule,
