@@ -9,11 +9,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.Bookify.dto.AccommodationBasicDTO;
 import rs.ac.uns.ftn.Bookify.dto.ReservationDTO;
+import rs.ac.uns.ftn.Bookify.dto.ReservationGuestViewDTO;
 import rs.ac.uns.ftn.Bookify.dto.ReservationRequestDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationStatusRequest;
 import rs.ac.uns.ftn.Bookify.enumerations.Status;
 import rs.ac.uns.ftn.Bookify.mapper.AccommodationBasicDTOMapper;
 import rs.ac.uns.ftn.Bookify.mapper.ReservationDTOMapper;
+import rs.ac.uns.ftn.Bookify.mapper.ReservationGuestViewDTOMapper;
 import rs.ac.uns.ftn.Bookify.mapper.ReservationRequestDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Guest;
@@ -146,7 +148,7 @@ public class ReservationController {
         reservationService.setAccommodation(accommodation, ra);
         Guest guest = (Guest) userService.get(guestId);
         reservationService.setGuest(guest, ra);
-
+        accommodationService.acceptReservationIfAutomaticConformation(ra);
         return new ResponseEntity<>(new ReservationDTO(), HttpStatus.CREATED);
     }
 
@@ -162,16 +164,23 @@ public class ReservationController {
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<ReservationDTO> acceptReservation(@PathVariable Long reservationId) {
         //change status into accepted
-        ReservationDTO acceptedReservation = new ReservationDTO();
-        return new ResponseEntity<ReservationDTO>(acceptedReservation, HttpStatus.OK);
+        Reservation r = reservationService.accept(reservationId);
+        accommodationService.acceptReservationForAccommodation(r);
+        ReservationDTO reservation = ReservationDTOMapper.toReservationDTO(r);
+        reservation.setUser(userService.getGuestForReservation(reservation.getId()));
+        reservation.setAvgRating(accommodationService.getAvgRating(reservation.getAccommodationId()));
+        return new ResponseEntity<ReservationDTO>(reservation, HttpStatus.OK);
     }
 
     @PutMapping(value = "/reject/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<ReservationDTO> rejectReservation(@PathVariable Long reservationId) {
         //change status into rejected
-        ReservationDTO rejectedReservation = new ReservationDTO();
-        return new ResponseEntity<ReservationDTO>(rejectedReservation, HttpStatus.OK);
+        Reservation r = reservationService.reject(reservationId);
+        ReservationDTO reservation = ReservationDTOMapper.toReservationDTO(r);
+        reservation.setUser(userService.getGuestForReservation(reservation.getId()));
+        reservation.setAvgRating(accommodationService.getAvgRating(reservation.getAccommodationId()));
+        return new ResponseEntity<ReservationDTO>(reservation, HttpStatus.OK);
     }
 
     @DeleteMapping("/{reservationId}")
@@ -199,4 +208,29 @@ public class ReservationController {
         Collection<ReservationDTO> reservations = new HashSet<>();
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/guest/{guestId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    public ResponseEntity<Collection<ReservationGuestViewDTO>> getReservationsByGuestId(@PathVariable Long guestId){
+        List<ReservationGuestViewDTO> response = new ArrayList<>();
+        reservationService.getAllGuestReservations(guestId).forEach(r -> {
+            ReservationGuestViewDTO reservation = ReservationGuestViewDTOMapper.toReservationGuestViewDTO(r);
+            reservation.setUser(userService.getGuestForReservation(reservation.getId()));
+            reservation.setAvgRating(accommodationService.getAvgRating(reservation.getAccommodationId()));
+            response.add(reservation);
+        });
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/cancel/{reservationId}")
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    public ResponseEntity<ReservationGuestViewDTO> cancelReservationGuest(@PathVariable Long reservationId){
+        Reservation r = reservationService.cancelReservation(reservationId);
+        ReservationGuestViewDTO reservation = ReservationGuestViewDTOMapper.toReservationGuestViewDTO(r);
+        reservation.setUser(userService.getGuestForReservation(reservation.getId()));
+        reservation.setAvgRating(accommodationService.getAvgRating(reservation.getAccommodationId()));
+
+        return new ResponseEntity<>(reservation, HttpStatus.OK);
+    }
+
 }

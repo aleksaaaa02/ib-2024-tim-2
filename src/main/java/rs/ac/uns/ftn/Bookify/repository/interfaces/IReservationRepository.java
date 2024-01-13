@@ -78,4 +78,6 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
 
     @Query("SELECT count(r) FROM Reservation r WHERE r.guest.id = :userId AND r.status = 'CANCELED'")
     int getCancellationTimes(Long userId);
+
+    List<Reservation> findAllByGuest_IdAndEndAfter(Long guestId, LocalDate date);
 }

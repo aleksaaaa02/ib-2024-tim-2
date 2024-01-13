@@ -11,6 +11,7 @@ import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Owner;
 import rs.ac.uns.ftn.Bookify.model.User;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 

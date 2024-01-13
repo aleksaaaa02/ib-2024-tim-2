@@ -9,6 +9,7 @@ import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Availability;
 import rs.ac.uns.ftn.Bookify.model.PricelistItem;
+import rs.ac.uns.ftn.Bookify.model.Reservation;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -54,6 +55,8 @@ public interface IAccommodationService {
     public void setAccommodationStatus(Long id, AccommodationStatusRequest newStatus);
     public void deleteAccommodation(Long accommodationId);
     public void insertForGuest(Long guestId, Long accommodationId);
+    public void acceptReservationIfAutomaticConformation(Reservation reservation);
+    public void acceptReservationForAccommodation(Reservation reservation);
     public List<ChartDTO> getChartsByPeriod(Long ownerId, LocalDate begin, LocalDate end);
     public byte[] generatePdfReportForOverall(Long ownerId, LocalDate begin, LocalDate end) throws DocumentException;
     public Map<Long, String> getAccommodationNames(Long ownerId);

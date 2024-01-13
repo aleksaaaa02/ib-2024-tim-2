@@ -1,15 +1,12 @@
 package rs.ac.uns.ftn.Bookify.service.interfaces;
 
-import rs.ac.uns.ftn.Bookify.dto.ReservationDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.Status;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Reservation;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public interface IReservationService {
 
@@ -30,4 +27,10 @@ public interface IReservationService {
     public List<Reservation> filterForOwner(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses);
     public void setReservationStatus(Long reservationId, Status status);
     public void delete(Long reservationId);
+    public void rejectOverlappingReservations(Long accommodationId, LocalDate startDate, LocalDate endDate);
+    public Reservation accept(Long reservationId);
+    public Reservation reject(Long reservationId);
+    public boolean cancelGuestsReservations(Long guestId);
+    public Reservation cancelReservation(Long reservationId);
+    public List<Reservation> getAllGuestReservations(Long guestId);
 }
