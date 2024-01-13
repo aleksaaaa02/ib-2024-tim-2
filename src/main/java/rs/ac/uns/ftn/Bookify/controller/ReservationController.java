@@ -9,11 +9,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.Bookify.dto.AccommodationBasicDTO;
 import rs.ac.uns.ftn.Bookify.dto.ReservationDTO;
+import rs.ac.uns.ftn.Bookify.dto.ReservationGuestViewDTO;
 import rs.ac.uns.ftn.Bookify.dto.ReservationRequestDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationStatusRequest;
 import rs.ac.uns.ftn.Bookify.enumerations.Status;
 import rs.ac.uns.ftn.Bookify.mapper.AccommodationBasicDTOMapper;
 import rs.ac.uns.ftn.Bookify.mapper.ReservationDTOMapper;
+import rs.ac.uns.ftn.Bookify.mapper.ReservationGuestViewDTOMapper;
 import rs.ac.uns.ftn.Bookify.mapper.ReservationRequestDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Guest;
@@ -206,4 +208,29 @@ public class ReservationController {
         Collection<ReservationDTO> reservations = new HashSet<>();
         return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/guest/{guestId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    public ResponseEntity<Collection<ReservationGuestViewDTO>> getReservationsByGuestId(@PathVariable Long guestId){
+        List<ReservationGuestViewDTO> response = new ArrayList<>();
+        reservationService.getAllGuestReservations(guestId).forEach(r -> {
+            ReservationGuestViewDTO reservation = ReservationGuestViewDTOMapper.toReservationGuestViewDTO(r);
+            reservation.setUser(userService.getGuestForReservation(reservation.getId()));
+            reservation.setAvgRating(accommodationService.getAvgRating(reservation.getAccommodationId()));
+            response.add(reservation);
+        });
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/cancel/{reservationId}")
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    public ResponseEntity<ReservationGuestViewDTO> cancelReservationGuest(@PathVariable Long reservationId){
+        Reservation r = reservationService.cancelReservation(reservationId);
+        ReservationGuestViewDTO reservation = ReservationGuestViewDTOMapper.toReservationGuestViewDTO(r);
+        reservation.setUser(userService.getGuestForReservation(reservation.getId()));
+        reservation.setAvgRating(accommodationService.getAvgRating(reservation.getAccommodationId()));
+
+        return new ResponseEntity<>(reservation, HttpStatus.OK);
+    }
+
 }

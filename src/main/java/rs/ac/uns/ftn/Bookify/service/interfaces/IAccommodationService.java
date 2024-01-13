@@ -6,10 +6,7 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.*;
 import rs.ac.uns.ftn.Bookify.enumerations.AccommodationStatusRequest;
 import rs.ac.uns.ftn.Bookify.enumerations.PricePer;
-import rs.ac.uns.ftn.Bookify.model.Accommodation;
-import rs.ac.uns.ftn.Bookify.model.Availability;
-import rs.ac.uns.ftn.Bookify.model.PricelistItem;
-import rs.ac.uns.ftn.Bookify.model.Reservation;
+import rs.ac.uns.ftn.Bookify.model.*;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -62,4 +59,5 @@ public interface IAccommodationService {
     public List<ChartDTO> getChartsByAccommodationAndYear(Long ownerId, Long accommodationId, int year);
     public byte[] generatePdfReportForAccommodation(Long ownerId, Long accommodationId, int year) throws DocumentException;
     public List<Accommodation> getTopAccommodations(int results);
+    public void removeReview(Review review);
 }

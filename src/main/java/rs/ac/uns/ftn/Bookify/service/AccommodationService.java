@@ -709,6 +709,12 @@ public class AccommodationService implements IAccommodationService {
         return accommodationRepository.getTopAccommodations(results);
     }
 
+    public void removeReview(Review review) {
+        Accommodation a = this.accommodationRepository.findByReviewsContains(review);
+        a.getReviews().remove(review);
+        this.accommodationRepository.save(a);
+    }
+
     private void addTableHeader(PdfPTable table, boolean isMonth) {
         PdfPCell cell;
 

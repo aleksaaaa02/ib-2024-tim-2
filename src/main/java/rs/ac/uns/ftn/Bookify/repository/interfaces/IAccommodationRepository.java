@@ -166,4 +166,6 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "ORDER BY COUNT(r.id) DESC " +
             "LIMIT :results", nativeQuery = true)
     List<Accommodation> getTopAccommodations(int results);
+
+    Accommodation findByReviewsContains(Review review);
 }

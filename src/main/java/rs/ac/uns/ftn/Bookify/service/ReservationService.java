@@ -182,6 +182,31 @@ public class ReservationService implements IReservationService {
         return true;
     }
 
+    @Override
+    public Reservation cancelReservation(Long reservationId) {
+        Optional<Reservation> reservation = reservationRepository.findById(reservationId);
+        if (reservation.isEmpty()) throw new BadRequestException("Reservation not found");
+        Reservation r = reservation.get();
+        Accommodation accommodation = r.getAccommodation();
+        int cancellationDays = accommodation.getCancellationDeadline();
+        LocalDate cancellationDate = r.getStart().minusDays(cancellationDays);
+        if (LocalDate.now().isAfter(cancellationDate)) throw new BadRequestException("Cancellation date expired");
+        r.setStatus(Status.CANCELED);
+        Availability availability = new Availability();
+        availability.setStartDate(r.getStart());
+        availability.setEndDate(r.getEnd());
+        accommodationService.addAvailability(accommodation.getId(), availability);
+        reservationRepository.save(r);
+        return r;
+    }
+
+    @Override
+    public List<Reservation> getAllGuestReservations(Long guestId) {
+        List<Reservation> reservations = this.reservationRepository.getAllForGuest(guestId);
+        reservations.removeIf(r -> !r.getStatus().equals(Status.ACCEPTED));
+        return reservations;
+    }
+
     private boolean canRespondToReservationRequest(Reservation reservation) {
         return LocalDate.now().isBefore(reservation.getStart());
     }
