@@ -12,6 +12,7 @@ import { OwnerInfoComponent } from './owner-info/owner-info.component';
 import { ReportComponent } from './report/report.component';
 import { ReportGuestComponent } from './report-guest/report-guest.component';
 import { GuestPageComponent } from './guest-page/guest-page.component';
+import { AccommodationNewReviewComponent } from './accommodation-new-review/accommodation-new-review.component';
 
 @NgModule({
   declarations: [
@@ -23,20 +24,22 @@ import { GuestPageComponent } from './guest-page/guest-page.component';
     OwnerInfoComponent,
     ReportComponent,
     ReportGuestComponent,
-    GuestPageComponent
+    GuestPageComponent,
+    AccommodationNewReviewComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     FormsModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   exports:[
     NewCommentComponent,
     CommentComponent,
     RatingsComponent,
     CommentsRatingsComponent,
-    OwnerPageComponent
+    OwnerPageComponent,
+    AccommodationNewReviewComponent
   ]
 })
 export class ReviewModule { }
