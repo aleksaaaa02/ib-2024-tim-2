@@ -1,24 +1,24 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
-import { AccommodationService } from "../accommodation.service";
-import { AccommodationDetailsDTO } from "../model/accommodation-details.dto.model";
-import { AccountService } from "../../account/account.service";
-import { MapComponent } from "../../../shared/map/map.component";
-import { CarouselComponent } from "../carousel/carousel.component";
-import { AuthenticationService } from "../../authentication/authentication.service";
-import { ReservationDialogComponent } from "../../../layout/reservation-dialog/reservation-dialog.component";
-import { MatDialog } from "@angular/material/dialog";
-import { ReserveComponent } from "../reserve/reserve.component";
-import { MessageDialogComponent } from "../../../layout/message-dialog/message-dialog.component";
-import { ReservationRequestDTO } from "../model/reservation-request.dto.model";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
+import {AccommodationService} from "../accommodation.service";
+import {AccommodationDetailsDTO} from "../model/accommodation-details.dto.model";
+import {AccountService} from "../../account/account.service";
+import {MapComponent} from "../../../shared/map/map.component";
+import {CarouselComponent} from "../carousel/carousel.component";
+import {AuthenticationService} from "../../authentication/authentication.service";
+import {ReservationDialogComponent} from "../../../layout/reservation-dialog/reservation-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
+import {ReserveComponent} from "../reserve/reserve.component";
+import {MessageDialogComponent} from "../../../layout/message-dialog/message-dialog.component";
+import {ReservationRequestDTO} from "../model/reservation-request.dto.model";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-accommodation-page',
   templateUrl: './accommodation-page.component.html',
   styleUrl: './accommodation-page.component.css'
 })
-export class AccommodationPageComponent implements OnInit {
+export class AccommodationPageComponent implements OnInit{
   amenitiesMap: Map<string, string> = new Map([
     ['Free wifi', 'wifi'],
     ['Free parking', 'local_parking'],
@@ -53,12 +53,7 @@ export class AccommodationPageComponent implements OnInit {
   @ViewChild(CarouselComponent) carouselComponent: CarouselComponent;
   @ViewChild(ReserveComponent) reservationComponent: ReserveComponent;
 
-  role: string;
-
-  constructor(public dialog: MatDialog, protected authenticationService: AuthenticationService, private route: ActivatedRoute,
-    private accommodationService: AccommodationService, private accountService: AccountService, private _snackBar: MatSnackBar) {
-    this.role = authenticationService.getRole();
-  }
+  constructor(public dialog: MatDialog, protected authenticationService: AuthenticationService, private route: ActivatedRoute, private accommodationService: AccommodationService, private accountService: AccountService, private _snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     window.scrollTo({
@@ -69,7 +64,7 @@ export class AccommodationPageComponent implements OnInit {
     this.setIfUser();
   }
 
-  private setIfUser() {
+  private setIfUser(){
     const reserve = document.getElementById("reserve-comp");
     const favorite = document.getElementById("favorite-button");
     if (reserve != null && favorite != null) {
@@ -81,7 +76,7 @@ export class AccommodationPageComponent implements OnInit {
     }
   }
 
-  private getAccommodationData() {
+  private getAccommodationData(){
     this.route.params.subscribe((params) => {
       const id = +params['accommodationId'];
       this.accommodationService.getAccommodationDetails(id).subscribe({
@@ -107,18 +102,18 @@ export class AccommodationPageComponent implements OnInit {
     });
   }
 
-  getAccommodationPhotos(id: number) {
-    this.accommodationService.getAccommodationImages(id).subscribe({
+  getAccommodationPhotos(id: number){
+    this.accommodationService.getAccommodationImages(id).subscribe( {
       next: (data): void => {
-        for (const b of data) {
-          this.accommodationImages.push("data:image/*;base64," + b);
+        for (const b of data){
+          this.accommodationImages.push("data:image/*;base64,"+b);
         }
         this.carouselComponent.images = this.accommodationImages;
       }
     });
   }
 
-  getOwnerPhoto(id: number) {
+  getOwnerPhoto(id: number){
     this.accountService.getAccountImage(this.accommodation.owner.imageId).subscribe({
       next: (data: Blob): void => {
         const reader = new FileReader();
@@ -133,7 +128,7 @@ export class AccommodationPageComponent implements OnInit {
     });
   }
 
-  setAmenities() {
+  setAmenities(){
     if (this.accommodation.filters != null) {
       for (const filter of this.accommodation.filters) {
         let label = this.transformLabel(filter);
@@ -147,30 +142,30 @@ export class AccommodationPageComponent implements OnInit {
     return label.charAt(0) + label.slice(1).toLowerCase();
   }
 
-  changeDisplay() {
+  changeDisplay(){
     if (this.accommodation.avgRating == 0) {
       const el = document.getElementById("accRating");
       if (el != null)
         el.style.display = 'none';
     }
-    if (this.accommodation.owner?.avgRating == 0) {
+    if (this.accommodation.owner?.avgRating == 0){
       const el1 = document.getElementById("ownerRating");
       if (el1 != null)
         el1.style.display = 'none';
     }
   }
 
-  reservePressed(values: { persons: number, dateBegin: string, dateEnd: string }): void {
+  reservePressed(values: { persons: number, dateBegin: string, dateEnd: string}): void {
     this.openDialog(this.accommodation.id, new Date(Date.parse(values.dateBegin)), new Date(Date.parse(values.dateEnd)), values.persons, this.accommodation.pricePer);
   }
 
   openDialog(id: number, begin: Date, end: Date, persons: number, pricePer: string): void {
-    this.accommodationService.getTotalPrice(id, begin, end, pricePer, persons).subscribe({
+    this.accommodationService.getTotalPrice(id, begin, end, pricePer, persons).subscribe( {
       next: (data): void => {
         if (data == -1 || begin < new Date())
-          this.dialog.open(MessageDialogComponent, { data: { message: "Accommodation it not available for this parameters." } });
+          this.dialog.open(MessageDialogComponent, {data: {message:"Accommodation it not available for this parameters."}});
         else {
-          this.dialog.open(ReservationDialogComponent, { data: { message: "Total cost for this reservation is " + Math.round(data * 100) / 100 + " EUR." } }).afterClosed().subscribe((result) => {
+          this.dialog.open(ReservationDialogComponent, {data: {message: "Total cost for this reservation is " + Math.round(data * 100) / 100 + " EUR."}}).afterClosed().subscribe((result) => {
             if (result) {
               let reservation: ReservationRequestDTO = {
                 created: new Date(),

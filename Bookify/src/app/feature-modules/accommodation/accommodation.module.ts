@@ -39,7 +39,6 @@ import {
 } from "./reports/accommodation-chart-revenue/accommodation-chart-revenue.component";
 import {ReportsPageComponent} from "./reports/reports-page/reports-page.component";
 import {TopDestinationComponent} from "../../layout/top-destination/top-destination.component";
-import { ReviewModule } from '../review/review.module';
 
 @NgModule({
   declarations: [
@@ -78,8 +77,7 @@ import { ReviewModule } from '../review/review.module';
     RouterLink,
     CarouselComponent,
     DatapickerRangeComponent,
-    ReservationModule,
-    ReviewModule
+    ReservationModule
   ],
   exports: [
     AccommodationCreateComponent,
