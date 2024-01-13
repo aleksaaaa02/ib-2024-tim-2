@@ -12,4 +12,5 @@ public class UserBasicDTO {
     private String lastName;
     private String phone;
     private Long imageId;
+    private String type;
 }

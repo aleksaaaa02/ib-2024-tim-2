@@ -24,8 +24,18 @@ public class ReviewService implements IReviewService {
     }
 
     @Override
-    public RatingDTO getRating(Long ownerId) {
+    public RatingDTO getOwnerRating(Long ownerId) {
         List<Review> reviews = reviewRepository.findByOwnerId(ownerId);
+        return getRatingDTO(reviews);
+    }
+
+    @Override
+    public RatingDTO getAccommodationRating(Long accommodationId) {
+        List<Review> reviews = reviewRepository.findByAccommodationId(accommodationId);
+        return getRatingDTO(reviews);
+    }
+
+    private static RatingDTO getRatingDTO(List<Review> reviews) {
         RatingDTO dto = new RatingDTO();
         for (Review review : reviews) {
             switch (review.getRate()) {
@@ -49,13 +59,29 @@ public class ReviewService implements IReviewService {
         int sum = 5 * dto.getFiveStars() + 4 * dto.getFourStars() + 3 * dto.getThreeStars() + 2 * dto.getTwoStars() + dto.getOneStars();
         int count = dto.getFiveStars() + dto.getFourStars() + dto.getThreeStars() + dto.getTwoStars() + dto.getOneStars();
         if (count != 0)
-            dto.setAvgRating(sum / count);
+            dto.setAvgRating(sum / (double) count);
         return dto;
     }
 
     @Override
     public Collection<CommentDTO> getOwnerComments(Long ownerId) {
         List<Review> reviews = reviewRepository.findByOwnerId(ownerId);
+        Collection<CommentDTO> dtos = new ArrayList<>();
+        for (Review review : reviews) {
+            Guest guest = review.getGuest();
+            String name = guest.getFirstName() + " " + guest.getLastName();
+            Long imageId = 0L;
+            if (guest.getProfileImage() != null) {
+                imageId = guest.getProfileImage().getId();
+            }
+            dtos.add(new CommentDTO(review.getId(), name, review.getDate(), review.getComment(), review.getRate(), guest.getId(), imageId));
+        }
+        return dtos;
+    }
+
+    @Override
+    public Collection<CommentDTO> getAccommodationComments(Long accommodationId) {
+        List<Review> reviews = reviewRepository.findByAccommodationId(accommodationId);
         Collection<CommentDTO> dtos = new ArrayList<>();
         for (Review review : reviews) {
             Guest guest = review.getGuest();

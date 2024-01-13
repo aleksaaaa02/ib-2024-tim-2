@@ -81,6 +81,11 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
+    public List<Reservation> getReservationsForAccommodationInLast7Days(Long guestId, Long accommodationId) {
+        return reservationRepository.getReservationsForAccommodationInLast7Days(guestId, LocalDate.now().minusDays(7), LocalDate.now(), Status.ACCEPTED, accommodationId);
+    }
+
+    @Override
     public List<Reservation> getAllForGuest(Long userId) {
         return reservationRepository.getAllForGuest(userId);
     }

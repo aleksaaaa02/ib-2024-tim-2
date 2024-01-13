@@ -260,6 +260,7 @@ public class UserController {
         if (user == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         UserBasicDTO dto = UserBasicDTOMapper.fromOwnertoDTO(user);
+        dto.setType(user.getUserType());
         return new ResponseEntity<UserBasicDTO>(dto, HttpStatus.OK);
     }
 }
