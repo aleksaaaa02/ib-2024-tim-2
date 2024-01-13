@@ -41,7 +41,26 @@ export class AccommodationNewReviewComponent implements OnInit {
   }
 
   onSubmit() {
-
+    this.submitted = true;
+    if (this.form.valid && this.percent > 0) {
+      const comment: NewCommentDTO = {
+        comment: this.form.get('comment')?.value,
+        rate: this.percent,
+        guestId: this.authenticationService.getUserId()
+      } 
+      this.reviewService.addAccommodationReview(this.accommodationId, comment).subscribe({
+        next: () => {
+          this.emit.emit(true);
+          this.openSnackBar("Your comment has been sent to admin for approval", "close");
+          this.form.get('comment')?.reset();
+          this.percent = 0;
+          this.submitted = false;
+        },
+        error: () => {
+          this.openSnackBar("You need to have a reservation to be able to comment on the accommodation", "cancel");
+        }
+      });
+    }
   }
 
   openSnackBar(message: string, action: string) {
