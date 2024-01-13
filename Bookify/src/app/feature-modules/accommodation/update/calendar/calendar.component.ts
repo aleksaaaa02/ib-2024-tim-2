@@ -289,17 +289,11 @@ export class CalendarComponent implements OnInit {
 
   private deletePrice(start: Date, end: Date) {
     if (document) {
-      const days = document.querySelectorAll('.calendar-days div');
-      days.forEach((dayElement) => {
-        if (dayElement.firstElementChild?.textContent && start && end) {
-          const day = +dayElement.firstElementChild?.textContent;
-          const currentDate = new Date(this.currentYear, this.currentMonth, day);
-          if (currentDate >= start && currentDate <= end) {
-            const priceControl = this.priceForm.get('price');
-            this.dateTextMap[this.currentYear + "-" + this.currentMonth + "-" + day] = "";
-          }
-        }
-      });
+      let currentDate = new Date(start);
+      while (currentDate <= end) {
+        this.dateTextMap[currentDate.getFullYear() + "-" + currentDate.getMonth() + "-" + currentDate.getDate()] = "";
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
       this.resetColors();
       this.clearSelectedDates();
     }
