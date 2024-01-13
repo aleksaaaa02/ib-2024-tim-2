@@ -51,7 +51,8 @@ const routes: Routes = [
   { path: "users", component: UsersComponent, canActivate: [authGuard] },
   { path: "favorites", component: FavoritesPageComponent, canActivate: [authGuard] },
   { path: "accommodation/reports", component: ReportsPageComponent, canActivate: [authGuard] },
-  { path: "feedback", component: FeedbackComponent, canActivate: [authGuard] }
+  { path: "feedback", component: FeedbackComponent, canActivate: [authGuard] },
+  { path: "guest-reservations", component: GuestReservationsComponent, canActivate: [authGuard] }
 ];
 
 @NgModule({
