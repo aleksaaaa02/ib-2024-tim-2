@@ -28,6 +28,7 @@ public interface IAccommodationService {
     public double getOnePrice(Long id, LocalDate begin, LocalDate end, PricePer pricePer, int persons);
     public FileSystemResource getImage(Long id);
     public Accommodation save(Accommodation accommodation);
+    public Accommodation saveAccommodation(Accommodation accommodation);
     public Long update(Accommodation accommodation);
     public Long addPriceList(Long accommodationId, PricelistItem item);
     public Long addAvailability(Long accommodationId, Availability availability);

@@ -167,6 +167,11 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
+    public Accommodation saveAccommodation(Accommodation accommodation) {
+        return accommodationRepository.save(accommodation);
+    }
+
+    @Override
     public Long update(Accommodation accommodation) {
         Accommodation a = accommodationRepository.getReferenceById(accommodation.getId());
         if(this.reservationService.hasFutureReservationsAccommodation(a))

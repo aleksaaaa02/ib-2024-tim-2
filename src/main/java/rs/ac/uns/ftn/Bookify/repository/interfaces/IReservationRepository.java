@@ -29,6 +29,13 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
             "AND r.accommodation IN (SELECT o.accommodations FROM Owner o WHERE o.id = :ownerId)")
     public List<Reservation> getReservations(Long guestId, LocalDate date, Status status, Long ownerId);
 
+    @Query("SELECT r FROM Reservation r WHERE r.guest.id = :guestId " +
+            "AND r.end >= :startDate " +
+            "AND r.end <= :endDate " +
+            "AND r.status = :status " +
+            "AND r.accommodation.id = :accommodationId")
+    public List<Reservation> getReservationsForAccommodationInLast7Days(Long guestId, LocalDate startDate, LocalDate endDate, Status status, Long accommodationId);
+
     @Query("SELECT r FROM Reservation r WHERE r.guest.id = :guestId")
     public List<Reservation> getAllForGuest(Long guestId);
 

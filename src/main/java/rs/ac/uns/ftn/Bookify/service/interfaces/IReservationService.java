@@ -21,6 +21,7 @@ public interface IReservationService {
     public void setAccommodation(Accommodation accommodation, Reservation reservation);
     public void setGuest(Guest guest, Reservation reservation);
     public List<Reservation> getReservations(Long guestId, Long ownerId);
+    public List<Reservation> getReservationsForAccommodationInLast7Days(Long guestId, Long accommodationId);
     public List<Reservation> getAllForGuest(Long userId);
     public List<Object[]> getGuestAccommodations(Long UserId);
     public List<Reservation> filterForGuest(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses);

@@ -12,9 +12,11 @@ import rs.ac.uns.ftn.Bookify.dto.RatingDTO;
 import rs.ac.uns.ftn.Bookify.dto.ReviewDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.ReviewType;
 import rs.ac.uns.ftn.Bookify.mapper.NewReviewDTOMapper;
+import rs.ac.uns.ftn.Bookify.model.Accommodation;
 import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Owner;
 import rs.ac.uns.ftn.Bookify.model.Review;
+import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IReviewService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
@@ -34,6 +36,9 @@ public class ReviewController {
 
     @Autowired
     private IReservationService reservationService;
+
+    @Autowired
+    private IAccommodationService accommodationService;
 
     @GetMapping(value = "/created", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -84,14 +89,26 @@ public class ReviewController {
     }
 
     @PostMapping(value = "/new-accommodation/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<ReviewDTO> newReviewAccommodation(@PathVariable Long accommodationId, @RequestBody ReviewDTO review) {
+    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    public ResponseEntity<ReviewDTO> newReviewAccommodation(@PathVariable Long accommodationId, @RequestBody NewReviewDTO newReview) {
         //insert new review for accommodation
-        ReviewDTO savedReview = new ReviewDTO(1L, 4, "Nice", new Date(), true, false, 2L, ReviewType.ACCOMMODATION);
-        return new ResponseEntity<ReviewDTO>(savedReview, HttpStatus.CREATED);
+
+        Review review = NewReviewDTOMapper.fromDTOtoReview(newReview);
+        Guest guest = userService.getGuest(newReview.getGuestId());
+        review.setGuest(guest);
+        if(reservationService.getReservationsForAccommodationInLast7Days(guest.getId(), accommodationId).isEmpty()){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        Review insertedReview = reviewService.save(review);
+        Accommodation accommodation = accommodationService.getAccommodation(accommodationId);
+        accommodation.getReviews().add(insertedReview);
+        accommodationService.saveAccommodation(accommodation);
+
+        return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/new-owner/{ownerId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
     public ResponseEntity<ReviewDTO> newReviewOwner(@PathVariable Long ownerId, @RequestBody NewReviewDTO newReview) {
         //insert new review for owner
 
