@@ -14,9 +14,9 @@
         <p class="subtitle">Incomes: {{request.price}} EUR</p>
         <div class="wrapper">
             <p class="description">Status: {{request.status}}</p>
-            <div class="button-wrapper">
-                <button class="details-button accept">Accept</button>
-                <button class="details-button reject">Reject</button>
+            <div class="button-wrapper" *ngIf="request.status==='PENDING'">
+                <button class="details-button accept" (click)="acceptReservation()">Accept</button>
+                <button class="details-button reject" (click)="rejectReservation()">Reject</button>
             </div>
         </div>
     </div>
