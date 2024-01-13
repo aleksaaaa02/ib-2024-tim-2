@@ -14,6 +14,9 @@ import { ReportGuestComponent } from './report-guest/report-guest.component';
 import { GuestPageComponent } from './guest-page/guest-page.component';
 import { AccommodationNewReviewComponent } from './accommodation-new-review/accommodation-new-review.component';
 import { RouterModule } from '@angular/router';
+import { AccommodationRatingsComponent } from './accommodation-ratings/accommodation-ratings.component';
+import { AccommodationReviewComponent } from './accommodation-review/accommodation-review.component';
+import { AccommodationReviewsComponent } from './accommodation-reviews/accommodation-reviews.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +29,10 @@ import { RouterModule } from '@angular/router';
     ReportComponent,
     ReportGuestComponent,
     GuestPageComponent,
-    AccommodationNewReviewComponent
+    AccommodationNewReviewComponent,
+    AccommodationRatingsComponent,
+    AccommodationReviewComponent,
+    AccommodationReviewsComponent
   ],
   imports: [
     CommonModule,
@@ -41,7 +47,8 @@ import { RouterModule } from '@angular/router';
     RatingsComponent,
     CommentsRatingsComponent,
     OwnerPageComponent,
-    AccommodationNewReviewComponent
+    AccommodationNewReviewComponent,
+    AccommodationReviewsComponent
   ]
 })
 export class ReviewModule { }
