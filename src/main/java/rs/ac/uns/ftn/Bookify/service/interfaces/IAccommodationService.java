@@ -59,5 +59,6 @@ public interface IAccommodationService {
     public Map<Long, String> getAccommodationNames(Long ownerId);
     public List<ChartDTO> getChartsByAccommodationAndYear(Long ownerId, Long accommodationId, int year);
     public byte[] generatePdfReportForAccommodation(Long ownerId, Long accommodationId, int year) throws DocumentException;
+    public List<Accommodation> getTopAccommodations(int results);
     public void removeReview(Review review);
 }

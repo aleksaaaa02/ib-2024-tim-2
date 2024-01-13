@@ -93,33 +93,16 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/top-accommodations", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<AccommodationBasicDTO>> getTopAccommodations() {
-        //returns most popular accommodations
-        AccommodationBasicDTO basicDTO1 = new AccommodationBasicDTO(1L, "Hotel", new Address(), 3.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
-                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet.");
-        AccommodationBasicDTO basicDTO2 = new AccommodationBasicDTO(2L, "Apartment", new Address(), 4.45f, 0f, PricePer.ROOM, 0f, 1L, AccommodationType.APARTMENT, "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
-                "      Quisque porttitor convallis rhoncus. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet. Nunc semper, justo a\n" +
-                "      bibendum luctus. Lorem ipsum dolor sit amet.");
-        Collection<AccommodationBasicDTO> basicAccommodations = new HashSet<>();
-        basicAccommodations.add(basicDTO1);
-        basicAccommodations.add(basicDTO2);
-        return new ResponseEntity<>(basicAccommodations, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/top-locations", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<LocationDTO>> getTopLocations() {
-        //returns most popular locations
-        LocationDTO location = new LocationDTO("Novi Sad", "Serbia");
-        Collection<LocationDTO> locationDTO = new HashSet<>();
-        locationDTO.add(location);
-        return new ResponseEntity<>(locationDTO, HttpStatus.OK);
+    public ResponseEntity<Collection<AccommodationBasicDTO>> getTopAccommodations(@RequestParam("results") int results) {
+        //returns all n results
+        List<Accommodation> accommodations = accommodationService.getTopAccommodations(results);
+        Collection<AccommodationBasicDTO> accommodationBasicDTO = accommodations.stream()
+                .map(AccommodationBasicDTOMapper::fromAccommodationToBasicDTO)
+                .collect(Collectors.toList());
+        for (AccommodationBasicDTO a : accommodationBasicDTO){
+            a.setAvgRating(accommodationService.getAvgRating(a.getId()));
+        }
+        return new ResponseEntity<>(accommodationBasicDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)

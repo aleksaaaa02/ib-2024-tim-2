@@ -710,6 +710,10 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
+    public List<Accommodation> getTopAccommodations(int results) {
+        return accommodationRepository.getTopAccommodations(results);
+    }
+
     public void removeReview(Review review) {
         Accommodation a = this.accommodationRepository.findByReviewsContains(review);
         a.getReviews().remove(review);
