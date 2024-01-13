@@ -4,6 +4,6 @@
     <app-accommodation-ratings [load]="loading" (loadingChange)="onLoadingChange($event)"></app-accommodation-ratings>
 
     <div *ngFor="let comment of comments">
-        <app-accommodation-review [comment]="comment" (emit)="onEmitChange($event)"></app-accommodation-review>
+        <app-accommodation-review [comment]="comment" [ownerId]="ownerId" (emit)="onEmitChange($event)"></app-accommodation-review>
     </div>
 </div>

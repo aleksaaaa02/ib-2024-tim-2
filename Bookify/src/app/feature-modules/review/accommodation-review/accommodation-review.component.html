@@ -13,5 +13,6 @@
         <p class="description">{{comment.comment}}</p>
     </div>
     <span class="material-symbols-outlined" *ngIf="comment.guestId===guestId"
-        (click)="deleteComment(comment.id)">cancel</span>
+        (click)="deleteComment(comment.id)">cancel</span> 
+  <button mat-button class="button" *ngIf="guestId===ownerId" (click)="onClick()">Report</button>
 </div>

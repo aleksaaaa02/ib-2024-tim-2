@@ -11,6 +11,7 @@ import { AuthenticationService } from '../../authentication/authentication.servi
 })
 export class AccommodationReviewsComponent implements OnChanges {
   @Input() load : boolean;
+  @Input() ownerId: number | undefined;
   accommodationId: number;
   comments: CommentDTO[];
   loading: boolean = false;

@@ -62,7 +62,6 @@ export class CommentComponent implements OnInit {
       }
     });
   }
-
   
   onClick(): void {
     this.reviewService.reportReview(this.comment.id).subscribe({
