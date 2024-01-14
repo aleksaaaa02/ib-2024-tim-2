@@ -379,6 +379,11 @@ public class UserService implements IUserService {
         userRepository.save(owner);
     }
 
+    @Override
+    public void save(User user) {
+        this.userRepository.save(user);
+    }
+
 
     @Override
     public boolean checkIfInFavorites(Long guestId, Long accommodationId) {

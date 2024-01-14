@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.NotificationDTO;
 import rs.ac.uns.ftn.Bookify.dto.NotificationSettingsDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.NotificationType;
+import rs.ac.uns.ftn.Bookify.mapper.NotificationDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.INotificationRepository;
 import rs.ac.uns.ftn.Bookify.service.interfaces.INotificationService;
@@ -25,6 +26,9 @@ public class NotificationService implements INotificationService {
 
     @Autowired
     IUserService userService;
+
+    @Autowired
+    NotificationDTOMapper mapper;
 
     @Override
     public List<Notification> getUserNotification(Long userId) {
@@ -68,7 +72,8 @@ public class NotificationService implements INotificationService {
 
     @Override
     public void sendNewNotification(Notification notification, Long userId) {
-        this.simpMessagingTemplate.convertAndSend("/socket-publisher/" + userId, notification);
+        NotificationDTO notificationDTO = mapper.toNotificationDTO(notification);
+        this.simpMessagingTemplate.convertAndSend("/socket-publisher/" + userId, notificationDTO);
     }
 
     @Override
@@ -76,8 +81,14 @@ public class NotificationService implements INotificationService {
         User user = userService.get(userId);
         if(wantsToBeNotified(notification,user)) {
             this.notificationRepository.save(notification);
+            saveToUser(user, notification);
             sendNewNotification(notification, userId);
         }
+    }
+
+    private void saveToUser(User user, Notification notification) {
+        user.getNotifications().add(notification);
+        this.userService.save(user);
     }
 
     private boolean wantsToBeNotified(Notification notification, User user) {
