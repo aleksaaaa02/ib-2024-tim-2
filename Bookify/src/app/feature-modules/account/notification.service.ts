@@ -7,6 +7,7 @@ import {Message} from "./model/message";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {BehaviorSubject, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
+import {Settings} from "./model/settings";
 
 @Injectable({
   providedIn: 'root'
@@ -75,5 +76,13 @@ export class NotificationService {
 
   getAllNotifications(userId: number): Observable<Message[]> {
     return this.httpClient.get<Message[]>(environment.apiHost + "notifications/" + userId);
+  }
+
+  getNotificationSettings(userId: number): Observable<Settings> {
+    return this.httpClient.get<Settings>(environment.apiHost + "notifications/" + userId + "/settings");
+  }
+
+  setNotificationSettings(userId: number, updatedSettings: Settings): Observable<Settings> {
+    return this.httpClient.put<Settings>(environment.apiHost + "notifications/" + userId + "/settings", updatedSettings);
   }
 }
