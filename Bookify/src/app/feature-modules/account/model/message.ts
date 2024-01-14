@@ -1,5 +1,6 @@
 export interface Message {
-  message: string,
-  fromId: string,
-  toId: string,
+  id:number,
+  description: string,
+  notificationType: string,
+  created: string;
 }
