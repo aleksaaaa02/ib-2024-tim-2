@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.Bookify.dto.NotificationDTO;
 import rs.ac.uns.ftn.Bookify.dto.NotificationSettingsDTO;
 import rs.ac.uns.ftn.Bookify.enumerations.NotificationType;
+import rs.ac.uns.ftn.Bookify.exception.BadRequestException;
 import rs.ac.uns.ftn.Bookify.mapper.NotificationDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.*;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.INotificationRepository;
@@ -43,11 +44,14 @@ public class NotificationService implements INotificationService {
     @Override
     public NotificationSettingsDTO getNotificationSettings(Long userId) {
         NotificationSettingsDTO settings = new NotificationSettingsDTO();
-        Map<NotificationType, Boolean> t = new HashMap<>();
-        t.put(NotificationType.NEW_USER_RATING, true);
-        t.put(NotificationType.NEW_ACCOMMODATION_RATING, true);
-        t.put(NotificationType.RESERVATION_CREATED, true);
-        t.put(NotificationType.RESERVATION_CANCELED, true);
+        User user = userService.get(userId);
+        Map<NotificationType, Boolean> t;
+        if(user instanceof Owner)
+            t = ((Owner) user).getNotificationType();
+        else if (user instanceof Guest)
+            t = ((Guest) user).getNotificationType();
+        else
+            throw new BadRequestException("Administrator doesn't have notification settings");
         settings.setNotificationType(t);
         return settings;
 
@@ -55,7 +59,13 @@ public class NotificationService implements INotificationService {
 
     @Override
     public NotificationSettingsDTO updateNotificationSettings(Long userId, NotificationSettingsDTO updatedSettings) {
-        updatedSettings.getNotificationType().put(NotificationType.NEW_USER_RATING, false);
+        User user = userService.get(userId);
+        if(user instanceof Owner)
+            ((Owner) user).setNotificationType(updatedSettings.getNotificationType());
+        else if (user instanceof Guest)
+            ((Guest) user).setNotificationType(updatedSettings.getNotificationType());
+        else throw new BadRequestException("Administrator doesn't have notification settings");
+        userService.save(user);
         return updatedSettings;
     }
 
