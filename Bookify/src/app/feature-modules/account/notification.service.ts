@@ -60,8 +60,8 @@ export class NotificationService {
     }) {
         console.log(message);
         if (message.body) {
-            let messageResult: Message = JSON.parse(message.body);
-            this.snackBar.open(messageResult.message, 'ok', {
+            let messageResult = JSON.parse(message.body);
+            this.snackBar.open(messageResult['description'], 'OK', {
                 duration: 3000, horizontalPosition: 'end', verticalPosition: 'bottom'
             });
             this.messages.push(messageResult);
