@@ -22,6 +22,7 @@ import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Reservation;
 import rs.ac.uns.ftn.Bookify.model.User;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
+import rs.ac.uns.ftn.Bookify.service.interfaces.INotificationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
@@ -39,6 +40,9 @@ public class ReservationController {
 
     @Autowired
     private IAccommodationService accommodationService;
+
+    @Autowired
+    private INotificationService notificationService;
 
     @Autowired
     private IUserService userService;
@@ -149,6 +153,7 @@ public class ReservationController {
         Guest guest = (Guest) userService.get(guestId);
         reservationService.setGuest(guest, ra);
         accommodationService.acceptReservationIfAutomaticConformation(ra);
+        notificationService.createNotificationOwnerNewReservation(ra);
         return new ResponseEntity<>(new ReservationDTO(), HttpStatus.CREATED);
     }
 
@@ -180,6 +185,7 @@ public class ReservationController {
         ReservationDTO reservation = ReservationDTOMapper.toReservationDTO(r);
         reservation.setUser(userService.getGuestForReservation(reservation.getId()));
         reservation.setAvgRating(accommodationService.getAvgRating(reservation.getAccommodationId()));
+        notificationService.createNotificationGuestRequestResponse(r);
         return new ResponseEntity<ReservationDTO>(reservation, HttpStatus.OK);
     }
 
@@ -229,7 +235,7 @@ public class ReservationController {
         ReservationGuestViewDTO reservation = ReservationGuestViewDTOMapper.toReservationGuestViewDTO(r);
         reservation.setUser(userService.getGuestForReservation(reservation.getId()));
         reservation.setAvgRating(accommodationService.getAvgRating(reservation.getAccommodationId()));
-
+        notificationService.createNotificationOwnerReservationCancellation(r);
         return new ResponseEntity<>(reservation, HttpStatus.OK);
     }
 
