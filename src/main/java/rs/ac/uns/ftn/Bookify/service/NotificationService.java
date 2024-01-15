@@ -14,6 +14,7 @@ import rs.ac.uns.ftn.Bookify.service.interfaces.INotificationService;
 import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -33,7 +34,9 @@ public class NotificationService implements INotificationService {
 
     @Override
     public List<Notification> getUserNotification(Long userId) {
-        return notificationRepository.getNotificationByUserId(userId);
+        List<Notification> notifications = notificationRepository.getNotificationByUserId(userId);
+        notifications.sort(Comparator.comparing(Notification::getCreated).reversed());
+        return notifications;
     }
 
     @Override
@@ -163,7 +166,7 @@ public class NotificationService implements INotificationService {
     private Notification generateNotification(String description, NotificationType notificationType) {
         Notification notification = new Notification();
         notification.setSeen(false);
-        notification.setCreated(LocalDate.now());
+        notification.setCreated(LocalDateTime.now());
         notification.setDescription(description);
         notification.setNotificationType(notificationType);
         return notification;

@@ -18,7 +18,7 @@ public class NotificationDTOMapper {
 
     public NotificationDTO toNotificationDTO(Notification notification){
         NotificationDTO notificationDTO = modelMapper.map(notification, NotificationDTO.class);
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm");
         notificationDTO.setCreated(notification.getCreated().format(dateTimeFormatter));
         return notificationDTO;
     }
