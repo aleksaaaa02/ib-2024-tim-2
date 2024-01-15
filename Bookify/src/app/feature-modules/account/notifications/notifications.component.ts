@@ -10,7 +10,7 @@ import {AuthenticationService} from "../../authentication/authentication.service
 })
 export class NotificationsComponent implements OnInit{
   notifications: Message[] = []
-
+  role: string = '';
   constructor(private notificationService: NotificationService,
               private authService: AuthenticationService) {
   }
@@ -24,5 +24,6 @@ export class NotificationsComponent implements OnInit{
       },
       error: err => {}
     });
+    this.role = this.authService.getRole();
   }
 }

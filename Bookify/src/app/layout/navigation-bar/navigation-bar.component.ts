@@ -15,6 +15,7 @@ export class NavigationBarComponent implements OnInit {
   currentRoute: string = "";
   isTransparentRoute: boolean = false;
   allowedScrollRoutes: string[] = ['', ' ', '/', '/results'];
+  notificationNumber: number = 0;
 
   constructor(private router: Router,
               private authenticationService: AuthenticationService,
@@ -55,6 +56,9 @@ export class NavigationBarComponent implements OnInit {
       this.role = this.authenticationService.getRole();
       this.setAccountImageIcon();
     }
+    this.authenticationService.getNotificationNumber().subscribe({
+      next: value => this.notificationNumber = value
+    });
   }
 
   private setAccountImageIcon(): void {
