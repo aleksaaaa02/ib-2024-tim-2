@@ -49,7 +49,6 @@ export class NotificationService {
   openSocket(userId: number | undefined) {
     if (this.isLoaded) {
       this.isSocketOpen = true;
-      console.log("Say UwU");
       this.stompClient.subscribe("/socket-publisher/" + userId, (message: {
         body: string;
       }) => {
