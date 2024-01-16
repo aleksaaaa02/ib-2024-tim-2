@@ -171,4 +171,8 @@ export class AccommodationService {
     return this.httpClient.get(environment.apiHost + "accommodations/download-reports-accommodation?ownerId=" + ownerId +
       "&accommodationId=" + accommodationId + "&year=" + year, { responseType: 'blob' });
   }
+
+  getTopAccommodations(): Observable<AccommodationBasicModel[]> {
+    return this.httpClient.get<AccommodationBasicModel[]>(environment.apiHost + 'accommodations/top-accommodations?results=2');
+  }
 }

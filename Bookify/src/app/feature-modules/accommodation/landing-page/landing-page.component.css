@@ -67,3 +67,43 @@
   margin: 0;
   padding: 0;
 }
+
+.background-top-dest {
+  width: 18vw;
+  height: 12vw;
+  background-size: cover;
+  border-radius: 1rem;
+  position: relative;
+}
+
+.name-top-dest {
+  font-size: 1.2vw;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  left: 0.5rem;
+}
+
+#budapest {
+  background-image: url("../../../../assets/images/budapest.jpg");
+}
+
+#sydney {
+  background-image: url("../../../../assets/images/sydney.jpg");
+}
+
+#copenhagen {
+  background-image: url("../../../../assets/images/copenhagen.jpg");
+}
+
+.list-accommodations {
+  display: flex;
+  width: 80%;
+  margin: auto;
+  justify-content: center;
+}
+
+.list-accommodations > * {
+  margin-right: 1rem;
+  margin-left: 1rem;
+}
