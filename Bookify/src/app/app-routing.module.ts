@@ -49,7 +49,8 @@ const routes: Routes = [
   { path: "owner-requests", component: OwnerReservationsComponent, canActivate: [authGuard] },
   { path: "users", component: UsersComponent, canActivate: [authGuard] },
   { path: "favorites", component: FavoritesPageComponent, canActivate: [authGuard] },
-  { path: "accommodation/reports", component: ReportsPageComponent, canActivate: [authGuard] }
+  { path: "accommodation/reports", component: ReportsPageComponent, canActivate: [authGuard] },
+  { path: "guest-reservations", component: GuestReservationsComponent, canActivate: [authGuard] }
 ];
 
 @NgModule({
