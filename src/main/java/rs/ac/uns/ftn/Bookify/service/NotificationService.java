@@ -106,9 +106,9 @@ public class NotificationService implements INotificationService {
 
     private boolean wantsToBeNotified(Notification notification, User user) {
         if(user instanceof Owner)
-            return ((Owner) user).getNotificationType().get(notification.getNotificationType());
+            return ((Owner) user).getNotificationType().getOrDefault(notification.getNotificationType(), false);
         if(user instanceof Guest)
-            return ((Guest) user).getNotificationType().get(notification.getNotificationType());
+            return ((Guest) user).getNotificationType().getOrDefault(notification.getNotificationType(), false);
         return false;
     }
 
