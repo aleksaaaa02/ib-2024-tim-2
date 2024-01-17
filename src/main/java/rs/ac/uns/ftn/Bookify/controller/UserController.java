@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.Bookify.controller;
 
 
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
@@ -82,7 +83,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<MessageDTO> registerUser(@RequestBody UserRegisteredDTO newUser) throws MessagingException {
+    public ResponseEntity<MessageDTO> registerUser(@Valid @RequestBody UserRegisteredDTO newUser) throws MessagingException {
         User user = userService.create(newUser);
         MessageDTO token = new MessageDTO();
         if (user != null) {
@@ -97,7 +98,7 @@ public class UserController {
 
     @PutMapping
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
-    public ResponseEntity<UserDetailDTO> updateUser(@RequestBody UserDetailDTO updatedUser) {
+    public ResponseEntity<UserDetailDTO> updateUser(@Valid @RequestBody UserDetailDTO updatedUser) {
         Optional<User> user = Optional.ofNullable(userService.update(updatedUser));
         return user.map(userDetailDTO -> new ResponseEntity<>(new UserDetailDTO(user.get()), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.BAD_REQUEST));
     }
@@ -124,7 +125,7 @@ public class UserController {
 
     @CrossOrigin(origins = "http://" + IP_ADDRESS + ":4200")
     @PutMapping(value = "/activate-account", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MessageDTO> activateAccount(@RequestBody MessageDTO uuid) {
+    public ResponseEntity<MessageDTO> activateAccount(@Valid @RequestBody MessageDTO uuid) {
         boolean activated = userService.activateUser(uuid.getToken());
         MessageDTO message = new MessageDTO();
         if (activated) {
@@ -136,7 +137,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<UserJWT> login(@RequestBody UserCredentialsDTO userCredentials, @RequestHeader(HttpHeaders.USER_AGENT) String userAgent) {
+    public ResponseEntity<UserJWT> login(@Valid @RequestBody UserCredentialsDTO userCredentials, @RequestHeader(HttpHeaders.USER_AGENT) String userAgent) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userCredentials.getEmail(), userCredentials.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -182,7 +183,7 @@ public class UserController {
 
     @PostMapping(value = "/report")
     @PreAuthorize("hasAnyAuthority('ROLE_GUEST', 'ROLE_OWNER')")
-    public ResponseEntity<Long> insertReport(@RequestBody ReportedUserDTO dto) {
+    public ResponseEntity<Long> insertReport(@Valid @RequestBody ReportedUserDTO dto) {
         //insert new report
         ReportedUser user = ReportedUserDTOMapper.fromDTOtoUser(dto);
         User reportedUser = userService.get(dto.getReportedUser());
@@ -241,7 +242,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/mobile")
-    public ResponseEntity<MessageDTO> registerUserMobile(@RequestBody UserRegisteredDTO newUser) throws MessagingException {
+    public ResponseEntity<MessageDTO> registerUserMobile(@Valid @RequestBody UserRegisteredDTO newUser) throws MessagingException {
         User user = userService.create(newUser);
         MessageDTO token = new MessageDTO();
         if (user != null) {
