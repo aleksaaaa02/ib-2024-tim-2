@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.Bookify.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -86,7 +87,7 @@ public class ReviewController {
 
     @PostMapping(value = "/new-accommodation/{accommodationId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<NewReviewDTO> newReviewAccommodation(@PathVariable Long accommodationId, @RequestBody NewReviewDTO newReview) {
+    public ResponseEntity<NewReviewDTO> newReviewAccommodation(@PathVariable Long accommodationId, @Valid @RequestBody NewReviewDTO newReview) {
         //insert new review for accommodation
 
         Review review = NewReviewDTOMapper.fromDTOtoReview(newReview);
@@ -106,7 +107,7 @@ public class ReviewController {
 
     @PostMapping(value = "/new-owner/{ownerId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
-    public ResponseEntity<NewReviewDTO> newReviewOwner(@PathVariable Long ownerId, @RequestBody NewReviewDTO newReview) {
+    public ResponseEntity<NewReviewDTO> newReviewOwner(@PathVariable Long ownerId, @Valid @RequestBody NewReviewDTO newReview) {
         //insert new review for owner
 
         Review review = NewReviewDTOMapper.fromDTOtoReview(newReview);

@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.Bookify.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -143,7 +144,7 @@ public class ReservationController {
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<ReservationDTO> insert(@RequestBody ReservationRequestDTO reservationRequestDTO, @RequestParam Long accommodationId, @RequestParam Long guestId) {
+    public ResponseEntity<ReservationDTO> insert(@Valid @RequestBody ReservationRequestDTO reservationRequestDTO, @RequestParam Long accommodationId, @RequestParam Long guestId) {
         //insert new reservation request
         Reservation reservation = ReservationRequestDTOMapper.fromReservationRequestDTOToReservation(reservationRequestDTO);
         Reservation ra = reservationService.save(reservation);

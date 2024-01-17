@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.Bookify.controller;
 import com.itextpdf.text.DocumentException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.jpa.repository.Query;
@@ -187,7 +188,7 @@ public class AccommodationController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<Accommodation> insert(@RequestParam Long ownerId, @RequestBody AccommodationInsertDTO accommodationDTO) {
+    public ResponseEntity<Accommodation> insert(@RequestParam Long ownerId,@Valid @RequestBody AccommodationInsertDTO accommodationDTO) {
         //insert new accommodation
         Accommodation accommodation = AccommodationInesertDTOMapper.fromDTOtoAccommodation(accommodationDTO);
 
@@ -215,7 +216,7 @@ public class AccommodationController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<Long> updateAccommodation(@RequestBody AccommodationDTO dto) throws Exception {
+    public ResponseEntity<Long> updateAccommodation(@Valid @RequestBody AccommodationDTO dto) throws Exception {
         //update accommodation
         Accommodation accommodation = AccommodationDTOMapper.fromDTOtoAccommodation(dto);
         accommodationService.update(accommodation);
@@ -281,7 +282,7 @@ public class AccommodationController {
 
     @PostMapping("/{accommodationId}/addPrice")
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<Long> addPriceListItem(@PathVariable Long accommodationId, @RequestBody PriceListItemDTO dto) {
+    public ResponseEntity<Long> addPriceListItem(@PathVariable Long accommodationId, @Valid @RequestBody PriceListItemDTO dto) {
         PricelistItem item = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
         Availability availability = PriceListItemDTOMapper.fromDTOtoAvailability(dto);
         accommodationService.addPriceList(accommodationId, item);
@@ -299,7 +300,7 @@ public class AccommodationController {
 
     @DeleteMapping("/price/{accommodationId}")
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<PriceListItemDTO> deletePriceList(@PathVariable Long accommodationId, @RequestBody PriceListItemDTO dto) {
+    public ResponseEntity<PriceListItemDTO> deletePriceList(@PathVariable Long accommodationId, @Valid @RequestBody PriceListItemDTO dto) {
         PricelistItem pricelistItem = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
         accommodationService.deletePriceListItem(accommodationId, pricelistItem);
         return new ResponseEntity<PriceListItemDTO>(dto, HttpStatus.OK);
