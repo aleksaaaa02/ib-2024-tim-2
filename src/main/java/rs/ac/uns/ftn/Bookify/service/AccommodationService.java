@@ -17,10 +17,8 @@ import rs.ac.uns.ftn.Bookify.model.Image;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAccommodationRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IAvailabilityRepository;
 import rs.ac.uns.ftn.Bookify.repository.interfaces.IPriceListItemRepository;
-import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
-import rs.ac.uns.ftn.Bookify.service.interfaces.IImageService;
-import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
-import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
+import rs.ac.uns.ftn.Bookify.service.interfaces.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
@@ -42,6 +40,9 @@ public class AccommodationService implements IAccommodationService {
 
     @Autowired
     IImageService imageService;
+
+    @Autowired
+    INotificationService notificationService;
 
     @Autowired
     private IAvailabilityRepository availabilityRepository;
@@ -540,6 +541,7 @@ public class AccommodationService implements IAccommodationService {
         reservationService.save(reservation);
         reservationService.rejectOverlappingReservations(accommodation.getId(), reservation.getStart(), reservation.getEnd());
         trimOverlapingAvailabilityIntervals(accommodation.getId(), reservation.getStart(), reservation.getEnd());
+        notificationService.createNotificationGuestRequestResponse(reservation);
     }
 
     public List<ChartDTO> getChartsByPeriod(Long ownerId, LocalDate begin, LocalDate end) {

@@ -14,10 +14,7 @@ import rs.ac.uns.ftn.Bookify.mapper.ReviewAdminViewDTOMapper;
 import rs.ac.uns.ftn.Bookify.model.Guest;
 import rs.ac.uns.ftn.Bookify.model.Owner;
 import rs.ac.uns.ftn.Bookify.model.Review;
-import rs.ac.uns.ftn.Bookify.service.interfaces.IAccommodationService;
-import rs.ac.uns.ftn.Bookify.service.interfaces.IReservationService;
-import rs.ac.uns.ftn.Bookify.service.interfaces.IReviewService;
-import rs.ac.uns.ftn.Bookify.service.interfaces.IUserService;
+import rs.ac.uns.ftn.Bookify.service.interfaces.*;
 
 import java.util.*;
 
@@ -32,6 +29,9 @@ public class ReviewController {
 
     @Autowired
     private IReservationService reservationService;
+
+    @Autowired
+    private INotificationService notificationService;
 
     @Autowired
     private IAccommodationService accommodationService;
@@ -100,7 +100,7 @@ public class ReviewController {
         Accommodation accommodation = accommodationService.getAccommodation(accommodationId);
         accommodation.getReviews().add(insertedReview);
         accommodationService.saveAccommodation(accommodation);
-
+        notificationService.createNotificationOwnerAccommodationGotNewRating(guest, accommodation);
         return new ResponseEntity<>(newReview, HttpStatus.OK);
     }
 
@@ -120,7 +120,7 @@ public class ReviewController {
         Owner owner = userService.getOwner(ownerId);
         owner.getReviews().add(insertedReview);
         userService.saveOwner(owner);
-
+        notificationService.createNotificationOwnerGotNewRating(guest, owner);
         return new ResponseEntity<>(newReview, HttpStatus.OK);
     }
 

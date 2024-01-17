@@ -39,4 +39,5 @@ public interface IUserService {
     public boolean checkIfInFavorites(Long guestId, Long accommodationId);
     public Long reportUser(ReportedUser reportedUser);
     public void removeOwnerReview(Review review);
+    public void save(User user);
 }

@@ -14,5 +14,5 @@ public class NotificationDTO {
     private Long id;
     private String description;
     private NotificationType notificationType;
-    private Date created;
+    private String created;
 }

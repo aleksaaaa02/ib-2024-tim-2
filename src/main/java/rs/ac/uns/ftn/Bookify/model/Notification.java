@@ -8,6 +8,8 @@ import org.hibernate.Length;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import rs.ac.uns.ftn.Bookify.enumerations.NotificationType;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -28,7 +30,7 @@ public class Notification {
 	private NotificationType notificationType;
 
 	@Column(nullable = false)
-	private Date created;
+	private LocalDateTime created;
 
 	@Column
 	private boolean seen;

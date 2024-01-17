@@ -82,7 +82,7 @@ public class WebSecurityConfig {
                             "/api/v1/accommodations/top-accommodations", "/api/v1/accommodations/top-locations", "/api/v1/users/image/{imageId}", "/api/v1/users/forgot-password/{email}",
                             "/api/v1/accommodations/images/{accommodationId}", "/api/v1/reviews/accommodation/{accommodationId}", "/api/v1/reviews/owner/{ownerId}", "/api/v1/users/user/{userId}",
                             "/api/v1/reviews/owner/{ownerId}", "/api/v1/reviews/owner/{ownerId}/rating", "/api/v1/reviews/accommodation/{accommodationId}/rating").permitAll()
-                    .requestMatchers(HttpMethod.POST,"/api/v1/users/login", "/api/v1/users", "/api/v1/accommodations/filter", "/api/v1/users/mobile").permitAll()
+                    .requestMatchers(HttpMethod.POST,"/api/v1/users/login", "/api/v1/users", "/api/v1/accommodations/filter", "/api/v1/users/mobile", "/sendMessageRest").permitAll()
                     .requestMatchers(HttpMethod.PUT, "/api/v1/users/activate-account").permitAll()
                     .anyRequest().authenticated()
             ;
@@ -97,9 +97,9 @@ public class WebSecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
-//                .requestMatchers(HttpMethod.POST,"/api/v1/users/login")
+                .requestMatchers(HttpMethod.POST,"/socket/**", "/ws/**")
                 .requestMatchers(HttpMethod.GET, "/", "/webjars/*", "/*.html", "favicon.ico",
-                        "/*/*.html", "/*/*.css", "/*/*.js");
+                        "/*/*.html", "/*/*.css", "/*/*.js", "/socket/**", "/ws/**");
 
     }
 }
