@@ -36,9 +36,9 @@ export class RatingsComponent implements OnInit, OnChanges {
     this.route.params.subscribe(params => {
       this.userId = +params['userId'];
     });
-    // if (Number.isNaN(this.userId)) {
-    //   this.userId = this.authenticationService.getUserId();
-    // }
+    if (Number.isNaN(this.userId)) {
+      this.userId = this.authenticationService.getUserId();
+    }
     if (!Number.isNaN(this.userId)) {
       this.getRating();
     }

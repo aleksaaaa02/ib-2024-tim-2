@@ -21,8 +21,8 @@ export class Interceptor implements HttpInterceptor {
       return next.handle(cloned).pipe(tap({
         next: (event: HttpEvent<any>): void => {},
         error: (error): void => {
-          if(error.status === 401){
-            localStorage.removeItem('user');
+          if(error.status === 401) {
+            this.authService.logout();
             this.authService.setUser();
             this.router.navigate(['']);
           }

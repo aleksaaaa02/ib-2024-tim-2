@@ -10,6 +10,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { PasswordChangeDialogComponent } from './password-change-dialog/password-change-dialog.component';
 import { AccountDeleteDialogComponent } from './account-delete-dialog/account-delete-dialog.component';
 import { ReviewModule } from '../review/review.module';
+import { NotificationCardComponent } from './notification-card/notification-card.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ReviewModule } from '../review/review.module';
     NotificationsComponent,
     NotificationSettingsComponent,
     PasswordChangeDialogComponent,
-    AccountDeleteDialogComponent
+    AccountDeleteDialogComponent,
+    NotificationCardComponent
   ],
   imports: [
     CommonModule,
