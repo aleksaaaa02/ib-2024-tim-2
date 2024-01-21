@@ -1,6 +1,6 @@
-# Bookify client
+# Bookify server
 
-[Bookify] is a powerful accommodation booking application developed using Spring Boot and Java 17. It offers a robust platform for users to seamlessly book accommodations, with features such as real-time availability and recommendations.
+Bookify is a powerful accommodation booking application developed using Spring Boot and Java 17. It offers a robust platform for users to seamlessly book accommodations, with features such as real-time availability and recommendations.
 
 ## Course Information
 This project is part of the coursework for the course "Inženjerstvo serverskog sloja" (Server-Side Engineering) at [Fakultet Tehničikih Nauka](https://www.ftn.uns.ac.rs/). The goal of the project is to apply the concepts learned during the course and showcase practical skills in developing the server-side of applications.
