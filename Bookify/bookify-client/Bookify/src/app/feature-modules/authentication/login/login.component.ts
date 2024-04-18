@@ -45,6 +45,10 @@ export class LoginComponent {
         next: (response: UserJWT) => {
          localStorage.setItem('user', response.accessToken);
          this.authenticationService.setUser();
+         if(this.authenticationService.getRole() === 'SYS_ADMIN'){
+           this.router.navigate(['/admin/certificates']);
+           return;
+         }
          this.router.navigate(['']);
         },
         error: err => {

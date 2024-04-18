@@ -401,7 +401,7 @@ public class UserService implements IUserService {
     }
 
     private boolean deletionIsPossibility(User user) {
-        switch (getRole(user)) {
+        switch (user.getUserType()) {
             case "OWNER":
                 List<Long> accId = new ArrayList<>();
                 for (Accommodation acc : ((Owner) user).getAccommodations()) {
@@ -426,14 +426,14 @@ public class UserService implements IUserService {
     }
 
     private User unblock(User user) {
-        String role = getRole(user);
+        String role = user.getUserType();
         if (role.equals("ADMIN")) throw new BadRequestException("Administrator's account cannot be blocked/unblocked");
         user.setBlocked(false);
         return userRepository.save(user);
     }
 
     private User block(User user) {
-        String role = getRole(user);
+        String role = user.getUserType();
         if (role.equals("ADMIN")) throw new BadRequestException("Administrator's account cannot be blocked/unblocked");
         if (role.equals("GUEST")) {
             reservationService.cancelGuestsReservations(user.getId());
