@@ -34,13 +34,6 @@ public class CertificateController {
     }
 
 
-    @PostMapping("/request")
-    public ResponseEntity<String> createNewCertificateRequest(@RequestBody CertificateRequestDTO certificateRequestDTO) {
-        CertificateRequest request = certificateService.createCertificateRequest(certificateRequestDTO);
-        if(request.getId() == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>("YEY", HttpStatus.OK);
-    }
-
     @GetMapping("/{certId}/signed")
     public ResponseEntity<List<CertificateDTO>> getCertificatesSignedSubjects(@PathVariable Long certId) {
 
@@ -60,16 +53,4 @@ public class CertificateController {
         return null;
     }
 
-    @PostMapping("/{requestId}/{issuerId}/accept")
-    public ResponseEntity<String> signCertificate(@PathVariable Long requestId, @PathVariable Long issuerId){
-        certificateService.signCertificateRequest(issuerId, requestId);
-        return new ResponseEntity<>("YAY",HttpStatus.OK);
-    }
-
-    @PutMapping("/{requestId}/reject")
-    public ResponseEntity<CertificateRequest> rejectCertificate(@PathVariable Long requestId){
-        CertificateRequest request = certificateService.rejectCertificateRequest(requestId);
-        if(request == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(request, HttpStatus.OK);
-    }
 }

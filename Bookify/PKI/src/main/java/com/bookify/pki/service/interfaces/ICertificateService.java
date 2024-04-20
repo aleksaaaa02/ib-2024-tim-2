@@ -9,10 +9,6 @@ import java.util.List;
 
 @Service
 public interface ICertificateService {
-    CertificateRequest createCertificateRequest(CertificateRequestDTO certificateRequestDTO);
-
     List<Certificate> getSignedCertificates(Long issuerId);
     Certificate getCertificateById(Long id);
-    void signCertificateRequest(Long issuerId, Long requestId);
-    CertificateRequest rejectCertificateRequest(Long requestId);
 }
