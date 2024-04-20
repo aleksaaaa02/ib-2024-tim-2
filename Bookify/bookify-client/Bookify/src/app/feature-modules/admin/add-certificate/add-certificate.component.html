@@ -1,0 +1,40 @@
+<div class="container">
+
+    <div class="certificate-info">
+
+        <h5>Subject:</h5>
+        <input matInput [(ngModel)]="data.name" placeholder="Enter subject">
+
+        <h5>Issuer:</h5>
+        <p>{{ parentSerialNumber }}</p>
+
+        <h5>Public key:</h5>
+        <input matInput [(ngModel)]="data.key" placeholder="Enter public key">
+
+        <h5>Signature:</h5>
+        <p>test</p>
+
+        <h5>Valid from:</h5>
+        <p>test</p>
+
+        <h5>Valid to:</h5>
+        <p>test</p>
+
+        <h5>Serial number:</h5>
+        <p>test</p>
+
+        <h5>Alias:</h5>
+        <p>test</p>
+
+        <h5>Extensions:</h5>
+        <p>test, test, test, test</p>
+
+    </div>
+
+    <div class="buttons">
+        <button (click)="closeDialog()" class="cancel">Cancel</button>
+    
+        <button (click)="onAddClick()">Add</button>
+    </div>
+
+</div>
