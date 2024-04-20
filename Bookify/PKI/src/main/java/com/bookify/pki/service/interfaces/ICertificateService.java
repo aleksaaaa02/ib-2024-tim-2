@@ -5,11 +5,14 @@ import com.bookify.pki.model.Certificate;
 import com.bookify.pki.model.CertificateRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface ICertificateService {
     CertificateRequest createCertificateRequest(CertificateRequestDTO certificateRequestDTO);
 
-    public Certificate getCertificateById(Long id);
+    List<Certificate> getSignedCertificates(Long issuerId);
+    Certificate getCertificateById(Long id);
     void signCertificateRequest(Long issuerId, Long requestId);
     CertificateRequest rejectCertificateRequest(Long requestId);
 }

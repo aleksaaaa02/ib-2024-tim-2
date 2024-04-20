@@ -6,3 +6,7 @@ Bookify/.idea/jarRepositories.xml
 Bookify/.idea/misc.xml
 Bookify/.idea/vcs.xml
 Bookify/.idea/workspace.xml
+Bookify/PKI/certificates/alias_mapping.json
+Bookify/PKI/keys/19202171941713625570155.key
+Bookify/PKI/keys/19202171941713625608334.key
+Bookify/PKI/src/main/resources/application.properties

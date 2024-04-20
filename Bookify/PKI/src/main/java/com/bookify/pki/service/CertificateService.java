@@ -71,6 +71,24 @@ public class CertificateService implements ICertificateService {
         return new Certificate(id, (X509Certificate) c);
     }
 
+    @Override
+    public List<Certificate> getSignedCertificates(Long issuerId){
+
+        List<Long> signedCertificateIds = aliasMappingService.getSignedCertificateIds(issuerId);
+
+        List<Certificate> certificates=new ArrayList<>();
+
+        for (Long id :signedCertificateIds){
+
+            String certificateAlias= aliasMappingService.getCertificateAlias(id);
+            java.security.cert.Certificate c=keyStoreReader.readCertificate("/Users/borislavcelar/keystore.jks", "bookify", certificateAlias);
+            certificates.add(new Certificate(id, (X509Certificate) c));
+
+        }
+
+        return certificates;
+
+    }
 
     @Override
     public CertificateRequest createCertificateRequest(CertificateRequestDTO certificateRequestDTO) {

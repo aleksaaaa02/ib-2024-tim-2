@@ -1,2 +1,17 @@
 {
+  "0" : {
+    "issuerId" : 0,
+    "alias" : "rootca",
+    "signedCertificates" : [ 1713625570851, 1713625608920 ]
+  },
+  "1713625570851" : {
+    "issuerId" : 0,
+    "alias" : "19202171941713625570155",
+    "signedCertificates" : [ ]
+  },
+  "1713625608920" : {
+    "issuerId" : 0,
+    "alias" : "19202171941713625608334",
+    "signedCertificates" : [ ]
+  }
 }
