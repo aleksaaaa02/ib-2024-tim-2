@@ -53,111 +53,24 @@ public class CertificateService implements ICertificateService {
     @Autowired
     private KeyStoreWriter keyStoreWriter;
 
+    @Autowired
+    private AliasMappingService aliasMappingService;
+
+    public CertificateService(){
+        Security.addProvider(new BouncyCastleProvider());
+    }
+
     @Override
     public Certificate getCertificateById(Long id){
 
 
-        String certificateAlias=getCertificateAlias(id);
+        String certificateAlias = aliasMappingService.getCertificateAlias(id);
 
         java.security.cert.Certificate c = keyStoreReader.readCertificate("/Users/borislavcelar/keystore.jks", "bookify", certificateAlias);
 
         return new Certificate(id, (X509Certificate) c);
     }
 
-    String getCertificateAlias(Long id){
-        Map<Long, String> aliases = null;
-        try (FileInputStream fileInputStream = new FileInputStream("/Users/borislavcelar/Documents/GitHub/ib-2024-tim-2/Bookify/PKI/certificates/id_alias.ser");
-             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-            // Read the serialized HashMap object from the file
-            aliases = (Map<Long, String>) objectInputStream.readObject();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return aliases.get(id);
-    }
-
-    List<Long> getSignedCertificateIds(Long issuerCertificateId){
-
-        Map<Long, List<Long>> signedIds = null;
-        try (FileInputStream fileInputStream = new FileInputStream("/Users/borislavcelar/Documents/GitHub/ib-2024-tim-2/Bookify/PKI/certificates/signed_ids.ser");
-             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-            // Read the serialized HashMap object from the file
-            signedIds = (Map<Long, List<Long>>) objectInputStream.readObject();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return signedIds.get(issuerCertificateId);
-
-
-    }
-
-    void addSignedId(Long issuerId,Long subjectId){
-
-        Map<Long, List<Long>> signedIds = null;
-        try (FileInputStream fileInputStream = new FileInputStream("/Users/borislavcelar/Documents/GitHub/ib-2024-tim-2/Bookify/PKI/certificates/signed_ids.ser");
-             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-            // Read the serialized HashMap object from the file
-            signedIds = (Map<Long, List<Long>>) objectInputStream.readObject();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (signedIds.isEmpty()) {
-            // If the map is empty, create a new list and add the number to it
-            List<Long> newList = new ArrayList<>();
-            newList.add(subjectId);
-            // Put the new list into the map
-            signedIds.put(issuerId, newList);
-        }else{
-
-            List<Long> newIds = new ArrayList<>();
-            newIds=signedIds.get(issuerId);
-            newIds.add(subjectId);
-            signedIds.put(issuerId,newIds);
-
-        }
-
-        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("/Users/borislavcelar/Documents/GitHub/ib-2024-tim-2/Bookify/PKI/certificates/signed_ids.ser"))) {
-            // Write the HashMap to the file
-            outputStream.writeObject(signedIds);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-    void addIdAlias(Long certId,String certAlias){
-
-        Map<Long, String> aliases = null;
-        try (FileInputStream fileInputStream = new FileInputStream("/Users/borislavcelar/Documents/GitHub/ib-2024-tim-2/Bookify/PKI/certificates/id_alias.ser");
-             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-            // Read the serialized HashMap object from the file
-            aliases = (Map<Long, String>) objectInputStream.readObject();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        aliases.put(certId,certAlias);
-
-        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("/Users/borislavcelar/Documents/GitHub/ib-2024-tim-2/Bookify/PKI/certificates/id_alias.ser"))) {
-            // Write the HashMap to the file
-            outputStream.writeObject(aliases);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public CertificateService(){
-        Security.addProvider(new BouncyCastleProvider());
-    }
 
     @Override
     public CertificateRequest createCertificateRequest(CertificateRequestDTO certificateRequestDTO) {
@@ -177,7 +90,7 @@ public class CertificateService implements ICertificateService {
         if(requestOptional.isEmpty()) return;
         CertificateRequest request = requestOptional.get();
 
-        String alias=getCertificateAlias(issuerId);
+        String alias=aliasMappingService.getCertificateAlias(issuerId);
 
         java.security.cert.Certificate c = keyStoreReader.readCertificate("/Users/borislavcelar/keystore.jks", "bookify", alias);
 
@@ -237,11 +150,9 @@ public class CertificateService implements ICertificateService {
             saveCertificate(x509Certificate,subjectAlias);
             savePrivateKey(keyPair.getPrivate(),subjectAlias);
 
-
             Long subjectId=new Date().getTime();
 
-            addSignedId(issuerId,subjectId);
-
+            aliasMappingService.addSignedCertificate(issuerId,subjectId,subjectAlias);
 
             System.out.println(x509Certificate);
         }
@@ -289,6 +200,7 @@ public class CertificateService implements ICertificateService {
     }
 
     void saveCertificate(X509Certificate cert,String alias){
+        keyStoreWriter.loadKeyStore("/Users/borislavcelar/keystore.jks","bookify".toCharArray());
         keyStoreWriter.write(alias,cert);
         keyStoreWriter.saveKeyStore("/Users/borislavcelar/keystore.jks","bookify".toCharArray());
     }
@@ -306,7 +218,7 @@ public class CertificateService implements ICertificateService {
         pemKey.append("-----END PRIVATE KEY-----\n");
 
         // Write the PEM encoded private key to the file
-        try (Writer writer = new FileWriter("/Users/borislavcelar/Documents/GitHub/ib-2024-tim-2/Bookify/PKI/keys"+alias+".key")) {
+        try (Writer writer = new FileWriter("/Users/borislavcelar/Documents/GitHub/ib-2024-tim-2/Bookify/PKI/keys/"+alias+".key")) {
             writer.write(pemKey.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);
