@@ -2,10 +2,7 @@ package com.bookify.pki.model;
 
 import com.bookify.pki.enumerations.CertificateRequestStatus;
 import com.bookify.pki.enumerations.CertificateType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +20,11 @@ public class CertificateRequest {
     private String locality;
     private String country;
     private String email;
+
+    @Enumerated(EnumType.STRING)
     private CertificateType certificateType;
+
+    @Enumerated(EnumType.STRING)
     private CertificateRequestStatus certificateRequestStatus;
 
 }

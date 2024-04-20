@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -17,8 +19,8 @@ import java.util.Map;
 @Service
 public class AliasMappingService {
 
-    static final String ALIAS_MAP_FILENAME="/Users/borislavcelar/Documents/GitHub/ib-2024-tim-2/Bookify/PKI/certificates/alias_mapping.json";
-
+    @Value("${alias-mapping.location}")
+    private String ALIAS_MAP_FILENAME;
 
     public String getCertificateAlias(Long certificateId){
 

@@ -47,9 +47,9 @@ public class CertificateController {
         return null;
     }
 
-    @PostMapping("/{requestId}/accept")
-    public ResponseEntity<String> signCertificate(@PathVariable Long requestId){
-        certificateService.signCertificateRequest(0L, requestId);
+    @PostMapping("/{requestId}/{issuerId}/accept")
+    public ResponseEntity<String> signCertificate(@PathVariable Long requestId, @PathVariable Long issuerId){
+        certificateService.signCertificateRequest(issuerId, requestId);
         return new ResponseEntity<>("YAY",HttpStatus.OK);
     }
 
