@@ -17,8 +17,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class CertificateDTO {
     Long id;
-    X500Name issuer;
-    X500Name subject;
+    String issuer;
+    String subject;
     Date dateFrom;
     Date dateTo;
 
@@ -26,17 +26,10 @@ public class CertificateDTO {
 
         this.id=certificate.getId();
 
-        try {
-
-            JcaX509CertificateHolder holder=new JcaX509CertificateHolder(certificate.getX509Certificate());
-            this.issuer=holder.getIssuer();
-            this.subject=holder.getSubject();
-            this.dateTo=holder.getNotAfter();
-            this.dateFrom=holder.getNotBefore();
-
-        } catch (CertificateEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        this.issuer=certificate.getX509Certificate().getIssuerX500Principal().getName();
+        this.subject=certificate.getX509Certificate().getSubjectX500Principal().getName();
+        this.dateTo=certificate.getX509Certificate().getNotAfter();
+        this.dateFrom=certificate.getX509Certificate().getNotBefore();
 
     }
 
