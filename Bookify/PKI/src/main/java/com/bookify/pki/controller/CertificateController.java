@@ -1,5 +1,6 @@
 package com.bookify.pki.controller;
 
+import com.bookify.pki.dto.CertificateDTO;
 import com.bookify.pki.dto.CertificateRequestDTO;
 import com.bookify.pki.model.Certificate;
 import com.bookify.pki.model.CertificateRequest;
@@ -20,9 +21,16 @@ public class CertificateController {
     private ICertificateService certificateService;
 
     @GetMapping("/{certId}")
-    public ResponseEntity<Certificate> getCertificate(@PathVariable Long certId) {
-        return null;
+    public ResponseEntity<CertificateDTO> getCertificate(@PathVariable Long certId) {
+
+        Certificate c=certificateService.getCertificateById(certId);
+
+        CertificateDTO cDTO=new CertificateDTO(c);
+
+        return new ResponseEntity<>(cDTO, HttpStatus.OK);
+
     }
+
 
     @PostMapping("/request")
     public ResponseEntity<String> createNewCertificateRequest(@RequestBody CertificateRequestDTO certificateRequestDTO) {
@@ -31,19 +39,21 @@ public class CertificateController {
         return new ResponseEntity<>("YEY", HttpStatus.OK);
     }
 
+
+
     @GetMapping("/all")
     public ResponseEntity<List<Certificate>> getAllCertificates() {
 
         return null;
     }
 
-    @PostMapping("/{issuerId}/{requestId}")
-    public ResponseEntity<?> signCertificate(@PathVariable Long issuerId, @PathVariable Long requestId){
-        certificateService.signCertificateRequest(-1L, requestId);
-        return null;
+    @PostMapping("/{requestId}/accept")
+    public ResponseEntity<String> signCertificate(@PathVariable Long requestId){
+        certificateService.signCertificateRequest(0L, requestId);
+        return new ResponseEntity<>("YAY",HttpStatus.OK);
     }
 
-    @PutMapping("/{requestId}")
+    @PutMapping("/{requestId}/reject")
     public ResponseEntity<CertificateRequest> rejectCertificate(@PathVariable Long requestId){
         CertificateRequest request = certificateService.rejectCertificateRequest(requestId);
         if(request == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

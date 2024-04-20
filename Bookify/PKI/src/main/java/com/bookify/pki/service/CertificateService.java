@@ -9,6 +9,7 @@ import com.bookify.pki.model.Subject;
 import com.bookify.pki.repository.ICertificateRequestRepository;
 import com.bookify.pki.service.interfaces.ICertificateService;
 import com.bookify.pki.utils.KeyStoreReader;
+import com.bookify.pki.utils.KeyStoreWriter;
 import com.bookify.pki.utils.KeyUtils;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -28,8 +29,7 @@ import org.bouncycastle.util.io.pem.PemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigInteger;
 import java.security.*;
 import java.security.cert.CertificateEncodingException;
@@ -37,9 +37,9 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class CertificateService implements ICertificateService {
@@ -49,6 +49,111 @@ public class CertificateService implements ICertificateService {
 
     @Autowired
     private KeyStoreReader keyStoreReader;
+
+    @Autowired
+    private KeyStoreWriter keyStoreWriter;
+
+    @Override
+    public Certificate getCertificateById(Long id){
+
+
+        String certificateAlias=getCertificateAlias(id);
+
+        java.security.cert.Certificate c = keyStoreReader.readCertificate("/Users/borislavcelar/keystore.jks", "bookify", certificateAlias);
+
+        return new Certificate(id, (X509Certificate) c);
+    }
+
+    String getCertificateAlias(Long id){
+        Map<Long, String> aliases = null;
+        try (FileInputStream fileInputStream = new FileInputStream("/Users/borislavcelar/Documents/GitHub/ib-2024-tim-2/Bookify/PKI/certificates/id_alias.ser");
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            // Read the serialized HashMap object from the file
+            aliases = (Map<Long, String>) objectInputStream.readObject();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return aliases.get(id);
+    }
+
+    List<Long> getSignedCertificateIds(Long issuerCertificateId){
+
+        Map<Long, List<Long>> signedIds = null;
+        try (FileInputStream fileInputStream = new FileInputStream("/Users/borislavcelar/Documents/GitHub/ib-2024-tim-2/Bookify/PKI/certificates/signed_ids.ser");
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            // Read the serialized HashMap object from the file
+            signedIds = (Map<Long, List<Long>>) objectInputStream.readObject();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return signedIds.get(issuerCertificateId);
+
+
+    }
+
+    void addSignedId(Long issuerId,Long subjectId){
+
+        Map<Long, List<Long>> signedIds = null;
+        try (FileInputStream fileInputStream = new FileInputStream("/Users/borislavcelar/Documents/GitHub/ib-2024-tim-2/Bookify/PKI/certificates/signed_ids.ser");
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            // Read the serialized HashMap object from the file
+            signedIds = (Map<Long, List<Long>>) objectInputStream.readObject();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (signedIds.isEmpty()) {
+            // If the map is empty, create a new list and add the number to it
+            List<Long> newList = new ArrayList<>();
+            newList.add(subjectId);
+            // Put the new list into the map
+            signedIds.put(issuerId, newList);
+        }else{
+
+            List<Long> newIds = new ArrayList<>();
+            newIds=signedIds.get(issuerId);
+            newIds.add(subjectId);
+            signedIds.put(issuerId,newIds);
+
+        }
+
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("/Users/borislavcelar/Documents/GitHub/ib-2024-tim-2/Bookify/PKI/certificates/signed_ids.ser"))) {
+            // Write the HashMap to the file
+            outputStream.writeObject(signedIds);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    void addIdAlias(Long certId,String certAlias){
+
+        Map<Long, String> aliases = null;
+        try (FileInputStream fileInputStream = new FileInputStream("/Users/borislavcelar/Documents/GitHub/ib-2024-tim-2/Bookify/PKI/certificates/id_alias.ser");
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            // Read the serialized HashMap object from the file
+            aliases = (Map<Long, String>) objectInputStream.readObject();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        aliases.put(certId,certAlias);
+
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("/Users/borislavcelar/Documents/GitHub/ib-2024-tim-2/Bookify/PKI/certificates/id_alias.ser"))) {
+            // Write the HashMap to the file
+            outputStream.writeObject(aliases);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public CertificateService(){
         Security.addProvider(new BouncyCastleProvider());
@@ -72,49 +177,81 @@ public class CertificateService implements ICertificateService {
         if(requestOptional.isEmpty()) return;
         CertificateRequest request = requestOptional.get();
 
-        if(issuerId == -1){
+        String alias=getCertificateAlias(issuerId);
 
-            java.security.cert.Certificate c = keyStoreReader.readCertificate("C:/Fakultet/Informaciona Bezbednost/ib-2021-tim-2/bookify/PKI/src/main/resources/static/keystore.jks", "password123", "rootCA");
-            try (
-                   FileReader keyReader = new FileReader("C:/Fakultet/Informaciona Bezbednost/ib-2021-tim-2/bookify/PKI/src/main/resources/static/rootCAKey.key")){
-
-                // Read private key
-                PemReader pemReader = new PemReader(keyReader);
-                PemObject pemObject = pemReader.readPemObject();
-                byte[] privateKeyBytes = pemObject.getContent();
-                PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-                KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-                PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
-
-                JcaX509CertificateHolder holder = new JcaX509CertificateHolder((X509Certificate) c);
+        java.security.cert.Certificate c = keyStoreReader.readCertificate("/Users/borislavcelar/keystore.jks", "bookify", alias);
 
 
-                Issuer issuer = new Issuer(privateKey, c.getPublicKey(), holder.getSubject());
-                KeyPair keyPair = KeyUtils.generateKeyPair();
-                X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
-                builder.addRDN(BCStyle.CN, request.getSubjectName());
-                builder.addRDN(BCStyle.C, request.getCountry());
-                builder.addRDN(BCStyle.L, request.getLocality());
-                builder.addRDN(BCStyle.E, request.getEmail());
-                //UID (USER ID) je ID korisnika
+        try {
+            //"/Users/borislavcelar/root_key.key"
 
-                Subject subject = new Subject(keyPair.getPublic(), builder.build());
-                Date startDate = new Date();
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(new Date());
-                calendar.add(Calendar.YEAR, 1);
-                Date endDate = calendar.getTime();
-
-
-                X509Certificate x509Certificate = generateCertificate(subject, issuer, startDate, endDate);
-                System.out.println(x509Certificate);
+            StringBuilder privateKeyContent = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new FileReader("/Users/borislavcelar/"+alias+".key"))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    privateKeyContent.append(line).append("\n");
+                }
             }
-            catch (InvalidKeySpecException | NoSuchAlgorithmException | IOException | CertificateEncodingException e) {
-                throw new RuntimeException(e);
+
+            // Remove PEM header and footer
+            String privateKeyPEM = privateKeyContent.toString()
+                    .replace("-----BEGIN PRIVATE KEY-----", "")
+                    .replace("-----END PRIVATE KEY-----", "")
+                    .replaceAll("\\s", "");
+
+            // Decode Base64-encoded data
+            byte[] privateKeyBytes = Base64.getDecoder().decode(privateKeyPEM);
+
+            // Convert to PrivateKey object
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+            PrivateKey privateKey= keyFactory.generatePrivate(keySpec);
+
+
+            JcaX509CertificateHolder holder = new JcaX509CertificateHolder((X509Certificate) c);
+
+            Issuer issuer = new Issuer(privateKey, c.getPublicKey(), holder.getSubject());
+            KeyPair keyPair = KeyUtils.generateKeyPair();
+            X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
+            builder.addRDN(BCStyle.CN, request.getSubjectName());
+            builder.addRDN(BCStyle.C, request.getCountry());
+            builder.addRDN(BCStyle.L, request.getLocality());
+            builder.addRDN(BCStyle.E, request.getEmail());
+            //UID (USER ID) je ID korisnika
+
+            Subject subject = new Subject(keyPair.getPublic(), builder.build());
+            Date startDate = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            calendar.add(Calendar.YEAR, 1);
+            Date endDate = calendar.getTime();
+
+            if(!holder.isValidOn(endDate)){
+                endDate=holder.getNotAfter();
             }
-            System.out.println(c);
+
+            X509Certificate x509Certificate = generateCertificate(subject, issuer, startDate, endDate);
+
+            String subjectAlias=generateCertificateAlias(x509Certificate);
+
+            saveCertificate(x509Certificate,subjectAlias);
+            savePrivateKey(keyPair.getPrivate(),subjectAlias);
+
+
+            Long subjectId=new Date().getTime();
+
+            addSignedId(issuerId,subjectId);
+
+
+            System.out.println(x509Certificate);
         }
+        catch (InvalidKeySpecException | NoSuchAlgorithmException | IOException | CertificateEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(c);
+
     }
+
 
     @Override
     public CertificateRequest rejectCertificateRequest(Long requestId) {
@@ -127,10 +264,12 @@ public class CertificateService implements ICertificateService {
 
     private X509Certificate generateCertificate(Subject subject, Issuer issuer, Date startDate, Date endDate) {
         try {
+
             BigInteger randomNumber = BigInteger.valueOf(System.currentTimeMillis());
             JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
             builder = builder.setProvider("BC");
             ContentSigner contentSigner = builder.build(issuer.getPrivateKey());
+
             X509v3CertificateBuilder certGen = new JcaX509v3CertificateBuilder(issuer.getX500Name(),
                     randomNumber,
                     startDate,
@@ -148,4 +287,36 @@ public class CertificateService implements ICertificateService {
         }
         return null;
     }
+
+    void saveCertificate(X509Certificate cert,String alias){
+        keyStoreWriter.write(alias,cert);
+        keyStoreWriter.saveKeyStore("/Users/borislavcelar/keystore.jks","bookify".toCharArray());
+    }
+
+    void savePrivateKey(PrivateKey privateKey,String alias){
+
+        // Convert the key to Base64 encoding
+        byte[] keyBytes = privateKey.getEncoded();
+        String base64Key = Base64.getEncoder().encodeToString(keyBytes);
+
+        // Add PEM headers and footers
+        StringBuilder pemKey = new StringBuilder();
+        pemKey.append("-----BEGIN PRIVATE KEY-----\n");
+        pemKey.append(base64Key).append("\n");
+        pemKey.append("-----END PRIVATE KEY-----\n");
+
+        // Write the PEM encoded private key to the file
+        try (Writer writer = new FileWriter("/Users/borislavcelar/Documents/GitHub/ib-2024-tim-2/Bookify/PKI/keys"+alias+".key")) {
+            writer.write(pemKey.toString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    String generateCertificateAlias(X509Certificate cert){
+
+        return cert.getIssuerX500Principal().getName().hashCode()+cert.getSerialNumber().toString();
+
+    }
+
 }
