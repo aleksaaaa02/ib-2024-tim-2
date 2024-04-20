@@ -48,15 +48,15 @@ public class CertificateRequestController {
         return null;
     }
 
-    @PostMapping("/{requestId}/accept/")
-    public ResponseEntity<CertificateRequest> signCertificate(@PathVariable Long requestId,@RequestParam(value="issuerId",required = true) Long issuerId){
+    @PostMapping("/accept/{requestId}/{issuerId}")
+    public ResponseEntity<CertificateRequest> acceptCertificateRequest(@PathVariable Long requestId,@PathVariable Long issuerId){
         CertificateRequest request = certificateRequestService.acceptCertificateRequest(requestId, issuerId);
 
         if(request == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(request, HttpStatus.OK);
     }
 
-    @PutMapping("/{requestId}/reject")
+    @PutMapping("/reject/{requestId}")
     public ResponseEntity<CertificateRequest> rejectCertificate(@PathVariable Long requestId){
         CertificateRequest request = certificateRequestService.rejectCertificateRequest(requestId);
         if(request == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
