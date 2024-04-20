@@ -2,8 +2,10 @@ package com.bookify.pki.service;
 
 import com.bookify.pki.builder.CertificateBuilder;
 import com.bookify.pki.dto.CertificateRequestDTO;
+import com.bookify.pki.dto.NewCertificateDTO;
 import com.bookify.pki.enumerations.CertificatePurpose;
 import com.bookify.pki.enumerations.CertificateRequestStatus;
+import com.bookify.pki.enumerations.CertificateType;
 import com.bookify.pki.model.Certificate;
 import com.bookify.pki.model.CertificateRequest;
 import com.bookify.pki.model.Issuer;
@@ -69,26 +71,69 @@ public class CertificateService implements ICertificateService {
 
     @Override
     public Certificate getCertificateById(Long id){
-
-
         String certificateAlias = aliasMappingService.getCertificateAlias(id);
-
         java.security.cert.Certificate c = keyStoreReader.readCertificate(keystoreLocation, keystorePassword, certificateAlias);
-
         return new Certificate(id, (X509Certificate) c);
     }
 
     @Override
+    public Certificate createNewCertificate(NewCertificateDTO newCertificateDTO) {
+        String certificateAlias = aliasMappingService.getCertificateAlias(newCertificateDTO.getIssuerId());
+        java.security.cert.Certificate issuerCertificate = keyStoreReader.readCertificate(keystoreLocation, keystorePassword, certificateAlias);
+
+        if(((X509Certificate) issuerCertificate).getBasicConstraints() == -1) return null;
+
+        JcaX509CertificateHolder holder = null;
+        try {
+            holder = new JcaX509CertificateHolder((X509Certificate) issuerCertificate);
+        } catch (CertificateEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+        PrivateKey privateKey = KeyUtils.readPrivateKey(keyLocation + certificateAlias + ".key");
+        Issuer issuer = new Issuer(privateKey, issuerCertificate.getPublicKey(), holder.getSubject());
+        
+        KeyPair keyPair = KeyUtils.generateKeyPair();
+
+        Subject subject = getSubject(newCertificateDTO, keyPair);
+
+        Date startDate = newCertificateDTO.getNotBefore();
+        Date endDate = newCertificateDTO.getNotAfter();
+
+        CertificateBuilder certificateBuilder = new CertificateBuilder();
+        certificateBuilder
+                .withIssuer(issuer)
+                .withPurpose(newCertificateDTO.getPurpose())
+                .withValidity(startDate, endDate)
+                .withSubject(subject);
+        X509Certificate x509Certificate = certificateBuilder.build();
+        if(x509Certificate == null) return null;
+
+        String subjectAlias = generateCertificateAlias(x509Certificate);
+        saveCertificate(x509Certificate, newCertificateDTO.getIssuerId(), subjectAlias);
+        if(newCertificateDTO.getCertificateType() != CertificateType.END_ENTITY) savePrivateKey(keyPair.getPrivate(), subjectAlias);
+        return new Certificate(newCertificateDTO.getIssuerId(), x509Certificate);
+    }
+
+    private static Subject getSubject(NewCertificateDTO newCertificateDTO, KeyPair keyPair) {
+        X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
+        builder.addRDN(BCStyle.CN, newCertificateDTO.getCommonName());
+        builder.addRDN(BCStyle.C, newCertificateDTO.getCountry());
+        builder.addRDN(BCStyle.L, newCertificateDTO.getLocality());
+        builder.addRDN(BCStyle.E, newCertificateDTO.getEmail());
+        builder.addRDN(BCStyle.O, newCertificateDTO.getOrganization());
+        builder.addRDN(BCStyle.OU, newCertificateDTO.getOrganizationalUnit());
+
+        return new Subject(keyPair.getPublic(), builder.build());
+    }
+
+    @Override
     public List<Certificate> getSignedCertificates(Long issuerId){
-
         List<Long> signedCertificateIds = aliasMappingService.getSignedCertificateIds(issuerId);
-
-        List<Certificate> certificates=new ArrayList<>();
-
+        List<Certificate> certificates = new ArrayList<>();
         for (Long id :signedCertificateIds){
-
             String certificateAlias= aliasMappingService.getCertificateAlias(id);
-            java.security.cert.Certificate c=keyStoreReader.readCertificate("/Users/borislavcelar/keystore.jks", "bookify", certificateAlias);
+            java.security.cert.Certificate c=keyStoreReader.readCertificate(keystoreLocation, keystorePassword, certificateAlias);
             certificates.add(new Certificate(id, (X509Certificate) c));
 
         }
@@ -96,7 +141,6 @@ public class CertificateService implements ICertificateService {
         return certificates;
 
     }
-
 
     public static Date getEndDate(JcaX509CertificateHolder holder) {
         Calendar calendar = Calendar.getInstance();
@@ -118,40 +162,13 @@ public class CertificateService implements ICertificateService {
         return new Subject(keyPair.getPublic(), builder.build());
     }
 
-    public X509Certificate generateCertificate(Subject subject, Issuer issuer, Date startDate, Date endDate) {
-        try {
-
-            BigInteger randomNumber = BigInteger.valueOf(System.currentTimeMillis());
-            JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
-            builder = builder.setProvider("BC");
-            ContentSigner contentSigner = builder.build(issuer.getPrivateKey());
-
-            X509v3CertificateBuilder certGen = new JcaX509v3CertificateBuilder(issuer.getX500Name(),
-                    randomNumber,
-                    startDate,
-                    endDate,
-                    subject.getX500Name(),
-                    subject.getPublicKey());
-
-            X509CertificateHolder certHolder = certGen.build(contentSigner);
-            JcaX509CertificateConverter certConverter = new JcaX509CertificateConverter();
-            certConverter = certConverter.setProvider("BC");
-            return certConverter.getCertificate(certHolder);
-
-        } catch (IllegalArgumentException | IllegalStateException | OperatorCreationException | CertificateException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
     void saveCertificate(X509Certificate cert,Long issuerId,String alias){
 
         keyStoreWriter.loadKeyStore(keystoreLocation,keystorePassword.toCharArray());
         keyStoreWriter.write(alias,cert);
         keyStoreWriter.saveKeyStore(keystoreLocation,keystorePassword.toCharArray());
 
-        Long subjectId=new Date().getTime();
+        Long subjectId = new Date().getTime();
         aliasMappingService.addSignedCertificate(issuerId,subjectId,alias);
     }
 

@@ -4,11 +4,13 @@ import com.bookify.pki.builder.CertificateBuilder;
 import com.bookify.pki.dto.CertificateRequestDTO;
 import com.bookify.pki.enumerations.CertificatePurpose;
 import com.bookify.pki.enumerations.CertificateRequestStatus;
+import com.bookify.pki.enumerations.CertificateType;
 import com.bookify.pki.model.Certificate;
 import com.bookify.pki.model.CertificateRequest;
 import com.bookify.pki.model.Issuer;
 import com.bookify.pki.model.Subject;
 import com.bookify.pki.repository.ICertificateRequestRepository;
+import com.bookify.pki.service.interfaces.ICertificateRequestService;
 import com.bookify.pki.service.interfaces.ICertificateService;
 import com.bookify.pki.utils.KeyStoreReader;
 import com.bookify.pki.utils.KeyStoreWriter;
@@ -39,11 +41,10 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.*;
 
 @Service
-public class CertificateRequestService {
+public class CertificateRequestService implements ICertificateRequestService {
 
     @Autowired
     private ICertificateRequestRepository certificateRequestRepository;
-
 
     @Autowired
     private AliasMappingService aliasMappingService;
@@ -68,84 +69,74 @@ public class CertificateRequestService {
         Security.addProvider(new BouncyCastleProvider());
     }
 
+    @Override
     public CertificateRequest getRequestById(Long id){
-
         Optional<CertificateRequest> requestOptional = certificateRequestRepository.findById(id);
-        if(requestOptional.isEmpty()) return null;
-
-        return requestOptional.get();
+        return requestOptional.orElse(null);
     }
 
+    @Override
     public List<Certificate> getSignedCertificates(Long issuerId){
-
         List<Long> signedCertificateIds = aliasMappingService.getSignedCertificateIds(issuerId);
+        List<Certificate> certificates = new ArrayList<>();
 
-        List<Certificate> certificates=new ArrayList<>();
-
-        for (Long id :signedCertificateIds){
-
-            String certificateAlias= aliasMappingService.getCertificateAlias(id);
-            java.security.cert.Certificate c=keyStoreReader.readCertificate(keystoreLocation, keystorePassword, certificateAlias);
+        for (Long id : signedCertificateIds){
+            String certificateAlias = aliasMappingService.getCertificateAlias(id);
+            java.security.cert.Certificate c = keyStoreReader.readCertificate(keystoreLocation, keystorePassword, certificateAlias);
             certificates.add(new Certificate(id, (X509Certificate) c));
-
         }
 
         return certificates;
-
     }
 
+    @Override
     public CertificateRequest createCertificateRequest(CertificateRequestDTO certificateRequestDTO) {
         CertificateRequest request = new CertificateRequest(null,
                 certificateRequestDTO.getSubjectName(),
                 certificateRequestDTO.getLocality(),
                 certificateRequestDTO.getCountry(),
                 certificateRequestDTO.getEmail(),
-                certificateRequestDTO.getCertificateType(),
+                CertificateType.END_ENTITY,
                 CertificateRequestStatus.PENDING);
         return certificateRequestRepository.save(request);
     }
 
+    @Override
     public CertificateRequest acceptCertificateRequest(Long issuerId, Long requestId) {
 
         Optional<CertificateRequest> requestOptional = certificateRequestRepository.findById(requestId);
         if(requestOptional.isEmpty()) return null;
-
         CertificateRequest request = requestOptional.get();
 
-        if(request.getCertificateRequestStatus()==CertificateRequestStatus.PENDING){
+        if(request.getCertificateRequestStatus() != CertificateRequestStatus.PENDING) return null;
 
-            signCertificateRequest(request,issuerId);
-
-            request.setCertificateRequestStatus(CertificateRequestStatus.ACCEPTED);
-            return certificateRequestRepository.save(request);
-
-        }else{
-
-            return null;
-
-        }
+        signCertificateRequest(request, issuerId);
+        request.setCertificateRequestStatus(CertificateRequestStatus.ACCEPTED);
+        return certificateRequestRepository.save(request);
     }
 
+    @Override
     public CertificateRequest rejectCertificateRequest(Long requestId) {
         Optional<CertificateRequest> requestOptional = certificateRequestRepository.findById(requestId);
         if(requestOptional.isEmpty()) return null;
-
         CertificateRequest request = requestOptional.get();
 
+        if(request.getCertificateRequestStatus() != CertificateRequestStatus.PENDING) return null;
         request.setCertificateRequestStatus(CertificateRequestStatus.REJECTED);
         return certificateRequestRepository.save(request);
     }
 
+    @Override
     public void signCertificateRequest(CertificateRequest request,Long issuerId) {
 
-        String issuerAlias=aliasMappingService.getCertificateAlias(issuerId);
+        String issuerAlias = aliasMappingService.getCertificateAlias(issuerId);
 
         java.security.cert.Certificate issuerCertificate = keyStoreReader.readCertificate(keystoreLocation, keystorePassword, issuerAlias);
+        if(((X509Certificate) issuerCertificate).getBasicConstraints() == -1) return;
 
         try {
 
-            PrivateKey privateKey=KeyUtils.readPrivateKey(keyLocation+issuerAlias+".key");
-
+            PrivateKey privateKey = KeyUtils.readPrivateKey(keyLocation+issuerAlias+".key");
             JcaX509CertificateHolder holder = new JcaX509CertificateHolder((X509Certificate) issuerCertificate);
 
             Issuer issuer = new Issuer(privateKey, issuerCertificate.getPublicKey(), holder.getSubject());
@@ -166,21 +157,22 @@ public class CertificateRequestService {
             X509Certificate x509Certificate = certificateBuilder.build();
             if(x509Certificate == null) return;
 
-            String subjectAlias=certificateService.generateCertificateAlias(x509Certificate);
+            String subjectAlias = certificateService.generateCertificateAlias(x509Certificate);
 
-            certificateService.saveCertificate(x509Certificate,issuerId,subjectAlias);
-            certificateService.savePrivateKey(keyPair.getPrivate(),subjectAlias);
+            certificateService.saveCertificate(x509Certificate, issuerId, subjectAlias);
+            //certificateService.savePrivateKey(keyPair.getPrivate(), subjectAlias);
 
             System.out.println(x509Certificate);
         }
         catch (CertificateEncodingException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
-
+    @Override
+    public List<CertificateRequest> getPendingCertificateRequest() {
+        return certificateRequestRepository.findAllByCertificateRequestStatusIs(CertificateRequestStatus.PENDING);
+    }
 
 
 }

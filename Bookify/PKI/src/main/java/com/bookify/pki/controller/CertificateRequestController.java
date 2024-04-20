@@ -5,6 +5,7 @@ import com.bookify.pki.dto.CertificateRequestDTO;
 import com.bookify.pki.model.Certificate;
 import com.bookify.pki.model.CertificateRequest;
 import com.bookify.pki.service.CertificateRequestService;
+import com.bookify.pki.service.interfaces.ICertificateRequestService;
 import com.bookify.pki.service.interfaces.ICertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,44 +21,43 @@ import java.util.List;
 public class CertificateRequestController {
 
     @Autowired
-    private CertificateRequestService certificateRequestService;
+    private ICertificateRequestService certificateRequestService;
 
     @GetMapping("/{requestId}")
-    public ResponseEntity<CertificateRequestDTO> getCertificateRequest(@PathVariable Long certId) {
-
-        CertificateRequest cr=certificateRequestService.getRequestById(certId);
-
+    public ResponseEntity<CertificateRequestDTO> getCertificateRequest(@PathVariable Long requestId) {
+        CertificateRequest cr = certificateRequestService.getRequestById(requestId);
         CertificateRequestDTO crDTO=new CertificateRequestDTO(cr);
-
         return new ResponseEntity<>(crDTO, HttpStatus.OK);
-
     }
 
 
     @PostMapping()
-    public ResponseEntity<String> createNewCertificateRequest(@RequestBody CertificateRequestDTO certificateRequestDTO) {
+    public ResponseEntity<CertificateRequest> createNewCertificateRequest(@RequestBody CertificateRequestDTO certificateRequestDTO) {
         CertificateRequest request = certificateRequestService.createCertificateRequest(certificateRequestDTO);
         if(request.getId() == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>("YEY", HttpStatus.OK);
+        return new ResponseEntity<>(request, HttpStatus.OK);
     }
 
 
     @GetMapping("/all")
-    public ResponseEntity<List<Certificate>> getAllCertificateRequests() {
-
-        return null;
+    public ResponseEntity<List<CertificateRequestDTO>> getAllCertificateRequests() {
+        List<CertificateRequest> requests = certificateRequestService.getPendingCertificateRequest();
+        List<CertificateRequestDTO> requestDTOS = new ArrayList<>();
+        for(CertificateRequest request : requests){
+            requestDTOS.add(new CertificateRequestDTO(request));
+        }
+        return new ResponseEntity<>(requestDTOS, HttpStatus.OK);
     }
 
     @PostMapping("/accept/{requestId}/{issuerId}")
     public ResponseEntity<CertificateRequest> acceptCertificateRequest(@PathVariable Long requestId,@PathVariable Long issuerId){
         CertificateRequest request = certificateRequestService.acceptCertificateRequest(requestId, issuerId);
-
         if(request == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(request, HttpStatus.OK);
     }
 
     @PutMapping("/reject/{requestId}")
-    public ResponseEntity<CertificateRequest> rejectCertificate(@PathVariable Long requestId){
+    public ResponseEntity<CertificateRequest> rejectCertificateRequest(@PathVariable Long requestId){
         CertificateRequest request = certificateRequestService.rejectCertificateRequest(requestId);
         if(request == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(request, HttpStatus.OK);

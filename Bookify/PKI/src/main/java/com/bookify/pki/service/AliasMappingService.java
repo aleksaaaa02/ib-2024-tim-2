@@ -25,7 +25,7 @@ public class AliasMappingService {
     public String getCertificateAlias(Long certificateId){
 
         Map<Long, CertificateAssociation> certificates = convertJsonFileToHashMap(ALIAS_MAP_FILENAME);
-
+        if(certificates == null) return null;
         return certificates.get(certificateId).getAlias();
 
     }
@@ -33,7 +33,7 @@ public class AliasMappingService {
     public List<Long> getSignedCertificateIds(Long issuerCertificateId){
 
         Map<Long, CertificateAssociation> certificates = convertJsonFileToHashMap(ALIAS_MAP_FILENAME);
-
+        if(certificates == null) return null;
         return certificates.get(issuerCertificateId).getSignedCertificates();
 
     }
@@ -41,6 +41,8 @@ public class AliasMappingService {
     public void addSignedCertificate(Long issuerId,Long subjectId,String alias){
 
         HashMap<Long, CertificateAssociation> certificates = convertJsonFileToHashMap(ALIAS_MAP_FILENAME);
+        if(certificates == null) return;
+
         certificates.put(subjectId,new CertificateAssociation(issuerId,alias,new ArrayList<>()));
 
         CertificateAssociation temp=certificates.get(issuerId);
