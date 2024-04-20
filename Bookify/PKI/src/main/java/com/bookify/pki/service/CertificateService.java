@@ -1,6 +1,7 @@
 package com.bookify.pki.service;
 
 import com.bookify.pki.dto.CertificateRequestDTO;
+import com.bookify.pki.enumerations.CertificateRequestStatus;
 import com.bookify.pki.model.Certificate;
 import com.bookify.pki.model.CertificateRequest;
 import com.bookify.pki.model.Issuer;
@@ -60,7 +61,8 @@ public class CertificateService implements ICertificateService {
                 certificateRequestDTO.getLocality(),
                 certificateRequestDTO.getCountry(),
                 certificateRequestDTO.getEmail(),
-                certificateRequestDTO.getCertificateType());
+                certificateRequestDTO.getCertificateType(),
+                CertificateRequestStatus.PENDING);
         return certificateRequestRepository.save(request);
     }
 
@@ -113,6 +115,16 @@ public class CertificateService implements ICertificateService {
             System.out.println(c);
         }
     }
+
+    @Override
+    public CertificateRequest rejectCertificateRequest(Long requestId) {
+        Optional<CertificateRequest> requestOptional = certificateRequestRepository.findById(requestId);
+        if(requestOptional.isEmpty()) return null;
+        CertificateRequest request = requestOptional.get();
+        request.setCertificateRequestStatus(CertificateRequestStatus.REJECTED);
+        return certificateRequestRepository.save(request);
+    }
+
     private X509Certificate generateCertificate(Subject subject, Issuer issuer, Date startDate, Date endDate) {
         try {
             BigInteger randomNumber = BigInteger.valueOf(System.currentTimeMillis());

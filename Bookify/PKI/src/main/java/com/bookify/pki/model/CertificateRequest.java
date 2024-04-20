@@ -1,5 +1,6 @@
 package com.bookify.pki.model;
 
+import com.bookify.pki.enumerations.CertificateRequestStatus;
 import com.bookify.pki.enumerations.CertificateType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,5 +24,6 @@ public class CertificateRequest {
     private String country;
     private String email;
     private CertificateType certificateType;
+    private CertificateRequestStatus certificateRequestStatus;
 
 }

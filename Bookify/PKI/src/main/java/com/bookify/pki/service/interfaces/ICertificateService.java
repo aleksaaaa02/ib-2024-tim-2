@@ -8,4 +8,5 @@ import org.springframework.stereotype.Service;
 public interface ICertificateService {
     CertificateRequest createCertificateRequest(CertificateRequestDTO certificateRequestDTO);
     void signCertificateRequest(Long issuerId, Long requestId);
+    CertificateRequest rejectCertificateRequest(Long requestId);
 }

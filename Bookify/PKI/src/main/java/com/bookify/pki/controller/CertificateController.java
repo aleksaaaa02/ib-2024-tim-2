@@ -33,6 +33,7 @@ public class CertificateController {
 
     @GetMapping("/all")
     public ResponseEntity<List<Certificate>> getAllCertificates() {
+
         return null;
     }
 
@@ -40,5 +41,12 @@ public class CertificateController {
     public ResponseEntity<?> signCertificate(@PathVariable Long issuerId, @PathVariable Long requestId){
         certificateService.signCertificateRequest(-1L, requestId);
         return null;
+    }
+
+    @PutMapping("/{requestId}")
+    public ResponseEntity<CertificateRequest> rejectCertificate(@PathVariable Long requestId){
+        CertificateRequest request = certificateService.rejectCertificateRequest(requestId);
+        if(request == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(request, HttpStatus.OK);
     }
 }

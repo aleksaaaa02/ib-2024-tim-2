@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 
 @Component
@@ -49,5 +50,14 @@ public class KeyStoreWriter {
         } catch (KeyStoreException e) {
             e.printStackTrace();
         }
+    }
+
+    public void write(String alias, X509Certificate certificate){
+        try {
+            keyStore.setCertificateEntry(alias, certificate);
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+
     }
 }
