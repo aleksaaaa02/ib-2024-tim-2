@@ -115,6 +115,58 @@ public class CertificateService implements ICertificateService {
         return new Certificate(newCertificateDTO.getIssuerId(), x509Certificate);
     }
 
+    @Override
+    public boolean validateCertificateChain(Long certificateId) {
+        while(true) {
+            Long issuerId = aliasMappingService.getCertificatesIssuerId(certificateId);
+            X509Certificate certificate = getCertificateById(certificateId).getX509Certificate();
+            if(!isCertificateValid(certificate, issuerId)) return false;
+            if(issuerId == certificateId) break;
+        }
+        return true;
+    }
+
+    @Override
+    public Long deleteCertificate(Long certificateId) {
+        if(certificateId == 0) return null;
+        deleteCertificateChildren(certificateId);
+        aliasMappingService.deleteFromParentList(certificateId);
+        deleteCertificateFromKeystore(certificateId);
+        return certificateId;
+    }
+
+    private void deleteCertificateFromKeystore(Long certificateId) {
+        String alias = aliasMappingService.getCertificateAlias(certificateId);
+        keyStoreWriter.loadKeyStore(keystoreLocation, keystorePassword.toCharArray());
+        keyStoreWriter.deleteCertificate(alias);
+        keyStoreWriter.saveKeyStore(keystoreLocation, keystorePassword.toCharArray());
+        aliasMappingService.deleteCertificateFromFile(certificateId);
+    }
+
+    private void deleteCertificateChildren(Long certificateId){
+        List<Long> certificateIds = aliasMappingService.getSignedCertificateIds(certificateId);
+        if(certificateIds.isEmpty()) return;
+
+
+        for(Long cerId : certificateIds){
+            deleteCertificateChildren(cerId);
+            deleteCertificateFromKeystore(cerId);
+
+        }
+    }
+
+    private boolean isCertificateValid(X509Certificate certificate, Long issuerId){
+        try {
+            JcaX509CertificateHolder holder = new JcaX509CertificateHolder(certificate);
+            X509Certificate certificateIssuer = getCertificateById(issuerId).getX509Certificate();
+            certificate.verify(certificateIssuer.getPublicKey());
+            return holder.isValidOn(new Date());
+        } catch (CertificateException | NoSuchAlgorithmException | SignatureException | InvalidKeyException |
+                 NoSuchProviderException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static Subject getSubject(NewCertificateDTO newCertificateDTO, KeyPair keyPair) {
         X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
         builder.addRDN(BCStyle.CN, newCertificateDTO.getCommonName());
