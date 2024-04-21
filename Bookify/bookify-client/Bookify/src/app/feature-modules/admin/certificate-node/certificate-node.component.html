@@ -2,7 +2,7 @@
     <div class="node-header">
         <div class="nodeBorder" (click)="openDetailsAndSelect($event)">
             <span (click)="toggleChildren($event)" class="expand-icon" *ngIf="certificate.children && certificate.children.length > 0">{{ isExpanded ? '▼' : '►' }}</span>
-            {{ certificate.name }}
+            {{ certificate.subject }}
             <span class="add-icon" *ngIf="!certificate.isEE" (click)="addChild($event)"><mat-icon>note_add</mat-icon></span>
             <span class="delete-icon" (click)="deleteNode($event)"><mat-icon>delete_forever</mat-icon></span>
         </div>

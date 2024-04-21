@@ -4,7 +4,7 @@
             <h2 class="requestLabel">Requested Certificates</h2>
             <ul class="requestCertificatesList" *ngIf="true">
                 <li *ngFor="let request of requests" (click)="selectRequestAndShowDetails($event, request)">
-                    {{ request.name }}
+                    {{ request.subjectName }} - {{ request.email }}
                 </li>
             </ul>
         </div>

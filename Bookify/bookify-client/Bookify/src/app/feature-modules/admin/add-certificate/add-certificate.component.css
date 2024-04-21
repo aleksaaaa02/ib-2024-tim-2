@@ -50,3 +50,47 @@
   input {
     margin-bottom: 1rem;
   }
+
+  .issuer {
+    font-weight: bolder;
+  }
+
+  input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  mat-select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+  }
+
+  .input-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .date-input {
+    width: calc(100% - 42px);
+  } 
+
+  mat-datepicker-toggle {
+    position: absolute;
+    right: -10px;
+    top: 38%;
+    transform: translateY(-50%);
+  }
+
+  .add {
+    transition: all 0.2s;
+  }
+
+  .add:disabled {
+    background-color: whitesmoke;
+    cursor: not-allowed;
+    color: #ccc;
+  }

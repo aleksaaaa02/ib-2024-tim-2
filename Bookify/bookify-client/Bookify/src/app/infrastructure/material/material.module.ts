@@ -19,6 +19,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatSliderModule} from "@angular/material/slider";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatBadgeModule} from "@angular/material/badge";
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [],
@@ -42,7 +43,10 @@ import {MatBadgeModule} from "@angular/material/badge";
     MatCardModule,
     MatSliderModule,
     MatDatepickerModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   exports: [
     MatToolbarModule,
