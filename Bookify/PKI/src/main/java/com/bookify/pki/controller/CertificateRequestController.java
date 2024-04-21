@@ -53,7 +53,7 @@ public class CertificateRequestController {
     @PostMapping("/accept/{requestId}/{issuerId}")
     public ResponseEntity<CertificateRequest> acceptCertificateRequest(@PathVariable Long requestId,@PathVariable Long issuerId){
         
-        CertificateRequest request = certificateRequestService.acceptCertificateRequest(requestId, issuerId);
+        CertificateRequest request = certificateRequestService.acceptCertificateRequest(issuerId, requestId);
         if(request == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(request, HttpStatus.OK);
 
