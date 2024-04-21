@@ -198,7 +198,7 @@ VALUES
     (36, 'GARDEN'), (36, 'WHEELCHAIR'), (36, 'BAR'), (36, 'FREE_WIFI'), (36, 'LUNCH');
 
 
-SET @path = 'C:/Fakultet/Informaciona Bezbednost/images/';
+SET @path = 'D:/[PROJECT]Bezbednost/images/';
 INSERT INTO image (image_name, image_path)
 VALUES
     ('image', CONCAT(@path, '1/1.jpeg')), ('image', CONCAT(@path, '1/2.jpeg')),
