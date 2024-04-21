@@ -4,7 +4,7 @@ interface Certificate {
   subject: string;
   dateFrom: Date;
   dateTo: Date;
-  type: string;
+  certificatePurpose: string;
   isEE: boolean;
   children?: Certificate[];
 }
@@ -15,7 +15,7 @@ interface CertificateRequest {
   locality: string;
   country: string;
   email: string;
-  type: string;
+  certificateType: string;
 }
 
 import { Component } from '@angular/core';
@@ -25,6 +25,7 @@ import { Router } from "@angular/router";
 import { CertificateRequestDetailsComponent } from '../certificate-request-details/certificate-request-details.component';
 import { AddCertificateComponent } from '../add-certificate/add-certificate.component';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../env/env';
 
 @Component({
   selector: 'app-certificates',
@@ -48,177 +49,14 @@ export class CertificatesComponent {
   selectedRequest: CertificateRequest;
   selectedCertificate: Certificate;
 
-  requests: CertificateRequest[] = [
-    {
-      "id": 1,
-      "subjectName": "John Doe",
-      "locality": "Belgrade",
-      "country": "Serbia",
-      "email": "johndoe@gmail.com",
-      "type": "END_ENTITY"
-    },
-    {
-      "id": 2,
-      "subjectName": "Jane Doe",
-      "locality": "Belgrade",
-      "country": "Serbia",
-      "email": "janedoe@gmail.com",
-      "type": "END_ENTITY"
-    },
-    {
-      "id": 3,
-      "subjectName": "John Smith",
-      "locality": "Belgrade",
-      "country": "Serbia",
-      "email": "johnsmith@gmail.com",
-      "type": "END_ENTITY"
-    }
-  ];
-  certificates: Certificate[] = [
-    {
-      "id": 1,
-      "issuer": "Root CA",
-      "subject": "CA1",
-      "dateFrom": new Date(2022, 0, 1), // 1 Jan 2023
-      "dateTo": new Date(2028, 11, 31), // 31 Dec 2023
-      "type": "INTERMEDIATE",
-      "isEE": false,
-      "children": [
-        {
-          "id": 4,
-          "issuer": "CA1",
-          "subject": "EE1",
-          "dateFrom": new Date(2022, 0, 1),
-          "dateTo": new Date(2023, 11, 31),
-          "type": "END_ENTITY",
-          "isEE": true,
-          "children": []
-        },
-        {
-          "id": 5,
-          "issuer": "CA1",
-          "subject": "CA4",
-          "dateFrom": new Date(2022, 0, 1),
-          "dateTo": new Date(2023, 11, 31),
-          "type": "INTERMEDIATE",
-          "isEE": false,
-          "children": [
-            {
-              "id": 6,
-              "issuer": "CA4",
-              "subject": "EE2",
-              "dateFrom": new Date(2022, 0, 1),
-              "dateTo": new Date(2023, 11, 31),
-              "type": "END_ENTITY",
-              "isEE": true,
-              "children": []
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "issuer": "Root CA",
-      "subject": "CA2",
-      "dateFrom": new Date(2022, 0, 1),
-      "dateTo": new Date(2028, 11, 31),
-      "type": "INTERMEDIATE",
-      "isEE": false,
-      "children": [
-        {
-          "id": 7,
-          "issuer": "CA2",
-          "subject": "EE3",
-          "dateFrom": new Date(2022, 0, 1),
-          "dateTo": new Date(2023, 11, 31),
-          "type": "END_ENTITY",
-          "isEE": true,
-          "children": []
-        },
-        {
-          "id": 8,
-          "issuer": "CA2",
-          "subject": "CA5",
-          "dateFrom": new Date(2022, 0, 1),
-          "dateTo": new Date(2023, 11, 31),
-          "type": "INTERMEDIATE",
-          "isEE": false,
-          "children": [
-            {
-              "id": 9,
-              "issuer": "CA5",
-              "subject": "EE4",
-              "dateFrom": new Date(2022, 0, 1),
-              "dateTo": new Date(2023, 11, 31),
-              "type": "END_ENTITY",
-              "isEE": true,
-              "children": []
-            },
-            {
-              "id": 10,
-              "issuer": "CA5",
-              "subject": "EE5",
-              "dateFrom": new Date(2022, 0, 1),
-              "dateTo": new Date(2023, 11, 31),
-              "type": "END_ENTITY",
-              "isEE": true,
-              "children": []
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "issuer": "Root CA",
-      "subject": "CA3",
-      "dateFrom": new Date(2022, 0, 1),
-      "dateTo": new Date(2028, 11, 31),
-      "type": "INTERMEDIATE",
-      "isEE": false,
-      "children": [
-        {
-          "id": 11,
-          "issuer": "CA3",
-          "subject": "EE6",
-          "dateFrom": new Date(2022, 0, 1),
-          "dateTo": new Date(2023, 11, 31),
-          "type": "END_ENTITY",
-          "isEE": true,
-          "children": []
-        },
-        {
-          "id": 12,
-          "issuer": "CA3",
-          "subject": "CA6",
-          "dateFrom": new Date(2022, 0, 1),
-          "dateTo": new Date(2023, 11, 31),
-          "type": "INTERMEDIATE",
-          "isEE": false,
-          "children": [
-            {
-              "id": 13,
-              "issuer": "CA6",
-              "subject": "EE7",
-              "dateFrom": new Date(2022, 0, 1),
-              "dateTo": new Date(2023, 11, 31),
-              "type": "END_ENTITY",
-              "isEE": true,
-              "children": []
-            }
-          ]
-        }
-      ]
-    }
-  
-  ];
+  requests: CertificateRequest[] = [];
+  certificates: Certificate[] = [];
 
   ngOnInit(): void {
-    this.httpClient.get<CertificateRequest[]>('localhost:8083/api/certificate/request/all').subscribe((data) => {
+    this.httpClient.get<CertificateRequest[]>(environment.http + 'localhost:8083/api/certificate/request/all').subscribe((data) => {
       this.requests = data;
     });
-    this.httpClient.get<Certificate[]>('localhost:8083/api/certificate/0/signed').subscribe((data) => {
+    this.httpClient.get<Certificate[]>(environment.http + 'localhost:8083/api/certificate/0/signed').subscribe((data) => {
       this.processCertificates(data);
       this.certificates = data;
     });
@@ -237,10 +75,10 @@ export class CertificatesComponent {
 
       certificate.dateFrom = dateFrom;
       certificate.dateTo = dateTo;
-      certificate.isEE = certificate.type === 'END_ENTITY';
+      certificate.isEE = certificate.certificatePurpose === 'END_ENTITY' || certificate.certificatePurpose === 'HTTPS';
   
-      if (certificate.type !== 'END_ENTITY') {
-        this.httpClient.get<Certificate[]>(`localhost:8083/api/certificate/${certificate.id}/signed`).subscribe((certificateData) => {
+      if (certificate.certificatePurpose !== 'END_ENTITY' && certificate.certificatePurpose !== 'HTTPS') {
+        this.httpClient.get<Certificate[]>(environment.http + `localhost:8083/api/certificate/${certificate.id}/signed`).subscribe((certificateData) => {
           certificate.children = certificateData;
           this.processCertificates(certificate.children);
         });
@@ -270,9 +108,8 @@ export class CertificatesComponent {
         data: { parentSerialNumber: undefined }
       }).afterClosed().subscribe((newCertificate) => {
         if (newCertificate) {
-          this.httpClient.post('localhost:8083/api/certificate', newCertificate).subscribe((newCertificateWithId) => {
+          this.httpClient.post(environment.http + 'localhost:8083/api/certificate', newCertificate).subscribe((newCertificateWithId) => {
             this.certificates.push(newCertificateWithId as Certificate);
-            // TODO proveri da li ovo radi (da li se azurira na frontu)
           });
         }
       });
@@ -284,13 +121,16 @@ export class CertificatesComponent {
       alert("Please select a certificate request and a certificate to sign with.");
       return;
     }
-    this.httpClient.post(`localhost:8083/api/certificate/request/accept/${this.selectedRequest.id}/${this.selectedCertificate.id}`, {});
-    this.requests = this.requests.filter((request) => request.id !== this.selectedRequest.id);
-    // deselect the certificate
-    const selectedRequests = document.getElementsByClassName('selectedNode');
-    if (selectedRequests.length > 0) {
-      selectedRequests[0].classList.remove('selectedNode');
+
+    if (this.selectedCertificate.certificatePurpose === 'END_ENTITY' || this.selectedCertificate.certificatePurpose === 'HTTPS') {
+      alert("Cannot sign with an End Entity certificate.");
+      return;
     }
+
+    this.httpClient.post(environment.http + `localhost:8083/api/certificate/request/accept/${this.selectedRequest.id}/${this.selectedCertificate.id}`, {}).subscribe(() => {
+      this.requests = this.requests.filter((request) => request.id !== this.selectedRequest.id);
+      location.reload();
+    });
   }
 
   rejectCertificate(): void {
@@ -298,7 +138,7 @@ export class CertificatesComponent {
       alert("Please select a certificate request to reject.");
       return;
     }
-    this.httpClient.put(`localhost:8083/api/certificate/request/reject/${this.selectedRequest.id}`, {});
+    this.httpClient.put(environment.http + `localhost:8083/api/certificate/request/reject/${this.selectedRequest.id}`, {});
     this.requests = this.requests.filter((request) => request.id !== this.selectedRequest.id);
   }
 

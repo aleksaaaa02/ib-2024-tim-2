@@ -1,55 +1,59 @@
 <div class="container">
 
-    <div class="certificate-info">
+    <div class="of">
 
-        <h5 class="issuer">Issuer:</h5>
-        <p class="issuer">{{ parentId }} - {{ data.parentName }}</p>
+        <div class="certificate-info">
 
-        <!-- <h5>Subject:</h5>
-        <input matInput [(ngModel)]="data.subjectName" placeholder="Enter subject name"> -->
-
-        <h5>Common name:</h5>
-        <input matInput [(ngModel)]="data.commonName" placeholder="Enter common name">
-
-        <h5>Organization:</h5>
-        <input matInput [(ngModel)]="data.organization" placeholder="Enter organization">
-
-        <h5>Organizational unit:</h5>
-        <input matInput [(ngModel)]="data.organizationalUnit" placeholder="Enter organization unit">
-
-        <h5>Email:</h5>
-        <input matInput [(ngModel)]="data.email" placeholder="Enter email">
-
-        <h5>Locality:</h5>
-        <input matInput [(ngModel)]="data.locality" placeholder="Enter locality">
-
-        <h5>Country:</h5>
-        <input matInput [(ngModel)]="data.country" placeholder="Enter country">
-
-        <h5>Valid from:</h5>
-        <div class="input-container">
-            <input class="date-input" matInput [matDatepicker]="fromDatepicker" [(ngModel)]="data.dateFrom" placeholder="Choose date" readonly>
-            <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+            <h5 class="issuer">Issuer:</h5>
+            <p class="issuer">{{ data.parentName }}</p>
+    
+            <!-- <h5>Subject:</h5>
+            <input matInput [(ngModel)]="data.subjectName" placeholder="Enter subject name"> -->
+    
+            <h5>Common name:</h5>
+            <input matInput [(ngModel)]="data.commonName" placeholder="Enter common name">
+    
+            <h5>Organization:</h5>
+            <input matInput [(ngModel)]="data.organization" placeholder="Enter organization">
+    
+            <h5>Organizational unit:</h5>
+            <input matInput [(ngModel)]="data.organizationalUnit" placeholder="Enter organization unit">
+    
+            <h5>Email:</h5>
+            <input matInput [(ngModel)]="data.email" placeholder="Enter email">
+    
+            <h5>Locality:</h5>
+            <input matInput [(ngModel)]="data.locality" placeholder="Enter locality">
+    
+            <h5>Country:</h5>
+            <input matInput [(ngModel)]="data.country" placeholder="Enter country">
+    
+            <h5>Valid from:</h5>
+            <div class="input-container">
+                <input class="date-input" matInput [matDatepicker]="fromDatepicker" [(ngModel)]="data.dateFrom" placeholder="Choose date" readonly>
+                <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+            </div>
+            <mat-datepicker #fromDatepicker></mat-datepicker>
+    
+            <h5>Valid to:</h5>
+            <div class="input-container">
+                <input class="date-input" matInput [matDatepicker]="toDatepicker" [(ngModel)]="data.dateTo" placeholder="Choose date" [max]="data.parentValidTo" readonly>
+                <mat-datepicker-toggle matSuffix [for]="toDatepicker"></mat-datepicker-toggle>
+            </div>
+            <mat-datepicker #toDatepicker></mat-datepicker>
+    
+            <h5>Certificate type:</h5>
+            <mat-select [(ngModel)]="data.type" placeholder="Choose type">
+                <mat-option *ngFor="let type of types" [value]="type">{{ type }}</mat-option>
+            </mat-select>
+    
+            <h5>Extensions / Purpose?:</h5>
+            <p>- sta treba ovde? -</p>
+    
         </div>
-        <mat-datepicker #fromDatepicker></mat-datepicker>
-
-        <h5>Valid to:</h5>
-        <div class="input-container">
-            <input class="date-input" matInput [matDatepicker]="toDatepicker" [(ngModel)]="data.dateTo" placeholder="Choose date" [max]="data.parentValidTo" readonly>
-            <mat-datepicker-toggle matSuffix [for]="toDatepicker"></mat-datepicker-toggle>
-        </div>
-        <mat-datepicker #toDatepicker></mat-datepicker>
-
-        <h5>Certificate type:</h5>
-        <mat-select [(ngModel)]="data.type" placeholder="Choose type">
-            <mat-option *ngFor="let type of types" [value]="type">{{ type }}</mat-option>
-        </mat-select>
-
-        <h5>Extensions / Purpose?:</h5>
-        <p>- sta treba ovde? -</p>
 
     </div>
-
+    
     <div class="buttons">
         <button (click)="closeDialog()" class="cancel">Cancel</button>
     

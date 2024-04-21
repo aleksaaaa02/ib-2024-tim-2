@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@CrossOrigin
 @RequestMapping("/api/certificate/request")
 public class CertificateRequestController {
 

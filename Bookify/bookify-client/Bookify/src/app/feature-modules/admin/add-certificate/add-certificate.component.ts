@@ -1,16 +1,35 @@
 interface CertificateDTO {
-  id?: number;
+  issuerId: number;
+  commonName: string;
+  organization: string;
+  organizationalUnit: string;
+  email: string;
+  locality: string;
+  country: string;
+  notBefore: Date;
+  notAfter: Date;
+  certificateType: string;
+  purpose: string;
+
+  subject?: string;
+  isEE?: boolean;
+}
+
+interface Certificate {
+  id: number;
   issuer: string;
   subject: string;
   dateFrom: Date;
   dateTo: Date;
-  type: string;
-  isEE?: boolean;
+  certificatePurpose: string;
+  isEE: boolean;
+  children?: Certificate[];
 }
 
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { environment } from '../../../../env/env';
 
 @Component({
   selector: 'app-add-certificate',
@@ -18,8 +37,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrl: './add-certificate.component.css'
 })
 export class AddCertificateComponent {
-
-  @Output() submitEvent = new EventEmitter<any>();
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<AddCertificateComponent>,
@@ -34,11 +51,12 @@ export class AddCertificateComponent {
       this.parentId = 0;
     }
 
-    this.data.parentValidTo = new Date(2024, 3, 22); // za testiranje
+    // this.data.parentValidTo = new Date(2024, 3, 22); // za testiranje
 
-    this.httpClient.get<CertificateDTO>('localhost:8083/api/certificate/' + this.parentId).subscribe((parentCertificate) => {
+    this.httpClient.get<Certificate>(environment.http + 'localhost:8083/api/certificate/' + this.parentId).subscribe((parentCertificate) => {
       this.data.parentName = parentCertificate.subject;
       this.data.parentValidTo = parentCertificate.dateTo;
+      console.log(this.data.parentValidTo);
     });
 
   }
@@ -55,14 +73,21 @@ export class AddCertificateComponent {
     }
 
     const newCertificate: CertificateDTO = {
-      issuer: this.data.parentName,
-      subject: this.data.subjectName,
-      dateFrom: this.data.dateFrom,
-      dateTo: this.data.dateTo,
-      type: this.data.type === 'Intermediate' ? 'INTERMEDIATE' : 'END_ENTITY'
+      issuerId: this.parentId,
+      commonName: this.data.commonName,
+      organization: this.data.organization,
+      organizationalUnit: this.data.organizationalUnit,
+      email: this.data.email,
+      locality: this.data.locality,
+      country: this.data.country,
+      notBefore: this.data.dateFrom,
+      notAfter: this.data.dateTo,
+      certificateType: this.data.type === 'Intermediate' ? 'INTERMEDIATE' : 'END_ENTITY',
+      purpose: this.data.type === 'Intermediate' ? 'INTERMEDIATE_CERTIFICATE_AUTHORITY' : 'END_ENTITY'
+      // subject: this.data.subjectName,
     };
-    this.submitEvent.emit(newCertificate);
-    this.dialogRef.close();
+    this.dialogRef.close(newCertificate);
+    // this.dialogRef.close();
   }
 
   checkDatesValidity() {

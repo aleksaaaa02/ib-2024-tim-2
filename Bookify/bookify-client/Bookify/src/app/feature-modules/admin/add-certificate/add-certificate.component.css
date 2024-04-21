@@ -26,10 +26,10 @@
     flex-direction: column;
     justify-content: space-between;
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    overflow: auto;
+    /* border: 1px solid #ccc;
+    border-radius: 5px; */
+    /* margin-bottom: 20px; */
+    /* overflow: auto; */
   }
   
   p:last-child {
@@ -53,6 +53,7 @@
 
   .issuer {
     font-weight: bolder;
+    overflow: auto;
   }
 
   input {
@@ -93,4 +94,11 @@
     background-color: whitesmoke;
     cursor: not-allowed;
     color: #ccc;
+  }
+
+  .of {
+    overflow: auto;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
   }

@@ -4,7 +4,7 @@ interface Certificate {
   subject: string;
   dateFrom: Date;
   dateTo: Date;
-  type: string;
+  certificatePurpose: string;
   isEE: boolean;
   children?: Certificate[];
 }
@@ -15,6 +15,7 @@ import { AddCertificateComponent } from '../add-certificate/add-certificate.comp
 import { CertificateDetailsComponent } from '../certificate-details/certificate-details.component';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../../../env/env';
 
 @Component({
   selector: 'app-certificate-node',
@@ -42,13 +43,12 @@ export class CertificateNodeComponent {
       data: { parentId: this.certificate.id }
     }).afterClosed().subscribe((newCertificate) => {
       if (newCertificate) {
-        this.httpClient.post('localhost:8083/api/certificate', newCertificate).subscribe((newCertificateWithId) => {
+        this.httpClient.post(environment.http + 'localhost:8083/api/certificate', newCertificate).subscribe((newCertificateWithId) => {
           if (this.certificate.children) {
             this.certificate.children.push(newCertificateWithId as Certificate);
           } else {
             this.certificate.children = [newCertificateWithId as Certificate];
           }
-          // TODO proveri da li ovo radi (da li se azurira na frontu i ako nije imao decu da li dodaje strelicu da se moze otvoriti)
         });
       }
     });
@@ -56,8 +56,10 @@ export class CertificateNodeComponent {
 
   deleteNode(event: any): void {
     event.stopPropagation();
-    this.httpClient.delete('localhost:8083/api/certificate/' + this.certificate.id);
-    location.reload(); // refresh page
+    console.log('deleting certificate with id: ' + this.certificate.id);
+    this.httpClient.delete(environment.http + 'localhost:8083/api/certificate/' + this.certificate.id).subscribe(() => {
+      location.reload(); 
+    });
   }
 
   openDetailsAndSelect(event: any): void {

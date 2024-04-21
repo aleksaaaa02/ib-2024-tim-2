@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@CrossOrigin
 @RequestMapping("/api/certificate")
 public class CertificateController {
 
@@ -56,6 +57,7 @@ public class CertificateController {
 
     @DeleteMapping("/{certId}")
     public ResponseEntity<Long> deleteCertificate(@PathVariable Long certId){
+        System.out.println("Deleting certificate with id: " + certId);
         Long certificateId = certificateService.deleteCertificate(certId);
         if(certificateId == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(certificateId, HttpStatus.OK);

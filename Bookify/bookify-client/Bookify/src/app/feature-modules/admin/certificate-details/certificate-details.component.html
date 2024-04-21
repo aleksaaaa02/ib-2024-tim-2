@@ -27,7 +27,10 @@
         <p>- no endpoint yet -</p>
 
         <h5>Extensions:</h5>
-        <p>- no endpoint yet -</p>
+        <!-- <p>- no endpoint yet -</p> -->
+        <ul>
+            <li *ngFor="let extension of extensions"><span style="font-weight: bold;">{{ extension.name }}:</span> {{ extension.value }}</li>
+        </ul>
 
     </div>
 
