@@ -44,6 +44,14 @@ public class KeyStoreWriter {
         }
     }
 
+    public void deleteCertificate(String alias){
+        try {
+            keyStore.deleteEntry(alias);
+        } catch (KeyStoreException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void write(String alias, PrivateKey privateKey, char[] password, Certificate certificate) {
         try {
             keyStore.setKeyEntry(alias, privateKey, password, new Certificate[] {certificate});

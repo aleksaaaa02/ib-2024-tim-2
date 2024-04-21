@@ -1,12 +1,9 @@
 package com.bookify.pki.service;
 
 import com.bookify.pki.model.CertificateAssociation;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +33,27 @@ public class AliasMappingService {
         if(certificates == null) return null;
         return certificates.get(issuerCertificateId).getSignedCertificates();
 
+    }
+
+    public Long getCertificatesIssuerId(Long certificateId){
+        Map<Long, CertificateAssociation> certificates = convertJsonFileToHashMap(ALIAS_MAP_FILENAME);
+        if(certificates == null) return null;
+        return certificates.get(certificateId).getIssuerId();
+    }
+
+    public void deleteCertificateFromFile(Long certificateId){
+        HashMap<Long, CertificateAssociation> certificates = convertJsonFileToHashMap(ALIAS_MAP_FILENAME);
+        if(certificates == null) return;
+        certificates.remove(certificateId);
+        serializeHashMapToJsonFile(certificates, ALIAS_MAP_FILENAME);
+    }
+
+    public void deleteFromParentList(Long certificateId){
+        HashMap<Long, CertificateAssociation> certificates = convertJsonFileToHashMap(ALIAS_MAP_FILENAME);
+        if(certificates == null) return;
+        Long issuerId = certificates.get(certificateId).getIssuerId();
+        certificates.get(issuerId).getSignedCertificates().remove(certificateId);
+        serializeHashMapToJsonFile(certificates, ALIAS_MAP_FILENAME);
     }
 
     public void addSignedCertificate(Long issuerId,Long subjectId,String alias){

@@ -48,6 +48,19 @@ public class CertificateController {
         return new ResponseEntity<>(new CertificateDTO(certificate), HttpStatus.OK);
     }
 
+    @GetMapping("/validate/{certId}")
+    public ResponseEntity<Boolean> validateCertificateChain(@PathVariable Long certId){
+        if(certificateService.validateCertificateChain(certId)) return new ResponseEntity<>(true, HttpStatus.OK);
+        return new ResponseEntity<>(false, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{certId}")
+    public ResponseEntity<Long> deleteCertificate(@PathVariable Long certId){
+        Long certificateId = certificateService.deleteCertificate(certId);
+        if(certificateId == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(certificateId, HttpStatus.OK);
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<Certificate>> getAllCertificates() {
         // Mislim da ova metoda nece biti potrebna
