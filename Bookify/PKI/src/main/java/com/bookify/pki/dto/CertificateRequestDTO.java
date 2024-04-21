@@ -20,12 +20,12 @@ public class CertificateRequestDTO {
     private CertificateType certificateType;
 
     public CertificateRequestDTO(CertificateRequest cr){
-        this.id=cr.getId();
-        this.subjectName=cr.getSubjectName();
-        this.locality=cr.getLocality();
-        this.country=cr.getCountry();
-        this.email=cr.getEmail();
-        this.certificateType=cr.getCertificateType();
+        this.id = cr.getId();
+        this.subjectName = cr.getGivenName() + " " + cr.getSurname();
+        this.locality = cr.getLocality();
+        this.country = cr.getCountry();
+        this.email = cr.getEmail();
+        this.certificateType = cr.getCertificateType();
     }
 
 

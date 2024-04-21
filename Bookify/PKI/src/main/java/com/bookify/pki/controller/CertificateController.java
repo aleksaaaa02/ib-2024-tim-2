@@ -3,10 +3,12 @@ package com.bookify.pki.controller;
 import com.bookify.pki.dto.CertificateDTO;
 import com.bookify.pki.dto.CertificateRequestDTO;
 import com.bookify.pki.dto.NewCertificateDTO;
+import com.bookify.pki.enumerations.CertificateRequestStatus;
 import com.bookify.pki.model.Certificate;
 import com.bookify.pki.model.CertificateAssociation;
 import com.bookify.pki.model.CertificateRequest;
 import com.bookify.pki.service.interfaces.ICertificateService;
+import org.bouncycastle.cert.cmp.CertificateStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,5 +70,4 @@ public class CertificateController {
         // Mislim da ova metoda nece biti potrebna
         return null;
     }
-
 }

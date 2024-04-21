@@ -207,7 +207,9 @@ public class CertificateService implements ICertificateService {
     }
     public static Subject getSubject(CertificateRequest request, KeyPair keyPair) {
         X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
-        builder.addRDN(BCStyle.CN, request.getSubjectName());
+        builder.addRDN(BCStyle.CN, request.getGivenName() + " " + request.getSurname());
+        builder.addRDN(BCStyle.GIVENNAME, request.getGivenName());
+        builder.addRDN(BCStyle.SURNAME, request.getSurname());
         builder.addRDN(BCStyle.C, request.getCountry());
         builder.addRDN(BCStyle.L, request.getLocality());
         builder.addRDN(BCStyle.E, request.getEmail());

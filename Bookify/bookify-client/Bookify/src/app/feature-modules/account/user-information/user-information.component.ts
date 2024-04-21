@@ -228,14 +228,16 @@ export class UserInformationComponent implements OnInit {
           this.dialog.open(MessageDialogComponent, {data: {message: 'Certificate is already approved!'}})
           return;
         }
-        
+
         const certificateDTO = {
-          subjectName: this.account.firstName + ' ' + this.account.lastName,
-          country: this.account.address?.country ? this.account.address.country : '',
-          locality: this.account.address?.city ? this.account.address.city : '',
+          userId: this.account.id,
+          givenName: this.account.firstName,
+          surname: this.account.lastName,
+          country: this.account.address?.country ? this.account.address.country : '.',
+          locality: this.account.address?.city ? this.account.address.city : '.',
           email: this.account.email
         }
-        this.http.post(environment.http + 'localhost:8083/api/certificate/request/' + this.authenticationService.getUserId(), certificateDTO).subscribe({
+        this.http.post(environment.http + 'localhost:8083/api/certificate/request', certificateDTO).subscribe({
           next: () => {
             this.dialog.open(MessageDialogComponent, {data: {message: 'Successfully sent certificate request!'}})
           },
