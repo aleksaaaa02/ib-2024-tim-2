@@ -1,1 +1,27 @@
-<p>certificates works!</p>
+<div class="bg">
+    <div class="container">
+        <div class="requestsContainer">
+            <h2 class="requestLabel">Requested Certificates</h2>
+            <ul class="requestCertificatesList" *ngIf="true">
+                <li *ngFor="let request of requests" (click)="selectRequestAndShowDetails($event, request)">
+                    {{ request.subjectName }} - {{ request.email }}
+                </li>
+            </ul>
+        </div>
+        <div class="certificates">
+            <button class="addNewCertificate" (click)="addCertificate()"><mat-icon>note_add</mat-icon></button>
+    
+            <div class="treeView">
+                <app-certificate-node *ngFor="let cert of certificates" [certificate]="cert" (selectedCertificate)="selectCertificate($event)"></app-certificate-node>
+            </div>
+        
+            <div class="actionButtons">
+                <div>
+                    <button class="signCertificate" (click)="signCertificate()">Sign Certificate</button>
+                    <button class="rejectCertificate" (click)="rejectCertificate()">Reject Certificate</button>
+                </div>
+                <button class="logout" (click)="logout()">Logout</button>
+            </div>
+        </div>
+    </div>    
+</div>
