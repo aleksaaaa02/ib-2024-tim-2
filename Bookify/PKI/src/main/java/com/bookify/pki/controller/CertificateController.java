@@ -57,6 +57,7 @@ public class CertificateController {
 
     @PostMapping
     public ResponseEntity<CertificateDTO> createNewCertificate(@RequestBody NewCertificateDTO newCertificateDTO){
+        if(!certificateService.validateCertificateChain(newCertificateDTO.getIssuerId()))return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         Certificate certificate = certificateService.createNewCertificate(newCertificateDTO);
         if(certificate == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(new CertificateDTO(certificate), HttpStatus.OK);

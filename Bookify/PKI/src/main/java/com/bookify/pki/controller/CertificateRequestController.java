@@ -27,6 +27,9 @@ public class CertificateRequestController {
     @Autowired
     private ICertificateRequestService certificateRequestService;
 
+    @Autowired
+    private ICertificateService certificateService;
+
     @GetMapping("/{requestId}")
     public ResponseEntity<CertificateRequestDTO> getCertificateRequest(@PathVariable Long requestId) {
         CertificateRequest cr = certificateRequestService.getRequestById(requestId);
@@ -56,6 +59,7 @@ public class CertificateRequestController {
 
     @PostMapping("/accept/{requestId}/{issuerId}")
     public ResponseEntity<CertificateRequest> acceptCertificateRequest(@PathVariable Long requestId,@PathVariable Long issuerId){
+        if(!certificateService.validateCertificateChain(issuerId))return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         CertificateRequest request = certificateRequestService.acceptCertificateRequest(issuerId, requestId);
         if(request == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(request, HttpStatus.OK);
