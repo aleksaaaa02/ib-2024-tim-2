@@ -38,7 +38,7 @@ public class CertificateController {
     public ResponseEntity<List<CertificateDTO>> getCertificatesSignedSubjects(@PathVariable Long certId) {
         List<Certificate> signedCertificates = certificateService.getSignedCertificates(certId);
         List<CertificateDTO> signedCertificateDTOs = new ArrayList<>();
-        for (Certificate c : signedCertificates){
+        for (Certificate c : signedCertificates) {
             signedCertificateDTOs.add(new CertificateDTO(c));
         }
         return new ResponseEntity<>(signedCertificateDTOs, HttpStatus.OK);
