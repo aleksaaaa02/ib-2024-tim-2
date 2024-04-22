@@ -128,6 +128,7 @@ public class CertificateService implements ICertificateService {
             X509Certificate certificate = getCertificateById(certificateId).getX509Certificate();
             if(!isCertificateValid(certificate, issuerId)) return false;
             if(issuerId == certificateId) break;
+            certificateId = issuerId;
         }
         return true;
     }
