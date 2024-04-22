@@ -18,4 +18,10 @@ public enum ExtendedKeyUsage {
         return this.value;
     }
 
+    public static ExtendedKeyUsage getExtendedKeyUsage(String oid){
+        for(ExtendedKeyUsage extendedKeyUsage : ExtendedKeyUsage.values()){
+            if(extendedKeyUsage.value.equalsIgnoreCase(oid)) return extendedKeyUsage;
+        }
+        return null;
+    }
 }
