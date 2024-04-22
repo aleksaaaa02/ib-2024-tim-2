@@ -16,6 +16,7 @@ import { Interceptor } from "./feature-modules/authentication/interceptor/interc
 import { AdministrationModule } from "./feature-modules/administration/administration.module";
 import { ReviewModule } from './feature-modules/review/review.module';
 import { ReservationModule } from './feature-modules/reservation/reservation.module';
+import { AdminModule } from './feature-modules/admin/admin.module';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { ReservationModule } from './feature-modules/reservation/reservation.mod
     ReservationModule,
     SharedModule,
     AdministrationModule,
-    ReviewModule
+    ReviewModule,
+    AdminModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true },

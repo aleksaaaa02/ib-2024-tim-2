@@ -21,14 +21,12 @@ import {GuestRequestsComponent} from "./feature-modules/reservation/guest-reques
 import {
   OwnerReservationsComponent
 } from "./feature-modules/reservation/owner-reservations/owner-reservations.component";
-import {
-  AccommodationFavoriteComponent
-} from "./feature-modules/accommodation/accommodation-favorite/accommodation-favorite.component";
 import {FavoritesPageComponent} from "./feature-modules/accommodation/favorites-page/favorites-page.component";
 import {UsersComponent} from "./feature-modules/administration/users/users.component";
 import { GuestPageComponent } from './feature-modules/review/guest-page/guest-page.component';
 import { ReportsPageComponent } from "./feature-modules/accommodation/reports/reports-page/reports-page.component";
 import {FeedbackComponent} from "./feature-modules/administration/feedback/feedback.component";
+import { CertificatesComponent } from "./feature-modules/admin/certificates/certificates.component";
 
 const routes: Routes = [
   { path: "login", component: LoginComponent },
@@ -52,7 +50,8 @@ const routes: Routes = [
   { path: "favorites", component: FavoritesPageComponent, canActivate: [authGuard] },
   { path: "accommodation/reports", component: ReportsPageComponent, canActivate: [authGuard] },
   { path: "feedback", component: FeedbackComponent, canActivate: [authGuard] },
-  { path: "guest-reservations", component: GuestReservationsComponent, canActivate: [authGuard] }
+  { path: "guest-reservations", component: GuestReservationsComponent, canActivate: [authGuard] },
+  { path: "admin/certificates", component: CertificatesComponent, canActivate: [authGuard] }
 ];
 
 @NgModule({

@@ -1,0 +1,168 @@
+<div class="container">
+
+    <div class="of">
+
+        <div class="certificate-info">
+
+            <h5 class="issuer">Issuer:</h5>
+            <p class="issuer">{{ data.parentName }}</p>
+
+            <h5>Common name:</h5>
+            <input matInput [(ngModel)]="data.commonName" placeholder="Enter common name">
+
+            <h5>Organization:</h5>
+            <input matInput [(ngModel)]="data.organization" placeholder="Enter organization">
+
+            <h5>Organizational unit:</h5>
+            <input matInput [(ngModel)]="data.organizationalUnit" placeholder="Enter organization unit">
+
+            <h5>Email:</h5>
+            <input matInput [(ngModel)]="data.email" placeholder="Enter email">
+
+            <h5>Locality:</h5>
+            <input matInput [(ngModel)]="data.locality" placeholder="Enter locality">
+
+            <h5>Country:</h5>
+            <input matInput [(ngModel)]="data.country" placeholder="Enter country">
+
+            <h5>Valid from:</h5>
+            <div class="input-container">
+                <input class="date-input" matInput [matDatepicker]="fromDatepicker" [(ngModel)]="data.dateFrom" placeholder="Choose date" readonly>
+                <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+            </div>
+            <mat-datepicker #fromDatepicker></mat-datepicker>
+
+            <h5>Valid to:</h5>
+            <div class="input-container">
+                <input class="date-input" matInput [matDatepicker]="toDatepicker" [(ngModel)]="data.dateTo" placeholder="Choose date" [max]="data.parentValidTo" readonly>
+                <mat-datepicker-toggle matSuffix [for]="toDatepicker"></mat-datepicker-toggle>
+            </div>
+            <mat-datepicker #toDatepicker></mat-datepicker>
+
+            <h5>Certificate type:</h5>
+            <mat-select [(ngModel)]="data.type" placeholder="Choose type">
+                <mat-option *ngFor="let type of types" [value]="type">{{ type }}</mat-option>
+            </mat-select>
+
+            <div *ngIf="data.type === 'HTTPS'" style="margin-top: 16px;">
+                <span style="font-weight: bold;">Subject alternative name</span>
+                <div class="https">
+                    <label>DNS:</label>
+                    <input matInput [(ngModel)]="data.subjectAlternativeName" placeholder="Enter DNS">
+                </div>
+            </div>
+
+            <div *ngIf="data.type === 'CUSTOM'" style="margin-top: 16px;">
+                <span style="font-weight: bold;">Basic constraits</span>
+                <div class="custom">
+                    <label>Certificate authority:</label>
+                    <mat-button-toggle-group [(ngModel)]="data.ca" name="ca">
+                        <mat-button-toggle value="true">True</mat-button-toggle>
+                        <mat-button-toggle value="false">False</mat-button-toggle>
+                    </mat-button-toggle-group>
+
+                    <br>
+                    <span style="font-weight: bold; font-size: 16px;">Key usage</span><br>
+                    <div class="key-signatures">
+                        <div class="key-pair">
+                            <div>
+                                <input type="checkbox" id="DIGITAL_SIGNATURE" [(ngModel)]="DIGITAL_SIGNATURE">
+                                <label for="DIGITAL_SIGNATURE">Digital signature</label>
+                            </div>
+                            <div>
+                                <label for="NON_REPUDIATION">Non repudiation</label>
+                                <input type="checkbox" id="NON_REPUDIATION" [(ngModel)]="NON_REPUDIATION">
+                            </div>
+                        </div>
+                        <div class="key-pair">
+                            <div>
+                                <input type="checkbox" id="KEY_ENCIPHERMENT" [(ngModel)]="KEY_ENCIPHERMENT">
+                                <label for="KEY_ENCIPHERMENT">Key encipherment</label>
+                            </div>
+                            <div>
+                                <label for="DATA_ENCIPHERMENT">Data encipherment</label>
+                                <input type="checkbox" id="DATA_ENCIPHERMENT" [(ngModel)]="DATA_ENCIPHERMENT">
+                            </div>
+                        </div>
+                        <div class="key-pair">
+                            <div>
+                                <input type="checkbox" id="KEY_AGREEMENT" [(ngModel)]="KEY_AGREEMENT">
+                                <label for="KEY_AGREEMENT">Key agreement</label>
+                            </div>
+                            <div>
+                                <label for="KEY_CERT_SIGN">Key cert sign</label>
+                                <input type="checkbox" id="KEY_CERT_SIGN" [(ngModel)]="KEY_CERT_SIGN">
+                            </div>
+                        </div>
+                        <div class="key-pair">
+                            <div>
+                                <input type="checkbox" id="CRL_SIGN" [(ngModel)]="CRL_SIGN">
+                                <label for="CRL_SIGN">CRL sign</label>
+                            </div>
+                            <div>
+                                <label for="ENCIPHER_ONLY">Encipher only</label>
+                                <input type="checkbox" id="ENCIPHER_ONLY" [(ngModel)]="ENCIPHER_ONLY">
+                            </div>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="DECIPHER_ONLY" [(ngModel)]="DECIPHER_ONLY">
+                            <label for="DECIPHER_ONLY">Decipher only</label>
+                        </div>
+                    </div>
+
+                    <br>
+                    <span style="font-weight: bold; font-size: 16px;">Extended key usage</span><br>
+                    <div class="key-signatures">
+                        <div class="key-pair">
+                            <div>
+                                <input type="checkbox" id="SERVER_AUTHENTICATION" [(ngModel)]="SERVER_AUTHENTICATION">
+                                <label for="SERVER_AUTHENTICATION">Server authentication</label>
+                            </div>
+                            <div>
+                                <label for="CLIENT_AUTHENTICATION">Client authentication</label>
+                                <input type="checkbox" id="CLIENT_AUTHENTICATION" [(ngModel)]="CLIENT_AUTHENTICATION">
+                            </div>
+                        </div>
+                        <div class="key-pair">
+                            <div>
+                                <input type="checkbox" id="CODE_SIGNING" [(ngModel)]="CODE_SIGNING">
+                                <label for="CODE_SIGNING">Code signing</label>
+                            </div>
+                            <div>
+                                <label for="EMAIL">Email</label>
+                                <input type="checkbox" id="EMAIL" [(ngModel)]="EMAIL">
+                            </div>
+                        </div>
+                        <div class="key-pair">
+                            <div>
+                                <input type="checkbox" id="TIMESTAMPING" [(ngModel)]="TIMESTAMPING">
+                                <label for="TIMESTAMPING">Timestamping</label>
+                            </div>
+                            <div>
+                                <label for="OCSP_SIGNING">OCSP signing</label>
+                                <input type="checkbox" id="OCSP_SIGNING" [(ngModel)]="OCSP_SIGNING">
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+                    <span style="font-weight: bold; font-size: 16px;">Subject alternative name</span>
+                    <div class="https">
+                        <label>DNS:</label>
+                        <input matInput [(ngModel)]="data.subjectAlternativeName" placeholder="Enter DNS">
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="buttons">
+        <button (click)="closeDialog()" class="cancel">Cancel</button>
+
+        <button (click)="onAddClick()" class="add" [disabled]="!checkDatesValidity() || !checkSubjectValidity() || !checkTypeValidity()">Add</button>
+    </div>
+
+</div>

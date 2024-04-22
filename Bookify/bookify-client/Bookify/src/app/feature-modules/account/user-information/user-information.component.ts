@@ -8,6 +8,9 @@ import {PasswordChangeDialogComponent} from "../password-change-dialog/password-
 import {Router} from "@angular/router";
 import {AccountDeleteDialogComponent} from '../account-delete-dialog/account-delete-dialog.component';
 import {MessageDialogComponent} from "../../../layout/message-dialog/message-dialog.component";
+import { HttpClient } from '@angular/common/http';
+import { count } from 'console';
+import { environment } from '../../../../env/env';
 
 @Component({
   selector: 'app-user-information',
@@ -20,6 +23,7 @@ export class UserInformationComponent implements OnInit {
   countries: Promise<string[]> = Promise.resolve([]);
   isDisabled: boolean = true;
   image: string | ArrayBuffer | null = null;
+  role: string = this.authenticationService.getRole();
 
   userInfoForm: FormGroup = new FormGroup({
     firstname: new FormControl({
@@ -55,7 +59,8 @@ export class UserInformationComponent implements OnInit {
   constructor(private authenticationService: AuthenticationService,
               private accountService: AccountService,
               public dialog: MatDialog,
-              private router: Router) {
+              private router: Router,
+              private http: HttpClient) {
 
   }
 
@@ -85,6 +90,20 @@ export class UserInformationComponent implements OnInit {
       }
     });
     this.countries = this.authenticationService.getCountries();
+    this.http.get(environment.http + 'localhost:8083/api/certificate/request/sent/' + this.authenticationService.getUserId()).subscribe({
+      next: (status: any) => {
+        if(status === 'ACCEPTED') {
+          this.http.get(environment.http + 'localhost:8083/api/certificate/byuser/' + this.authenticationService.getUserId(), { responseType: "blob" }).subscribe({
+            next: (certificate: any) => {
+              console.log("CERTIFICATE:", certificate);
+            },
+            error: (err) => {
+              console.error(err);
+            }
+          });
+        }
+      }
+    });
   }
 
   OnSaveClick(): void {
@@ -211,4 +230,40 @@ export class UserInformationComponent implements OnInit {
     this.authenticationService.logout();
     this.router.navigate(['']);
   }
+
+  OnCertificateClick(): void {
+    this.http.get(environment.http + 'localhost:8083/api/certificate/request/sent/' + this.authenticationService.getUserId()).subscribe({
+      next: (status: any) => {
+        if(status === 'PENDING') {
+          this.dialog.open(MessageDialogComponent, {data: {message: 'Certificate request is already pending!'}})
+          return;
+        } else if(status === 'ACCEPTED') {
+          this.dialog.open(MessageDialogComponent, {data: {message: 'Certificate is already approved!'}})
+          return;
+        }
+
+        const certificateDTO = {
+          userId: this.account.id,
+          givenName: this.account.firstName,
+          surname: this.account.lastName,
+          country: this.account.address?.country ? this.account.address.country : '.',
+          locality: this.account.address?.city ? this.account.address.city : '.',
+          email: this.account.email
+        }
+        this.http.post(environment.http + 'localhost:8083/api/certificate/request', certificateDTO).subscribe({
+          next: () => {
+            this.dialog.open(MessageDialogComponent, {data: {message: 'Successfully sent certificate request!'}})
+          },
+          error: (err) => {
+            console.error(err);
+          }
+        });
+
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
 }

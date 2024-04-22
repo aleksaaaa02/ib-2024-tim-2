@@ -1,0 +1,12 @@
+
+Bookify/.idea/compiler.xml
+Bookify/.idea/encodings.xml
+Bookify/.idea/jarRepositories.xml
+Bookify/.idea/misc.xml
+Bookify/.idea/vcs.xml
+Bookify/.idea/workspace.xml
+Bookify/PKI/certificates/alias_mapping.json
+Bookify/PKI/keys/*
+Bookify/PKI/src/main/resources/application.properties
+Bookify/bookify-server/.DS_Store
+Bookify/bookify-server/cert/*

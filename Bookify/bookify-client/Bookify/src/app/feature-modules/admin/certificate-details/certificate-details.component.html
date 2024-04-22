@@ -1,0 +1,35 @@
+<div class="container">
+
+    <div class="of">
+        <div class="certificate-info">
+
+            <h5>Subject:</h5>
+            <p class="scroll">{{ data.certificate.subject }}</p>
+
+            <h5>Issuer:</h5>
+            <p class="scroll">{{ data.certificate.issuer }}</p>
+
+            <h5>Valid from:</h5>
+            <p>{{ data.certificate.dateFrom | date: 'dd.MM.yyyy' }}</p>
+
+            <h5>Valid to:</h5>
+            <p>{{ data.certificate.dateTo | date: 'dd.MM.yyyy' }}</p>
+
+            <h5>Public key:</h5>
+            <p class="scroll">{{ data.certificate.publicKey }}</p>
+
+            <h5>Serial number:</h5>
+            <p>{{ data.certificate.serialNumber }}</p>
+
+            <h5>Extensions:</h5>
+            <ul>
+                <li *ngFor="let extension of data.certificate.extensions"><span style="font-weight: bold;">{{ extension.extensionsType }}:<br/></span>
+                <span *ngFor="let exValue of extension.value">- {{ exValue }}<br/></span></li>
+            </ul>
+
+        </div>
+    </div>
+
+    <button (click)="closeDialog()">OK</button>
+
+</div>

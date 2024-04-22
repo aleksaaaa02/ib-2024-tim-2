@@ -1,0 +1,25 @@
+<div class="container">
+
+    <div class="request-info">
+
+        <h5>Subject:</h5>
+        <p>{{ data.request.subjectName }}</p>
+
+        <h5>Email:</h5>
+        <p>{{ data.request.email }}</p>
+
+        <h5>Locality:</h5>
+        <p>{{ data.request.locality }}</p>
+
+        <h5>Country:</h5>
+        <p>{{ data.request.country }}</p>
+
+        <h5>Purpose</h5>
+        <p>Digital signature</p>
+
+    </div>
+
+    <button (click)="closeDialog()">OK</button>
+
+</div>
+

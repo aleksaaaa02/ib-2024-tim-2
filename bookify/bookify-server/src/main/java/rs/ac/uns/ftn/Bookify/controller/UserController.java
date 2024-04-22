@@ -144,7 +144,7 @@ public class UserController {
         UserDetails user = (UserDetails) authentication.getPrincipal();
         User u = userService.get(user.getUsername());
         if (userService.isLoginAvailable(u.getId())) {
-            String jwt = jwtUtils.generateToken(user.getUsername(), u.getId(), userService.getRole(u), userAgent);
+            String jwt = jwtUtils.generateToken(user.getUsername(), u.getId(), u.getUserType(), userAgent);
             int expiresIn = jwtUtils.getExpiredIn(userAgent);
             return new ResponseEntity<>(new UserJWT(jwt, (long) expiresIn), HttpStatus.OK);
         }

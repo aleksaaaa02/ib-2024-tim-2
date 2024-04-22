@@ -9,7 +9,8 @@ VALUES
     ('OWNER', true, '2023-11-29 15:45:00', 'Admin Road 321', 'Admin City', 'Hungary', '13579', false, 'owner3@example.com', 'Admin', 'Tester', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+2233445566', null, false, ""),
     ('GUEST', true,'2023-11-30 12:30:00', 'Another Guest Street 99', 'Guestropolis', 'Romania', '11223', false, 'guest3@example.com', 'Sam', 'White', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+7788990011', null, false, ""),
     ('OWNER', true, '2023-11-27 20:20:00', 'Owner Street 876', 'Owner City', 'Bulgaria', '554433', false, 'owner4@example.com', 'Eva', 'Brown', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+7788990011', null, false, ""),
-    ('GUEST', true,'2023-11-30 12:30:00', 'Admin Lane 765', 'Adminville', 'Montenego', '332211', false, 'guest5@example.com', 'Chris', 'Miller', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+7788990011', null, false, "")
+    ('GUEST', true,'2023-11-30 12:30:00', 'Admin Lane 765', 'Adminville', 'Montenego', '332211', false, 'guest5@example.com', 'Chris', 'Miller', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+7788990011', null, false, ""),
+    ('SYS_ADMIN', true,'2023-11-30 12:30:00', 'Futoski put 7', 'Novi Sad', 'Serbia', '332211', false, 'sysadmin@example.com', 'System', 'Admin', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+7788990011', null, false, "")
 ;
 
 
@@ -197,7 +198,7 @@ VALUES
     (36, 'GARDEN'), (36, 'WHEELCHAIR'), (36, 'BAR'), (36, 'FREE_WIFI'), (36, 'LUNCH');
 
 
-SET @path = 'C:/Fakultet/Informaciona Bezbednost/images/';
+SET @path = 'D:/[PROJECT]Bezbednost/images/';
 INSERT INTO image (image_name, image_path)
 VALUES
     ('image', CONCAT(@path, '1/1.jpeg')), ('image', CONCAT(@path, '1/2.jpeg')),
