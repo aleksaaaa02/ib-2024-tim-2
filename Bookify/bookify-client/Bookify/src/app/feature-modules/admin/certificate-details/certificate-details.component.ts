@@ -18,19 +18,19 @@ export class CertificateDetailsComponent {
   extensions = [
     {
       name: 'Basic Constraints',
-      value: 'CA:FALSE'
+      value: ['CA:FALSE']
     },
     {
       name: 'Key Usage',
-      value: 'Digital Signature, Key Encipherment'
+      value: ['Digital Signature', 'Key Encipherment']
     },
     {
       name: 'Extended Key Usage',
-      value: 'TLS Web Server Authentication, TLS Web Client Authentication'
+      value: ['TLS Web Server Authentication', 'TLS Web Client Authentication']
     },
     {
       name: 'Subject Alternative Name',
-      value: 'DNS:www.example.com, DNS:example.com, DNS:example.com, DNS:example.com, '
+      value: ['DNS:www.example.com', 'DNS:example.com', 'DNS:example.com', 'DNS:example.com']
     }
   ];
 
