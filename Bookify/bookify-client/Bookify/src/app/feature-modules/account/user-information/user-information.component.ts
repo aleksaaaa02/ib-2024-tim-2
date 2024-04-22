@@ -90,6 +90,20 @@ export class UserInformationComponent implements OnInit {
       }
     });
     this.countries = this.authenticationService.getCountries();
+    this.http.get(environment.http + 'localhost:8083/api/certificate/request/sent/' + this.authenticationService.getUserId()).subscribe({
+      next: (status: any) => {
+        if(status === 'ACCEPTED') {
+          this.http.get(environment.http + 'localhost:8083/api/certificate/byuser/' + this.authenticationService.getUserId(), { responseType: "blob" }).subscribe({
+            next: (certificate: any) => {
+              console.log("CERTIFICATE:", certificate);
+            },
+            error: (err) => {
+              console.error(err);
+            }
+          });
+        }
+      }
+    });
   }
 
   OnSaveClick(): void {
