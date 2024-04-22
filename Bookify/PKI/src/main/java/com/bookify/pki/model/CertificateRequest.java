@@ -16,7 +16,10 @@ public class CertificateRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String subjectName;
+    @Column(unique = true)
+    private Long userId;
+    private String givenName;
+    private String surname;
     private String locality;
     private String country;
     private String email;

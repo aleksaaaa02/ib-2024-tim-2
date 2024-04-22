@@ -2,6 +2,7 @@ package com.bookify.pki.service;
 
 import com.bookify.pki.builder.CertificateBuilder;
 import com.bookify.pki.dto.CertificateRequestDTO;
+import com.bookify.pki.dto.NewCertificateRequestDTO;
 import com.bookify.pki.enumerations.CertificatePurpose;
 import com.bookify.pki.enumerations.CertificateRequestStatus;
 import com.bookify.pki.enumerations.CertificateType;
@@ -19,6 +20,7 @@ import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
+import org.bouncycastle.cert.cmp.CertificateStatus;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
@@ -30,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.io.*;
 import java.math.BigInteger;
 import java.security.*;
@@ -90,9 +93,11 @@ public class CertificateRequestService implements ICertificateRequestService {
     }
 
     @Override
-    public CertificateRequest createCertificateRequest(CertificateRequestDTO certificateRequestDTO) {
+    public CertificateRequest createCertificateRequest(NewCertificateRequestDTO certificateRequestDTO) {
         CertificateRequest request = new CertificateRequest(null,
-                certificateRequestDTO.getSubjectName(),
+                certificateRequestDTO.getUserId(),
+                certificateRequestDTO.getGivenName(),
+                certificateRequestDTO.getSurname(),
                 certificateRequestDTO.getLocality(),
                 certificateRequestDTO.getCountry(),
                 certificateRequestDTO.getEmail(),
@@ -172,6 +177,12 @@ public class CertificateRequestService implements ICertificateRequestService {
     @Override
     public List<CertificateRequest> getPendingCertificateRequest() {
         return certificateRequestRepository.findAllByCertificateRequestStatusIs(CertificateRequestStatus.PENDING);
+    }
+
+    @Override
+    public CertificateRequestStatus getCertificateStatusRequest(Long userId) {
+        Optional<CertificateRequest> request = certificateRequestRepository.findByUserId(userId);
+        return request.map(CertificateRequest::getCertificateRequestStatus).orElse(null);
     }
 
 

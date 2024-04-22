@@ -3,10 +3,12 @@ package com.bookify.pki.controller;
 import com.bookify.pki.dto.CertificateDTO;
 import com.bookify.pki.dto.CertificateRequestDTO;
 import com.bookify.pki.dto.NewCertificateDTO;
+import com.bookify.pki.enumerations.CertificateRequestStatus;
 import com.bookify.pki.model.Certificate;
 import com.bookify.pki.model.CertificateAssociation;
 import com.bookify.pki.model.CertificateRequest;
 import com.bookify.pki.service.interfaces.ICertificateService;
+import org.bouncycastle.cert.cmp.CertificateStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@CrossOrigin
 @RequestMapping("/api/certificate")
 public class CertificateController {
 
@@ -56,6 +59,7 @@ public class CertificateController {
 
     @DeleteMapping("/{certId}")
     public ResponseEntity<Long> deleteCertificate(@PathVariable Long certId){
+        System.out.println("Deleting certificate with id: " + certId);
         Long certificateId = certificateService.deleteCertificate(certId);
         if(certificateId == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(certificateId, HttpStatus.OK);
@@ -66,5 +70,4 @@ public class CertificateController {
         // Mislim da ova metoda nece biti potrebna
         return null;
     }
-
 }

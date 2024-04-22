@@ -110,9 +110,9 @@ public class CertificateService implements ICertificateService {
         if(x509Certificate == null) return null;
 
         String subjectAlias = generateCertificateAlias(x509Certificate);
-        saveCertificate(x509Certificate, newCertificateDTO.getIssuerId(), subjectAlias);
+        Long id = saveCertificate(x509Certificate, newCertificateDTO.getIssuerId(), subjectAlias);
         if(newCertificateDTO.getCertificateType() != CertificateType.END_ENTITY) savePrivateKey(keyPair.getPrivate(), subjectAlias);
-        return new Certificate(newCertificateDTO.getIssuerId(), x509Certificate);
+        return new Certificate(id, x509Certificate);
     }
 
     @Override
@@ -207,14 +207,16 @@ public class CertificateService implements ICertificateService {
     }
     public static Subject getSubject(CertificateRequest request, KeyPair keyPair) {
         X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
-        builder.addRDN(BCStyle.CN, request.getSubjectName());
+        builder.addRDN(BCStyle.CN, request.getGivenName() + " " + request.getSurname());
+        builder.addRDN(BCStyle.GIVENNAME, request.getGivenName());
+        builder.addRDN(BCStyle.SURNAME, request.getSurname());
         builder.addRDN(BCStyle.C, request.getCountry());
         builder.addRDN(BCStyle.L, request.getLocality());
         builder.addRDN(BCStyle.E, request.getEmail());
         return new Subject(keyPair.getPublic(), builder.build());
     }
 
-    void saveCertificate(X509Certificate cert,Long issuerId,String alias){
+    Long saveCertificate(X509Certificate cert,Long issuerId,String alias){
 
         keyStoreWriter.loadKeyStore(keystoreLocation,keystorePassword.toCharArray());
         keyStoreWriter.write(alias,cert);
@@ -222,6 +224,7 @@ public class CertificateService implements ICertificateService {
 
         Long subjectId = new Date().getTime();
         aliasMappingService.addSignedCertificate(issuerId,subjectId,alias);
+        return subjectId;
     }
 
     void savePrivateKey(PrivateKey privateKey,String alias){

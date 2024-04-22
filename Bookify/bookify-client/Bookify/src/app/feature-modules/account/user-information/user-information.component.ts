@@ -10,6 +10,7 @@ import {AccountDeleteDialogComponent} from '../account-delete-dialog/account-del
 import {MessageDialogComponent} from "../../../layout/message-dialog/message-dialog.component";
 import { HttpClient } from '@angular/common/http';
 import { count } from 'console';
+import { environment } from '../../../../env/env';
 
 @Component({
   selector: 'app-user-information',
@@ -217,8 +218,7 @@ export class UserInformationComponent implements OnInit {
   }
 
   OnCertificateClick(): void {
-    // TODO check certificate request endpoints
-    this.http.get('https://localhost:8083/api/certificate/request/sent' + this.authenticationService.getUserId()).subscribe({
+    this.http.get(environment.http + 'localhost:8083/api/certificate/request/sent/' + this.authenticationService.getUserId()).subscribe({
       next: (status: any) => {
         if(status === 'PENDING') {
           this.dialog.open(MessageDialogComponent, {data: {message: 'Certificate request is already pending!'}})
@@ -227,14 +227,16 @@ export class UserInformationComponent implements OnInit {
           this.dialog.open(MessageDialogComponent, {data: {message: 'Certificate is already approved!'}})
           return;
         }
-        
+
         const certificateDTO = {
-          subjectName: this.account.firstName + ' ' + this.account.lastName,
-          country: this.account.address?.country ? this.account.address.country : '',
-          locality: this.account.address?.city ? this.account.address.city : '',
+          userId: this.account.id,
+          givenName: this.account.firstName,
+          surname: this.account.lastName,
+          country: this.account.address?.country ? this.account.address.country : '.',
+          locality: this.account.address?.city ? this.account.address.city : '.',
           email: this.account.email
         }
-        this.http.post('https://localhost:8083/api/certificate/request' + this.authenticationService.getUserId(), certificateDTO).subscribe({
+        this.http.post(environment.http + 'localhost:8083/api/certificate/request', certificateDTO).subscribe({
           next: () => {
             this.dialog.open(MessageDialogComponent, {data: {message: 'Successfully sent certificate request!'}})
           },
@@ -247,7 +249,7 @@ export class UserInformationComponent implements OnInit {
       error: (err) => {
         console.error(err);
       }
-    })
+    });
   }
 
 }

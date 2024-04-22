@@ -15,4 +15,23 @@ export class CertificateDetailsComponent {
     this.dialogRef.close();
   }
 
+  extensions = [
+    {
+      name: 'Basic Constraints',
+      value: ['CA:FALSE']
+    },
+    {
+      name: 'Key Usage',
+      value: ['Digital Signature', 'Key Encipherment']
+    },
+    {
+      name: 'Extended Key Usage',
+      value: ['TLS Web Server Authentication', 'TLS Web Client Authentication']
+    },
+    {
+      name: 'Subject Alternative Name',
+      value: ['DNS:www.example.com', 'DNS:example.com', 'DNS:example.com', 'DNS:example.com']
+    }
+  ];
+
 }
