@@ -25,6 +25,8 @@ interface Certificate {
   dateTo: Date;
   purpose: string;
   isEE: boolean;
+  publicKey?: string;
+  serialNumber?: string;
   extensions?: Extension[];
   children?: Certificate[];
 }

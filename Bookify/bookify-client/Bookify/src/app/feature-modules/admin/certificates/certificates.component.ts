@@ -11,6 +11,8 @@ interface Certificate {
   dateTo: Date;
   purpose: string;
   isEE: boolean;
+  publicKey?: string;
+  serialNumber?: string;
   extensions?: Extension[];
   children?: Certificate[];
 }
@@ -131,7 +133,7 @@ export class CertificatesComponent {
       return;
     }
 
-    if (this.selectedCertificate.purpose === 'DIGITAL_SIGNATURE' || this.selectedCertificate.purpose === 'HTTPS') {
+    if (this.selectedCertificate.isEE) {
       alert("Cannot sign with an End Entity certificate.");
       return;
     }
