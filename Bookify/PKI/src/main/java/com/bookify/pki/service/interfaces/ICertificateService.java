@@ -15,4 +15,5 @@ public interface ICertificateService {
     Certificate createNewCertificate(NewCertificateDTO newCertificateDTO);
     boolean validateCertificateChain(Long certificateId);
     Long deleteCertificate(Long certificateId);
+    Long getCertificateByUserId(Long userId);
 }

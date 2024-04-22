@@ -24,6 +24,7 @@ public class CertificateRequest {
     private String country;
     private String email;
 
+
     @Enumerated(EnumType.STRING)
     private CertificateType certificateType;
 

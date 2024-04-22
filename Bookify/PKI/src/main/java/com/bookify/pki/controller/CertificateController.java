@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.cert.CertificateEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,16 @@ public class CertificateController {
         return new ResponseEntity<>(certificateDTO, HttpStatus.OK);
     }
 
+    @GetMapping("/byuser/{userId}")
+    public ResponseEntity<byte[]> getCertificateByUserId(@PathVariable Long userId){
+        Long certificateId = certificateService.getCertificateByUserId(userId);
+        Certificate certificate = certificateService.getCertificateById(certificateId);
+        try {
+            return new ResponseEntity<>(certificate.getX509Certificate().getEncoded(), HttpStatus.OK);
+        } catch (CertificateEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @GetMapping("/{certId}/signed")
     public ResponseEntity<List<CertificateDTO>> getCertificatesSignedSubjects(@PathVariable Long certId) {
@@ -64,6 +75,7 @@ public class CertificateController {
         if(certificateId == null) return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(certificateId, HttpStatus.OK);
     }
+
 
     @GetMapping("/all")
     public ResponseEntity<List<Certificate>> getAllCertificates() {

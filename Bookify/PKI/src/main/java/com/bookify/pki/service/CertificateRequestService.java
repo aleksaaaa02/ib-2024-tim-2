@@ -6,11 +6,10 @@ import com.bookify.pki.dto.NewCertificateRequestDTO;
 import com.bookify.pki.enumerations.CertificatePurpose;
 import com.bookify.pki.enumerations.CertificateRequestStatus;
 import com.bookify.pki.enumerations.CertificateType;
+import com.bookify.pki.model.*;
 import com.bookify.pki.model.Certificate;
-import com.bookify.pki.model.CertificateRequest;
-import com.bookify.pki.model.Issuer;
-import com.bookify.pki.model.Subject;
 import com.bookify.pki.repository.ICertificateRequestRepository;
+import com.bookify.pki.repository.IUserCertificateRepository;
 import com.bookify.pki.service.interfaces.ICertificateRequestService;
 import com.bookify.pki.service.interfaces.ICertificateService;
 import com.bookify.pki.utils.KeyStoreReader;
@@ -58,6 +57,8 @@ public class CertificateRequestService implements ICertificateRequestService {
     @Autowired
     private CertificateService certificateService;
 
+    @Autowired
+    private IUserCertificateRepository userCertificateRepository;
 
     @Value("${keystore.location}")
     private String keystoreLocation;
@@ -166,9 +167,10 @@ public class CertificateRequestService implements ICertificateRequestService {
 
             String subjectAlias = certificateService.generateCertificateAlias(x509Certificate);
 
-            certificateService.saveCertificate(x509Certificate, issuerId, subjectAlias);
+            Long subjectId = certificateService.saveCertificate(x509Certificate, issuerId, subjectAlias);
             //certificateService.savePrivateKey(keyPair.getPrivate(), subjectAlias);
 
+            userCertificateRepository.save(new UserCertificate(null, request.getUserId(), subjectId));
             System.out.println(x509Certificate);
         }
         catch (CertificateEncodingException e) {

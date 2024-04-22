@@ -11,6 +11,7 @@ import com.bookify.pki.model.CertificateRequest;
 import com.bookify.pki.model.Issuer;
 import com.bookify.pki.model.Subject;
 import com.bookify.pki.repository.ICertificateRequestRepository;
+import com.bookify.pki.repository.IUserCertificateRepository;
 import com.bookify.pki.service.interfaces.ICertificateService;
 import com.bookify.pki.utils.KeyStoreReader;
 import com.bookify.pki.utils.KeyStoreWriter;
@@ -54,6 +55,9 @@ public class CertificateService implements ICertificateService {
 
     @Autowired
     private AliasMappingService aliasMappingService;
+
+    @Autowired
+    private IUserCertificateRepository userCertificateRepository;
 
     @Value("${keystore.location}")
     private String keystoreLocation;
@@ -135,6 +139,11 @@ public class CertificateService implements ICertificateService {
         aliasMappingService.deleteFromParentList(certificateId);
         deleteCertificateFromKeystore(certificateId);
         return certificateId;
+    }
+
+    @Override
+    public Long getCertificateByUserId(Long userId) {
+        return userCertificateRepository.findByUserId(userId).getCertificateId();
     }
 
     private void deleteCertificateFromKeystore(Long certificateId) {
