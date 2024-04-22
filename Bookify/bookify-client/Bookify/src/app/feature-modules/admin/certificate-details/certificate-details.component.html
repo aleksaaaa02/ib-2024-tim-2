@@ -29,7 +29,7 @@
 
             <h5>Extensions:</h5>
             <ul>
-                <li *ngFor="let extension of data.extensions"><span style="font-weight: bold;">{{ extension.extensionsType }}:<br/></span>
+                <li *ngFor="let extension of data.certificate.extensions"><span style="font-weight: bold;">{{ extension.extensionsType }}:<br/></span>
                 <span *ngFor="let exValue of extension.value">- {{ exValue }}<br/></span></li>
             </ul>
 

@@ -83,10 +83,9 @@ export class CertificatesComponent {
       certificate.dateFrom = dateFrom;
       certificate.dateTo = dateTo;
       if (certificate.extensions)
-      certificate.isEE = certificate.extensions?.some((extension) => extension.extensionsType === 'BASIC_CONSTRAINTS' && extension.value.includes('true'));
+        certificate.isEE = certificate.extensions?.some((extension) => extension.extensionsType === 'BASIC_CONSTRAINTS' && extension.value.includes('false'));
 
-  if (!certificate.isEE) {
-
+      if (!certificate.isEE) {
         this.httpClient.get<Certificate[]>(environment.http + `localhost:8083/api/certificate/${certificate.id}/signed`).subscribe((certificateData) => {
           certificate.children = certificateData;
           this.processCertificates(certificate.children);
@@ -117,6 +116,7 @@ export class CertificatesComponent {
         data: { parentSerialNumber: undefined }
       }).afterClosed().subscribe((newCertificate) => {
         if (newCertificate) {
+          console.log(newCertificate);
           this.httpClient.post(environment.http + 'localhost:8083/api/certificate', newCertificate).subscribe((newCertificateWithId) => {
             this.certificates.push(newCertificateWithId as Certificate);
           });
@@ -147,8 +147,9 @@ export class CertificatesComponent {
       alert("Please select a certificate request to reject.");
       return;
     }
-    this.httpClient.put(environment.http + `localhost:8083/api/certificate/request/reject/${this.selectedRequest.id}`, {});
-    this.requests = this.requests.filter((request) => request.id !== this.selectedRequest.id);
+    this.httpClient.put(environment.http + `localhost:8083/api/certificate/request/reject/${this.selectedRequest.id}`, {}).subscribe(() => {
+      this.requests = this.requests.filter((request) => request.id !== this.selectedRequest.id);
+    });
   }
 
   selectCertificate(certificate: Certificate): void {

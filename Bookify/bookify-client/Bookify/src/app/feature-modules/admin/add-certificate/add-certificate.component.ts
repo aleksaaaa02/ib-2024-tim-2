@@ -145,11 +145,20 @@ export class AddCertificateComponent {
       this.data.dateFrom = currentDate;
     }
 
-    if (this.data.type === "CUSTOM" && this.data.subjectAlternativeName === undefined) {
+    if (this.data.subjectAlternativeName === undefined) {
       this.data.subjectAlternativeName = '';
     }
 
-
+    let purposeString: string;
+    if (this.data.type === 'Digital signature') {
+      purposeString = 'DIGITAL_SIGNATURE';
+    } else if (this.data.type === 'Intermediate certificate authority') {
+      purposeString = 'INTERMEDIATE_CERTIFICATE_AUTHORITY';
+    } else if (this.data.type === 'HTTPS') {
+      purposeString = 'HTTPS';
+    } else {
+      purposeString = 'CUSTOM';
+    }
 
     const newCertificate: CertificateDTO = {
       issuerId: this.parentId,
@@ -167,7 +176,7 @@ export class AddCertificateComponent {
         {extensionsType: "EXTENDED_KEY_USAGE", value: this.getExtendedKeyUsages()},
         {extensionsType: "SUBJECT_ALTERNATIVE_NAME", value: this.data.subjectAlternativeName}
       ],
-      purpose: this.data.type
+      purpose: purposeString
     };
     this.dialogRef.close(newCertificate);
   }
