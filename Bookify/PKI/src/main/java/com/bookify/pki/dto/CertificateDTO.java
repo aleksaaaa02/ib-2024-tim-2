@@ -2,6 +2,7 @@ package com.bookify.pki.dto;
 
 import com.bookify.pki.enumerations.CertificatePurpose;
 import com.bookify.pki.model.Certificate;
+import com.bookify.pki.model.Extension;
 import com.bookify.pki.model.Issuer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -26,8 +28,7 @@ public class CertificateDTO {
     private String subject;
     private String dateFrom;
     private String dateTo;
-    private CertificatePurpose certificatePurpose;
-
+    private List<Extension> extensions;
     public CertificateDTO(Certificate certificate){
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         this.id = certificate.getId();

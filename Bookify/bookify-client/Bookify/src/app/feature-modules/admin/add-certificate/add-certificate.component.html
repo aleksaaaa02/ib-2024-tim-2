@@ -6,39 +6,39 @@
 
             <h5 class="issuer">Issuer:</h5>
             <p class="issuer">{{ data.parentName }}</p>
-    
+
             <h5>Common name:</h5>
             <input matInput [(ngModel)]="data.commonName" placeholder="Enter common name">
-    
+
             <h5>Organization:</h5>
             <input matInput [(ngModel)]="data.organization" placeholder="Enter organization">
-    
+
             <h5>Organizational unit:</h5>
             <input matInput [(ngModel)]="data.organizationalUnit" placeholder="Enter organization unit">
-    
+
             <h5>Email:</h5>
             <input matInput [(ngModel)]="data.email" placeholder="Enter email">
-    
+
             <h5>Locality:</h5>
             <input matInput [(ngModel)]="data.locality" placeholder="Enter locality">
-    
+
             <h5>Country:</h5>
             <input matInput [(ngModel)]="data.country" placeholder="Enter country">
-    
+
             <h5>Valid from:</h5>
             <div class="input-container">
                 <input class="date-input" matInput [matDatepicker]="fromDatepicker" [(ngModel)]="data.dateFrom" placeholder="Choose date" readonly>
                 <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
             </div>
             <mat-datepicker #fromDatepicker></mat-datepicker>
-    
+
             <h5>Valid to:</h5>
             <div class="input-container">
                 <input class="date-input" matInput [matDatepicker]="toDatepicker" [(ngModel)]="data.dateTo" placeholder="Choose date" [max]="data.parentValidTo" readonly>
                 <mat-datepicker-toggle matSuffix [for]="toDatepicker"></mat-datepicker-toggle>
             </div>
             <mat-datepicker #toDatepicker></mat-datepicker>
-    
+
             <h5>Certificate type:</h5>
             <mat-select [(ngModel)]="data.type" placeholder="Choose type">
                 <mat-option *ngFor="let type of types" [value]="type">{{ type }}</mat-option>
@@ -52,7 +52,7 @@
                 </div>
             </div>
 
-            <div *ngIf="data.type === 'Custom'" style="margin-top: 16px;">
+            <div *ngIf="data.type === 'CUSTOM'" style="margin-top: 16px;">
                 <span style="font-weight: bold;">Basic constraits</span>
                 <div class="custom">
                     <label>Certificate authority:</label>
@@ -60,7 +60,7 @@
                         <mat-button-toggle value="true">True</mat-button-toggle>
                         <mat-button-toggle value="false">False</mat-button-toggle>
                     </mat-button-toggle-group>
-                    
+
                     <br>
                     <span style="font-weight: bold; font-size: 16px;">Key usage</span><br>
                     <div class="key-signatures">
@@ -154,14 +154,14 @@
 
                 </div>
             </div>
-    
+
         </div>
 
     </div>
-    
+
     <div class="buttons">
         <button (click)="closeDialog()" class="cancel">Cancel</button>
-    
+
         <button (click)="onAddClick()" class="add" [disabled]="!checkDatesValidity() || !checkSubjectValidity() || !checkTypeValidity()">Add</button>
     </div>
 

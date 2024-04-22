@@ -1,10 +1,16 @@
+interface Extension {
+  extensionsType: string;
+  value: string[];
+}
+
 interface Certificate {
   id: number;
   issuer: string;
   subject: string;
   dateFrom: Date;
   dateTo: Date;
-  certificatePurpose: string;
+  purpose: string;
+  extensions?: Extension[];
   isEE: boolean;
   children?: Certificate[];
 }
@@ -58,7 +64,7 @@ export class CertificateNodeComponent {
     event.stopPropagation();
     console.log('deleting certificate with id: ' + this.certificate.id);
     this.httpClient.delete(environment.http + 'localhost:8083/api/certificate/' + this.certificate.id).subscribe(() => {
-      location.reload(); 
+      location.reload();
     });
   }
 

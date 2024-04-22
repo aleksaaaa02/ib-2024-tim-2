@@ -105,7 +105,9 @@ public class CertificateService implements ICertificateService {
                 .withIssuer(issuer)
                 .withPurpose(newCertificateDTO.getPurpose())
                 .withValidity(startDate, endDate)
-                .withSubject(subject);
+                .withSubject(subject)
+                .withExtension(newCertificateDTO.getExtensions())
+                .withParentExtensions(holder.getExtensions().getExtensionOIDs());
         X509Certificate x509Certificate = certificateBuilder.build();
         if(x509Certificate == null) return null;
 
@@ -159,6 +161,7 @@ public class CertificateService implements ICertificateService {
         try {
             JcaX509CertificateHolder holder = new JcaX509CertificateHolder(certificate);
             X509Certificate certificateIssuer = getCertificateById(issuerId).getX509Certificate();
+
             certificate.verify(certificateIssuer.getPublicKey());
             return holder.isValidOn(new Date());
         } catch (CertificateException | NoSuchAlgorithmException | SignatureException | InvalidKeyException |

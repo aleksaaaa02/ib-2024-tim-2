@@ -1,5 +1,5 @@
 interface Extension {
-  name: string;
+  extensionsType: string;
   value: string[];
 }
 
@@ -13,7 +13,7 @@ interface CertificateDTO {
   country: string;
   notBefore: Date;
   notAfter: Date;
-  certificatePurpose: string;
+  purpose: string;
   extensions?: Extension[];
 }
 
@@ -23,8 +23,9 @@ interface Certificate {
   subject: string;
   dateFrom: Date;
   dateTo: Date;
-  certificatePurpose: string;
+  purpose: string;
   isEE: boolean;
+  extensions?: Extension[];
   children?: Certificate[];
 }
 
@@ -45,7 +46,7 @@ export class AddCertificateComponent {
     private httpClient: HttpClient) { }
 
   parentId: number;
-  types = ['Custom', 'Digital signature', 'Intermediate certificate authority', 'HTTPS'];
+  types = ['CUSTOM', 'Digital signature', 'Intermediate certificate authority', 'HTTPS'];
   DIGITAL_SIGNATURE: boolean;
   NON_REPUDIATION: boolean;
   KEY_ENCIPHERMENT: boolean;
@@ -62,7 +63,7 @@ export class AddCertificateComponent {
   EMAIL: boolean;
   TIMESTAMPING: boolean;
   OCSP_SIGNING: boolean;
-  
+
   ngOnInit(): void {
     this.parentId = this.data.parentId;
     if (this.parentId === undefined) {
@@ -144,7 +145,7 @@ export class AddCertificateComponent {
       this.data.dateFrom = currentDate;
     }
 
-    if (this.data.type === "Custom" && this.data.subjectAlternativeName === undefined) {
+    if (this.data.type === "CUSTOM" && this.data.subjectAlternativeName === undefined) {
       this.data.subjectAlternativeName = '';
     }
 
@@ -161,12 +162,12 @@ export class AddCertificateComponent {
       notBefore: this.data.dateFrom,
       notAfter: this.data.dateTo,
       extensions: [
-        {name: "BASIC_CONSTRAINTS", value: this.data.ca},
-        {name: "KEY_USAGE", value: this.getKeyUsages()},
-        {name: "EXTENDED_KEY_USAGE", value: this.getExtendedKeyUsages()},
-        {name: "SUBJECT_ALTERNATIVE_NAME", value: this.data.subjectAlternativeName}
+        {extensionsType: "BASIC_CONSTRAINTS", value: this.data.ca},
+        {extensionsType: "KEY_USAGE", value: this.getKeyUsages()},
+        {extensionsType: "EXTENDED_KEY_USAGE", value: this.getExtendedKeyUsages()},
+        {extensionsType: "SUBJECT_ALTERNATIVE_NAME", value: this.data.subjectAlternativeName}
       ],
-      certificatePurpose: this.data.type
+      purpose: this.data.type
     };
     this.dialogRef.close(newCertificate);
   }
@@ -189,10 +190,10 @@ export class AddCertificateComponent {
     if (this.data.type === 'HTTPS') {
       return this.data.subjectAlternativeName !== undefined && this.data.subjectAlternativeName !== '';
     }
-    if (this.data.type === 'Custom') {
-      if (!this.DIGITAL_SIGNATURE && !this.NON_REPUDIATION 
-        && !this.KEY_ENCIPHERMENT && !this.DATA_ENCIPHERMENT 
-        && !this.KEY_AGREEMENT && !this.KEY_CERT_SIGN 
+    if (this.data.type === 'CUSTOM') {
+      if (!this.DIGITAL_SIGNATURE && !this.NON_REPUDIATION
+        && !this.KEY_ENCIPHERMENT && !this.DATA_ENCIPHERMENT
+        && !this.KEY_AGREEMENT && !this.KEY_CERT_SIGN
         && !this.CRL_SIGN && !this.ENCIPHER_ONLY && !this.DECIPHER_ONLY) {
           return false;
       }

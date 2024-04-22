@@ -1,11 +1,17 @@
+interface Extension {
+  extensionsType: string;
+  value: string[];
+}
+
 interface Certificate {
   id: number;
   issuer: string;
   subject: string;
   dateFrom: Date;
   dateTo: Date;
-  certificatePurpose: string;
+  purpose: string;
   isEE: boolean;
+  extensions?: Extension[];
   children?: Certificate[];
 }
 
@@ -75,9 +81,11 @@ export class CertificatesComponent {
 
       certificate.dateFrom = dateFrom;
       certificate.dateTo = dateTo;
-      certificate.isEE = certificate.certificatePurpose === 'END_ENTITY' || certificate.certificatePurpose === 'HTTPS';
-  
-      if (certificate.certificatePurpose !== 'END_ENTITY' && certificate.certificatePurpose !== 'HTTPS') {
+      if (certificate.extensions)
+      certificate.isEE = certificate.extensions?.some((extension) => extension.extensionsType === 'BASIC_CONSTRAINTS' && extension.value.includes('true'));
+
+  if (!certificate.isEE) {
+
         this.httpClient.get<Certificate[]>(environment.http + `localhost:8083/api/certificate/${certificate.id}/signed`).subscribe((certificateData) => {
           certificate.children = certificateData;
           this.processCertificates(certificate.children);
@@ -122,7 +130,7 @@ export class CertificatesComponent {
       return;
     }
 
-    if (this.selectedCertificate.certificatePurpose === 'END_ENTITY' || this.selectedCertificate.certificatePurpose === 'HTTPS') {
+    if (this.selectedCertificate.purpose === 'DIGITAL_SIGNATURE' || this.selectedCertificate.purpose === 'HTTPS') {
       alert("Cannot sign with an End Entity certificate.");
       return;
     }
