@@ -96,7 +96,7 @@ export class CertificatesComponent {
 
     this.dialog.open(CertificateRequestDetailsComponent, {
       width: '500px',
-      height: '500px',
+      height: '490px',
       data: { request: request }
     });
   }
@@ -104,7 +104,7 @@ export class CertificatesComponent {
   addCertificate(): void {
       this.dialog.open(AddCertificateComponent, {
         width: '500px',
-        height: '500px',
+        height: '520px',
         data: { parentSerialNumber: undefined }
       }).afterClosed().subscribe((newCertificate) => {
         if (newCertificate) {

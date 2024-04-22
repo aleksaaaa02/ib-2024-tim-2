@@ -26,10 +26,6 @@ button:hover {
   flex-direction: column;
   justify-content: space-between;
   padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  overflow: auto;
 }
 
 p:last-child {
@@ -39,4 +35,15 @@ p:last-child {
 ul {
   padding-left: 1.2rem;
   margin-bottom: 0;
+}
+
+.of{
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  overflow: auto;
+}
+
+.scroll {
+  overflow: auto;
 }

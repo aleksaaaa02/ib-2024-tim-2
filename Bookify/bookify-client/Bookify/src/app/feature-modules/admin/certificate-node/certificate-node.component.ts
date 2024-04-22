@@ -39,7 +39,7 @@ export class CertificateNodeComponent {
     event.stopPropagation();
     this.dialog.open(AddCertificateComponent, {
       width: '500px',
-      height: '500px',
+      height: '520px',
       data: { parentId: this.certificate.id }
     }).afterClosed().subscribe((newCertificate) => {
       if (newCertificate) {
@@ -73,7 +73,7 @@ export class CertificateNodeComponent {
 
     this.dialog.open(CertificateDetailsComponent, {
       width: '500px',
-      height: '500px',
+      height: '520px',
       data: { certificate: this.certificate }
     });
   }

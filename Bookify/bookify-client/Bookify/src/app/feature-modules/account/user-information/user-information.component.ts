@@ -218,7 +218,6 @@ export class UserInformationComponent implements OnInit {
   }
 
   OnCertificateClick(): void {
-    // TODO check certificate request endpoints
     this.http.get(environment.http + 'localhost:8083/api/certificate/request/sent/' + this.authenticationService.getUserId()).subscribe({
       next: (status: any) => {
         if(status === 'PENDING') {
