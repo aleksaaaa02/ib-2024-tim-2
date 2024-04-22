@@ -11,6 +11,7 @@ import com.bookify.pki.service.interfaces.ICertificateService;
 import org.bouncycastle.cert.cmp.CertificateStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class CertificateController {
         return new ResponseEntity<>(certificateDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/byuser/{userId}")
+    @GetMapping(value = "/byuser/{userId}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> getCertificateByUserId(@PathVariable Long userId){
         Long certificateId = certificateService.getCertificateByUserId(userId);
         Certificate certificate = certificateService.getCertificateById(certificateId);
