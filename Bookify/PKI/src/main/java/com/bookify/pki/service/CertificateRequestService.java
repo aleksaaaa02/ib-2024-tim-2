@@ -155,9 +155,11 @@ public class CertificateRequestService implements ICertificateRequestService {
             CertificateBuilder certificateBuilder = new CertificateBuilder();
             certificateBuilder
                     .withIssuer(issuer)
-                    .withPurpose(CertificatePurpose.END_ENTITY)
+                    .withPurpose(CertificatePurpose.DIGITAL_SIGNATURE)
                     .withSubject(subject)
-                    .withValidity(startDate, endDate);
+                    .withValidity(startDate, endDate)
+                    .withParentExtensions(holder.getExtensions().getExtensionOIDs());
+
 
             X509Certificate x509Certificate = certificateBuilder.build();
             if(x509Certificate == null) return;

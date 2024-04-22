@@ -17,7 +17,10 @@ import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import java.math.BigInteger;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class CertificateBuilder {
 
@@ -26,6 +29,8 @@ public class CertificateBuilder {
     private Date startDate;
     private Date endDate;
     private CertificatePurpose purpose;
+    private List<com.bookify.pki.model.Extension> extensions;
+    private List<ASN1ObjectIdentifier> parentExtensionsOIDs;
 
     public CertificateBuilder withSubject(Subject subject) {
         this.subject = subject;
@@ -45,6 +50,15 @@ public class CertificateBuilder {
 
     public CertificateBuilder withPurpose(CertificatePurpose purpose){
         this.purpose = purpose;
+        return this;
+    }
+
+    public CertificateBuilder withExtension(List<com.bookify.pki.model.Extension> extensions) {
+        this.extensions = extensions;
+        return this;
+    }
+    public CertificateBuilder withParentExtensions(ASN1ObjectIdentifier[] parentExtensionsOIDs){
+        this.parentExtensionsOIDs = new ArrayList<>(Arrays.asList(parentExtensionsOIDs));
         return this;
     }
 
@@ -73,7 +87,7 @@ public class CertificateBuilder {
                     buildIntermediateCACertificate(certGen);
                     break;
                 default:
-                    buildEndEntityCertificate(certGen);
+                    buildCustomCertificate(certGen);
                     break;
             }
 
@@ -130,6 +144,67 @@ public class CertificateBuilder {
         } catch (CertIOException e) {
             throw new RuntimeException(e);
         }
+    }
+    private void buildCustomCertificate(X509v3CertificateBuilder certificateBuilder) {
+        try {
+            for(com.bookify.pki.model.Extension ext: extensions) {
+                //isExtensionAppliable(ext);
+                switch (ext.getExtensionsType()){
+                    case BASIC_CONSTRAINTS:
+                        addBasicConstraints(certificateBuilder, ext);
+                        break;
+                    case SUBJECT_ALTERNATIVE_NAME:
+                        addSubjectAlternativeName(certificateBuilder, ext);
+                        break;
+                    case EXTENDED_KEY_USAGE:
+                        addExtendedKeyUsage(certificateBuilder, ext);
+                        break;
+                    case KEY_USAGE:
+                        addKeyUsage(certificateBuilder, ext);
+                        break;
+                    default:
+                        throw new RuntimeException();
+                }
+            }
+
+        } catch (CertIOException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void addKeyUsage(X509v3CertificateBuilder certificateBuilder, com.bookify.pki.model.Extension ext) throws CertIOException {
+        List<String> keyUsages = (List<String>) ext.getValue();
+        int keyUsageValue = 0;
+        for(String keyUsage : keyUsages){
+            com.bookify.pki.enumerations.KeyUsage usage = com.bookify.pki.enumerations.KeyUsage.valueOf(keyUsage);
+            keyUsageValue |= usage.getKeyUsage();
+        }
+        certificateBuilder.addExtension(ext.getExtensionsType().getOID(), true, new KeyUsage(keyUsageValue));
+    }
+
+    private static void addExtendedKeyUsage(X509v3CertificateBuilder certificateBuilder, com.bookify.pki.model.Extension ext) throws CertIOException {
+        List<String> extendedKeyUsages = (List<String>) ext.getValue();
+        for(String usage: extendedKeyUsages){
+            com.bookify.pki.enumerations.ExtendedKeyUsage keyUsage = com.bookify.pki.enumerations.ExtendedKeyUsage.valueOf(usage);
+            certificateBuilder.addExtension(ext.getExtensionsType().getOID(), true,
+                    new ExtendedKeyUsage(KeyPurposeId.getInstance(new ASN1ObjectIdentifier(keyUsage.getOID()))));
+        }
+    }
+
+    private static void addSubjectAlternativeName(X509v3CertificateBuilder certificateBuilder, com.bookify.pki.model.Extension ext) throws CertIOException {
+        String dns = (String) ext.getValue();
+        GeneralName generalName = new GeneralName(GeneralName.dNSName, dns);
+        GeneralNames names = new GeneralNames(generalName);
+        certificateBuilder.addExtension(ext.getExtensionsType().getOID(), false, new GeneralName(GeneralName.dNSName, names));
+    }
+
+    private static void addBasicConstraints(X509v3CertificateBuilder certificateBuilder, com.bookify.pki.model.Extension ext) throws CertIOException {
+        boolean isCa = ((String) ext.getValue()).equals("true");
+        certificateBuilder.addExtension(ext.getExtensionsType().getOID(), true, new BasicConstraints(isCa));
+    }
+
+    private void isExtensionAppliable(com.bookify.pki.model.Extension extension) throws CertIOException {
+        if(!parentExtensionsOIDs.contains(extension.getExtensionsType().getOID())) throw new CertIOException("Parent CA doesn't contain extension: " + extension.getExtensionsType().toString());
     }
 
 }
