@@ -65,6 +65,7 @@ export class CertificatesComponent {
     this.httpClient.get<Certificate[]>(environment.http + 'localhost:8083/api/certificate/0/signed').subscribe((data) => {
       this.processCertificates(data);
       this.certificates = data;
+      console.log(this.certificates);
     });
   }
 
