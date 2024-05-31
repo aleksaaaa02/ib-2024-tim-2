@@ -49,9 +49,6 @@ public class UserController {
     private IReportedUserService reportedUserService;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
     private JWTUtils jwtUtils;
 
 
@@ -136,22 +133,6 @@ public class UserController {
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<UserJWT> login(@Valid @RequestBody UserCredentialsDTO userCredentials, @RequestHeader(HttpHeaders.USER_AGENT) String userAgent) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userCredentials.getEmail(), userCredentials.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        UserDetails user = (UserDetails) authentication.getPrincipal();
-        User u = userService.get(user.getUsername());
-        if (userService.isLoginAvailable(u.getId())) {
-            String jwt = jwtUtils.generateToken(user.getUsername(), u.getId(), u.getUserType(), userAgent);
-            int expiresIn = jwtUtils.getExpiredIn(userAgent);
-            return new ResponseEntity<>(new UserJWT(jwt, (long) expiresIn), HttpStatus.OK);
-        }
-
-        return null;
-    }
-
     @DeleteMapping("/{userId}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
@@ -196,12 +177,6 @@ public class UserController {
         return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
-    @GetMapping("/search")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Collection<UserDTO>> searchUsers(@RequestParam String searchParameter) {
-        return new ResponseEntity<>(null, HttpStatus.OK);
-    }
-
     @PostMapping("/change-image/{userId}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<Long> changeAccountImage(@RequestParam("image") MultipartFile image, @PathVariable Long userId) throws Exception {
@@ -229,18 +204,6 @@ public class UserController {
         return new ResponseEntity<>(imageId, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/logout")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
-    public ResponseEntity<?> logout() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!(auth instanceof AnonymousAuthenticationToken)) {
-            SecurityContextHolder.clearContext();
-            return new ResponseEntity<String>("Goodbye", HttpStatus.OK);
-        } else {
-            throw new BadRequestException("User is not authenticated");
-        }
-    }
-
     @PostMapping(value = "/mobile")
     public ResponseEntity<MessageDTO> registerUserMobile(@Valid @RequestBody UserRegisteredDTO newUser) throws MessagingException {
         User user = userService.create(newUser);
@@ -262,7 +225,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         UserBasicDTO dto = UserBasicDTOMapper.fromOwnertoDTO(user);
         dto.setType(user.getUserType());
-        return new ResponseEntity<UserBasicDTO>(dto, HttpStatus.OK);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 }
 

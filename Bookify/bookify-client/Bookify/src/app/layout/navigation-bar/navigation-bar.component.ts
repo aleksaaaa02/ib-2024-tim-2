@@ -35,6 +35,10 @@ export class NavigationBarComponent implements OnInit {
     }
   }
 
+  async login() {
+    await this.authenticationService.login();
+  }
+
   private checkIfInitialTransparent(): void {
     if (this.currentRoute.includes('/results'))
       this.isTransparentRoute = true;

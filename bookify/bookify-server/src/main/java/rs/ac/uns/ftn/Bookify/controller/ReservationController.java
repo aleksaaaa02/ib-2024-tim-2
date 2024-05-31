@@ -132,9 +132,6 @@ public class ReservationController {
         return new ResponseEntity<>(returns, HttpStatus.OK);
     }
 
-
-
-
     @GetMapping(value = "/{userId}/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
     public ResponseEntity<Collection<ReservationDTO>> findReservationsByUserIdAndStatus(@PathVariable Long userId, @PathVariable Status status) {
@@ -194,26 +191,6 @@ public class ReservationController {
     public ResponseEntity<ReservationDTO> delete(@PathVariable Long reservationId) {
         //delete reservation
         return new ResponseEntity<ReservationDTO>(HttpStatus.NO_CONTENT);
-    }
-
-    @GetMapping(value = "/filter/owner", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<Collection<ReservationDTO>> filterOwnersRequests(@RequestParam("accommodationId") Long accommodationId, @RequestParam("begin")
-    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end,
-                                                                           @RequestParam("statuses") Set<Status> statuses) {
-        // return all requests of one user using filters (g, tabs)
-        Collection<ReservationDTO> reservations = new HashSet<>();
-        return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/filter/guest", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<Collection<ReservationDTO>> filterGuestsRequests(@RequestParam("guestId") Long guestId, @RequestParam("accommodationId") Long accommodationId, @RequestParam("begin")
-    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end,
-                                                                           @RequestParam("statuses") Set<Status> statuses) {
-        // return all requests of one user using filters (g, tabs)
-        Collection<ReservationDTO> reservations = new HashSet<>();
-        return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
     }
 
     @GetMapping(value = "/guest/{guestId}", produces = MediaType.APPLICATION_JSON_VALUE)

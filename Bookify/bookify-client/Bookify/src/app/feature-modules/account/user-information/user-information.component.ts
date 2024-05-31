@@ -11,6 +11,7 @@ import {MessageDialogComponent} from "../../../layout/message-dialog/message-dia
 import { HttpClient } from '@angular/common/http';
 import { count } from 'console';
 import { environment } from '../../../../env/env';
+import {KeycloakService} from "../../authentication/keycloak/keycloak.service";
 
 @Component({
   selector: 'app-user-information',
@@ -60,7 +61,8 @@ export class UserInformationComponent implements OnInit {
               private accountService: AccountService,
               public dialog: MatDialog,
               private router: Router,
-              private http: HttpClient) {
+              private http: HttpClient,
+              private keycloakService: KeycloakService) {
 
   }
 
@@ -130,9 +132,11 @@ export class UserInformationComponent implements OnInit {
     }
   }
 
-  OnEditClick(): void {
-    this.isDisabled = false;
-    this.toggleFormState();
+  async OnEditClick() {
+    await this.keycloakService.keycloak.accountManagement();
+    return;
+    // this.isDisabled = false;
+    // this.toggleFormState();
   }
 
   OnPasswordChangeClick(): void {

@@ -29,10 +29,6 @@ import {FeedbackComponent} from "./feature-modules/administration/feedback/feedb
 import { CertificatesComponent } from "./feature-modules/admin/certificates/certificates.component";
 
 const routes: Routes = [
-  { path: "login", component: LoginComponent },
-  { path: "registration", component: RegistrationComponent },
-  { path: "forgot-password", component: ForgotPasswordComponent },
-  { path: "confirmation", component: ConfirmationComponent },
   { path: "results", component: ResultsPageComponent },
   { path: "accommodation/details/:accommodationId", component: AccommodationPageComponent },
   { path: '', component: LandingPageComponent },

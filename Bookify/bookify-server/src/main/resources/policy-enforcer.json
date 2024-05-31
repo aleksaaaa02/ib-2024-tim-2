@@ -1,0 +1,9 @@
+{
+  "realm": "Bookify",
+  "auth-server-url": "http://127.0.0.1:8080",
+  "resource": "bookify-backend",
+  "credentials": {
+    "secret": "9Tgwe95I1dPtY80rPVl90NopDYyS1EgH"
+  },
+  "http-method-as-scope": true
+}

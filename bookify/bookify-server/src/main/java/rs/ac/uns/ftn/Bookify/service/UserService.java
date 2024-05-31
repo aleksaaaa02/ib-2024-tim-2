@@ -29,18 +29,16 @@ public class UserService implements IUserService {
     private final IReportedUserRepository reportedUserRepository;
     private final IReservationRepository reservationRepository;
     private final IReservationService reservationService;
-    private final PasswordEncoder passwordEncoder;
     private final IAccommodationService accommodationService;
 
 
     @Autowired
     public UserService(IImageService imageService, IUserRepository userRepository, IReservationService reservationService,
-                       PasswordEncoder passwordEncoder, @Lazy IAccommodationService accommodationService, IReservationRepository reservationRepository,
+                       @Lazy IAccommodationService accommodationService, IReservationRepository reservationRepository,
                        IReportedUserRepository reportedUserRepository) {
         this.imageService = imageService;
         this.userRepository = userRepository;
         this.reservationService = reservationService;
-        this.passwordEncoder = passwordEncoder;
         this.accommodationService = accommodationService;
         this.reservationRepository = reservationRepository;
         this.reportedUserRepository = reportedUserRepository;
@@ -76,7 +74,6 @@ public class UserService implements IUserService {
         } else {
             user = UserRegisteredDTOMapper.fromDTOtoGuest(newUser);
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         Active active = new Active(false, new Date(), UUID.randomUUID().toString());
         user.setActive(active);
         userRepository.save(user);
@@ -105,7 +102,6 @@ public class UserService implements IUserService {
             return false;
         }
         User user = u.get();
-        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         return true;
     }
@@ -117,7 +113,6 @@ public class UserService implements IUserService {
             throw new BadRequestException("Not found");
         }
         StringBuilder randomPassword = generaterandomPassword();
-        user.setPassword(passwordEncoder.encode(randomPassword.toString()));
         userRepository.save(user);
         return randomPassword.toString();
     }
