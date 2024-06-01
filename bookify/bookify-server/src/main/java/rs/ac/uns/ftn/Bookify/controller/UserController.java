@@ -43,14 +43,7 @@ public class UserController {
     private IUserService userService;
 
     @Autowired
-    private EmailService emailService;
-
-    @Autowired
     private IReportedUserService reportedUserService;
-
-    @Autowired
-    private JWTUtils jwtUtils;
-
 
     private final String IP_ADDRESS = "192.168.1.5";
 
@@ -79,45 +72,11 @@ public class UserController {
         return user.map(userDetailDTO -> new ResponseEntity<>(new UserDetailDTO(user.get()), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping
-    public ResponseEntity<MessageDTO> registerUser(@Valid @RequestBody UserRegisteredDTO newUser) throws MessagingException {
-//        User user = userService.create(newUser);
-//        MessageDTO token = new MessageDTO();
-//        if (user != null) {
-//            emailService.sendEmail("Account Activation", user.getEmail(), "Click the link to activate your account: ",
-//                    "http://localhost:4200/confirmation?uuid=" + user.getActive().getHashToken());
-//            token.setToken(user.getActive().getHashToken());
-//            return new ResponseEntity<>(token, HttpStatus.OK);
-//        }
-//        token.setToken("Failed to create new user");
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-    }
-
     @PutMapping
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<UserDetailDTO> updateUser(@Valid @RequestBody UserDetailDTO updatedUser) {
         Optional<User> user = Optional.ofNullable(userService.update(updatedUser));
         return user.map(userDetailDTO -> new ResponseEntity<>(new UserDetailDTO(user.get()), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.BAD_REQUEST));
-    }
-
-    @PostMapping("/{userId}/change-password")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
-    public ResponseEntity<String> changePassword(@PathVariable Long userId, @RequestBody String newPassword) {
-        boolean success = userService.changePassword(userId, newPassword);
-        if (success) {
-            return new ResponseEntity<>("Password updated", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Failed to change password", HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping("/forgot-password/{email}")
-    public ResponseEntity<String> forgotPassword(@PathVariable String email) throws MessagingException {
-        String newPassword = userService.resetPassword(email);
-        if (newPassword != null) {
-            emailService.sendEmail("Reset Password", email, "Your new password is: ", newPassword);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @CrossOrigin(origins = "http://" + IP_ADDRESS + ":4200")
@@ -202,20 +161,6 @@ public class UserController {
             imageId = u.getProfileImage().getId();
         }
         return new ResponseEntity<>(imageId, HttpStatus.OK);
-    }
-
-    @PostMapping(value = "/mobile")
-    public ResponseEntity<MessageDTO> registerUserMobile(@Valid @RequestBody UserRegisteredDTO newUser) throws MessagingException {
-//        User user = userService.create(newUser);
-//        MessageDTO token = new MessageDTO();
-//        if (user != null) {
-//            emailService.sendEmail("Account Activation", user.getEmail(), "Click the link to activate your account: ",
-//                    "http://" + IP_ADDRESS + ":4200/confirmation?uuid=" + user.getActive().getHashToken());
-//            token.setToken(user.getActive().getHashToken());
-//            return new ResponseEntity<>(token, HttpStatus.OK);
-//        }
-//        token.setToken("Failed to create new user");
-        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @GetMapping(value = "/user/{userId}")
