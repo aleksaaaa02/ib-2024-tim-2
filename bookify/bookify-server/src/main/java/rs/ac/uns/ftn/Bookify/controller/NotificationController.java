@@ -29,7 +29,7 @@ public class NotificationController {
 
     @GetMapping("/{userId}")
     @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
-    public ResponseEntity<Collection<NotificationDTO>> getUserNotifications(@PathVariable Long userId) {
+    public ResponseEntity<Collection<NotificationDTO>> getUserNotifications(@PathVariable String userId) {
         List<NotificationDTO> notifications = new ArrayList<>();
         notificationService.getUserNotification(userId).forEach(n -> {
             notifications.add(mapper.toNotificationDTO(n));
@@ -39,7 +39,7 @@ public class NotificationController {
 
     @GetMapping("/unseen/{userId}")
     @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
-    public ResponseEntity<Collection<NotificationDTO>> getUnseenUserNotifications(@PathVariable Long userId) {
+    public ResponseEntity<Collection<NotificationDTO>> getUnseenUserNotifications(@PathVariable String userId) {
         List<NotificationDTO> notifications = new ArrayList<>();
         notificationService.getUnseenNotifications(userId).forEach(n -> {
             notifications.add(mapper.toNotificationDTO(n));
@@ -50,20 +50,20 @@ public class NotificationController {
 
     @DeleteMapping("/{userId}/{notificationId}")
     @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
-    public ResponseEntity<String> removeNotification(@PathVariable Long userId, @PathVariable Long notificationId) {
+    public ResponseEntity<String> removeNotification(@PathVariable String userId, @PathVariable String notificationId) {
         return new ResponseEntity<>("Deleted", HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/settings")
     @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
-    public ResponseEntity<NotificationSettingsDTO> getNotificationSettings(@PathVariable Long userId) {
+    public ResponseEntity<NotificationSettingsDTO> getNotificationSettings(@PathVariable String userId) {
         Optional<NotificationSettingsDTO> settings = Optional.ofNullable(notificationService.getNotificationSettings(userId));
         return settings.map(notificationSettingsDTO -> new ResponseEntity<>(notificationSettingsDTO, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @PutMapping("/{userId}/settings")
     @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
-    public ResponseEntity<NotificationSettingsDTO> updateNotificationSettings(@PathVariable Long userId, @RequestBody NotificationSettingsDTO updatedSettings) {
+    public ResponseEntity<NotificationSettingsDTO> updateNotificationSettings(@PathVariable String userId, @RequestBody NotificationSettingsDTO updatedSettings) {
         Optional<NotificationSettingsDTO> settings = Optional.ofNullable(notificationService.updateNotificationSettings(userId, updatedSettings));
         return settings.map(notificationSettingsDTO -> new ResponseEntity<>(notificationSettingsDTO, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }

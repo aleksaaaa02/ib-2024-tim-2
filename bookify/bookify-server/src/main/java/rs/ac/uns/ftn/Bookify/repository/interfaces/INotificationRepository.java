@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface INotificationRepository extends JpaRepository<Notification, Long> {
 
-    @Query("SELECT u.notifications FROM User u WHERE u.id=:userId")
-    public List<Notification> getNotificationByUserId(Long userId);
+    @Query("SELECT u.notifications FROM User u WHERE u.uid=:userId")
+    public List<Notification> getNotificationByUserId(String userId);
 
-    @Query("SELECT n FROM User u JOIN u.notifications n WHERE u.id = :userId AND n.seen = false")
-    public List<Notification> getUnseenNotificationForUser(Long userId);
+    @Query("SELECT n FROM User u JOIN u.notifications n WHERE u.uid = :userId AND n.seen = false")
+    public List<Notification> getUnseenNotificationForUser(String userId);
 
 }

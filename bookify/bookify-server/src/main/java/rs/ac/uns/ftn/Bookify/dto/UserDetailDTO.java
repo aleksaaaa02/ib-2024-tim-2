@@ -13,7 +13,7 @@ import rs.ac.uns.ftn.Bookify.model.User;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDetailDTO {
-    private Long id;
+    private String uid;
 
     @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String email;
@@ -31,7 +31,7 @@ public class UserDetailDTO {
     private Address address;
     private Long imageId;
     public UserDetailDTO(User user){
-        this.id = user.getId();
+        this.uid = user.getUid();
         this.email = user.getEmail();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();

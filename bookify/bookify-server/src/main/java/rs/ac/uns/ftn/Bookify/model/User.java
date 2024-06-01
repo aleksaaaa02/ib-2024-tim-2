@@ -23,9 +23,6 @@ import java.util.Objects;
 public abstract class User implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
 	@Column(unique = true)
 	private String uid;
 

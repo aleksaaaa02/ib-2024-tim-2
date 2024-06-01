@@ -60,8 +60,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User get(Long userId) {
-        Optional<User> u = userRepository.findById(userId);
+    public User getByUID(String userId) {
+        Optional<User> u = userRepository.findUserByUid(userId);
         return u.orElse(null);
     }
 
@@ -84,7 +84,7 @@ public class UserService implements IUserService {
 
     @Override
     public User update(UserDetailDTO updatedUser) {
-        Optional<User> user = this.userRepository.findById(updatedUser.getId());
+        Optional<User> user = this.userRepository.findUserByUid(updatedUser.getUid());
         if (user.isEmpty()) {
             throw new RuntimeException("User not found");
         }
@@ -145,46 +145,6 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean activateUser(String uuid) {
-//        User u = userRepository.findByHashToken(uuid);
-//        if (u == null) {
-//            return false;
-//        }
-//        u.setActive(new Active(true, new Date(), ""));
-//        userRepository.save(u);
-        return true;
-    }
-
-    @Override
-    public boolean isLoginAvailable(Long userId) {
-//        User user = get(userId);
-//        if (user.isBlocked()) {
-//            throw new UserIsBlockedException();
-//        }
-//        if (!user.getActive().isActive()) {
-//            throw new UserNotActivatedException();
-//        }
-        return true;
-    }
-
-    @Override
-    public boolean delete(Long userId) {
-        Optional<User> u = userRepository.findById(userId);
-        if (u.isEmpty()) {
-            return false;
-        }
-        return deleteUser(u.get());
-    }
-
-    private boolean deleteUser(User user) {
-        if (deletionIsPossibility(user)) {
-            userRepository.deleteById(user.getId());
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public String getRole(User user) {
         String role;
         if (user instanceof Owner) {
@@ -198,8 +158,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO block(Long userId) {
-        Optional<User> u = userRepository.findById(userId);
+    public UserDTO block(String userId) {
+        Optional<User> u = userRepository.findUserByUid(userId);
         if (u.isEmpty()) throw new BadRequestException("User not found");
         User user = u.get();
 
@@ -210,8 +170,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO unblock(Long userId) {
-        Optional<User> u = userRepository.findById(userId);
+    public UserDTO unblock(String userId) {
+        Optional<User> u = userRepository.findUserByUid(userId);
         if (u.isEmpty()) throw new BadRequestException("User not found");
         User user = u.get();
 
@@ -253,11 +213,11 @@ public class UserService implements IUserService {
         Long imageId = 0L;
         if (o.getProfileImage() != null)
             imageId = o.getProfileImage().getId();
-        return new OwnerDTO(o.getId(), o.getFirstName(), o.getLastName(), o.getPhone(), avgRating, imageId);
+        return new OwnerDTO(o.getUid(), o.getFirstName(), o.getLastName(), o.getPhone(), avgRating, imageId);
     }
 
     @Override
-    public Float getAvgRating(Long id) {
+    public Float getAvgRating(String id) {
         Float f = this.userRepository.getAverageReviewByOwnerId(id);
         if (f == null)
             return 0f;
@@ -266,7 +226,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void saveOwnerAccommodation(Accommodation accommodation, Long ownerId) {
+    public void saveOwnerAccommodation(Accommodation accommodation, String ownerId) {
         Owner owner = userRepository.findOwnerById(ownerId);
         owner.getAccommodations().add(accommodation);
         userRepository.save(owner);
@@ -275,7 +235,7 @@ public class UserService implements IUserService {
     @Override
     public OwnerDTO setOwnerForAccommodation(Long id) {
         OwnerDTO o = findbyAccommodationId(id);
-        o.setAvgRating(getAvgRating(o.getId()));
+        o.setAvgRating(getAvgRating(o.getUid()));
         return o;
     }
 
@@ -283,15 +243,7 @@ public class UserService implements IUserService {
     @Transactional
     @Scheduled(cron = "${activation.cron}")
     public void checkInactiveUsers() {
-//        Calendar calendar = Calendar.getInstance();
-//        List<User> users = userRepository.findAll();
-//        for (User user : users) {
-//            calendar.setTime(user.getActive().getTime());
-//            calendar.add(Calendar.MINUTE, 1);
-//            if (!user.getActive().isActive() && calendar.getTime().compareTo(new Date()) < 0) {
-//                userRepository.deleteUser(user.getId());
-//            }
-//        }
+
     }
 
     @Override
@@ -306,12 +258,12 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Owner getOwner(Long ownerId) {
+    public Owner getOwner(String ownerId) {
         return userRepository.findOwnerById(ownerId);
     }
 
     @Override
-    public Guest getGuest(Long guestId) {
+    public Guest getGuest(String guestId) {
         return userRepository.findGuestById(guestId);
     }
 
@@ -324,10 +276,10 @@ public class UserService implements IUserService {
     public UserReservationDTO getOwnerForReservation(Long accommodationId) {
         Owner owner = userRepository.getOwner(accommodationId);
         UserReservationDTO user = new UserReservationDTO();
-        user.setId(owner.getId());
+        user.setUid(owner.getUid());
         user.setFirstName(owner.getFirstName());
         user.setLastName(owner.getLastName());
-        user.setAvgRating(getAvgRating(owner.getId()));
+        user.setAvgRating(getAvgRating(owner.getUid()));
         return user;
     }
 
@@ -335,16 +287,16 @@ public class UserService implements IUserService {
     public UserReservationDTO getGuestForReservation(Long reservationId) {
         Guest guest = reservationRepository.findById(reservationId).get().getGuest();
         UserReservationDTO user = new UserReservationDTO();
-        user.setId(guest.getId());
+        user.setUid(guest.getUid());
         user.setFirstName(guest.getFirstName());
         user.setLastName(guest.getLastName());
-        user.setCancellationTimes(reservationRepository.getCancellationTimes(user.getId()));
+        user.setCancellationTimes(reservationRepository.getCancellationTimes(user.getUid()));
         return user;
     }
 
     @Transactional
     @Override
-    public void addToFavorites(Long guestId, Long accommodationId) {
+    public void addToFavorites(String guestId, Long accommodationId) {
         userRepository.addFavoriteToUser(guestId, accommodationId);
     }
 
@@ -356,13 +308,13 @@ public class UserService implements IUserService {
         if(reportedUser.getReportedUser() instanceof Guest){
             guest = (Guest) reportedUser.getReportedUser();
             owner = (Owner) reportedUser.getCreatedBy();
-            if(reservationService.getReservations(guest.getId(), owner.getId()).isEmpty()){
+            if(reservationService.getReservations(guest.getUid(), owner.getUid()).isEmpty()){
                 throw new BadRequestException("Do not have reservations");
             }
         }else{
             owner = (Owner) reportedUser.getReportedUser();
             guest = (Guest) reportedUser.getCreatedBy();
-            if(reservationService.getReservations(guest.getId(), owner.getId()).isEmpty()){
+            if(reservationService.getReservations(guest.getUid(), owner.getUid()).isEmpty()){
                 throw new BadRequestException("Do not have reservations");
             }
         }
@@ -383,7 +335,7 @@ public class UserService implements IUserService {
 
 
     @Override
-    public boolean checkIfInFavorites(Long guestId, Long accommodationId) {
+    public boolean checkIfInFavorites(String guestId, Long accommodationId) {
         return userRepository.checkIfInFavorites(guestId, accommodationId) == 1;
     }
 
@@ -410,7 +362,7 @@ public class UserService implements IUserService {
                 accId.forEach(this.accommodationService::deleteAccommodation);
                 return true;
             case "GUEST":
-                if (reservationService.hasFutureReservationsGuest(user.getId()))
+                if (reservationService.hasFutureReservationsGuest(user.getUid()))
                     throw new UserDeletionException("You have active future reservations.");
                 return true;
             default:
@@ -433,7 +385,7 @@ public class UserService implements IUserService {
         String role = user.getUserType();
         if (role.equals("ADMIN")) throw new BadRequestException("Administrator's account cannot be blocked/unblocked");
         if (role.equals("GUEST")) {
-            reservationService.cancelGuestsReservations(user.getId());
+            reservationService.cancelGuestsReservations(user.getUid());
         }
         user.setBlocked(true);
         return userRepository.save(user);

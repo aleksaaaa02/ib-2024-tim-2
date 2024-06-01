@@ -108,13 +108,13 @@ public class AccommodationController {
 
     @GetMapping(value = "/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<Collection<AccommodationOwnerDTO>> getOwnersAccommodations(@PathVariable Long ownerId) {
+    public ResponseEntity<Collection<AccommodationOwnerDTO>> getOwnersAccommodations(@PathVariable String ownerId) {
         return new ResponseEntity<>(this.accommodationService.getOwnerAccommodation(ownerId), HttpStatus.OK);
     }
 
     @GetMapping("/favorites")
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<Collection<AccommodationBasicDTO>> getFavoritesAccommodations(@RequestParam("guestId") Long guestId) {
+    public ResponseEntity<Collection<AccommodationBasicDTO>> getFavoritesAccommodations(@RequestParam("guestId") String guestId) {
         //returns all favorites accommodation of user
         User user = userService.get(guestId);
         List<Accommodation> accommodations = new ArrayList<>();
@@ -131,7 +131,7 @@ public class AccommodationController {
 
     @GetMapping(value = "/charts-accommodations", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<Map<Long, String>> getChartsAccommodations(@RequestParam("ownerId") Long ownerId) {
+    public ResponseEntity<Map<Long, String>> getChartsAccommodations(@RequestParam("ownerId") String ownerId) {
         //get names and ids for accommodations of owner
         Map<Long, String> map = accommodationService.getAccommodationNames(ownerId);
         return new ResponseEntity<>(map, HttpStatus.OK);
@@ -139,7 +139,7 @@ public class AccommodationController {
 
     @GetMapping(value = "/overall-charts", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<Collection<ChartDTO>> getChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
+    public ResponseEntity<Collection<ChartDTO>> getChartsByPeriod(@RequestParam("ownerId") String ownerId, @RequestParam("begin")
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end) {
         //return all charts for period
         LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -151,7 +151,7 @@ public class AccommodationController {
 
     @GetMapping(value = "/download-reports-overall", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<byte[]> downloadChartsByPeriod(@RequestParam("ownerId") Long ownerId, @RequestParam("begin")
+    public ResponseEntity<byte[]> downloadChartsByPeriod(@RequestParam("ownerId") String ownerId, @RequestParam("begin")
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end) throws DocumentException {
         //download pdf
         LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -167,7 +167,7 @@ public class AccommodationController {
 
     @GetMapping(value = "/download-reports-accommodation", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<byte[]> downloadChartsByPeriod(@RequestParam("ownerId") Long ownerId,
+    public ResponseEntity<byte[]> downloadChartsByPeriod(@RequestParam("ownerId") String ownerId,
                                                          @RequestParam("accommodationId") Long accommodationId, @RequestParam("year") int year) throws DocumentException {
         //download pdf
         byte[] pdfContent = accommodationService.generatePdfReportForAccommodation(ownerId, accommodationId, year);
@@ -180,7 +180,7 @@ public class AccommodationController {
 
     @GetMapping(value = "/accommodation-charts", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@RequestParam("ownerId") Long ownerId, @RequestParam("accommodationId") Long accommodationId, @RequestParam("year") int year) {
+    public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@RequestParam("ownerId") String ownerId, @RequestParam("accommodationId") Long accommodationId, @RequestParam("year") int year) {
         //return all charts for accommodation
         Collection<ChartDTO> charts = accommodationService.getChartsByAccommodationAndYear(ownerId, accommodationId, year);
         return new ResponseEntity<Collection<ChartDTO>>(charts, HttpStatus.OK);
@@ -188,7 +188,7 @@ public class AccommodationController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<Accommodation> insert(@RequestParam Long ownerId,@Valid @RequestBody AccommodationInsertDTO accommodationDTO) {
+    public ResponseEntity<Accommodation> insert(@RequestParam String ownerId,@Valid @RequestBody AccommodationInsertDTO accommodationDTO) {
         //insert new accommodation
         Accommodation accommodation = AccommodationInesertDTOMapper.fromDTOtoAccommodation(accommodationDTO);
 
@@ -200,7 +200,7 @@ public class AccommodationController {
 
     @PostMapping("/add-to-favorites/{guestId}/{accommodationId}")
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<String> addAccommodationToFavorites(@PathVariable Long guestId, @PathVariable Long accommodationId) {
+    public ResponseEntity<String> addAccommodationToFavorites(@PathVariable String guestId, @PathVariable Long accommodationId) {
         //inserts accommodation to favorites
         accommodationService.insertForGuest(guestId, accommodationId);
         return new ResponseEntity<>("Accommodation added to favorites", HttpStatus.OK);
@@ -208,7 +208,7 @@ public class AccommodationController {
 
     @GetMapping("/added-to-favorites/{guestId}/{accommodationId}")
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<Boolean> addedAccommodationToFavorites(@PathVariable Long guestId, @PathVariable Long accommodationId) {
+    public ResponseEntity<Boolean> addedAccommodationToFavorites(@PathVariable String guestId, @PathVariable Long accommodationId) {
         //inserts accommodation to favorites
         boolean result = userService.checkIfInFavorites(guestId, accommodationId);
         return new ResponseEntity<>(result, HttpStatus.OK);

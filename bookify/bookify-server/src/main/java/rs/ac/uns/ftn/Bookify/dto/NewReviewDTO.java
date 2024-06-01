@@ -18,5 +18,5 @@ public class NewReviewDTO {
     @Max(5)
     private int rate;
     @NotNull
-    private Long guestId;
+    private String guestId;
 }

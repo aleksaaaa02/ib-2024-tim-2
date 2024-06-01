@@ -39,7 +39,7 @@ public interface IAccommodationService {
     public List<FileSystemResourcesDTO> getAllImagesDTO(Long accommodationId);
     public float getAvgRating(Long id);
     public Collection<AccommodationBasicDTO> getAvgRatings(Collection<AccommodationBasicDTO> accommodations);
-    public List<AccommodationOwnerDTO> getOwnerAccommodation(Long ownerId);
+    public List<AccommodationOwnerDTO> getOwnerAccommodation(String ownerId);
     public Accommodation getAccommodation(Long accommodationId);
     public SearchResponseDTO getSearchResponseForSearch(Collection<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons, String location, int page, int size);
     public SearchResponseDTO getSearchReposnseForFilter(Collection<AccommodationBasicDTO> accommodationBasicDTO, LocalDate begin, LocalDate end, int persons, String location, int page, int size, String sort, FilterDTO filter);
@@ -51,14 +51,14 @@ public interface IAccommodationService {
     public boolean checkPersons(Long id, int persons);
     public void setAccommodationStatus(Long id, AccommodationStatusRequest newStatus);
     public void deleteAccommodation(Long accommodationId);
-    public void insertForGuest(Long guestId, Long accommodationId);
+    public void insertForGuest(String guestId, Long accommodationId);
     public void acceptReservationIfAutomaticConformation(Reservation reservation);
     public void acceptReservationForAccommodation(Reservation reservation);
-    public List<ChartDTO> getChartsByPeriod(Long ownerId, LocalDate begin, LocalDate end);
-    public byte[] generatePdfReportForOverall(Long ownerId, LocalDate begin, LocalDate end) throws DocumentException;
-    public Map<Long, String> getAccommodationNames(Long ownerId);
-    public List<ChartDTO> getChartsByAccommodationAndYear(Long ownerId, Long accommodationId, int year);
-    public byte[] generatePdfReportForAccommodation(Long ownerId, Long accommodationId, int year) throws DocumentException;
+    public List<ChartDTO> getChartsByPeriod(String ownerId, LocalDate begin, LocalDate end);
+    public byte[] generatePdfReportForOverall(String ownerId, LocalDate begin, LocalDate end) throws DocumentException;
+    public Map<Long, String> getAccommodationNames(String ownerId);
+    public List<ChartDTO> getChartsByAccommodationAndYear(String ownerId, Long accommodationId, int year);
+    public byte[] generatePdfReportForAccommodation(String ownerId, Long accommodationId, int year) throws DocumentException;
     public List<Accommodation> getTopAccommodations(int results);
     public void removeReview(Review review);
 }

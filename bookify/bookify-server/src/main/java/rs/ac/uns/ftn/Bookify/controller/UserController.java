@@ -67,7 +67,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
-    public ResponseEntity<UserDetailDTO> getUserById(@PathVariable Long userId) {
+    public ResponseEntity<UserDetailDTO> getUserById(@PathVariable String userId) {
         Optional<User> user = Optional.ofNullable(userService.get(userId));
         return user.map(userDetailDTO -> new ResponseEntity<>(new UserDetailDTO(user.get()), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
@@ -82,30 +82,21 @@ public class UserController {
     @CrossOrigin(origins = "http://" + IP_ADDRESS + ":4200")
     @PutMapping(value = "/activate-account", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MessageDTO> activateAccount(@Valid @RequestBody MessageDTO uuid) {
-        boolean activated = userService.activateUser(uuid.getToken());
-        MessageDTO message = new MessageDTO();
-        if (activated) {
-            message.setToken("Account activated, Congratulations.");
-            return new ResponseEntity<>(message, HttpStatus.OK);
-        }
-        message.setToken("Your acctivation expired, register again");
-        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{userId}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
-    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
-        boolean success = userService.delete(userId);
-        if (success) return new ResponseEntity<>("Account deleted successfully!", HttpStatus.OK);
+    public ResponseEntity<String> deleteUser(@PathVariable String userId) {
         return new ResponseEntity<>("Account has not been deleted", HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/{userId}/block-user")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    public ResponseEntity<UserDTO> blockUser(@PathVariable Long userId) {
+    public ResponseEntity<UserDTO> blockUser(@PathVariable String userId) {
         UserDTO response = this.userService.block(userId);
         if(response != null) {
-            reportedUserService.deletedUsersReports(response.getId());
+            reportedUserService.deletedUsersReports(response.getUid());
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -113,7 +104,7 @@ public class UserController {
 
     @PutMapping("/{userId}/unblock-user")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    public ResponseEntity<UserDTO> unblockUser(@PathVariable Long userId) {
+    public ResponseEntity<UserDTO> unblockUser(@PathVariable String userId) {
         UserDTO response = this.userService.unblock(userId);
         if(response != null)
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -154,7 +145,7 @@ public class UserController {
 
     @GetMapping(value = "/account-pic/{userId}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
-    public ResponseEntity<Long> getAccountImageId(@PathVariable Long userId) throws Exception {
+    public ResponseEntity<Long> getAccountImageId(@PathVariable String userId) throws Exception {
         User u = userService.get(userId);
         Long imageId = -1L;
         if (u.getProfileImage() != null) {
@@ -164,7 +155,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/user/{userId}")
-    public ResponseEntity<UserBasicDTO> getUser(@PathVariable Long userId) {
+    public ResponseEntity<UserBasicDTO> getUser(@PathVariable String userId) {
         User user = userService.get(userId);
         if (user == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

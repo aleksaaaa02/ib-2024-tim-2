@@ -12,14 +12,14 @@ import java.util.List;
 
 public interface IReviewRepository extends JpaRepository<Review, Long> {
 
-    @Query("SELECT r FROM Owner o join o.reviews r WHERE o.id=:ownerId and r.accepted = true ")
-    List<Review> findByOwnerId(@Param("ownerId") Long ownerId);
+    @Query("SELECT r FROM Owner o join o.reviews r WHERE o.uid=:ownerId and r.accepted = true ")
+    List<Review> findByOwnerId(@Param("ownerId") String ownerId);
 
     @Query("SELECT r FROM Accommodation a join a.reviews r WHERE a.id= :accommodationId and r.accepted = true ")
     List<Review> findByAccommodationId(@Param("accommodationId") Long accommodationId);
 
-    @Query("SELECT g FROM Guest g WHERE g.id=:guestId")
-    Guest findGuestById(@Param("guestId") Long guestId);
+    @Query("SELECT g FROM Guest g WHERE g.uid=:guestId")
+    Guest findGuestById(@Param("guestId") String guestId);
 
     List<Review> findByAcceptedIsAndReportedIs(boolean accepted, boolean reported);
 

@@ -21,9 +21,9 @@ public class ReportedUserDTO {
     private String reason;
     private Date created;
     @NotNull
-    private Long reportedUser;
+    private String reportedUser;
     @NotNull
-    private Long createdBy;
+    private String createdBy;
 }
 
 

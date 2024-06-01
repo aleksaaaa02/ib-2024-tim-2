@@ -46,7 +46,7 @@ public class WebSecurityConfig {
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
-    @Value("${spring.security.oauth2.client.provider.keycloak.jwk-set-uri}")
+    @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
     String jwkSetUri;
 
     @Bean
@@ -66,7 +66,7 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.securityContext((securityContext) -> securityContext.securityContextRepository(new RequestAttributeSecurityContextRepository()));
+//        http.securityContext((securityContext) -> securityContext.securityContextRepository(new RequestAttributeSecurityContextRepository()));
         http.csrf(AbstractHttpConfigurer::disable);
         http.cors(httpSecurityCorsConfigurer -> CORSConfigurer());
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -83,7 +83,6 @@ public class WebSecurityConfig {
         });
         http.oauth2ResourceServer(auth -> auth.jwt(Customizer.withDefaults()));
         http.addFilterAfter(createPolicyEnforcerFilter(), BearerTokenAuthenticationFilter.class);
-        http.oauth2Login(Customizer.withDefaults());
 
         return http.build();
     }

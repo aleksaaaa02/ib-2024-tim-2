@@ -31,7 +31,7 @@ public class ReportedUserService implements IReportedUserService {
 
     @Override
     @Transactional
-    public void deletedUsersReports(Long userId) {
-        reportedUserRepository.deleteByReportedUser_Id(userId);
+    public void deletedUsersReports(String userId) {
+        reportedUserRepository.deleteByReportedUser_Uid(userId);
     }
 }

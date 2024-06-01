@@ -33,19 +33,19 @@ public class NotificationService implements INotificationService {
     NotificationDTOMapper mapper;
 
     @Override
-    public List<Notification> getUserNotification(Long userId) {
+    public List<Notification> getUserNotification(String userId) {
         List<Notification> notifications = notificationRepository.getNotificationByUserId(userId);
         notifications.sort(Comparator.comparing(Notification::getCreated).reversed());
         return notifications;
     }
 
     @Override
-    public boolean removeNotification(Long userId, Long notificationId) {
+    public boolean removeNotification(String userId, Long notificationId) {
         return false;
     }
 
     @Override
-    public NotificationSettingsDTO getNotificationSettings(Long userId) {
+    public NotificationSettingsDTO getNotificationSettings(String userId) {
         NotificationSettingsDTO settings = new NotificationSettingsDTO();
         User user = userService.get(userId);
         Map<NotificationType, Boolean> t;
@@ -61,7 +61,7 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public NotificationSettingsDTO updateNotificationSettings(Long userId, NotificationSettingsDTO updatedSettings) {
+    public NotificationSettingsDTO updateNotificationSettings(String userId, NotificationSettingsDTO updatedSettings) {
         User user = userService.get(userId);
         if(user instanceof Owner)
             ((Owner) user).setNotificationType(updatedSettings.getNotificationType());
@@ -73,7 +73,7 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public List<Notification> getUnseenNotifications(Long userId) {
+    public List<Notification> getUnseenNotifications(String userId) {
         List<Notification> response = new ArrayList<>();
         this.notificationRepository.getUnseenNotificationForUser(userId).forEach(notification -> {
             notification.setSeen(true);
@@ -84,13 +84,13 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public void sendNewNotification(Notification notification, Long userId) {
+    public void sendNewNotification(Notification notification, String userId) {
         NotificationDTO notificationDTO = mapper.toNotificationDTO(notification);
         this.simpMessagingTemplate.convertAndSend("/socket-publisher/" + userId, notificationDTO);
     }
 
     @Override
-    public void saveNotification(Notification notification, Long userId) {
+    public void saveNotification(Notification notification, String userId) {
         User user = userService.get(userId);
         if(wantsToBeNotified(notification,user)) {
             this.notificationRepository.save(notification);
@@ -115,7 +115,7 @@ public class NotificationService implements INotificationService {
     @Override
     public Notification createNotificationOwnerNewReservation(Reservation reservation) {
         Accommodation accommodation = reservation.getAccommodation();
-        Long ownerId = userService.findbyAccommodationId(accommodation.getId()).getId();
+        String ownerId = userService.findbyAccommodationId(accommodation.getId()).getUid();
         String guest = reservation.getGuest().getFirstName() + " " + reservation.getGuest().getLastName();
         String description = guest + " created a new request for accommodation: " + accommodation.getName();
         Notification notification = generateNotification(description, NotificationType.RESERVATION_CREATED);
@@ -126,7 +126,7 @@ public class NotificationService implements INotificationService {
     @Override
     public Notification createNotificationOwnerReservationCancellation(Reservation reservation) {
         Accommodation accommodation = reservation.getAccommodation();
-        Long ownerId = userService.findbyAccommodationId(accommodation.getId()).getId();
+        String ownerId = userService.findbyAccommodationId(accommodation.getId()).getUid();
         String guest = reservation.getGuest().getFirstName() + " " + reservation.getGuest().getLastName();
         String description = guest + " cancelled a reservation for accommodation: " + accommodation.getName();
         Notification notification = generateNotification(description, NotificationType.RESERVATION_CANCELED);
@@ -139,13 +139,13 @@ public class NotificationService implements INotificationService {
         String guestName = guest.getFirstName() + " " + guest.getLastName();
         String description = guestName + " add new rating to your profile";
         Notification notification = generateNotification(description, NotificationType.NEW_USER_RATING);
-        saveNotification(notification, owner.getId());
+        saveNotification(notification, owner.getUid());
         return notification;
     }
 
     @Override
     public Notification createNotificationOwnerAccommodationGotNewRating(Guest guest, Accommodation accommodation) {
-        Long ownerId = userService.findbyAccommodationId(accommodation.getId()).getId();
+        String ownerId = userService.findbyAccommodationId(accommodation.getId()).getUid();
         String guestName = guest.getFirstName() + " " + guest.getLastName();
         String description = guestName + " add new rating to your accommodation: " + accommodation.getName();
         Notification notification = generateNotification(description, NotificationType.NEW_ACCOMMODATION_RATING);
@@ -156,7 +156,7 @@ public class NotificationService implements INotificationService {
 
     @Override
     public Notification createNotificationGuestRequestResponse(Reservation reservation) {
-        Long guestId = reservation.getGuest().getId();
+        String guestId = reservation.getGuest().getUid();
         String description = "Owner responded to request for " + reservation.getAccommodation().getName() + " with " + reservation.getStatus();
         Notification notification = generateNotification(description, NotificationType.RESERVATION_RESPONSE);
         saveNotification(notification, guestId);

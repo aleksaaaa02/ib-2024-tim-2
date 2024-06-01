@@ -9,7 +9,7 @@ import rs.ac.uns.ftn.Bookify.model.User;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-    private Long id;
+    private String uid;
     private String email;
     private String firstName;
     private String lastName;
@@ -17,7 +17,7 @@ public class UserDTO {
     private Long imageId;
 
     public UserDTO(User u) {
-        this.id = u.getId();
+        this.uid = u.getUid();
         this.email = u.getEmail();
         this.firstName = u.getFirstName();
         this.lastName = u.getLastName();
