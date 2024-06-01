@@ -1,16 +1,16 @@
-INSERT INTO users (type, is_active, time, address, city, country, zip_code, blocked, email, first_name, last_name, password, phone, profile_image_id, deleted, hash_token)
+INSERT INTO users (type,  address, city, country, zip_code, blocked, email, first_name, last_name,  phone, profile_image_id, deleted)
 VALUES
-    ('ADMIN', true,'2023-11-30 12:30:00', 'Trg Dositeja Obradovica 6', 'Novi Sad', 'Serbia', '21000', false, 'admin@example.com', 'pera', 'peric', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+3816213421', null, false, ""),
-    ('GUEST', true, '2023-11-30 12:30:00', 'Some Street 123', 'Cityville', 'Croatia', '12345', false, 'guest@example.com', 'John', 'Doe', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+1234567890', null, false, ""),
-    ('OWNER', true,'2023-11-30 12:30:00', 'Another Road 789', 'Townsville', 'Austria', '67890', false, 'owner@example.com', 'Alice', 'Smith', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+9876543210', null, false, ""),
-    ('GUEST', true,'2023-11-30 12:30:00', 'Test Street 42', 'Test City', 'Austria', '54321', false, 'guest4@example.com', 'Admin', 'User', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+1122334455', null, false, ""),
-    ('GUEST', true, '2023-11-28 08:00:00', 'Guest Lane 87', 'Guestville', 'Slovakia', '98765', false, 'guest2@example.com', 'Jane', 'Doe', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+9988776655', null, false, ""),
-    ('OWNER', true,'2023-11-30 12:30:00', 'Owner Avenue 567', 'Ownertown', 'Slovenia', '45678', false, 'owner2@example.com', 'Bob', 'Johnson', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+6655443322', null, false, ""),
-    ('OWNER', true, '2023-11-29 15:45:00', 'Admin Road 321', 'Admin City', 'Hungary', '13579', false, 'owner3@example.com', 'Admin', 'Tester', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+2233445566', null, false, ""),
-    ('GUEST', true,'2023-11-30 12:30:00', 'Another Guest Street 99', 'Guestropolis', 'Romania', '11223', false, 'guest3@example.com', 'Sam', 'White', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+7788990011', null, false, ""),
-    ('OWNER', true, '2023-11-27 20:20:00', 'Owner Street 876', 'Owner City', 'Bulgaria', '554433', false, 'owner4@example.com', 'Eva', 'Brown', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+7788990011', null, false, ""),
-    ('GUEST', true,'2023-11-30 12:30:00', 'Admin Lane 765', 'Adminville', 'Montenego', '332211', false, 'guest5@example.com', 'Chris', 'Miller', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+7788990011', null, false, ""),
-    ('SYS_ADMIN', true,'2023-11-30 12:30:00', 'Futoski put 7', 'Novi Sad', 'Serbia', '332211', false, 'sysadmin@example.com', 'System', 'Admin', '$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra', '+7788990011', null, false, "")
+    ('ADMIN',  'Trg Dositeja Obradovica 6', 'Novi Sad', 'Serbia', '21000', false, 'admin@example.com', 'pera', 'peric',  '+3816213421', null, false),
+    ('GUEST',  'Some Street 123', 'Cityville', 'Croatia', '12345', false, 'guest@example.com', 'John', 'Doe',  '+1234567890', null, false),
+    ('OWNER',  'Another Road 789', 'Townsville', 'Austria', '67890', false, 'owner@example.com', 'Alice', 'Smith',  '+9876543210', null, false),
+    ('GUEST',  'Test Street 42', 'Test City', 'Austria', '54321', false, 'guest4@example.com', 'Admin', 'User',  '+1122334455', null, false),
+    ('GUEST',  'Guest Lane 87', 'Guestville', 'Slovakia', '98765', false, 'guest2@example.com', 'Jane', 'Doe',  '+9988776655', null, false),
+    ('OWNER',  'Owner Avenue 567', 'Ownertown', 'Slovenia', '45678', false, 'owner2@example.com', 'Bob', 'Johnson',  '+6655443322', null, false),
+    ('OWNER',  'Admin Road 321', 'Admin City', 'Hungary', '13579', false, 'owner3@example.com', 'Admin', 'Tester',  '+2233445566', null, false),
+    ('GUEST',  'Another Guest Street 99', 'Guestropolis', 'Romania', '11223', false, 'guest3@example.com', 'Sam', 'White', '+7788990011', null, false),
+    ('OWNER',  'Owner Street 876', 'Owner City', 'Bulgaria', '554433', false, 'owner4@example.com', 'Eva', 'Brown',  '+7788990011', null, false),
+    ('GUEST',  'Admin Lane 765', 'Adminville', 'Montenego', '332211', false, 'guest5@example.com', 'Chris', 'Miller',  '+7788990011', null, false),
+    ('SYS_ADMIN',  'Futoski put 7', 'Novi Sad', 'Serbia', '332211', false, 'sysadmin@example.com', 'System', 'Admin',  '+7788990011', null, false)
 ;
 
 

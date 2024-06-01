@@ -28,12 +28,6 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
     User findByEmail(String email);
 
-    @Query("select u from User u where u.active.hashToken = :uuid")
-    User findByHashToken(String uuid);
-
-    @Modifying
-    @Query("delete from User u where u.id= :userId")
-    void deleteUser(Long userId);
     @Query("SELECT o FROM Owner o")
     List<Owner> findAllOwners();
 
@@ -50,4 +44,8 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT o FROM Owner o WHERE :review MEMBER OF o.reviews")
     Owner getOwnerByReview(Review review);
+
+    Boolean existsByUid(String uid);
+
+    Optional<User> findUserByUid(String userUid);
 }

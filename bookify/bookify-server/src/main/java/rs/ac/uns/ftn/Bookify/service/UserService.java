@@ -30,18 +30,20 @@ public class UserService implements IUserService {
     private final IReservationRepository reservationRepository;
     private final IReservationService reservationService;
     private final IAccommodationService accommodationService;
+    private final ILdapService ldapService;
 
 
     @Autowired
     public UserService(IImageService imageService, IUserRepository userRepository, IReservationService reservationService,
                        @Lazy IAccommodationService accommodationService, IReservationRepository reservationRepository,
-                       IReportedUserRepository reportedUserRepository) {
+                       IReportedUserRepository reportedUserRepository, ILdapService ldapService) {
         this.imageService = imageService;
         this.userRepository = userRepository;
         this.reservationService = reservationService;
         this.accommodationService = accommodationService;
         this.reservationRepository = reservationRepository;
         this.reportedUserRepository = reportedUserRepository;
+        this.ldapService = ldapService;
     }
 
 
@@ -75,7 +77,7 @@ public class UserService implements IUserService {
             user = UserRegisteredDTOMapper.fromDTOtoGuest(newUser);
         }
         Active active = new Active(false, new Date(), UUID.randomUUID().toString());
-        user.setActive(active);
+//        user.setActive(active);
         userRepository.save(user);
         return user;
     }
@@ -144,24 +146,24 @@ public class UserService implements IUserService {
 
     @Override
     public boolean activateUser(String uuid) {
-        User u = userRepository.findByHashToken(uuid);
-        if (u == null) {
-            return false;
-        }
-        u.setActive(new Active(true, new Date(), ""));
-        userRepository.save(u);
+//        User u = userRepository.findByHashToken(uuid);
+//        if (u == null) {
+//            return false;
+//        }
+//        u.setActive(new Active(true, new Date(), ""));
+//        userRepository.save(u);
         return true;
     }
 
     @Override
     public boolean isLoginAvailable(Long userId) {
-        User user = get(userId);
-        if (user.isBlocked()) {
-            throw new UserIsBlockedException();
-        }
-        if (!user.getActive().isActive()) {
-            throw new UserNotActivatedException();
-        }
+//        User user = get(userId);
+//        if (user.isBlocked()) {
+//            throw new UserIsBlockedException();
+//        }
+//        if (!user.getActive().isActive()) {
+//            throw new UserNotActivatedException();
+//        }
         return true;
     }
 
@@ -281,15 +283,15 @@ public class UserService implements IUserService {
     @Transactional
     @Scheduled(cron = "${activation.cron}")
     public void checkInactiveUsers() {
-        Calendar calendar = Calendar.getInstance();
-        List<User> users = userRepository.findAll();
-        for (User user : users) {
-            calendar.setTime(user.getActive().getTime());
-            calendar.add(Calendar.MINUTE, 1);
-            if (!user.getActive().isActive() && calendar.getTime().compareTo(new Date()) < 0) {
-                userRepository.deleteUser(user.getId());
-            }
-        }
+//        Calendar calendar = Calendar.getInstance();
+//        List<User> users = userRepository.findAll();
+//        for (User user : users) {
+//            calendar.setTime(user.getActive().getTime());
+//            calendar.add(Calendar.MINUTE, 1);
+//            if (!user.getActive().isActive() && calendar.getTime().compareTo(new Date()) < 0) {
+//                userRepository.deleteUser(user.getId());
+//            }
+//        }
     }
 
     @Override
@@ -437,4 +439,19 @@ public class UserService implements IUserService {
         return userRepository.save(user);
     }
 
+    @Scheduled(fixedRate = 60000)
+    public void fetchDataFromLDAP(){
+        List<User> users = ldapService.getAllUsersFromLdap();
+        for(User u : users){
+            Optional<User> user = userRepository.findUserByUid(u.getUid());
+            if(user.isEmpty()) userRepository.save(u);
+            else {
+                // mozda moze i samo da se preskoci :D
+                User oldUser = user.get();
+                oldUser.setFirstName(u.getFirstName());
+                oldUser.setLastName(u.getLastName());
+                userRepository.save(oldUser);
+            }
+        }
+    }
 }

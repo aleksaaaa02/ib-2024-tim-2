@@ -26,11 +26,11 @@ public abstract class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(unique = true)
+	private String uid;
+
 	@Column(unique = true, nullable = false)
 	private String email;
-
-	@Column(nullable = false)
-	private String password;
 
 	@Column(nullable = false)
 	private String firstName;
@@ -38,10 +38,10 @@ public abstract class User implements Serializable {
 	@Column(nullable = false)
 	private String lastName;
 
-	@Column(nullable = false)
-	private boolean blocked;
+	@Column
+	private boolean blocked = Boolean.FALSE;
 
-	@Column(nullable = false)
+	@Column
 	private String phone;
 
 	@Column
@@ -52,9 +52,6 @@ public abstract class User implements Serializable {
 
 	@OneToOne
 	private Image profileImage;
-
-	@Embedded
-	private Active active;
 
 	@Embedded
 	private Address address;

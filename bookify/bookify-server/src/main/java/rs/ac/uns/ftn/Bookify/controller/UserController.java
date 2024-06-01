@@ -81,16 +81,16 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<MessageDTO> registerUser(@Valid @RequestBody UserRegisteredDTO newUser) throws MessagingException {
-        User user = userService.create(newUser);
-        MessageDTO token = new MessageDTO();
-        if (user != null) {
-            emailService.sendEmail("Account Activation", user.getEmail(), "Click the link to activate your account: ",
-                    "http://localhost:4200/confirmation?uuid=" + user.getActive().getHashToken());
-            token.setToken(user.getActive().getHashToken());
-            return new ResponseEntity<>(token, HttpStatus.OK);
-        }
-        token.setToken("Failed to create new user");
-        return new ResponseEntity<MessageDTO>(token, HttpStatus.BAD_REQUEST);
+//        User user = userService.create(newUser);
+//        MessageDTO token = new MessageDTO();
+//        if (user != null) {
+//            emailService.sendEmail("Account Activation", user.getEmail(), "Click the link to activate your account: ",
+//                    "http://localhost:4200/confirmation?uuid=" + user.getActive().getHashToken());
+//            token.setToken(user.getActive().getHashToken());
+//            return new ResponseEntity<>(token, HttpStatus.OK);
+//        }
+//        token.setToken("Failed to create new user");
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping
@@ -206,16 +206,16 @@ public class UserController {
 
     @PostMapping(value = "/mobile")
     public ResponseEntity<MessageDTO> registerUserMobile(@Valid @RequestBody UserRegisteredDTO newUser) throws MessagingException {
-        User user = userService.create(newUser);
-        MessageDTO token = new MessageDTO();
-        if (user != null) {
-            emailService.sendEmail("Account Activation", user.getEmail(), "Click the link to activate your account: ",
-                    "http://" + IP_ADDRESS + ":4200/confirmation?uuid=" + user.getActive().getHashToken());
-            token.setToken(user.getActive().getHashToken());
-            return new ResponseEntity<>(token, HttpStatus.OK);
-        }
-        token.setToken("Failed to create new user");
-        return new ResponseEntity<>(token, HttpStatus.OK);
+//        User user = userService.create(newUser);
+//        MessageDTO token = new MessageDTO();
+//        if (user != null) {
+//            emailService.sendEmail("Account Activation", user.getEmail(), "Click the link to activate your account: ",
+//                    "http://" + IP_ADDRESS + ":4200/confirmation?uuid=" + user.getActive().getHashToken());
+//            token.setToken(user.getActive().getHashToken());
+//            return new ResponseEntity<>(token, HttpStatus.OK);
+//        }
+//        token.setToken("Failed to create new user");
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @GetMapping(value = "/user/{userId}")
