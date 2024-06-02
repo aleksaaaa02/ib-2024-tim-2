@@ -198,7 +198,7 @@ VALUES
     (36, 'GARDEN'), (36, 'WHEELCHAIR'), (36, 'BAR'), (36, 'FREE_WIFI'), (36, 'LUNCH');
 
 
-SET @path = 'D:/[PROJECT]Bezbednost/images/';
+SET @path = 'C:/Fakultet/Informaciona Bezbednost/images/';
 INSERT INTO image (image_name, image_path)
 VALUES
     ('image', CONCAT(@path, '1/1.jpeg')), ('image', CONCAT(@path, '1/2.jpeg')),
@@ -235,7 +235,7 @@ VALUES
     (27, 33), (28, 34), (29, 35), (30, 36), (31, 37), (32, 38), (33, 39), (34, 40),
     (35, 41), (36, 42), (23, 43), (24, 44), (25, 45), (27, 46), (28, 47), (29, 48);
 
-INSERT INTO users_accommodations (owner_id, accommodations_id)
+INSERT INTO users_accommodations (owner_uid, accommodations_id)
 VALUES
     ('owner@example.com', 1), ('owner@example.com', 2), ('owner@example.com', 3), ('owner@example.com', 4), ('owner@example.com', 5), ('owner@example.com', 6), ('owner@example.com', 7), ('owner@example.com', 8),
     ('owner@example.com', 9), ('owner@example.com', 10), ('owner@example.com', 11), ('owner@example.com', 12), ('owner@example.com', 13), ('owner@example.com', 14), ('owner@example.com', 15), ('owner@example.com', 16),

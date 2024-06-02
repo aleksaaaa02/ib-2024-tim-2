@@ -5,5 +5,133 @@
   "credentials": {
     "secret": "9Tgwe95I1dPtY80rPVl90NopDYyS1EgH"
   },
-  "http-method-as-scope": true
+  "http-method-as-scope": true,
+  "paths": [
+    {
+      "path": "/api/v1/accommodations/top-accommodations",
+      "enforcement-mode": "DISABLED",
+      "methods": [
+        {
+          "method": "GET"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/accommodations/image/{imageId}",
+      "enforcement-mode": "DISABLED",
+      "methods": [
+        {
+          "method": "GET"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/accommodations/search",
+      "enforcement-mode": "DISABLED",
+      "methods": [
+        {
+          "method": "GET"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/accommodations/details/{accommodationId}",
+      "enforcement-mode": "DISABLED",
+      "methods": [
+        {
+          "method": "GET"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/users/image/{imageId}",
+      "enforcement-mode": "DISABLED",
+      "methods": [
+        {
+          "method": "GET"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/accommodations/images/{accommodationId}",
+      "enforcement-mode": "DISABLED",
+      "methods": [
+        {
+          "method": "GET"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/accommodations/top-locations",
+      "enforcement-mode": "DISABLED",
+      "methods": [
+        {
+          "method": "GET"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/reviews/accommodation/{accommodationId}",
+      "enforcement-mode": "DISABLED",
+      "methods": [
+        {
+          "method": "GET"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/reviews/owner/{ownerId}",
+      "enforcement-mode": "DISABLED",
+      "methods": [
+        {
+          "method": "GET"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/users/user/{userId}",
+      "enforcement-mode": "DISABLED",
+      "methods": [
+        {
+          "method": "GET"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/reviews/owner/{ownerId}/rating",
+      "enforcement-mode": "DISABLED",
+      "methods": [
+        {
+          "method": "GET"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/reviews/accommodation/{accommodationId}/rating",
+      "enforcement-mode": "DISABLED",
+      "methods": [
+        {
+          "method": "GET"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/accommodations/filter",
+      "enforcement-mode": "DISABLED",
+      "methods": [
+        {
+          "method": "POST"
+        }
+      ]
+    },
+    {
+      "path": "/api/v1/sendMessageRest",
+      "enforcement-mode": "DISABLED",
+      "methods": [
+        {
+          "method": "POST"
+        }
+      ]
+    }
+  ]
 }

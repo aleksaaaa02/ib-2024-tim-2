@@ -37,7 +37,7 @@ export class AccommodationRatingsComponent implements OnInit, OnChanges {
       this.accommodationId = +params['accommodationId'];
     });
     if(Number.isNaN(this.accommodationId)){
-      this.accommodationId = this.authenticationService.getUserId();
+      return;
     }
     if (!Number.isNaN(this.accommodationId)) {
       this.getRating();

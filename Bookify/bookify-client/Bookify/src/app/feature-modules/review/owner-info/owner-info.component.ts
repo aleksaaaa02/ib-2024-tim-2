@@ -10,7 +10,7 @@ import { AccountService } from '../../account/account.service';
   styleUrl: './owner-info.component.css'
 })
 export class OwnerInfoComponent implements OnInit {
-  ownerId: number;
+  ownerId: string;
   ownerFirstName: string;
   ownerLastName: string;
   ownerPhone: string;
@@ -21,7 +21,7 @@ export class OwnerInfoComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.ownerId = +params['userId'];
+      this.ownerId = params['userId'];
     });
     if (!Number.isNaN(this.ownerId)) {
       this.reviewServise.getUserDTO(this.ownerId).subscribe({

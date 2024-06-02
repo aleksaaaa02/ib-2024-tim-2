@@ -15,11 +15,11 @@ export class ReviewService {
 
   constructor(private httpClient: HttpClient, @Inject(LOCALE_ID) private locale: string) { }
 
-  getUserDTO(userId: number): Observable<UserDTO>{
+  getUserDTO(userId: string): Observable<UserDTO>{
     return this.httpClient.get<UserDTO>(environment.apiUser + "/user/" + userId);
   }
 
-  getOwnerRating(ownerId: number): Observable<RatingDTO>{
+  getOwnerRating(ownerId: string): Observable<RatingDTO>{
     return this.httpClient.get<RatingDTO>(environment.apiReview + "/owner/" + ownerId + "/rating");
   }
 
@@ -27,7 +27,7 @@ export class ReviewService {
     return this.httpClient.get<RatingDTO>(environment.apiReview + "/accommodation/" + accommodationId + "/rating");
   }
 
-  getOwnerComments(ownerId: number): Observable<CommentDTO[]>{
+  getOwnerComments(ownerId: string): Observable<CommentDTO[]>{
     return this.httpClient.get<CommentDTO[]>(environment.apiReview + "/owner/" + ownerId);
   }
 
@@ -35,7 +35,7 @@ export class ReviewService {
     return this.httpClient.get<CommentDTO[]>(environment.apiReview + "/accommodation/" + accommodationId);
   }
 
-  add(ownerId: number,newComment: NewCommentDTO) {
+  add(ownerId: string, newComment: NewCommentDTO) {
     return this.httpClient.post<null>(environment.apiReview + "/new-owner/" + ownerId, newComment);
   }
 
@@ -43,10 +43,10 @@ export class ReviewService {
     return this.httpClient.post<null>(environment.apiReview + "/new-accommodation/" + accommodationId, newComment);
   }
 
-  delete(ownerId: number, reviewId: number) {
+  delete(ownerId: string, reviewId: number) {
     return this.httpClient.delete<null>(environment.apiReview + "/owner-delete/" + ownerId + "/" + reviewId);
   }
-  
+
   deleteAccommodationReview(accommodationId: number, reviewId: number) {
     return this.httpClient.delete<null>(environment.apiReview + "/accommodation-delete/" + accommodationId + "/" + reviewId);
   }
@@ -54,7 +54,7 @@ export class ReviewService {
   reportReview(reviewId: number): Observable<number> {
     return this.httpClient.put<number>(environment.apiReview + "/report/" + reviewId, null);
   }
-  
+
   reportUser(reportedUser: ReportedUserDTO): Observable<number> {
     return this.httpClient.post<number>(environment.apiUser + "/report", reportedUser);
   }

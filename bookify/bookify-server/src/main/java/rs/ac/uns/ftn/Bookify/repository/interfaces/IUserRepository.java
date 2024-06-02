@@ -36,10 +36,10 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying
-    @Query(nativeQuery = true, value = "INSERT INTO users_favorites (guest_id, favorites_id) VALUES (:userId, :accommodationId)")
+    @Query(nativeQuery = true, value = "INSERT INTO users_favorites (guest_uid, favorites_id) VALUES (:userId, :accommodationId)")
     void addFavoriteToUser(@Param("userId") String userId, @Param("accommodationId") Long accommodationId);
 
-    @Query(value = "SELECT COUNT(*) FROM users_favorites WHERE guest_id = :guestId AND favorites_id = :accommodationId", nativeQuery = true)
+    @Query(value = "SELECT COUNT(*) FROM users_favorites WHERE guest_uid = :guestId AND favorites_id = :accommodationId", nativeQuery = true)
     int checkIfInFavorites(@Param("guestId") String guestId, @Param("accommodationId") Long accommodationId);
 
     @Query("SELECT o FROM Owner o WHERE :review MEMBER OF o.reviews")

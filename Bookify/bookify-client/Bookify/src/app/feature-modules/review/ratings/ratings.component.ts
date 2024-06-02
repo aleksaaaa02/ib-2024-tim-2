@@ -12,7 +12,7 @@ import { AuthenticationService } from '../../authentication/authentication.servi
 export class RatingsComponent implements OnInit, OnChanges {
   @Input() load: boolean;
   @Output() loadingChange = new EventEmitter<boolean>();
-  userId: number;
+  userId: string;
 
   oneStar: number;
   twoStars: number;
@@ -34,7 +34,7 @@ export class RatingsComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.userId = +params['userId'];
+      this.userId = params['userId'];
     });
     if (Number.isNaN(this.userId)) {
       this.userId = this.authenticationService.getUserId();

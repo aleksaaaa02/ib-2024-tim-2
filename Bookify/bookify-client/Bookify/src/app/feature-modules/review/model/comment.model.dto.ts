@@ -4,6 +4,6 @@ export interface CommentDTO {
   date: Date,
   comment: string,
   rate: number,
-  guestId: number,
+  guestId: string,
   imageId: number
 }

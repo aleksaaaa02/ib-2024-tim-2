@@ -72,13 +72,14 @@ export class AuthenticationService {
     return '';*/
   }
 
-  getUserId(): number {
-    if (this.isLoggedIn()) {
-      const accessToken: any = localStorage.getItem('user');
-      const helper: JwtHelperService = new JwtHelperService();
-      return helper.decodeToken(accessToken).id
+  getUserId(): string{
+
+    if (this.keycloakService.keycloak.authenticated) {
+      const email = this.keycloakService.profile?.email;
+      if(email) return this.keycloakService.profile?.email || "-1";
+
     }
-    return -1;
+    return "-1";
   }
 
   setUser(): void {

@@ -28,7 +28,7 @@ export class NotificationService {
   }
 
 
-  initializeWebSocketConnection(userId: number | undefined): void {
+  initializeWebSocketConnection(userId: string | undefined): void {
     let ws = new SockJS(this.serverUrl);
     this.stompClient = Stomp.over(ws);
     let that = this;
@@ -46,7 +46,7 @@ export class NotificationService {
     }
   }
 
-  openSocket(userId: number | undefined) {
+  openSocket(userId: string | undefined) {
     if (this.isLoaded) {
       this.isSocketOpen = true;
       this.stompClient.subscribe("/socket-publisher/" + userId, (message: {
@@ -73,15 +73,15 @@ export class NotificationService {
     }
   }
 
-  getAllNotifications(userId: number): Observable<Message[]> {
+  getAllNotifications(userId: string): Observable<Message[]> {
     return this.httpClient.get<Message[]>(environment.apiHost + "notifications/" + userId);
   }
 
-  getNotificationSettings(userId: number): Observable<Settings> {
+  getNotificationSettings(userId: string): Observable<Settings> {
     return this.httpClient.get<Settings>(environment.apiHost + "notifications/" + userId + "/settings");
   }
 
-  setNotificationSettings(userId: number, updatedSettings: Settings): Observable<Settings> {
+  setNotificationSettings(userId: string, updatedSettings: Settings): Observable<Settings> {
     return this.httpClient.put<Settings>(environment.apiHost + "notifications/" + userId + "/settings", updatedSettings);
   }
 }

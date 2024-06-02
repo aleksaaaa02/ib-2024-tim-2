@@ -12,7 +12,7 @@ import { AuthenticationService } from '../../authentication/authentication.servi
 export class OwnerPageComponent {
   load: boolean = false;
   role: string;
-  ownerId: number;
+  ownerId: string;
   type: string;
 
   constructor(private authenticationService: AuthenticationService, private reviewService: ReviewService, private route: ActivatedRoute) {
@@ -21,7 +21,7 @@ export class OwnerPageComponent {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.ownerId = +params['userId'];
+      this.ownerId = params['userId'];
     });
     this.reviewService.getUserDTO(this.ownerId).subscribe({
       next: (owner: UserDTO) => {

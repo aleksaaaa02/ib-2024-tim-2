@@ -11,14 +11,14 @@ import { AuthenticationService } from '../../authentication/authentication.servi
 })
 export class AccommodationReviewsComponent implements OnChanges {
   @Input() load : boolean;
-  @Input() ownerId: number | undefined;
+  @Input() ownerId: string | undefined;
   accommodationId: number;
   comments: CommentDTO[];
   loading: boolean = false;
 
   constructor(private reviewServise: ReviewService, private route: ActivatedRoute, private cdr: ChangeDetectorRef,
      private authenticationService: AuthenticationService) { }
- 
+
   ngOnChanges(changes: SimpleChanges): void {
     if(this.load){
       this.reviewServise.getAccommodationComments(this.accommodationId).subscribe({
@@ -54,6 +54,6 @@ export class AccommodationReviewsComponent implements OnChanges {
   }
 
   onLoadingChange(data: boolean): void {
-    this.loading = false; 
+    this.loading = false;
   }
 }
