@@ -1,8 +1,6 @@
 package rs.ac.uns.ftn.Bookify.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,9 +17,13 @@ public class UserDetailDTO {
     private String email;
     @NotNull
     @NotEmpty
+    @Size(min = 3, max = 30)
+    @Pattern(regexp = "[a-zA-Z0-9 ]+")
     private String firstName;
     @NotNull
     @NotEmpty
+    @Size(min = 3, max = 30)
+    @Pattern(regexp = "[a-zA-Z0-9 ]+")
     private String lastName;
     private boolean blocked;
     @NotNull

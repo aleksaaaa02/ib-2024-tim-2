@@ -37,7 +37,8 @@ export class UsersCardComponent implements OnInit {
   }
 
   blockUser(): void {
-    this.adminService.blockUser(this.user.id).subscribe({
+    console.log(this.user)
+    this.adminService.blockUser(this.user.uid).subscribe({
       next: (user: User) => {
         this.user = user;
       },
@@ -48,7 +49,7 @@ export class UsersCardComponent implements OnInit {
   }
 
   unblockUser(): void {
-    this.adminService.unblockUser(this.user.id).subscribe({
+    this.adminService.unblockUser(this.user.uid).subscribe({
       next: (user: User) => {
         this.user = user;
       },

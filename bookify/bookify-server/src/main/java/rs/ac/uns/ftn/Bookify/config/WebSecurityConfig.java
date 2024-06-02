@@ -8,6 +8,7 @@ import org.keycloak.representations.adapters.config.PolicyEnforcerConfig;
 import org.keycloak.util.JsonSerialization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -30,9 +31,11 @@ import org.springframework.security.oauth2.server.resource.web.authentication.Be
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
+import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import rs.ac.uns.ftn.Bookify.config.filters.JWTAuthenticationFilter;
+import rs.ac.uns.ftn.Bookify.config.filters.XSSFilter;
 import rs.ac.uns.ftn.Bookify.config.utils.JWTUtils;
 import rs.ac.uns.ftn.Bookify.service.CustomUserDetailService;
 
@@ -82,6 +85,9 @@ public class WebSecurityConfig {
                     .anyRequest().authenticated()
             ;
         });
+        http.headers(headers -> headers.xssProtection(xss ->
+                xss.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK))
+                .contentSecurityPolicy(cps -> cps.policyDirectives("script-src 'self'")));
         http.oauth2ResourceServer(auth -> auth.jwt(Customizer.withDefaults()));
         http.addFilterAfter(createPolicyEnforcerFilter(), BearerTokenAuthenticationFilter.class);
 
@@ -111,6 +117,14 @@ public class WebSecurityConfig {
                 return config;
             }
         });
+    }
+
+    @Bean
+    public FilterRegistrationBean<XSSFilter> filterRegistrationBean(){
+        FilterRegistrationBean<XSSFilter> filterRegistrationBean = new FilterRegistrationBean<XSSFilter>();
+        filterRegistrationBean.setFilter(new XSSFilter());
+        filterRegistrationBean.addUrlPatterns("/*");
+        return filterRegistrationBean;
     }
 
     @Bean

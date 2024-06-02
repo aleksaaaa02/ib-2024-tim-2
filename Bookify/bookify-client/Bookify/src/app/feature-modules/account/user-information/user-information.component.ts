@@ -133,51 +133,17 @@ export class UserInformationComponent implements OnInit {
   }
 
   async OnEditClick() {
+
+    this.isDisabled = false;
+    this.toggleFormState();
+  }
+
+  async editAccount(): Promise<void> {
+
     await this.keycloakService.keycloak.accountManagement();
     return;
-    // this.isDisabled = false;
-    // this.toggleFormState();
   }
 
-  OnPasswordChangeClick(): void {
-    const dialogRef = this.dialog.open(PasswordChangeDialogComponent, {
-      data: {'password': ''}
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      const password = result.password;
-      if (password === '' || !password) return;
-      this.accountService.updatePassword(this.account.id, password).subscribe({
-        next: (value: string) => {
-          this.isDisabled = true;
-          this.toggleFormState();
-          this.openDialog(value);
-        },
-        error: err => {
-          this.openDialog(err);
-        }
-      });
-    });
-  }
-
-  OnDeleteAccountClick(): void {
-    this.dialog.open(AccountDeleteDialogComponent).afterClosed().subscribe({
-      next: (value: boolean) => {
-        if (value) {
-          this.accountService.deleteAccount(this.account.id).subscribe({
-            next: (value: string) => {
-              this.authenticationService.logout();
-              this.openDialog("Account deleted successfully!", '/');
-            },
-            error: (err) => {
-              console.log(err);
-              this.openDialog(err.error);
-            }
-          });
-        }
-      }
-    });
-
-  }
 
   toggleFormState(): void {
     this.userInfoForm.updateValueAndValidity();

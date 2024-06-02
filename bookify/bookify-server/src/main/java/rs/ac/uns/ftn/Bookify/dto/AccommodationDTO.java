@@ -1,8 +1,6 @@
 package rs.ac.uns.ftn.Bookify.dto;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,8 +17,12 @@ import java.util.List;
 public class AccommodationDTO {
     private Long id;
     @NotEmpty
+    @Size(min = 3, max = 30)
+    @Pattern(regexp = "[a-zA-Z0-9 ]+")
     private String name;
     @NotEmpty
+    @Size(min = 3, max = 30)
+    @Pattern(regexp = "[a-zA-Z0-9 ]+")
     private String description;
     @Min(0)
     private int minGuest;
