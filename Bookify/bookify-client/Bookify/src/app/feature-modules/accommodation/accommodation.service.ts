@@ -23,7 +23,7 @@ import {ChartsDTO} from "./model/accommodation-charts.dto.model";
 export class AccommodationService {
   constructor(private httpClient: HttpClient, @Inject(LOCALE_ID) private locale: string) { }
 
-  getOwnerAccommodations(ownerId: number | undefined): Observable<AccommodationOwnerDtoModel[]> {
+  getOwnerAccommodations(ownerId: string | undefined): Observable<AccommodationOwnerDtoModel[]> {
     return this.httpClient.get<AccommodationOwnerDtoModel[]>(environment.apiAccommodation + '/' + ownerId);
   }
 
@@ -70,16 +70,16 @@ export class AccommodationService {
     return this.httpClient.get<string[]>(environment.apiHost + "accommodations/images/" + accommodationId, { responseType: "json" });
   }
 
-  addToFavorites(guestId: number, accommodationId: number): Observable<string> {
+  addToFavorites(guestId: string, accommodationId: number): Observable<string> {
     const url = `${environment.apiHost}accommodations/add-to-favorites/${guestId}/${accommodationId}`;
     return this.httpClient.post(url, {}, { responseType: "text" });
   }
 
-  getFavorites(guestId: number): Observable<AccommodationBasicModel[]>{
+  getFavorites(guestId: string): Observable<AccommodationBasicModel[]>{
     return this.httpClient.get<AccommodationBasicModel[]>(environment.apiHost + "accommodations/favorites?guestId=" + guestId);
   }
 
-  checkIfInFavorites(guestId: number, accommodationId: number): Observable<boolean> {
+  checkIfInFavorites(guestId: string, accommodationId: number): Observable<boolean> {
     const url = `${environment.apiHost}accommodations/added-to-favorites/${guestId}/${accommodationId}`;
     return this.httpClient.get<boolean>(url);
   }
@@ -93,7 +93,7 @@ export class AccommodationService {
       return countries;
     } catch (error) {
       console.error('Error fetching countries:', error);
-      return [];
+      return ['nesto samo da radi'];
     }
   }
 
@@ -101,7 +101,7 @@ export class AccommodationService {
     return this.httpClient.get<PriceList[]>(environment.apiAccommodation + '/' + accommodationId + "/getPrice");
   }
 
-  add(ownerId: number, accommodation: AccommodationDTO): Observable<Accommodation> {
+  add(ownerId: string, accommodation: AccommodationDTO): Observable<Accommodation> {
     const params = new HttpParams().set('ownerId', ownerId);
     return this.httpClient.post<Accommodation>(environment.apiAccommodation, accommodation, { params });
   }
@@ -123,7 +123,7 @@ export class AccommodationService {
     images.forEach((file: File) => {
       data.append("images", file);
     })
-    return this.httpClient.post<string[]>(environment.apiAccommodation + "/" + accommodationId, data);
+    return this.httpClient.post<string[]>(environment.apiAccommodation + "/images/" + accommodationId, data);
   }
 
   getImages(accommodationId: number): Observable<Uint8Array[]> {
@@ -138,7 +138,7 @@ export class AccommodationService {
     return this.httpClient.post<PriceListDTO>(environment.apiAccommodation + "/" + accommodationId + "/addPrice", priceList);
   }
 
-  createReservationRequest(reservation: ReservationRequestDTO, accommodationId: number, guestId: number): Observable<Reservation> {
+  createReservationRequest(reservation: ReservationRequestDTO, accommodationId: number, guestId: string): Observable<Reservation> {
     const params = new HttpParams().set('accommodationId', accommodationId).set('guestId', guestId);
     return this.httpClient.post<Reservation>(environment.apiHost + "reservations/create", reservation, { params });
   }
@@ -147,27 +147,27 @@ export class AccommodationService {
     return this.httpClient.delete<number>(environment.apiAccommodation + "/images/" + imageId);
   }
 
-  getOverallCharts(ownerId: number, startDate: string, endDate: string): Observable<ChartsDTO[]> {
+  getOverallCharts(ownerId: string, startDate: string, endDate: string): Observable<ChartsDTO[]> {
     return this.httpClient.get<ChartsDTO[]>(environment.apiHost + "accommodations/overall-charts?ownerId=" + ownerId +
       "&begin=" + startDate +
       "&end=" + endDate);
   }
 
-  getNamesForAccommodations(ownerId: number): Observable<{ [key: number]: string }> {
+  getNamesForAccommodations(ownerId: string): Observable<{ [key: number]: string }> {
     return this.httpClient.get<{ [key: number]: string }>(environment.apiHost + "accommodations/charts-accommodations?ownerId=" + ownerId);
   }
 
-  getAccommodationCharts(ownerId: number, accommodationId: number, year: number): Observable<ChartsDTO[]> {
+  getAccommodationCharts(ownerId: string, accommodationId: number, year: number): Observable<ChartsDTO[]> {
     return this.httpClient.get<ChartsDTO[]>(environment.apiHost + "accommodations/accommodation-charts?ownerId=" + ownerId + "&accommodationId=" + accommodationId + "&year=" + year);
   }
 
 
-  generatePdfReportForOverall(ownerId: number, begin: string, end:string): Observable<Blob> {
+  generatePdfReportForOverall(ownerId: string, begin: string, end:string): Observable<Blob> {
     return this.httpClient.get(environment.apiHost + "accommodations/download-reports-overall?ownerId=" + ownerId +
       "&begin=" + begin + "&end=" + end, { responseType: 'blob' });
   }
 
-  generatePdfReportForAccommodation(ownerId: number, accommodationId: number, year: number): Observable<Blob> {
+  generatePdfReportForAccommodation(ownerId: string, accommodationId: number, year: number): Observable<Blob> {
     return this.httpClient.get(environment.apiHost + "accommodations/download-reports-accommodation?ownerId=" + ownerId +
       "&accommodationId=" + accommodationId + "&year=" + year, { responseType: 'blob' });
   }

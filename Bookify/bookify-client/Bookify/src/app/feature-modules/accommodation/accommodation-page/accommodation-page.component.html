@@ -47,7 +47,7 @@
     <div id="owner">
       <p class="subcategory">Owner</p>
       <hr/>
-      <div id="owner-profile" [routerLink]="['/owner',accommodation?.owner?.id]">
+      <div id="owner-profile" [routerLink]="['/owner',accommodation?.owner?.uid]">
         <div id="account-pic">
           <img alt="" class="image" [src]="ownerImage"/>
         </div>
@@ -66,6 +66,6 @@
   </div>
   <div class="reviews">
     <app-accommodation-new-review *ngIf="role==='GUEST'"></app-accommodation-new-review>
-    <app-accommodation-reviews [ownerId]="accommodation?.owner?.id"></app-accommodation-reviews>
+    <app-accommodation-reviews [ownerId]="accommodation?.owner?.uid"></app-accommodation-reviews>
   </div>
 </div>

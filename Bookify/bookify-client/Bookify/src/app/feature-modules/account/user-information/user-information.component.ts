@@ -4,13 +4,11 @@ import {AccountService} from "../account.service";
 import {Account} from "../model/account";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
-import {PasswordChangeDialogComponent} from "../password-change-dialog/password-change-dialog.component";
 import {Router} from "@angular/router";
-import {AccountDeleteDialogComponent} from '../account-delete-dialog/account-delete-dialog.component';
 import {MessageDialogComponent} from "../../../layout/message-dialog/message-dialog.component";
 import { HttpClient } from '@angular/common/http';
-import { count } from 'console';
 import { environment } from '../../../../env/env';
+import {KeycloakService} from "../../authentication/keycloak/keycloak.service";
 
 @Component({
   selector: 'app-user-information',
@@ -60,7 +58,8 @@ export class UserInformationComponent implements OnInit {
               private accountService: AccountService,
               public dialog: MatDialog,
               private router: Router,
-              private http: HttpClient) {
+              private http: HttpClient,
+              private keycloakService: KeycloakService) {
 
   }
 
@@ -108,9 +107,9 @@ export class UserInformationComponent implements OnInit {
 
   OnSaveClick(): void {
     if (this.userInfoForm.valid) {
-      this.account.firstName = this.userInfoForm.value.firstname;
-      this.account.lastName = this.userInfoForm.value.lastname;
-      if (this.account.address === undefined) this.account.address = {};
+      this.account.firstName = this.userInfoForm.value.firstname || '';
+      this.account.lastName = this.userInfoForm.value.lastname || '';
+      if (this.account.address === undefined || this.account.address === null) this.account.address = {};
       this.account.address.city = this.userInfoForm.value.city;
       this.account.address.country = this.userInfoForm.value.country;
       this.account.address.address = this.userInfoForm.value.address;
@@ -130,50 +129,18 @@ export class UserInformationComponent implements OnInit {
     }
   }
 
-  OnEditClick(): void {
+  async OnEditClick() {
+
     this.isDisabled = false;
     this.toggleFormState();
   }
 
-  OnPasswordChangeClick(): void {
-    const dialogRef = this.dialog.open(PasswordChangeDialogComponent, {
-      data: {'password': ''}
-    });
-    dialogRef.afterClosed().subscribe((result) => {
-      const password = result.password;
-      if (password === '' || !password) return;
-      this.accountService.updatePassword(this.account.id, password).subscribe({
-        next: (value: string) => {
-          this.isDisabled = true;
-          this.toggleFormState();
-          this.openDialog(value);
-        },
-        error: err => {
-          this.openDialog(err);
-        }
-      });
-    });
+  async editAccount(): Promise<void> {
+
+    await this.keycloakService.keycloak.accountManagement();
+    return;
   }
 
-  OnDeleteAccountClick(): void {
-    this.dialog.open(AccountDeleteDialogComponent).afterClosed().subscribe({
-      next: (value: boolean) => {
-        if (value) {
-          this.accountService.deleteAccount(this.account.id).subscribe({
-            next: (value: string) => {
-              this.authenticationService.logout();
-              this.openDialog("Account deleted successfully!", '/');
-            },
-            error: (err) => {
-              console.log(err);
-              this.openDialog(err.error);
-            }
-          });
-        }
-      }
-    });
-
-  }
 
   toggleFormState(): void {
     this.userInfoForm.updateValueAndValidity();
@@ -186,11 +153,11 @@ export class UserInformationComponent implements OnInit {
   setFormData(): void {
     this.userInfoForm.get('firstname')?.setValue(this.account.firstName);
     this.userInfoForm.get('lastname')?.setValue(this.account.lastName);
-    this.userInfoForm.get('phone')?.setValue(this.account.phone);
-    this.userInfoForm.get('address')?.setValue(this.account.address?.address);
-    this.userInfoForm.get('country')?.setValue(this.account.address?.country);
-    this.userInfoForm.get('city')?.setValue(this.account.address?.city);
-    this.userInfoForm.get('zipcode')?.setValue(this.account.address?.zipCode);
+    this.userInfoForm.get('phone')?.setValue(this.account.phone || '');
+    this.userInfoForm.get('address')?.setValue(this.account.address?.address || '');
+    this.userInfoForm.get('country')?.setValue(this.account.address?.country || '');
+    this.userInfoForm.get('city')?.setValue(this.account.address?.city || '');
+    this.userInfoForm.get('zipcode')?.setValue(this.account.address?.zipCode || '');
 
   }
 
@@ -243,7 +210,7 @@ export class UserInformationComponent implements OnInit {
         }
 
         const certificateDTO = {
-          userId: this.account.id,
+          userId: this.account.uid,
           givenName: this.account.firstName,
           surname: this.account.lastName,
           country: this.account.address?.country ? this.account.address.country : '.',

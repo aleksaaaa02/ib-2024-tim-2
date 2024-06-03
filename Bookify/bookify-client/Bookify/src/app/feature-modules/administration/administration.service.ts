@@ -32,11 +32,11 @@ export class AdministrationService {
     return this.httpClient.get<User[]>(environment.apiUser);
   }
 
-  blockUser(userId: undefined | number): Observable<User> {
+  blockUser(userId: undefined | string): Observable<User> {
     return this.httpClient.put<User>(environment.apiUser + "/" + userId + "/block-user", {});
   }
 
-  unblockUser(userId: undefined | number): Observable<User> {
+  unblockUser(userId: undefined | string): Observable<User> {
     return this.httpClient.put<User>(environment.apiUser + "/" + userId + "/unblock-user", {});
   }
   getAllReports(): Observable<ReportedUser[]> {

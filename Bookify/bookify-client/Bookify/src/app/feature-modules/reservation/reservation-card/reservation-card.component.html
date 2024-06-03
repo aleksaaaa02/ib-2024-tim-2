@@ -8,7 +8,7 @@
             <meter class="average-rating" min="0" max="5" style="--percent: calc({{request.avgRating}}/5*100%);"></meter>
         </div>
         <hr />
-        <p class="subtitle" [routerLink]="['/guest',request?.user?.id]">Guest: {{request.user.firstName}} {{request.user.lastName}} <span>(Cancelled {{request.user.cancellationTimes}} time)</span></p>
+        <p class="subtitle" [routerLink]="['/guest',request?.user?.uid]">Guest: {{request.user.firstName}} {{request.user.lastName}} <span>(Cancelled {{request.user.cancellationTimes}} time)</span></p>
         <p class="subtitle">Date: {{request.start}}-{{request.end}}</p>
         <p class="subtitle">Persons: {{request.guestNumber}}</p>
         <p class="subtitle">Incomes: {{request.price}} EUR</p>

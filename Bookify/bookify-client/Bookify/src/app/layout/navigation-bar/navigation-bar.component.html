@@ -12,5 +12,5 @@
   <div id="account-icon-holder" *ngIf="role!==''">
     <img alt="" id="account-icon" [src]="userImage"/>
   </div>
-  <a routerLink="login" mat-button id="login_btn" *ngIf="role===''">Login</a>
+  <a (click)="login()" mat-button id="login_btn" *ngIf="role===''">Login</a>
 </mat-toolbar>

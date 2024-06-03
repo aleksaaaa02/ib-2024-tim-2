@@ -6,7 +6,7 @@ export interface Review {
   accepted?: boolean,
   reported?: boolean,
   guest: {
-    id?:number,
+    uid?:string,
     firstName?:string,
     lastName?:string,
     email?:string,

@@ -12,13 +12,13 @@ import { AuthenticationService } from '../../authentication/authentication.servi
 export class CommentsRatingsComponent implements OnChanges {
   @ViewChild('wrapper', { static: true }) wrapper: ElementRef;
   @Input() load : boolean;
-  ownerId: number;
+  ownerId: string;
   comments: CommentDTO[];
   loading: boolean = false;
 
   constructor(private reviewServise: ReviewService, private route: ActivatedRoute, private cdr: ChangeDetectorRef,
     private authenticationService: AuthenticationService, private renderer: Renderer2) { }
- 
+
   ngOnChanges(changes: SimpleChanges): void {
     if(this.load){
       this.reviewServise.getOwnerComments(this.ownerId).subscribe({
@@ -31,7 +31,7 @@ export class CommentsRatingsComponent implements OnChanges {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.ownerId = +params['userId'];
+      this.ownerId = params['userId'];
     });
     if(Number.isNaN(this.ownerId)){
       this.ownerId = this.authenticationService.getUserId();
@@ -58,6 +58,6 @@ export class CommentsRatingsComponent implements OnChanges {
   }
 
   onLoadingChange(data: boolean): void {
-    this.loading = false; 
+    this.loading = false;
   }
 }

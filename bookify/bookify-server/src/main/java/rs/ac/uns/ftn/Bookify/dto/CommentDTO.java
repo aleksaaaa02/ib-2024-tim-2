@@ -15,6 +15,6 @@ public class CommentDTO {
     private Date date;
     private String comment;
     private int rate;
-    private Long guestId;
+    private String guestId;
     private Long imageId;
 }

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import rs.ac.uns.ftn.Bookify.model.ReportedUser;
-
 import java.util.Date;
 
 @Data

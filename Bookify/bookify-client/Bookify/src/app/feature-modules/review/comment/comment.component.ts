@@ -15,10 +15,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class CommentComponent implements OnInit {
   @Input() comment: CommentDTO;
-  @Input() owner: number = 0;
+  @Input() owner: string = "-1";
   @Output() emit = new EventEmitter<boolean>();
-  guestId: number;
-  ownerId: number;
+  guestId: string;
+  ownerId: string;
   ownerImage: string | ArrayBuffer | null = null;
 
   constructor(public datepipe: DatePipe, private authenticationService: AuthenticationService, private route: ActivatedRoute,
@@ -28,7 +28,7 @@ export class CommentComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.ownerId = +params['userId'];
+      this.ownerId = params['userId'];
       if (this.comment.imageId != 0)
         this.getOwnerPhoto(this.comment.imageId);
       else
@@ -62,14 +62,14 @@ export class CommentComponent implements OnInit {
       }
     });
   }
-  
+
   onClick(): void {
     this.reviewService.reportReview(this.comment.id).subscribe({
       next: (id: number) => {
         this.openSnackBar("Comment reported", "cancel");
       },
       error: (_) => {
-        
+
       }
     })
   }

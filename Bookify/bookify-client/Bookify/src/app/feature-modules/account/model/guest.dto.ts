@@ -1,7 +1,7 @@
 import {Address} from "./address";
 
 export interface GuestDTO {
-  id: number,
+  uid: string,
   firstName: string,
   lastName: string
 }

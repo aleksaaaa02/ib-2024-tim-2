@@ -1,5 +1,5 @@
 export interface ReportedUserDTO {
     reason: string,
-    reportedUser: number,
-    createdBy: number
+    reportedUser: string,
+    createdBy: string
 }

@@ -25,8 +25,7 @@
           </div>
         </form>
         <div class="button-holder">
-          <button mat-button (click)="OnPasswordChangeClick()">CHANGE PASSWORD</button>
-          <button mat-button (click)="OnDeleteAccountClick()" >DELETE ACCOUNT</button>
+          <button mat-button (click)="editAccount()">EDIT ACCOUNT</button>
           <button mat-button *ngIf="role==='OWNER'" (click)="OnCertificateClick()">REQUEST A CERTIFICATE</button>
         </div>
       </div>
@@ -94,7 +93,7 @@
       </div>
     </form>
     <div class="button-holder-horizontal">
-      <button mat-button (click)="OnEditClick()" [ngClass]="{disabled: !isDisabled}" [disabled]="!isDisabled">EDIT ACCOUNT</button>
+      <button mat-button (click)="OnEditClick()" [ngClass]="{disabled: !isDisabled}" [disabled]="!isDisabled">EDIT INFO</button>
       <button mat-button (click)="OnSaveClick()" [ngClass]="{disabled: isDisabled}" [disabled]="isDisabled">SAVE CHANGES</button>
       <button mat-button (click)="OnCancelClick()" [ngClass]="{disabled: isDisabled}" [disabled]="isDisabled">CANCEL</button>
     </div>

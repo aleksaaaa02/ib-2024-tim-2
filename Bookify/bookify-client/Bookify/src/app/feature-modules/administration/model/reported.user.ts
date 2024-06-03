@@ -3,14 +3,14 @@ export interface ReportedUser {
     reason?:string,
     created?:number,
     reportedUser:{
-        id?:number,
+        uid?:string,
         firstName?:string,
         lastName?:string,
         email?:string,
         blocked: boolean
     },
     createdBy:{
-        id?:number,
+        uid?:string,
         firstName?:string,
         lastName?:string,
         email?:string

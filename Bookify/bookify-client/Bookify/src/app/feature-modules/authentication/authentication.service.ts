@@ -8,6 +8,7 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 import { UserRegistrationDTO } from "./model/user.registration.dto.model";
 import { Message } from "./model/message.dto.model";
 import {NotificationService} from "../account/notification.service";
+import {KeycloakService} from "./keycloak/keycloak.service";
 
 @Injectable({
   providedIn: 'root',
@@ -17,11 +18,14 @@ import {NotificationService} from "../account/notification.service";
 export class AuthenticationService {
   constructor(@Inject(LOCALE_ID) private locale: string,
     private httpClient: HttpClient,
-              private notificationService: NotificationService) {
+              private notificationService: NotificationService,
+              private keycloakService: KeycloakService) {
   }
 
   user$: BehaviorSubject<string> = new BehaviorSubject("");
   userState: Observable<string> = this.user$.asObservable();
+
+  private possibleRoles: string[] = ['ADMIN', 'GUEST', 'OWNER', 'SYS_ADMIN'];
 
   private headers = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -41,9 +45,8 @@ export class AuthenticationService {
     }
   }
 
-  login(userCredentials: Credentials): Observable<UserJWT> {
-    return this.httpClient.post<UserJWT>(environment.apiHost + "users/login", userCredentials,
-      { headers: this.headers });
+  async login(){
+    await this.keycloakService.login();
   }
 
   isLoggedIn(): boolean {
@@ -51,32 +54,53 @@ export class AuthenticationService {
   }
 
   getRole(): string {
-    if (this.isLoggedIn()) {
+    const roles = this.keycloakService.profile?.roles;
+    if (roles === undefined) return '';
+    for (let role of this.possibleRoles){
+      if(roles.includes(role)) {
+        console.log(role);
+        return role;
+      }
+    }
+    return '';
+
+    /*if (this.isLoggedIn()) {
       const accessToken: any = localStorage.getItem('user');
       const helper: JwtHelperService = new JwtHelperService();
       return helper.decodeToken(accessToken).role;
     }
-    return '';
+    return '';*/
   }
 
-  getUserId(): number {
-    if (this.isLoggedIn()) {
-      const accessToken: any = localStorage.getItem('user');
-      const helper: JwtHelperService = new JwtHelperService();
-      return helper.decodeToken(accessToken).id
+  getUserId(): string{
+
+    if (this.keycloakService.keycloak.authenticated) {
+      const email = this.keycloakService.profile?.email;
+      if(email) return this.keycloakService.profile?.email || "-1";
+
     }
-    return -1;
+    return "-1";
   }
 
   setUser(): void {
     this.user$.next(this.getRole());
   }
 
-  logout(): void {
+  async logout() {
+    await this.keycloakService.logout();
+    /*
     this.user$.next('');
     localStorage.removeItem('user');
     this.httpClient.get(environment.apiHost + "users/logout");
     this.notificationService.closeSocket();
+    */
+  }
+
+  refreshToken(){
+    this.keycloakService.keycloak?.updateToken(5).then(refreshed => {
+      if(refreshed) console.log("YEY");
+      else console.log("BRUH");
+    });
   }
 
   connectWithWebSocket():void {
