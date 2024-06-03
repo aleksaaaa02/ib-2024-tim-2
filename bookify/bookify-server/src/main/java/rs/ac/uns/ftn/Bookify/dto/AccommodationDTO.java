@@ -16,11 +16,9 @@ import java.util.List;
 @NoArgsConstructor
 public class AccommodationDTO {
     private Long id;
-    @NotEmpty
     @Size(min = 3, max = 30)
     @Pattern(regexp = "[a-zA-Z0-9 ]+")
     private String name;
-    @NotEmpty
     @Size(min = 3, max = 30)
     @Pattern(regexp = "[a-zA-Z0-9 ]+")
     private String description;

@@ -15,12 +15,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccommodationInsertDTO {
-    @NotEmpty
     @Size(min = 3, max = 30)
     @Pattern(regexp = "[a-zA-Z0-9 ]+")
     private String name;
-    @NotEmpty
-    @Size(min = 3, max = 30)
+    @Size(min = 3, max = 1000)
     @Pattern(regexp = "[a-zA-Z0-9 ]+")
     private String description;
     @Min(0)

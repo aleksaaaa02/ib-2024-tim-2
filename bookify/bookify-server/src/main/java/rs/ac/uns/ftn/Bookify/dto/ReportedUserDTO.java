@@ -15,16 +15,12 @@ import java.util.Date;
 public class ReportedUserDTO {
 
     private Long id;
-    @NotNull
-    @NotEmpty
     @Size(min = 3, max = 30)
     @Pattern(regexp = "[a-zA-Z0-9 ]+")
     private String reason;
     private Date created;
-    @NotNull
     @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String reportedUser;
-    @NotNull
     @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String createdBy;
 }
