@@ -132,6 +132,15 @@
           "method": "POST"
         }
       ]
+    },
+    {
+      "path": "/api/v1/accommodations/images/files/{accommodationId}",
+      "enforcement-mode": "DISABLED",
+      "methods": [
+        {
+          "method": "GET"
+        }
+      ]
     }
   ]
 }

@@ -1,7 +1,7 @@
 import {Address} from "./address";
 
 export interface Owner {
-  id: string,
+  uid: string,
   firstName: string,
   lastName: string,
   phone: string,

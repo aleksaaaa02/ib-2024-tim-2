@@ -112,7 +112,7 @@ public class AccommodationController {
         return new ResponseEntity<>(this.accommodationService.getOwnerAccommodation(ownerId), HttpStatus.OK);
     }
 
-    @GetMapping("/favorites")
+    @GetMapping(value = "/favorites", produces = MediaType.APPLICATION_JSON_VALUE)
 //    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<Collection<AccommodationBasicDTO>> getFavoritesAccommodations(@RequestParam("guestId") String guestId) {
         //returns all favorites accommodation of user
@@ -297,7 +297,7 @@ public class AccommodationController {
         return new ResponseEntity<>(priceListItemDTOS, HttpStatus.OK);
     }
 
-    @DeleteMapping("/price/{accommodationId}")
+    @DeleteMapping(value = "/price/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
 //    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<PriceListItemDTO> deletePriceList(@PathVariable Long accommodationId, @Valid @RequestBody PriceListItemDTO dto) {
         PricelistItem pricelistItem = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);

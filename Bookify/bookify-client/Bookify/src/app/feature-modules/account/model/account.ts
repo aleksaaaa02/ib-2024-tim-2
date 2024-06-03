@@ -1,7 +1,7 @@
 import {Address} from "./address";
 
 export interface Account {
-  id?: string,
+  uid?: string,
   email?: string,
   firstName?: string,
   lastName?: string,

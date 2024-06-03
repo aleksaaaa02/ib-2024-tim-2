@@ -22,7 +22,7 @@ export class ReportedUsersCardComponent implements OnInit {
   }
 
   block(): void {
-    this.adminService.blockUser(this.report.reportedUser.id).subscribe({
+    this.adminService.blockUser(this.report.reportedUser.uid).subscribe({
       next: (response) => {
         if (response) {
           this.openDialog("User " + response.firstName + " " + response.lastName + " has been blocked");

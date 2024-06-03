@@ -25,11 +25,7 @@ export class Interceptor implements HttpInterceptor {
         next: (event: HttpEvent<any>): void => {},
         error: (error): void => {
           if(error.status === 401) {
-           // this.authService.logout();
-            //this.authService.setUser();
-           // this.router.navigate(['']);
-
-            // Here should be the code for refreshing the token :D
+            this.authService.refreshToken();
           }
         }
       }));

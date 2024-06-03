@@ -156,7 +156,7 @@ public class ReviewController {
         ReviewAdminViewDTO response = ReviewAdminViewDTOMapper.toReviewDTO(review);
         return new ResponseEntity<ReviewAdminViewDTO>(response, HttpStatus.OK);
     }
-    @DeleteMapping(value="/remove/{reviewId}")
+    @DeleteMapping(value="/remove/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
 //    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<ReviewAdminViewDTO> removeReview(@PathVariable Long reviewId) {
         //change to accepted
@@ -179,7 +179,7 @@ public class ReviewController {
         return new ResponseEntity<Long>(reviewId, HttpStatus.OK);
     }
 
-    @DeleteMapping("/accommodation-delete/{accommodationId}/{reviewId}")
+    @DeleteMapping(value = "/accommodation-delete/{accommodationId}/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
 //    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<ReviewDTO> deleteAccommodationReview(@PathVariable Long reviewId, @PathVariable Long accommodationId) {
         //delete review for accommodation
@@ -192,7 +192,7 @@ public class ReviewController {
         return new ResponseEntity<ReviewDTO>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/owner-delete/{ownerId}/{reviewId}")
+    @DeleteMapping(value = "/owner-delete/{ownerId}/{reviewId}", produces = MediaType.APPLICATION_JSON_VALUE)
 //    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<ReviewDTO> deleteOwnerReview(@PathVariable Long reviewId, @PathVariable String ownerId) {
         //delete review for owner

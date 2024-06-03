@@ -187,12 +187,6 @@ public class ReservationController {
         return new ResponseEntity<ReservationDTO>(reservation, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{reservationId}")
-    public ResponseEntity<ReservationDTO> delete(@PathVariable Long reservationId) {
-        //delete reservation
-        return new ResponseEntity<ReservationDTO>(HttpStatus.NO_CONTENT);
-    }
-
     @GetMapping(value = "/guest/{guestId}", produces = MediaType.APPLICATION_JSON_VALUE)
 //    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<Collection<ReservationGuestViewDTO>> getReservationsByGuestId(@PathVariable String guestId){
@@ -206,7 +200,7 @@ public class ReservationController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/cancel/{reservationId}")
+    @PutMapping(value = "/cancel/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
 //    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<ReservationGuestViewDTO> cancelReservationGuest(@PathVariable Long reservationId){
         Reservation r = reservationService.cancelReservation(reservationId);

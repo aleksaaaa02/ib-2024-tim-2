@@ -2,14 +2,10 @@ package rs.ac.uns.ftn.Bookify.config.filters;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 import rs.ac.uns.ftn.Bookify.config.wrappers.request.XSSRequestWrapper;
 
 import java.io.IOException;
 
-@Component
-@Order(1)
 public class XSSFilter implements Filter{
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

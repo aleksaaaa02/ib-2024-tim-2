@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.Bookify.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class NotificationController {
     @Autowired
     private INotificationService notificationService;
 
-    @GetMapping("/{userId}")
+    @GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
 //    @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
     public ResponseEntity<Collection<NotificationDTO>> getUserNotifications(@PathVariable String userId) {
         List<NotificationDTO> notifications = new ArrayList<>();
@@ -37,7 +38,7 @@ public class NotificationController {
         return new ResponseEntity<>(notifications, HttpStatus.OK);
     }
 
-    @GetMapping("/unseen/{userId}")
+    @GetMapping(value = "/unseen/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
 //    @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
     public ResponseEntity<Collection<NotificationDTO>> getUnseenUserNotifications(@PathVariable String userId) {
         List<NotificationDTO> notifications = new ArrayList<>();
@@ -48,20 +49,20 @@ public class NotificationController {
         return new ResponseEntity<>(notifications, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{userId}/{notificationId}")
+    @DeleteMapping(value = "/{userId}/{notificationId}")
 //    @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
     public ResponseEntity<String> removeNotification(@PathVariable String userId, @PathVariable String notificationId) {
         return new ResponseEntity<>("Deleted", HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}/settings")
+    @GetMapping(value = "/{userId}/settings", produces = MediaType.APPLICATION_JSON_VALUE)
 //    @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
     public ResponseEntity<NotificationSettingsDTO> getNotificationSettings(@PathVariable String userId) {
         Optional<NotificationSettingsDTO> settings = Optional.ofNullable(notificationService.getNotificationSettings(userId));
         return settings.map(notificationSettingsDTO -> new ResponseEntity<>(notificationSettingsDTO, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping("/{userId}/settings")
+    @PutMapping(value = "/{userId}/settings", produces = MediaType.APPLICATION_JSON_VALUE)
 //    @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
     public ResponseEntity<NotificationSettingsDTO> updateNotificationSettings(@PathVariable String userId, @RequestBody NotificationSettingsDTO updatedSettings) {
         Optional<NotificationSettingsDTO> settings = Optional.ofNullable(notificationService.updateNotificationSettings(userId, updatedSettings));

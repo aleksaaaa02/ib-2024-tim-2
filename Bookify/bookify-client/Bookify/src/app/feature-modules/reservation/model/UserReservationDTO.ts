@@ -1,5 +1,5 @@
 export interface UserReservationDTO {
-  id: number;
+  uid: number;
   firstName: string;
   lastName: string;
   avgRating: number;

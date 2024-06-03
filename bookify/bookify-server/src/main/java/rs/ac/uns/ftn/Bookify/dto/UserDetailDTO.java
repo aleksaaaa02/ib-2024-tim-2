@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.Bookify.dto;
 
+
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,21 +17,17 @@ public class UserDetailDTO {
 
     @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String email;
-    @NotNull
-    @NotEmpty
-    @Size(min = 3, max = 30)
-    @Pattern(regexp = "[a-zA-Z0-9 ]+")
+    @Size(min = 3, max = 50)
+    @Pattern(message = "Not valid",regexp = "^[a-zA-Z]+$")
     private String firstName;
-    @NotNull
-    @NotEmpty
-    @Size(min = 3, max = 30)
-    @Pattern(regexp = "[a-zA-Z0-9 ]+")
+    @Size(min = 3, max = 50)
+    @Pattern(regexp = "^[a-zA-Z]+$")
     private String lastName;
     private boolean blocked;
-    @NotNull
-    @NotEmpty
+    @Size(min = 3, max = 50)
+    @Pattern(regexp = "^(\\+\\d{1,3}( )?)?((\\(\\d{1,3}\\))|\\d{1,3})[- .]?\\d{3,4}[- .]?\\d{4}$")
     private String phone;
-    @NotNull
+    @Valid
     private Address address;
     private Long imageId;
     public UserDetailDTO(User user){

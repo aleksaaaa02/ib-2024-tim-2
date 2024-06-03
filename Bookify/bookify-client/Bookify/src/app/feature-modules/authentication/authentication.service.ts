@@ -96,6 +96,13 @@ export class AuthenticationService {
     */
   }
 
+  refreshToken(){
+    this.keycloakService.keycloak?.updateToken(5).then(refreshed => {
+      if(refreshed) console.log("YEY");
+      else console.log("BRUH");
+    });
+  }
+
   connectWithWebSocket():void {
     this.notificationService.initializeWebSocketConnection(this.getUserId());
   }
