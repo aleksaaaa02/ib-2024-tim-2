@@ -340,6 +340,7 @@ public class UserService implements IUserService {
     }
 
     private void updateUserData(UserDetailDTO updatedUser, User u) {
+        if(u.getAddress()==null) u.setAddress(new Address());
         u.getAddress().setAddress(updatedUser.getAddress().getAddress());
         u.getAddress().setCity(updatedUser.getAddress().getCity());
         u.getAddress().setZipCode(updatedUser.getAddress().getZipCode());

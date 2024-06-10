@@ -127,7 +127,7 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "from users_accommodations a " +
             "join reservations r on a.accommodations_id=r.accommodation_id " +
             "join accommodations ac on ac.id = a.accommodations_id " +
-            "where owner_id = :ownerId " +
+            "where owner_uid = :ownerId " +
             "and ((r.start >= :begin and r.end <= :end) " +
             "or (r.start <= :begin and r.end >= :begin and r.end <= :end) " +
             "or (r.end >= :end and r.start >= :begin and r.start <= :end) " +
@@ -147,7 +147,7 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "FROM users_accommodations a " +
             "JOIN reservations r ON a.accommodations_id = r.accommodation_id " +
             "JOIN accommodations ac ON ac.id = a.accommodations_id " +
-            "WHERE owner_id = :ownerId " +
+            "WHERE owner_uid = :ownerId " +
             "AND ((r.start >= :date AND r.end <= LAST_DAY(:date)) " +
             "OR (r.start <= :date AND r.end >= :date AND r.end <= LAST_DAY(:date)) " +
             "OR (r.end >= LAST_DAY(:date) AND r.start >= :date AND r.start <= LAST_DAY(:date)) " +

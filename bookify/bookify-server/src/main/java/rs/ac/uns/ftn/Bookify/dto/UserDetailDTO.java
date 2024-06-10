@@ -18,10 +18,10 @@ public class UserDetailDTO {
     @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String email;
     @Size(min = 3, max = 50)
-    @Pattern(message = "Not valid",regexp = "^[a-zA-Z]+$")
+    @Pattern(message = "Not valid",regexp = "^[a-zA-Z0-9!?,.\\-\\s]*$")
     private String firstName;
     @Size(min = 3, max = 50)
-    @Pattern(regexp = "^[a-zA-Z]+$")
+    @Pattern(regexp = "^[a-zA-Z0-9!?,.\\-\\s]*$")
     private String lastName;
     private boolean blocked;
     @Size(min = 3, max = 50)

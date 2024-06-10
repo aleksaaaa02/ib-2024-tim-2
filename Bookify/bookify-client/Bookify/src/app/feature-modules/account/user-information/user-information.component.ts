@@ -115,7 +115,6 @@ export class UserInformationComponent implements OnInit {
       this.account.address.address = this.userInfoForm.value.address;
       this.account.address.zipCode = this.userInfoForm.value.zipcode;
       this.account.phone = this.userInfoForm.value.phone;
-
       this.accountService.updateUser(this.account).subscribe({
         next: () => {
           this.isDisabled = true;

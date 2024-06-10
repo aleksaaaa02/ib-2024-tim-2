@@ -37,7 +37,6 @@ public class UserController {
     private final String IP_ADDRESS = "192.168.1.5";
 
     @GetMapping(value = "/reported", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Collection<ReportedUserDetailsDTO>> getReportedUsers() {
         List<ReportedUserDetailsDTO> response = new ArrayList<>();
         reportedUserService.getAllReports().forEach(reportedUser -> response.add(new ReportedUserDetailsDTO(reportedUser)));
@@ -45,7 +44,6 @@ public class UserController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<Collection<UserDTO>> getAllUsers() {
         List<UserDTO> response = new ArrayList<>();
         userService.getAll().forEach((u) ->{
@@ -55,27 +53,23 @@ public class UserController {
     }
 
     @GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<UserDetailDTO> getUserById(@PathVariable String userId) {
         Optional<User> user = Optional.ofNullable(userService.get(userId));
         return user.map(userDetailDTO -> new ResponseEntity<>(new UserDetailDTO(user.get()), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<UserDetailDTO> updateUser(@RequestBody @Valid UserDetailDTO updatedUser) {
         Optional<User> user = Optional.ofNullable(userService.update(updatedUser));
         return user.map(userDetailDTO -> new ResponseEntity<>(new UserDetailDTO(user.get()), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.BAD_REQUEST));
     }
 
     @DeleteMapping("/{userId}")
-//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<String> deleteUser(@PathVariable String userId) {
         return new ResponseEntity<>("Account has not been deleted", HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping(value = "/{userId}/block-user", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<UserDTO> blockUser(@PathVariable String userId) {
         UserDTO response = this.userService.block(userId);
         if(response != null) {
@@ -86,7 +80,6 @@ public class UserController {
     }
 
     @PutMapping(value = "/{userId}/unblock-user", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<UserDTO> unblockUser(@PathVariable String userId) {
         UserDTO response = this.userService.unblock(userId);
         if(response != null)
@@ -96,7 +89,6 @@ public class UserController {
 
 
     @PostMapping(value = "/report")
-//    @PreAuthorize("hasAnyAuthority('ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<Long> insertReport(@Valid @RequestBody ReportedUserDTO dto) {
         //insert new report
         ReportedUser user = ReportedUserDTOMapper.fromDTOtoUser(dto);
@@ -111,7 +103,6 @@ public class UserController {
     }
 
     @PostMapping(value = "/change-image/{userId}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<Long> changeAccountImage(@RequestParam("image") MultipartFile image, @PathVariable Long userId) throws Exception {
         Long id = userService.updateImage(image.getBytes(), image.getName(), userId);
         if (id < 0) {
@@ -127,7 +118,6 @@ public class UserController {
     }
 
     @GetMapping(value = "/account-pic/{userId}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_GUEST', 'ROLE_OWNER')")
     public ResponseEntity<Long> getAccountImageId(@PathVariable String userId) throws Exception {
         User u = userService.get(userId);
         Long imageId = -1L;

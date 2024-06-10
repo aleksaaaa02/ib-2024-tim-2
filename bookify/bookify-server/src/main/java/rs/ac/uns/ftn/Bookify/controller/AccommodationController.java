@@ -83,7 +83,6 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/price", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<Double> getTotalPrice(@RequestParam("id") Long id, @RequestParam("begin") @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end, @RequestParam("pricePer") PricePer pricePer, @RequestParam("persons") int persons) {
         LocalDate beginL = begin.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate endL = end.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -107,13 +106,11 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/{ownerId}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Collection<AccommodationOwnerDTO>> getOwnersAccommodations(@PathVariable String ownerId) {
         return new ResponseEntity<>(this.accommodationService.getOwnerAccommodation(ownerId), HttpStatus.OK);
     }
 
     @GetMapping(value = "/favorites", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<Collection<AccommodationBasicDTO>> getFavoritesAccommodations(@RequestParam("guestId") String guestId) {
         //returns all favorites accommodation of user
         User user = userService.get(guestId);
@@ -130,7 +127,6 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/charts-accommodations", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Map<Long, String>> getChartsAccommodations(@RequestParam("ownerId") String ownerId) {
         //get names and ids for accommodations of owner
         Map<Long, String> map = accommodationService.getAccommodationNames(ownerId);
@@ -138,7 +134,6 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/overall-charts", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Collection<ChartDTO>> getChartsByPeriod(@RequestParam("ownerId") String ownerId, @RequestParam("begin")
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end) {
         //return all charts for period
@@ -150,7 +145,6 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/download-reports-overall", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<byte[]> downloadChartsByPeriod(@RequestParam("ownerId") String ownerId, @RequestParam("begin")
     @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end) throws DocumentException {
         //download pdf
@@ -166,7 +160,6 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/download-reports-accommodation", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<byte[]> downloadChartsByPeriod(@RequestParam("ownerId") String ownerId,
                                                          @RequestParam("accommodationId") Long accommodationId, @RequestParam("year") int year) throws DocumentException {
         //download pdf
@@ -179,7 +172,6 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/accommodation-charts", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Collection<ChartDTO>> getChartsByAccommodation(@RequestParam("ownerId") String ownerId, @RequestParam("accommodationId") Long accommodationId, @RequestParam("year") int year) {
         //return all charts for accommodation
         Collection<ChartDTO> charts = accommodationService.getChartsByAccommodationAndYear(ownerId, accommodationId, year);
@@ -198,7 +190,6 @@ public class AccommodationController {
     }
 
     @PostMapping("/add-to-favorites/{guestId}/{accommodationId}")
-//    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<String> addAccommodationToFavorites(@PathVariable String guestId, @PathVariable Long accommodationId) {
         //inserts accommodation to favorites
         accommodationService.insertForGuest(guestId, accommodationId);
@@ -206,7 +197,6 @@ public class AccommodationController {
     }
 
     @GetMapping("/added-to-favorites/{guestId}/{accommodationId}")
-//    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<Boolean> addedAccommodationToFavorites(@PathVariable String guestId, @PathVariable Long accommodationId) {
         //inserts accommodation to favorites
         boolean result = userService.checkIfInFavorites(guestId, accommodationId);
@@ -214,7 +204,6 @@ public class AccommodationController {
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Long> updateAccommodation(@Valid @RequestBody AccommodationDTO dto) throws Exception {
         //update accommodation
         Accommodation accommodation = AccommodationDTOMapper.fromDTOtoAccommodation(dto);
@@ -223,7 +212,6 @@ public class AccommodationController {
     }
 
     @PutMapping(value = "/approve/{accommodationId}")
-//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> approveAccommodation(@PathVariable Long accommodationId) {
         //change to accepted
         this.accommodationService.setAccommodationStatus(accommodationId, AccommodationStatusRequest.APPROVED);
@@ -231,14 +219,12 @@ public class AccommodationController {
     }
 
     @PutMapping(value = "/reject/{accommodationId}")
-//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> rejectAccommodation(@PathVariable Long accommodationId) {
         this.accommodationService.setAccommodationStatus(accommodationId, AccommodationStatusRequest.REJECTED);
         return new ResponseEntity<>(String.format("Accommodation %d rejected", accommodationId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{accommodationId}")
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<String> delete(@PathVariable Long accommodationId) {
         //delete accommodation
         return new ResponseEntity<>("Accommodation removed", HttpStatus.OK);
@@ -273,14 +259,12 @@ public class AccommodationController {
 //    }
 
     @PostMapping("/images/{accommodationId}")
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Long> uploadAccommodationImages(@PathVariable Long accommodationId, @RequestParam("images") List<MultipartFile> images) throws Exception {
         imageService.save(accommodationId, images);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @PostMapping("/{accommodationId}/addPrice")
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Long> addPriceListItem(@PathVariable Long accommodationId, @Valid @RequestBody PriceListItemDTO dto) {
         PricelistItem item = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
         Availability availability = PriceListItemDTOMapper.fromDTOtoAvailability(dto);
@@ -290,7 +274,6 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/{accommodationId}/getPrice", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Collection<PriceListItemDTO>> getAccommodationPriceListItems(@PathVariable Long accommodationId) {
         Collection<PricelistItem> priceListItems = accommodationService.getAccommodationPriceListItems(accommodationId);
         Collection<PriceListItemDTO> priceListItemDTOS = PriceListItemDTOMapper.fromPriceListItemtoDTO(priceListItems);
@@ -298,7 +281,6 @@ public class AccommodationController {
     }
 
     @DeleteMapping(value = "/price/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<PriceListItemDTO> deletePriceList(@PathVariable Long accommodationId, @Valid @RequestBody PriceListItemDTO dto) {
         PricelistItem pricelistItem = PriceListItemDTOMapper.fromDTOtoPriceListItem(dto);
         accommodationService.deletePriceListItem(accommodationId, pricelistItem);
@@ -306,7 +288,6 @@ public class AccommodationController {
     }
 
     @GetMapping(value = "/edit/{accommodationId}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<AccommodationInsertDTO> getAccommodation(@PathVariable Long accommodationId) {
         Accommodation accommodation = accommodationService.getAccommodation(accommodationId);
         AccommodationInsertDTO accommodationInsertDTO = AccommodationInesertDTOMapper.fromAccommodationtoDTO(accommodation);
@@ -314,14 +295,12 @@ public class AccommodationController {
     }
 
     @DeleteMapping("/images/{imageId}")
-//    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<Long> deleteAccommodationImage(@PathVariable Long imageId) throws Exception {
         imageService.deleteById(imageId);
         return new ResponseEntity<Long>(imageId, HttpStatus.OK);
     }
 
     @GetMapping(value = "/requests", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<Collection<AccommodationRequestDTO>> getRequests() {
         return new ResponseEntity<>(this.userService.findAccommodationRequests(), HttpStatus.OK);
     }

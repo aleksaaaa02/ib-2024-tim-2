@@ -16,7 +16,7 @@ public class ReportedUserDTO {
 
     private Long id;
     @Size(min = 3, max = 30)
-    @Pattern(regexp = "[a-zA-Z0-9 ]+")
+    @Pattern(regexp = "^[a-zA-Z0-9!?,.\\-\\s]*$")
     private String reason;
     private Date created;
     @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")

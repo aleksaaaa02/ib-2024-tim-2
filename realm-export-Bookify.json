@@ -35,15 +35,15 @@
   "duplicateEmailsAllowed": false,
   "resetPasswordAllowed": true,
   "editUsernameAllowed": false,
-  "bruteForceProtected": false,
-  "permanentLockout": false,
-  "maxTemporaryLockouts": 0,
+  "bruteForceProtected": true,
+  "permanentLockout": true,
+  "maxTemporaryLockouts": 2,
   "maxFailureWaitSeconds": 900,
   "minimumQuickLoginWaitSeconds": 60,
   "waitIncrementSeconds": 60,
   "quickLoginCheckMilliSeconds": 1000,
   "maxDeltaTimeSeconds": 43200,
-  "failureFactor": 30,
+  "failureFactor": 5,
   "roles": {
     "realm": [
       {
@@ -1068,9 +1068,9 @@
             "uris": [
               "/api/v1/accommodations/accommodation-charts",
               "/api/v1/accommodations/download-reports-overall",
-              "/api/v1/accommodations/overall-chart",
               "/api/v1/accommodations/download-reports-accommodation",
-              "/api/v1/accommodations/charts-accommodations"
+              "/api/v1/accommodations/charts-accommodations",
+              "/api/v1/accommodations/overall-charts"
             ],
             "scopes": [
               {
@@ -3004,11 +3004,11 @@
           ]
         },
         "config": {
-          "pagination": [
-            "true"
-          ],
           "fullSyncPeriod": [
             "-1"
+          ],
+          "pagination": [
+            "true"
           ],
           "startTls": [
             "false"
@@ -3031,17 +3031,17 @@
           "enabled": [
             "true"
           ],
+          "usernameLDAPAttribute": [
+            "uid"
+          ],
           "changedSyncPeriod": [
             "-1"
-          ],
-          "bindCredential": [
-            "**********"
           ],
           "bindDn": [
             "uid=admin,ou=system"
           ],
-          "usernameLDAPAttribute": [
-            "uid"
+          "bindCredential": [
+            "**********"
           ],
           "vendor": [
             "other"
@@ -3049,11 +3049,11 @@
           "uuidLDAPAttribute": [
             "entryUUID"
           ],
-          "allowKerberosAuthentication": [
-            "false"
-          ],
           "connectionUrl": [
             "ldap://localhost:10389"
+          ],
+          "allowKerberosAuthentication": [
+            "false"
           ],
           "syncRegistrations": [
             "true"
@@ -3086,7 +3086,7 @@
             "WRITABLE"
           ],
           "validatePasswordPolicy": [
-            "false"
+            "true"
           ]
         }
       }

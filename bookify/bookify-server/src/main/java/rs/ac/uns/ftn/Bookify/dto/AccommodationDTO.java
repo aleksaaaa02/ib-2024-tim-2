@@ -17,10 +17,10 @@ import java.util.List;
 public class AccommodationDTO {
     private Long id;
     @Size(min = 3, max = 30)
-    @Pattern(regexp = "[a-zA-Z0-9 ]+")
+    @Pattern(regexp = "^[a-zA-Z0-9!?,.\\-\\s]*$")
     private String name;
-    @Size(min = 3, max = 30)
-    @Pattern(regexp = "[a-zA-Z0-9 ]+")
+    @Size(min = 3, max = 1000)
+    @Pattern(regexp = "^[a-zA-Z0-9!?,.\\-\\s]*$")
     private String description;
     @Min(0)
     private int minGuest;

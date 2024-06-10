@@ -16,18 +16,18 @@ import lombok.NoArgsConstructor;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Address {
 	@Column(length = 50)
-	@Pattern(regexp = "[a-zA-Z0-9 ]+")
+	@Pattern(regexp = "^[a-zA-Z0-9!?,.\\-\\s]*$")
 	private String country;
 
 	@Column(length = 30)
-	@Pattern(regexp = "[a-zA-Z0-9 ]+")
+	@Pattern(regexp = "^[a-zA-Z0-9!?,.\\-\\s]*$")
 	private String city;
 
 	@Column(length = 52)
-	@Pattern(regexp = "[a-zA-Z0-9 ]+")
+	@Pattern(regexp = "^[a-zA-Z0-9!?,.\\-\\s]*$")
 	private String address;
 
 	@Column(length = 10)
-	@Pattern(regexp = "[a-zA-Z0-9 ]+")
+	@Pattern(regexp = "^[a-zA-Z0-9!?,.\\-\\s]*$")
 	private String zipCode;
 }

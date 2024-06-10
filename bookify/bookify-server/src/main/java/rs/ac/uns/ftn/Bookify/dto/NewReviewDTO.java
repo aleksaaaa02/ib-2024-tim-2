@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class NewReviewDTO {
     @NotEmpty
     @Size(min = 1, max = 100)
-    @Pattern(regexp = "[a-zA-Z0-9 ]+")
+    @Pattern(regexp = "^[a-zA-Z0-9!?,.\\-\\s]*$")
     private String comment;
     @Min(0)
     @Max(5)
