@@ -17,23 +17,17 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
     Owner findByAccommodations_Id(Long accommodationId);
 
-    @Query("SELECT o FROM Owner o WHERE o.id=:ownerId")
-    Owner findOwnerById(@Param("ownerId") Long ownerId);
+    @Query("SELECT o FROM Owner o WHERE o.uid=:ownerId")
+    Owner findOwnerById(@Param("ownerId") String ownerId);
 
-    @Query("SELECT g FROM Guest g WHERE g.id=:guestId")
-    Guest findGuestById(@Param("guestId") Long guestId);
+    @Query("SELECT g FROM Guest g WHERE g.uid=:guestId")
+    Guest findGuestById(@Param("guestId") String guestId);
 
-    @Query("SELECT AVG(r.rate) FROM Owner o JOIN o.reviews r WHERE o.id = :ownerId")
-    Float getAverageReviewByOwnerId(@Param("ownerId") Long ownerId);
+    @Query("SELECT AVG(r.rate) FROM Owner o JOIN o.reviews r WHERE o.uid = :ownerId")
+    Float getAverageReviewByOwnerId(@Param("ownerId") String ownerId);
 
     User findByEmail(String email);
 
-    @Query("select u from User u where u.active.hashToken = :uuid")
-    User findByHashToken(String uuid);
-
-    @Modifying
-    @Query("delete from User u where u.id= :userId")
-    void deleteUser(Long userId);
     @Query("SELECT o FROM Owner o")
     List<Owner> findAllOwners();
 
@@ -42,12 +36,16 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying
-    @Query(nativeQuery = true, value = "INSERT INTO users_favorites (guest_id, favorites_id) VALUES (:userId, :accommodationId)")
-    void addFavoriteToUser(@Param("userId") Long userId, @Param("accommodationId") Long accommodationId);
+    @Query(nativeQuery = true, value = "INSERT INTO users_favorites (guest_uid, favorites_id) VALUES (:userId, :accommodationId)")
+    void addFavoriteToUser(@Param("userId") String userId, @Param("accommodationId") Long accommodationId);
 
-    @Query(value = "SELECT COUNT(*) FROM users_favorites WHERE guest_id = :guestId AND favorites_id = :accommodationId", nativeQuery = true)
-    int checkIfInFavorites(@Param("guestId") Long guestId, @Param("accommodationId") Long accommodationId);
+    @Query(value = "SELECT COUNT(*) FROM users_favorites WHERE guest_uid = :guestId AND favorites_id = :accommodationId", nativeQuery = true)
+    int checkIfInFavorites(@Param("guestId") String guestId, @Param("accommodationId") Long accommodationId);
 
     @Query("SELECT o FROM Owner o WHERE :review MEMBER OF o.reviews")
     Owner getOwnerByReview(Review review);
+
+    Boolean existsByUid(String uid);
+
+    Optional<User> findUserByUid(String userUid);
 }

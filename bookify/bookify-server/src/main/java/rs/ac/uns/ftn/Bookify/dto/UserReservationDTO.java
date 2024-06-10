@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserReservationDTO {
-    private Long id;
+    private String uid;
     private String firstName;
     private String lastName;
     private double avgRating;

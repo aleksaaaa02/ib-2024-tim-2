@@ -11,7 +11,7 @@ import { UserDTO } from '../model/user.model.dto';
 })
 export class GuestPageComponent implements OnInit {
   role: string;
-  ownerId: number;
+  ownerId: string;
   type: string;
 
   constructor(private authenticationService: AuthenticationService, private reviewService: ReviewService, private route: ActivatedRoute) {
@@ -20,7 +20,7 @@ export class GuestPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.ownerId = +params['userId'];
+      this.ownerId = params['userId'];
     });
     this.reviewService.getUserDTO(this.ownerId).subscribe({
       next: (owner: UserDTO) => {

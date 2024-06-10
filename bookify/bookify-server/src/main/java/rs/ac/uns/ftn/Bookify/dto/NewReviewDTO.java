@@ -1,9 +1,6 @@
 package rs.ac.uns.ftn.Bookify.dto;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,10 +10,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NewReviewDTO {
     @NotEmpty
+    @Size(min = 1, max = 100)
+    @Pattern(regexp = "^[a-zA-Z0-9!?,.\\-\\s]*$")
     private String comment;
     @Min(0)
     @Max(5)
     private int rate;
     @NotNull
-    private Long guestId;
+    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
+    private String guestId;
 }

@@ -14,10 +14,10 @@ import rs.ac.uns.ftn.Bookify.repository.interfaces.IUserRepository;
 import java.util.Optional;
 
 
-@Service
+//@Service
 public class CustomUserDetailService implements UserDetailsService {
 
-    @Autowired
+//    @Autowired
     private IUserRepository userRepository;
 
 
@@ -29,9 +29,6 @@ public class CustomUserDetailService implements UserDetailsService {
         }
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
-                .password(user.getPassword())
-                .authorities(getUserRole(user))
-                .roles(getUserRole(user))
                 .build();
     }
 

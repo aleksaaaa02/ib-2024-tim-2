@@ -1,8 +1,8 @@
 package rs.ac.uns.ftn.Bookify.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,25 +13,25 @@ import rs.ac.uns.ftn.Bookify.model.User;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDetailDTO {
-    private Long id;
+    private String uid;
 
     @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
     private String email;
-    @NotNull
-    @NotEmpty
+    @Size(min = 3, max = 50)
+    @Pattern(message = "Not valid",regexp = "^[a-zA-Z0-9!?,.\\-\\s]*$")
     private String firstName;
-    @NotNull
-    @NotEmpty
+    @Size(min = 3, max = 50)
+    @Pattern(regexp = "^[a-zA-Z0-9!?,.\\-\\s]*$")
     private String lastName;
     private boolean blocked;
-    @NotNull
-    @NotEmpty
+    @Size(min = 3, max = 50)
+    @Pattern(regexp = "^(\\+\\d{1,3}( )?)?((\\(\\d{1,3}\\))|\\d{1,3})[- .]?\\d{3,4}[- .]?\\d{4}$")
     private String phone;
-    @NotNull
+    @Valid
     private Address address;
     private Long imageId;
     public UserDetailDTO(User user){
-        this.id = user.getId();
+        this.uid = user.getUid();
         this.email = user.getEmail();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();

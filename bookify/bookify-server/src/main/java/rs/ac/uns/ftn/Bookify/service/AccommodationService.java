@@ -431,7 +431,7 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public List<AccommodationOwnerDTO> getOwnerAccommodation(Long ownerId) {
+    public List<AccommodationOwnerDTO> getOwnerAccommodation(String ownerId) {
         List<AccommodationOwnerDTO> result = new ArrayList<>();
         for(Accommodation accommodation : accommodationRepository.getOwnerAccommodation(ownerId)){
             result.add(new AccommodationOwnerDTO(accommodation, getAvgRating(accommodation.getId())));
@@ -522,7 +522,7 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public void insertForGuest(Long guestId, Long accommodationId) {
+    public void insertForGuest(String guestId, Long accommodationId) {
         userService.addToFavorites(guestId, accommodationId);
     }
 
@@ -544,7 +544,7 @@ public class AccommodationService implements IAccommodationService {
         notificationService.createNotificationGuestRequestResponse(reservation);
     }
 
-    public List<ChartDTO> getChartsByPeriod(Long ownerId, LocalDate begin, LocalDate end) {
+    public List<ChartDTO> getChartsByPeriod(String ownerId, LocalDate begin, LocalDate end) {
         List<Tuple> helper = accommodationRepository.getOverallReport(ownerId, begin, end);
         List<ChartDTO> chart = new ArrayList<>();
         Map<Long, ChartDTO> map = new HashMap<>();
@@ -575,7 +575,7 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public byte[] generatePdfReportForOverall(Long ownerId, LocalDate begin, LocalDate end) {
+    public byte[] generatePdfReportForOverall(String ownerId, LocalDate begin, LocalDate end) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             Document document = new Document();
@@ -624,7 +624,7 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public Map<Long, String> getAccommodationNames(Long ownerId) {
+    public Map<Long, String> getAccommodationNames(String ownerId) {
         List<Tuple> tuple =  accommodationRepository.getAccommodationNames(ownerId);
         Map<Long, String> map = new HashMap<>();
         for (Tuple t : tuple) {
@@ -636,7 +636,7 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public List<ChartDTO> getChartsByAccommodationAndYear(Long ownerId, Long accommodationId, int year) {
+    public List<ChartDTO> getChartsByAccommodationAndYear(String ownerId, Long accommodationId, int year) {
         List<ChartDTO> chart = new ArrayList<>();
         for (int i = 1; i <= 12; i++){
             LocalDate date = LocalDate.of(year, i, 1);
@@ -663,7 +663,7 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public byte[] generatePdfReportForAccommodation(Long ownerId, Long accommodationId, int year) throws DocumentException {
+    public byte[] generatePdfReportForAccommodation(String ownerId, Long accommodationId, int year) throws DocumentException {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             Document document = new Document();

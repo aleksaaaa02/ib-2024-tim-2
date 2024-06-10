@@ -13,13 +13,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class NewCommentComponent implements OnInit {
   @Output() emit = new EventEmitter<boolean>();
-  
+
   percent: number = 0;
   form: FormGroup;
   submitted: boolean;
 
-  ownerId: number;
-  
+  ownerId: string;
+
   constructor(private fb: FormBuilder, private route: ActivatedRoute, private reviewService: ReviewService,
      private authenticationService: AuthenticationService, private _snackBar: MatSnackBar) {
     this.form = this.fb.group({
@@ -29,7 +29,7 @@ export class NewCommentComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.ownerId = +params['userId'];
+      this.ownerId = params['userId'];
     });
   }
 
@@ -47,7 +47,7 @@ export class NewCommentComponent implements OnInit {
         comment: this.form.get('comment')?.value,
         rate: this.percent,
         guestId: this.authenticationService.getUserId()
-      } 
+      }
       this.reviewService.add(this.ownerId, comment).subscribe({
         next: () => {
           this.emit.emit(true);

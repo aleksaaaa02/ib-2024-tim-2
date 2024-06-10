@@ -98,8 +98,8 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     @Query("SELECT AVG(r.rate) FROM Accommodation a JOIN a.reviews r WHERE a.id = :accommodationId AND r.accepted=true")
     Float getAverageReviewByAccommodationId(@Param("accommodationId") Long accommodationId);
 
-    @Query("SELECT o.accommodations FROM Owner o WHERE o.id =:ownerId ")
-    List<Accommodation> getOwnerAccommodation(Long ownerId);
+    @Query("SELECT o.accommodations FROM Owner o WHERE o.uid =:ownerId ")
+    List<Accommodation> getOwnerAccommodation(String ownerId);
 
     @Query("SELECT COUNT(a) FROM Accommodation a " +
             "JOIN a.availability av " +
@@ -127,13 +127,13 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "from users_accommodations a " +
             "join reservations r on a.accommodations_id=r.accommodation_id " +
             "join accommodations ac on ac.id = a.accommodations_id " +
-            "where owner_id = :ownerId " +
+            "where owner_uid = :ownerId " +
             "and ((r.start >= :begin and r.end <= :end) " +
             "or (r.start <= :begin and r.end >= :begin and r.end <= :end) " +
             "or (r.end >= :end and r.start >= :begin and r.start <= :end) " +
             "or (r.start <= :begin and r.end >= :end)) " +
             "and r.status = 'ACCEPTED' ", nativeQuery = true)
-    List<Tuple> getOverallReport(@Param("ownerId") Long ownerId,
+    List<Tuple> getOverallReport(@Param("ownerId") String ownerId,
                                  @Param("begin") LocalDate begin,
                                  @Param("end") LocalDate end);
 
@@ -141,20 +141,20 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "from users_accommodations ua " +
             "join accommodations a on a.id = ua.accommodations_id " +
             "where owner_id = :ownerId", nativeQuery = true)
-    List<Tuple> getAccommodationNames(@Param("ownerId") Long ownerId);
+    List<Tuple> getAccommodationNames(@Param("ownerId") String ownerId);
 
     @Query(value = "SELECT ac.price_per, r.guest_number, (CASE WHEN r.start < :date THEN :date ELSE r.start END) AS startDate, (CASE WHEN r.end > LAST_DAY(:date) THEN LAST_DAY(:date) ELSE r.end END) AS endDate " +
             "FROM users_accommodations a " +
             "JOIN reservations r ON a.accommodations_id = r.accommodation_id " +
             "JOIN accommodations ac ON ac.id = a.accommodations_id " +
-            "WHERE owner_id = :ownerId " +
+            "WHERE owner_uid = :ownerId " +
             "AND ((r.start >= :date AND r.end <= LAST_DAY(:date)) " +
             "OR (r.start <= :date AND r.end >= :date AND r.end <= LAST_DAY(:date)) " +
             "OR (r.end >= LAST_DAY(:date) AND r.start >= :date AND r.start <= LAST_DAY(:date)) " +
             "OR (r.start <= :date AND r.end >= LAST_DAY(:date))) " +
             "AND ac.id = :accommodationId " +
             "AND r.status = 'ACCEPTED' ", nativeQuery = true)
-    List<Tuple> getAccommodationReport(@Param("ownerId") Long ownerId,
+    List<Tuple> getAccommodationReport(@Param("ownerId") String ownerId,
                                        @Param("accommodationId") Long accommodationId,
                                        @Param("date") LocalDate date);
 

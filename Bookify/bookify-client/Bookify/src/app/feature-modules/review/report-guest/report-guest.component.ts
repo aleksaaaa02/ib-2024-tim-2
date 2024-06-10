@@ -14,8 +14,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class ReportGuestComponent implements OnInit {
   form: FormGroup;
   submitted: boolean;
-  reportedUserId: number;
-  reportingUserId: number;
+  reportedUserId: string;
+  reportingUserId: string;
 
   constructor(private fb: FormBuilder, private route: ActivatedRoute, private authenticationService: AuthenticationService,
     private reviewService: ReviewService, private _snackBar: MatSnackBar) {
@@ -27,7 +27,7 @@ export class ReportGuestComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.reportedUserId = +params['userId'];
+      this.reportedUserId = params['userId'];
     });
   }
 

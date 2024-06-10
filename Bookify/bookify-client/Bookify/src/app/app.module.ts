@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import { BrowserModule, provideClientHydration, withNoHttpTransferCache } from '@angular/platform-browser';
 import { AccommodationModule } from './feature-modules/accommodation/accommodation.module';
 import { AppRoutingModule } from './app-routing.module';
@@ -17,6 +17,11 @@ import { AdministrationModule } from "./feature-modules/administration/administr
 import { ReviewModule } from './feature-modules/review/review.module';
 import { ReservationModule } from './feature-modules/reservation/reservation.module';
 import { AdminModule } from './feature-modules/admin/admin.module';
+import {KeycloakService} from "./feature-modules/authentication/keycloak/keycloak.service";
+
+export function kcFactory(kcService: KeycloakService) {
+  return () => kcService.init();
+}
 
 @NgModule({
   declarations: [
@@ -43,6 +48,12 @@ import { AdminModule } from './feature-modules/admin/admin.module';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true },
     provideClientHydration(withNoHttpTransferCache()),
+    {
+      provide: APP_INITIALIZER,
+      deps: [KeycloakService],
+      useFactory: kcFactory,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

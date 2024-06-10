@@ -16,15 +16,15 @@ export class ReservationService {
 
   constructor(private httpClient: HttpClient, @Inject(LOCALE_ID) private locale: string) { }
 
-  getAllRequestsForGuest(userId: number): Observable<ReservationDTO[]> {
+  getAllRequestsForGuest(userId: string): Observable<ReservationDTO[]> {
     return this.httpClient.get<ReservationDTO[]>(environment.apiHost + "reservations/guest" + "?userId=" + userId);
   }
 
-  getAccommodationMapForGuest(userId: number): Observable<any[]> {
+  getAccommodationMapForGuest(userId: string): Observable<any[]> {
     return this.httpClient.get<any[]>(environment.apiHost + "reservations/accommodations/guest" + "?userId=" + userId);
   }
 
-  getFilteredRequestsForGuest(userId: number, accommodationId: number, dateBegin: Date, dateEnd: Date, statuses: string[]): Observable<ReservationDTO[]> {
+  getFilteredRequestsForGuest(userId: string, accommodationId: number, dateBegin: Date, dateEnd: Date, statuses: string[]): Observable<ReservationDTO[]> {
     return this.httpClient.get<ReservationDTO[]>(environment.apiHost + "reservations/guest/filter" +
                                                                             "?userId=" + userId +
                                                                             "&accommodationId=" + accommodationId +
@@ -33,11 +33,11 @@ export class ReservationService {
                                                                             "&statuses=" + statuses);
   }
 
-  getAllRequestsForOwner(userId: number): Observable<ReservationDTO[]> {
+  getAllRequestsForOwner(userId: string): Observable<ReservationDTO[]> {
     return this.httpClient.get<ReservationDTO[]>(environment.apiHost + "reservations/owner" + "?userId=" + userId);
   }
 
-  getAccommodationMapForOwner(userId: number): Observable<any[]> {
+  getAccommodationMapForOwner(userId: string): Observable<any[]> {
     return this.httpClient.get<any[]>(environment.apiHost + "reservations/accommodations/owner" + "?userId=" + userId);
   }
 
@@ -45,7 +45,7 @@ export class ReservationService {
     return this.httpClient.put(environment.apiHost + "reservations/delete/" + reservationId, {}, {responseType:"text"});
   }
 
-  getFilteredRequestsForOwner(userId: number, accommodationId: number, dateBegin: Date, dateEnd: Date, statuses: string[]): Observable<ReservationDTO[]> {
+  getFilteredRequestsForOwner(userId: string, accommodationId: number, dateBegin: Date, dateEnd: Date, statuses: string[]): Observable<ReservationDTO[]> {
     return this.httpClient.get<ReservationDTO[]>(environment.apiHost + "reservations/owner/filter" +
       "?userId=" + userId +
       "&accommodationId=" + accommodationId +
@@ -61,7 +61,7 @@ export class ReservationService {
     return this.httpClient.put<ReservationDTO>(environment.apiHost + "reservations/reject/" + reservationId,{});
   }
 
-  getGuestReservations(guestId: number): Observable<ReservationGuestViewDTO[]> {
+  getGuestReservations(guestId: string): Observable<ReservationGuestViewDTO[]> {
     return this.httpClient.get<ReservationGuestViewDTO[]>(environment.apiHost + "reservations/guest/" + guestId);
   }
 

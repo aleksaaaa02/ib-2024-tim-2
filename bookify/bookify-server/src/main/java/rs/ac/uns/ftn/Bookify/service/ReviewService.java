@@ -24,7 +24,7 @@ public class ReviewService implements IReviewService {
     }
 
     @Override
-    public RatingDTO getOwnerRating(Long ownerId) {
+    public RatingDTO getOwnerRating(String ownerId) {
         List<Review> reviews = reviewRepository.findByOwnerId(ownerId);
         return getRatingDTO(reviews);
     }
@@ -64,7 +64,7 @@ public class ReviewService implements IReviewService {
     }
 
     @Override
-    public Collection<CommentDTO> getOwnerComments(Long ownerId) {
+    public Collection<CommentDTO> getOwnerComments(String ownerId) {
         List<Review> reviews = reviewRepository.findByOwnerId(ownerId);
         Collection<CommentDTO> dtos = new ArrayList<>();
         for (Review review : reviews) {
@@ -74,7 +74,7 @@ public class ReviewService implements IReviewService {
             if (guest.getProfileImage() != null) {
                 imageId = guest.getProfileImage().getId();
             }
-            dtos.add(new CommentDTO(review.getId(), name, review.getDate(), review.getComment(), review.getRate(), guest.getId(), imageId));
+            dtos.add(new CommentDTO(review.getId(), name, review.getDate(), review.getComment(), review.getRate(), guest.getUid(), imageId));
         }
         return dtos;
     }
@@ -90,7 +90,7 @@ public class ReviewService implements IReviewService {
             if (guest.getProfileImage() != null) {
                 imageId = guest.getProfileImage().getId();
             }
-            dtos.add(new CommentDTO(review.getId(), name, review.getDate(), review.getComment(), review.getRate(), guest.getId(), imageId));
+            dtos.add(new CommentDTO(review.getId(), name, review.getDate(), review.getComment(), review.getRate(), guest.getUid(), imageId));
         }
         return dtos;
     }

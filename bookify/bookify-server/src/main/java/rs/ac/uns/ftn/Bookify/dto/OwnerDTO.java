@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OwnerDTO {
-    private Long id;
+    private String uid;
     private String firstName;
     private String lastName;
     private String phone;

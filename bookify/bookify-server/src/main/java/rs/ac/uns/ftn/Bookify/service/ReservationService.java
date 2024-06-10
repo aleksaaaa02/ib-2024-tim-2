@@ -41,8 +41,8 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public boolean hasFutureReservationsGuest(Long guestId) {
-        List<Reservation> futureReservations = this.reservationRepository.findByGuest_IdAndEndAfterAndStatusNotIn(guestId, LocalDate.now(), EnumSet.of(Status.CANCELED, Status.REJECTED));
+    public boolean hasFutureReservationsGuest(String guestId) {
+        List<Reservation> futureReservations = this.reservationRepository.findByGuest_UidAndEndAfterAndStatusNotIn(guestId, LocalDate.now(), EnumSet.of(Status.CANCELED, Status.REJECTED));
         return !futureReservations.isEmpty();
     }
 
@@ -76,42 +76,42 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public List<Reservation> getReservations(Long guestId, Long ownerId) {
+    public List<Reservation> getReservations(String guestId, String ownerId) {
         return reservationRepository.getReservations(guestId, LocalDate.now(), Status.ACCEPTED, ownerId);
     }
 
     @Override
-    public List<Reservation> getReservationsForAccommodationInLast7Days(Long guestId, Long accommodationId) {
+    public List<Reservation> getReservationsForAccommodationInLast7Days(String guestId, Long accommodationId) {
         return reservationRepository.getReservationsForAccommodationInLast7Days(guestId, LocalDate.now().minusDays(7), LocalDate.now(), Status.ACCEPTED, accommodationId);
     }
 
     @Override
-    public List<Reservation> getAllForGuest(Long userId) {
+    public List<Reservation> getAllForGuest(String userId) {
         return reservationRepository.getAllForGuest(userId);
     }
 
     @Override
-    public List<Object[]> getGuestAccommodations(Long userId) {
+    public List<Object[]> getGuestAccommodations(String userId) {
         return reservationRepository.getIdToNameGuestMap(userId);
     }
 
     @Override
-    public List<Reservation> filterForGuest(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses) {
+    public List<Reservation> filterForGuest(String userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses) {
         return reservationRepository.filterForGuest(userId, accommodationId, startDate, endDate, statuses);
     }
 
     @Override
-    public List<Reservation> getAllForOwner(Long userId) {
+    public List<Reservation> getAllForOwner(String userId) {
         return reservationRepository.getAllForOwner(userId);
     }
 
     @Override
-    public List<Object[]> getOwnerAccommodations(Long userId) {
+    public List<Object[]> getOwnerAccommodations(String userId) {
         return reservationRepository.getIdToNameOwnerMap(userId);
     }
 
     @Override
-    public List<Reservation> filterForOwner(Long userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses) {
+    public List<Reservation> filterForOwner(String userId, Long accommodationId, LocalDate startDate, LocalDate endDate, Status[] statuses) {
         return reservationRepository.filterForOwner(userId, accommodationId, startDate, endDate, statuses);
     }
 
@@ -171,8 +171,8 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public boolean cancelGuestsReservations(Long guestId) {
-        List<Reservation> reservations = this.reservationRepository.findAllByGuest_IdAndEndAfter(guestId, LocalDate.now());
+    public boolean cancelGuestsReservations(String guestId) {
+        List<Reservation> reservations = this.reservationRepository.findAllByGuest_UidAndEndAfter(guestId, LocalDate.now());
         reservations.forEach(reservation -> {
             if (reservation.getStatus() == Status.ACCEPTED
                     && !(LocalDate.now().isAfter(reservation.getStart()) && LocalDate.now().isBefore(reservation.getEnd()))) {
@@ -206,7 +206,7 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public List<Reservation> getAllGuestReservations(Long guestId) {
+    public List<Reservation> getAllGuestReservations(String guestId) {
         List<Reservation> reservations = this.reservationRepository.getAllForGuest(guestId);
         reservations.removeIf(r -> !r.getStatus().equals(Status.ACCEPTED));
         return reservations;

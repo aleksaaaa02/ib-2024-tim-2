@@ -146,7 +146,7 @@ export class AccommodationCreateComponent implements OnInit {
         address: addressDTO
       };
       if (isNaN(this.accommodationId)) {
-        const id: number = this.authenticationService.getUserId();
+        const id: string = this.authenticationService.getUserId();
         this.accommodationService.add(id, dto).subscribe(
           {
             next: (data: Accommodation) => {

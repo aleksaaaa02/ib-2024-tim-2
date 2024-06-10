@@ -49,8 +49,7 @@ public class ReservationController {
     private IUserService userService;
 
     @GetMapping(value="/guest", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<Collection<ReservationDTO>> findReservationsByUserId(@RequestParam Long userId) {
+    public ResponseEntity<Collection<ReservationDTO>> findReservationsByUserId(@RequestParam String userId) {
         //return all reservations of one guest
         Collection<Reservation> reservations = reservationService.getAllForGuest(userId);
         Collection<ReservationDTO> reservationDTOS = reservations.stream()
@@ -64,8 +63,7 @@ public class ReservationController {
     }
 
     @GetMapping(value="/guest/filter", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<Collection<ReservationDTO>> FilterReservationsForGuest(@RequestParam Long userId, @RequestParam Long accommodationId,
+    public ResponseEntity<Collection<ReservationDTO>> FilterReservationsForGuest(@RequestParam String userId, @RequestParam Long accommodationId,
                                                                                   @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") Date startDate, @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") Date endDate, @RequestParam Status[] statuses) {
         //return all reservations of one guest
         LocalDate beginL = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -83,16 +81,14 @@ public class ReservationController {
     }
 
     @GetMapping(value="/accommodations/guest", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<List<Object[]>> getAccommodationNames(@RequestParam Long userId) {
+    public ResponseEntity<List<Object[]>> getAccommodationNames(@RequestParam String userId) {
         //return all accommodation names and ids for guest
         List<Object[]> returns = reservationService.getGuestAccommodations(userId);
         return new ResponseEntity<>(returns, HttpStatus.OK);
     }
 
     @GetMapping(value="/owner", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<Collection<ReservationDTO>> findReservationsByOwnerId(@RequestParam Long userId) {
+    public ResponseEntity<Collection<ReservationDTO>> findReservationsByOwnerId(@RequestParam String userId) {
         //return all reservations of one guest
         Collection<Reservation> reservations = reservationService.getAllForOwner(userId);
         Collection<ReservationDTO> reservationDTOS = reservations.stream()
@@ -106,8 +102,7 @@ public class ReservationController {
     }
 
     @GetMapping(value="/owner/filter", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<Collection<ReservationDTO>> FilterReservationsForOwner(@RequestParam Long userId, @RequestParam Long accommodationId,
+    public ResponseEntity<Collection<ReservationDTO>> FilterReservationsForOwner(@RequestParam String userId, @RequestParam Long accommodationId,
                                                                                   @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") Date startDate, @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") Date endDate, @RequestParam Status[] statuses) {
         //return all reservations of one guest
         LocalDate beginL = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -125,26 +120,20 @@ public class ReservationController {
     }
 
     @GetMapping(value="/accommodations/owner", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<List<Object[]>> getAccommodationNamesOwner(@RequestParam Long userId) {
+    public ResponseEntity<List<Object[]>> getAccommodationNamesOwner(@RequestParam String userId) {
         //return all accommodation names and ids for guest
         List<Object[]> returns = reservationService.getOwnerAccommodations(userId);
         return new ResponseEntity<>(returns, HttpStatus.OK);
     }
 
-
-
-
     @GetMapping(value = "/{userId}/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyAuthority('ROLE_OWNER','ROLE_GUEST')")
-    public ResponseEntity<Collection<ReservationDTO>> findReservationsByUserIdAndStatus(@PathVariable Long userId, @PathVariable Status status) {
+    public ResponseEntity<Collection<ReservationDTO>> findReservationsByUserIdAndStatus(@PathVariable String userId, @PathVariable Status status) {
         // return all reservations of one user where reservation status == status (g, tabs)
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<ReservationDTO> insert(@Valid @RequestBody ReservationRequestDTO reservationRequestDTO, @RequestParam Long accommodationId, @RequestParam Long guestId) {
+    public ResponseEntity<ReservationDTO> insert(@Valid @RequestBody ReservationRequestDTO reservationRequestDTO, @RequestParam Long accommodationId, @RequestParam String guestId) {
         //insert new reservation request
         Reservation reservation = ReservationRequestDTOMapper.fromReservationRequestDTOToReservation(reservationRequestDTO);
         Reservation ra = reservationService.save(reservation);
@@ -159,7 +148,6 @@ public class ReservationController {
     }
 
     @PutMapping(value = "/delete/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_GUEST')")
     public ResponseEntity<String> cancelReservation(@PathVariable Long reservationId) {
         //change status into canceled
         this.reservationService.delete(reservationId);
@@ -167,7 +155,6 @@ public class ReservationController {
     }
 
     @PutMapping(value = "/accept/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<ReservationDTO> acceptReservation(@PathVariable Long reservationId) {
         //change status into accepted
         Reservation r = reservationService.accept(reservationId);
@@ -179,7 +166,6 @@ public class ReservationController {
     }
 
     @PutMapping(value = "/reject/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_OWNER')")
     public ResponseEntity<ReservationDTO> rejectReservation(@PathVariable Long reservationId) {
         //change status into rejected
         Reservation r = reservationService.reject(reservationId);
@@ -190,35 +176,8 @@ public class ReservationController {
         return new ResponseEntity<ReservationDTO>(reservation, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{reservationId}")
-    public ResponseEntity<ReservationDTO> delete(@PathVariable Long reservationId) {
-        //delete reservation
-        return new ResponseEntity<ReservationDTO>(HttpStatus.NO_CONTENT);
-    }
-
-    @GetMapping(value = "/filter/owner", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_OWNER')")
-    public ResponseEntity<Collection<ReservationDTO>> filterOwnersRequests(@RequestParam("accommodationId") Long accommodationId, @RequestParam("begin")
-    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end,
-                                                                           @RequestParam("statuses") Set<Status> statuses) {
-        // return all requests of one user using filters (g, tabs)
-        Collection<ReservationDTO> reservations = new HashSet<>();
-        return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/filter/guest", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<Collection<ReservationDTO>> filterGuestsRequests(@RequestParam("guestId") Long guestId, @RequestParam("accommodationId") Long accommodationId, @RequestParam("begin")
-    @DateTimeFormat(pattern = "dd.MM.yyyy") Date begin, @RequestParam("end") @DateTimeFormat(pattern = "dd.MM.yyyy") Date end,
-                                                                           @RequestParam("statuses") Set<Status> statuses) {
-        // return all requests of one user using filters (g, tabs)
-        Collection<ReservationDTO> reservations = new HashSet<>();
-        return new ResponseEntity<Collection<ReservationDTO>>(reservations, HttpStatus.OK);
-    }
-
     @GetMapping(value = "/guest/{guestId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('ROLE_GUEST')")
-    public ResponseEntity<Collection<ReservationGuestViewDTO>> getReservationsByGuestId(@PathVariable Long guestId){
+    public ResponseEntity<Collection<ReservationGuestViewDTO>> getReservationsByGuestId(@PathVariable String guestId){
         List<ReservationGuestViewDTO> response = new ArrayList<>();
         reservationService.getAllGuestReservations(guestId).forEach(r -> {
             ReservationGuestViewDTO reservation = ReservationGuestViewDTOMapper.toReservationGuestViewDTO(r);
@@ -229,8 +188,7 @@ public class ReservationController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/cancel/{reservationId}")
-    @PreAuthorize("hasAuthority('ROLE_GUEST')")
+    @PutMapping(value = "/cancel/{reservationId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ReservationGuestViewDTO> cancelReservationGuest(@PathVariable Long reservationId){
         Reservation r = reservationService.cancelReservation(reservationId);
         ReservationGuestViewDTO reservation = ReservationGuestViewDTOMapper.toReservationGuestViewDTO(r);

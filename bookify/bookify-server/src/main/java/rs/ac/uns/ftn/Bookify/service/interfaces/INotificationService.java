@@ -8,13 +8,13 @@ import java.util.Collection;
 import java.util.List;
 
 public interface INotificationService {
-    public List<Notification> getUserNotification(Long userId);
-    public boolean removeNotification(Long userId, Long notificationId);
-    public NotificationSettingsDTO getNotificationSettings(Long userId);
-    public NotificationSettingsDTO updateNotificationSettings(Long userId, NotificationSettingsDTO updatedSettings);
-    public List<Notification> getUnseenNotifications(Long userId);
-    public void sendNewNotification(Notification notification, Long userId);
-    public void saveNotification(Notification notification, Long userId);
+    public List<Notification> getUserNotification(String userId);
+    public boolean removeNotification(String userId, Long notificationId);
+    public NotificationSettingsDTO getNotificationSettings(String userId);
+    public NotificationSettingsDTO updateNotificationSettings(String userId, NotificationSettingsDTO updatedSettings);
+    public List<Notification> getUnseenNotifications(String userId);
+    public void sendNewNotification(Notification notification, String userId);
+    public void saveNotification(Notification notification, String userId);
     public Notification createNotificationOwnerNewReservation(Reservation reservation);
     public Notification createNotificationOwnerReservationCancellation(Reservation reservation);
     public Notification createNotificationOwnerGotNewRating(Guest guest, Owner owner);

@@ -2,7 +2,7 @@ export interface AccommodationRequests {
   id: number,
   name: string,
   owner: {
-    id: number,
+    uid: number,
     firstName: string,
     lastName: string,
     email: string,

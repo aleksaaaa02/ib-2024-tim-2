@@ -35,6 +35,10 @@ export class NavigationBarComponent implements OnInit {
     }
   }
 
+  async login() {
+    await this.authenticationService.login();
+  }
+
   private checkIfInitialTransparent(): void {
     if (this.currentRoute.includes('/results'))
       this.isTransparentRoute = true;
@@ -63,8 +67,8 @@ export class NavigationBarComponent implements OnInit {
 
   private setAccountImageIcon(): void {
     this.userImage = "assets/images/user.jpg";
-    const id: number = this.authenticationService.getUserId();
-    if (id === -1) return;
+    const id: string = this.authenticationService.getUserId();
+    if (id === "-1") return;
     this.accountService.getAccountImageId(id).subscribe({
       next: (id: number) => {
         if (id !== -1) {

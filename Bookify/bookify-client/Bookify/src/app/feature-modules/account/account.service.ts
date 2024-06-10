@@ -13,7 +13,7 @@ export class AccountService {
 
   }
 
-  getUser(userId: number): Observable<Account> {
+  getUser(userId: string): Observable<Account> {
     return this.httpClient.get<Account>(environment.apiHost + "users/" + userId);
   }
 
@@ -21,7 +21,7 @@ export class AccountService {
     return this.httpClient.get(environment.apiHost + "users/image/" + imageId, {responseType: "blob"});
   }
 
-  updatePassword(userId: number | undefined, newPassword: string): Observable<string>{
+  updatePassword(userId: string | undefined, newPassword: string): Observable<string>{
       return this.httpClient.post(environment.apiHost + "users/" + userId + "/change-password", newPassword, {responseType: "text"});
   }
 
@@ -29,15 +29,15 @@ export class AccountService {
     return this.httpClient.put<Account>(environment.apiHost + "users", account);
   }
 
-  updateAccountImage(userId: number | undefined, file: File): Observable<number> {
+  updateAccountImage(userId: string | undefined, file: File): Observable<number> {
     const data: FormData = new FormData();
     data.append('image', file);
     return this.httpClient.post<number>(environment.apiHost + "users/change-image/" + userId, data);
   }
-  deleteAccount(userId: number | undefined): Observable<string>{
+  deleteAccount(userId: string | undefined): Observable<string>{
     return this.httpClient.delete(environment.apiHost + "users/" + userId, {responseType: "text"});
   }
-  getAccountImageId(userId: number | undefined): Observable<number>{
+  getAccountImageId(userId: string | undefined): Observable<number>{
     return this.httpClient.get<number>(environment.apiHost + "users/account-pic/" + userId);
   }
 }

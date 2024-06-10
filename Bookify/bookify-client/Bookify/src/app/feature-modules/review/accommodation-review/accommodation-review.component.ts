@@ -15,9 +15,9 @@ import { ReviewService } from '../review.service';
 })
 export class AccommodationReviewComponent implements OnInit {
   @Input() comment: CommentDTO;
-  @Input() ownerId: number | undefined;
+  @Input() ownerId: string | undefined;
   @Output() emit = new EventEmitter<boolean>();
-  guestId: number;
+  guestId: string;
   accommodationId: number;
   ownerImage: string | ArrayBuffer | null = null;
 
@@ -75,7 +75,7 @@ export class AccommodationReviewComponent implements OnInit {
         this.openSnackBar("Comment reported", "cancel");
       },
       error: (_) => {
-        
+
       }
     })
   }
